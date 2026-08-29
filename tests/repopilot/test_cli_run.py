@@ -32,6 +32,45 @@ class ScriptedToolCallingModel:
         return next(self._turns)
 
 
+class TransientThenFinishModel:
+    """A model fake that makes one retryable error before returning a Tool Call."""
+
+    model_name = "transient-then-finish-model"
+
+    def __init__(self) -> None:
+        self.requests: list[tuple[list[dict], list[dict]]] = []
+
+    def complete(self, messages: list[dict], tools: list[dict]) -> AssistantTurn:
+        self.requests.append((messages, tools))
+        if len(self.requests) == 1:
+            raise TimeoutError("provider request timed out")
+        return AssistantTurn(
+            tool_calls=[
+                ToolCall(
+                    "call-1",
+                    "finish_task",
+                    {
+                        "root_cause": "The provider recovered after a timeout.",
+                        "changes": ["No repository changes were needed."],
+                    },
+                )
+            ]
+        )
+
+
+class NonTransientFailingModel:
+    """A model fake for an unrecoverable provider failure."""
+
+    model_name = "non-transient-failing-model"
+
+    def __init__(self) -> None:
+        self.requests: list[tuple[list[dict], list[dict]]] = []
+
+    def complete(self, messages: list[dict], tools: list[dict]) -> AssistantTurn:
+        self.requests.append((messages, tools))
+        raise ValueError("the provider rejected the request")
+
+
 def _make_target_repository(path: Path) -> None:
     path.mkdir()
     (path / "README.md").write_text("RepoPilot needle\n")
@@ -52,6 +91,365 @@ def _make_target_repository(path: Path) -> None:
         cwd=path,
         check=True,
     )
+
+
+def test_cli_stops_at_the_replan_budget_after_consecutive_invalid_tool_calls(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+    model = ScriptedToolCallingModel(
+        [
+            AssistantTurn(tool_calls=[ToolCall("call-1", "unknown_tool", {})]),
+            AssistantTurn(tool_calls=[ToolCall("call-2", "unknown_tool", {})]),
+        ]
+    )
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Make a bounded recovery decision.",
+            "--state-dir",
+            str(state_directory),
+            "--max-consecutive-failures",
+            "2",
+            "--max-replans",
+            "0",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "BUDGET_EXCEEDED" in result.output
+    assert len(model.requests) == 2
+
+    run_directory = next(state_directory.iterdir())
+    metadata = json.loads((run_directory / "metadata.json").read_text())
+    events = [json.loads(line) for line in (run_directory / "trace.jsonl").read_text().splitlines()]
+
+    assert metadata["status"] == "BUDGET_EXCEEDED"
+    assert [failure["category"] for failure in metadata["failures"]] == ["TOOL_ERROR", "TOOL_ERROR"]
+    assert metadata["recoveries"][-1]["action"] == "REPLAN"
+    assert metadata["budget"]["max_replans"] == 0
+    assert metadata["budget"]["replans_used"] == 0
+    assert any(event["type"] == "failure" and event["category"] == "TOOL_ERROR" for event in events)
+    assert any(event["type"] == "recovery" and event["action"] == "REPLAN" for event in events)
+    assert any(event["type"] == "budget_exhausted" and event["limit"] == "replans" for event in events)
+
+
+def test_cli_resets_consecutive_failures_after_a_recovery_replan(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+    model = ScriptedToolCallingModel(
+        [
+            AssistantTurn(tool_calls=[ToolCall("call-1", "unknown_tool", {})]),
+            AssistantTurn(tool_calls=[ToolCall("call-2", "unknown_tool", {})]),
+            AssistantTurn(tool_calls=[ToolCall("call-3", "unknown_tool", {})]),
+            AssistantTurn(
+                tool_calls=[
+                    ToolCall(
+                        "call-4",
+                        "finish_task",
+                        {
+                            "root_cause": "The new Plan reset the recovery attempt.",
+                            "changes": ["No change was needed."],
+                        },
+                    )
+                ]
+            ),
+        ]
+    )
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Recover once, then handle a separate failure.",
+            "--state-dir",
+            str(state_directory),
+            "--max-consecutive-failures",
+            "2",
+            "--max-replans",
+            "1",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "UNVERIFIED" in result.output
+    assert len(model.requests) == 4
+    run_directory = next(state_directory.iterdir())
+    metadata = json.loads((run_directory / "metadata.json").read_text())
+
+    assert [recovery["action"] for recovery in metadata["recoveries"]] == [
+        "RETURN_OBSERVATION",
+        "REPLAN",
+        "RETURN_OBSERVATION",
+    ]
+    assert metadata["budget"]["replans_used"] == 1
+
+
+def test_cli_persists_every_configured_run_budget_limit(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+    model = ScriptedToolCallingModel(
+        [
+            AssistantTurn(
+                tool_calls=[
+                    ToolCall(
+                        "call-1",
+                        "finish_task",
+                        {"root_cause": "The budget was inspected.", "changes": ["No change was needed."]},
+                    )
+                ]
+            )
+        ]
+    )
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Expose the configured budget.",
+            "--state-dir",
+            str(state_directory),
+            "--max-steps",
+            "7",
+            "--max-replans",
+            "5",
+            "--max-consecutive-failures",
+            "4",
+            "--command-timeout-seconds",
+            "123",
+            "--max-run-seconds",
+            "456",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    run_directory = next(state_directory.iterdir())
+    metadata = json.loads((run_directory / "metadata.json").read_text())
+
+    assert metadata["budget"] == {
+        "max_steps": 7,
+        "steps_used": 1,
+        "max_replans": 5,
+        "replans_used": 0,
+        "max_consecutive_failures": 4,
+        "command_timeout_seconds": 123.0,
+        "max_run_seconds": 456.0,
+    }
+
+
+def test_cli_returns_a_failed_task_verification_as_a_debug_observation_without_rerunning_it(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+    model = ScriptedToolCallingModel(
+        [
+            AssistantTurn(
+                tool_calls=[
+                    ToolCall(
+                        "call-1",
+                        "verify_task",
+                        {
+                            "command": "exit 7",
+                            "scope": "focused check",
+                            "reason": "Shows the current implementation still fails.",
+                        },
+                    )
+                ]
+            ),
+            AssistantTurn(
+                tool_calls=[
+                    ToolCall(
+                        "call-2",
+                        "finish_task",
+                        {
+                            "root_cause": "The focused check failed.",
+                            "changes": ["No change was made."],
+                        },
+                    )
+                ]
+            ),
+        ]
+    )
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model),
+        ["run", str(target_repository), "--task", "Debug the failed check.", "--state-dir", str(state_directory)],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "UNVERIFIED" in result.output
+    assert len(model.requests) == 2
+    assert any(message["role"] == "tool" and '"exit_code": 7' in message["content"] for message in model.requests[1][0])
+    assert any(
+        message["role"] == "user" and "Recovery Observation (VERIFICATION_FAILURE)" in message["content"]
+        for message in model.requests[1][0]
+    )
+
+    run_directory = next(state_directory.iterdir())
+    metadata = json.loads((run_directory / "metadata.json").read_text())
+    verification = json.loads((run_directory / "verification.json").read_text())
+
+    assert metadata["failures"] == [
+        {
+            "category": "VERIFICATION_FAILURE",
+            "reason": "Task Verification exited with 7.",
+            "tool_name": "verify_task",
+        }
+    ]
+    assert metadata["recoveries"][0]["action"] == "DEBUG_OBSERVATION"
+    assert [item["command"] for item in verification["verifications"]] == ["exit 7"]
+
+
+def test_cli_uses_exponential_retry_recovery_for_a_transient_model_error(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+    model = TransientThenFinishModel()
+    retry_delays: list[float] = []
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model, sleeper=retry_delays.append),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Recover from a provider timeout.",
+            "--state-dir",
+            str(state_directory),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert len(model.requests) == 2
+    assert retry_delays == [0.25]
+    run_directory = next(state_directory.iterdir())
+    metadata = json.loads((run_directory / "metadata.json").read_text())
+
+    assert metadata["status"] == "UNVERIFIED"
+    assert metadata["failures"][0]["category"] == "MODEL_ERROR"
+    assert metadata["recoveries"][0] == {
+        "action": "RETRY_MODEL",
+        "category": "MODEL_ERROR",
+        "reason": "Retrying a transient model error after 0.25 seconds: provider request timed out",
+        "retry_delay_seconds": 0.25,
+    }
+
+
+def test_cli_stops_as_failed_after_a_non_transient_model_error(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+    model = NonTransientFailingModel()
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Handle a rejected provider request.",
+            "--state-dir",
+            str(state_directory),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "FAILED" in result.output
+    assert len(model.requests) == 1
+    run_directory = next(state_directory.iterdir())
+    metadata = json.loads((run_directory / "metadata.json").read_text())
+
+    assert metadata["status"] == "FAILED"
+    assert metadata["failures"][0]["category"] == "MODEL_ERROR"
+    assert metadata["recoveries"][0]["action"] == "STOP"
+
+
+def test_cli_keeps_an_ordinary_nonzero_command_as_a_tool_observation(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+    model = ScriptedToolCallingModel(
+        [
+            AssistantTurn(tool_calls=[ToolCall("call-1", "run_command", {"command": "exit 4"})]),
+            AssistantTurn(
+                tool_calls=[
+                    ToolCall(
+                        "call-2",
+                        "finish_task",
+                        {"root_cause": "The command result was inspected.", "changes": ["No change was needed."]},
+                    )
+                ]
+            ),
+        ]
+    )
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model),
+        ["run", str(target_repository), "--task", "Inspect a failing command.", "--state-dir", str(state_directory)],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert len(model.requests) == 2
+    run_directory = next(state_directory.iterdir())
+    metadata = json.loads((run_directory / "metadata.json").read_text())
+
+    assert metadata["failures"] == []
+    assert metadata["recoveries"] == []
+
+
+def test_cli_replans_after_a_repeated_tool_call_and_observation(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+    model = ScriptedToolCallingModel(
+        [
+            AssistantTurn(tool_calls=[ToolCall("call-1", "list_files", {"path": "."})]),
+            AssistantTurn(tool_calls=[ToolCall("call-2", "list_files", {"path": "."})]),
+            AssistantTurn(
+                tool_calls=[
+                    ToolCall(
+                        "call-3",
+                        "finish_task",
+                        {"root_cause": "A revised plan was made.", "changes": ["No change was needed."]},
+                    )
+                ]
+            ),
+        ]
+    )
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Avoid repeating inspection without progress.",
+            "--state-dir",
+            str(state_directory),
+            "--max-consecutive-failures",
+            "1",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert len(model.requests) == 3
+    run_directory = next(state_directory.iterdir())
+    metadata = json.loads((run_directory / "metadata.json").read_text())
+
+    assert metadata["failures"][0]["category"] == "NO_PROGRESS"
+    assert metadata["recoveries"][0]["action"] == "REPLAN"
+    assert metadata["budget"]["replans_used"] == 1
+    assert metadata["plan"]["version"] == 2
 
 
 def _docker_available() -> bool:

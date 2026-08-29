@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -116,10 +116,16 @@ class ToolRegistry:
             return {"ok": False, "error": "invalid_plan", "details": str(error)}
         except ValueError as error:
             return {"ok": False, "error": "invalid_repository_path", "details": str(error)}
+        except (OSError, TimeoutError) as error:
+            return {"ok": False, "error": "environment_error", "details": str(error)}
 
 
 def create_tool_registry(
-    environment: ExecutionEnvironment, target_repository: Path, plan_history: PlanHistory
+    environment: ExecutionEnvironment,
+    target_repository: Path,
+    plan_history: PlanHistory,
+    *,
+    command_timeout_seconds: float = 300.0,
 ) -> ToolRegistry:
     """Create repository and Agent Control Tools without exposing the Environment to the Runtime."""
 
@@ -135,7 +141,7 @@ def create_tool_registry(
         return str(relative) or "."
 
     def execute(command: Command) -> dict[str, Any]:
-        return environment.execute(command).to_dict()
+        return environment.execute(replace(command, timeout_seconds=command_timeout_seconds)).to_dict()
 
     def current_diff() -> dict[str, Any]:
         return execute(

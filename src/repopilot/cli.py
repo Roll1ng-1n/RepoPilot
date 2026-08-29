@@ -12,6 +12,7 @@ import typer
 from platformdirs import user_state_dir
 
 from repopilot.artifacts import RunArtifacts
+from repopilot.budget import RunBudget
 from repopilot.environment import (
     EnvironmentCreationError,
     EnvironmentRequest,
@@ -45,6 +46,8 @@ class EnvironmentOption(str, Enum):
 def create_app(
     model_factory: ModelFactory | None = None,
     environment_factory: ExecutionEnvironmentFactory | None = None,
+    *,
+    sleeper: Callable[[float], None] | None = None,
 ) -> typer.Typer:
     """Build the CLI, allowing Runtime Tests to replace composition boundaries."""
 
@@ -70,6 +73,11 @@ def create_app(
             help="Execution Environment.",
         ),
         image: str | None = typer.Option(None, "--image", help="Container image required by --environment docker."),
+        max_steps: int = typer.Option(30, "--max-steps", min=1),
+        max_replans: int = typer.Option(2, "--max-replans", min=0),
+        max_consecutive_failures: int = typer.Option(3, "--max-consecutive-failures", min=1),
+        command_timeout_seconds: float = typer.Option(300.0, "--command-timeout-seconds", min=0.001),
+        max_run_seconds: float = typer.Option(30.0 * 60.0, "--max-run-seconds", min=0.001),
     ) -> None:
         if task is None:
             task = typer.prompt("Task")
@@ -102,12 +110,26 @@ def create_app(
         secret_values = _credential_values(api_key)
         artifacts = RunArtifacts(state_dir or Path(user_state_dir("repopilot")) / "runs", secrets=secret_values)
         plan_history = PlanHistory.for_task(task)
+        budget = RunBudget(
+            max_steps=max_steps,
+            max_replans=max_replans,
+            max_consecutive_failures=max_consecutive_failures,
+            command_timeout_seconds=command_timeout_seconds,
+            max_run_seconds=max_run_seconds,
+        )
         try:
             result = AgentRuntime(
                 tool_calling_model,
-                create_tool_registry(execution_environment, repository, plan_history),
+                create_tool_registry(
+                    execution_environment,
+                    repository,
+                    plan_history,
+                    command_timeout_seconds=budget.command_timeout_seconds,
+                ),
                 artifacts,
                 plan_history,
+                budget,
+                sleeper,
             ).run(task, repository)
         finally:
             execution_environment.close()
