@@ -22,6 +22,14 @@ class RunArtifacts:
     def write_metadata(self, metadata: dict[str, Any]) -> None:
         self._metadata_path.write_text(json.dumps(self._redact(metadata), indent=2, sort_keys=True) + "\n")
 
+    def write_text(self, filename: str, content: str) -> None:
+        """Persist a named, redacted terminal Agent Run artifact."""
+        (self.path / filename).write_text(self._redact(content))
+
+    def write_json(self, filename: str, value: Any) -> None:
+        """Persist a named, redacted JSON terminal Agent Run artifact."""
+        (self.path / filename).write_text(json.dumps(self._redact(value), indent=2, sort_keys=True) + "\n")
+
     def append_trace(self, event_type: str, **data: Any) -> None:
         event = self._redact({"type": event_type, **data})
         with self._trace_path.open("a") as trace:

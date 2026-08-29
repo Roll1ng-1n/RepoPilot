@@ -73,6 +73,7 @@ class AgentRuntime:
                 )
                 if tool_call.name == "finish_task" and observation.get("ok"):
                     status = observation["result"]["status"]
+                    self._write_terminal_artifacts(observation["result"])
                     should_finish = True
             if should_finish:
                 break
@@ -88,6 +89,45 @@ class AgentRuntime:
             }
         )
         return AgentRunResult(self._artifacts.run_id, status, self._artifacts.path, self._plan_history.current)
+
+    def _write_terminal_artifacts(self, completion: dict[str, Any]) -> None:
+        self._artifacts.write_text("patch.diff", completion["final_patch"])
+        self._artifacts.write_json("verification.json", {"verifications": completion["verifications"]})
+        report = completion["report"]
+        self._artifacts.write_text(
+            "task_report.md",
+            self._format_task_report(report, completion["verifications"]),
+        )
+
+    @staticmethod
+    def _format_task_report(report: dict[str, Any], verifications: list[dict[str, Any]]) -> str:
+        verification_lines = [
+            f"- `{item['scope']}`: {item['reason']} ({'passed' if item['result']['exit_code'] == 0 else 'failed'})"
+            for item in verifications
+        ] or ["- No Task Verification was run."]
+        risk_lines = [f"- {risk}" for risk in report["risks"]] or ["- No risks reported."]
+        return "\n".join(
+            [
+                "# Task report",
+                "",
+                "## Root cause",
+                "",
+                report["root_cause"],
+                "",
+                "## Changes",
+                "",
+                *(f"- {change}" for change in report["changes"]),
+                "",
+                "## Verification",
+                "",
+                *verification_lines,
+                "",
+                "## Risks",
+                "",
+                *risk_lines,
+                "",
+            ]
+        )
 
     @staticmethod
     def _assistant_message(turn: Any) -> dict[str, Any]:

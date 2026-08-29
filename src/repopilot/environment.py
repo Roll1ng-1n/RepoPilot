@@ -15,6 +15,7 @@ class Command:
 
     argv: tuple[str, ...]
     timeout_seconds: float = 30.0
+    stdin: str | None = None
 
 
 @dataclass(frozen=True)
@@ -60,6 +61,7 @@ class LocalExecutionEnvironment:
                 cwd=self._target_repository,
                 capture_output=True,
                 check=False,
+                input=command.stdin,
                 text=True,
                 timeout=command.timeout_seconds,
             )

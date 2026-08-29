@@ -38,8 +38,24 @@ class RunCommandArguments(_ToolArguments):
     command: str = Field(min_length=1)
 
 
+class ApplyPatchArguments(_ToolArguments):
+    patch: str = Field(min_length=1)
+
+
+class ViewDiffArguments(_ToolArguments):
+    pass
+
+
+class VerifyTaskArguments(_ToolArguments):
+    command: str = Field(min_length=1)
+    scope: str = Field(min_length=1)
+    reason: str = Field(min_length=1)
+
+
 class FinishTaskArguments(_ToolArguments):
-    summary: str = Field(min_length=1)
+    root_cause: str = Field(min_length=1)
+    changes: list[str] = Field(min_length=1)
+    risks: list[str] = Field(default_factory=list)
 
 
 class UpdatePlanArguments(_ToolArguments):
@@ -108,6 +124,7 @@ def create_tool_registry(
     """Create repository and Agent Control Tools without exposing the Environment to the Runtime."""
 
     root = target_repository.resolve()
+    verifications: list[dict[str, Any]] = []
 
     def safe_path(path: str) -> str:
         resolved = (root / path).resolve()
@@ -119,6 +136,19 @@ def create_tool_registry(
 
     def execute(command: Command) -> dict[str, Any]:
         return environment.execute(command).to_dict()
+
+    def current_diff() -> dict[str, Any]:
+        return execute(
+            Command(
+                (
+                    "bash",
+                    "-lc",
+                    "git diff --no-ext-diff --binary --; "
+                    "git ls-files --others --exclude-standard -z | "
+                    "xargs -0 -r -n1 sh -c 'git diff --no-index --binary /dev/null \"$0\" || true'",
+                )
+            )
+        )
 
     def list_files(arguments: _ToolArguments) -> dict[str, Any]:
         path = safe_path(arguments.path)  # type: ignore[attr-defined]
@@ -149,8 +179,43 @@ def create_tool_registry(
     def run_command(arguments: _ToolArguments) -> dict[str, Any]:
         return execute(Command(("bash", "-lc", arguments.command)))  # type: ignore[attr-defined]
 
+    def apply_patch(arguments: _ToolArguments) -> dict[str, Any]:
+        result = execute(
+            Command(
+                ("git", "apply", "--whitespace=nowarn", "-"),
+                stdin=arguments.patch,  # type: ignore[attr-defined]
+            )
+        )
+        return {"applied": result["exit_code"] == 0, "result": result}
+
+    def view_diff(_arguments: _ToolArguments) -> dict[str, Any]:
+        result = current_diff()
+        return {"patch": result["stdout"], "result": result}
+
+    def verify_task(arguments: _ToolArguments) -> dict[str, Any]:
+        result = execute(Command(("bash", "-lc", arguments.command)))  # type: ignore[attr-defined]
+        verification = {
+            "command": arguments.command,  # type: ignore[attr-defined]
+            "scope": arguments.scope,  # type: ignore[attr-defined]
+            "reason": arguments.reason,  # type: ignore[attr-defined]
+            "result": result,
+        }
+        verifications.append(verification)
+        return verification
+
     def finish_task(arguments: _ToolArguments) -> dict[str, Any]:
-        return {"status": "UNVERIFIED", "summary": arguments.summary}  # type: ignore[attr-defined]
+        diff = current_diff()
+        status = "SUCCEEDED" if any(item["result"]["exit_code"] == 0 for item in verifications) else "UNVERIFIED"
+        return {
+            "status": status,
+            "final_patch": diff["stdout"],
+            "verifications": verifications,
+            "report": {
+                "root_cause": arguments.root_cause,  # type: ignore[attr-defined]
+                "changes": arguments.changes,  # type: ignore[attr-defined]
+                "risks": arguments.risks,  # type: ignore[attr-defined]
+            },
+        }
 
     def update_plan(arguments: _ToolArguments) -> dict[str, Any]:
         updated = plan_history.update_step(arguments.step_id, arguments.status)  # type: ignore[attr-defined]
@@ -173,7 +238,22 @@ def create_tool_registry(
             _ToolDefinition("read_file", "Read a bounded range of a repository file.", ReadFileArguments, read_file),
             _ToolDefinition("run_command", "Run a command in the Target Repository.", RunCommandArguments, run_command),
             _ToolDefinition(
-                "finish_task", "Finish the Agent Run with an unverified summary.", FinishTaskArguments, finish_task
+                "apply_patch", "Apply a unified diff patch to the Target Repository.", ApplyPatchArguments, apply_patch
+            ),
+            _ToolDefinition(
+                "view_diff", "Show the current uncommitted Target Repository diff.", ViewDiffArguments, view_diff
+            ),
+            _ToolDefinition(
+                "verify_task",
+                "Run an executable Task Verification with its scope and reason.",
+                VerifyTaskArguments,
+                verify_task,
+            ),
+            _ToolDefinition(
+                "finish_task",
+                "Finish the Agent Run with its root cause, changes, and risks.",
+                FinishTaskArguments,
+                finish_task,
             ),
             _ToolDefinition("update_plan", "Update the status of one Plan Step.", UpdatePlanArguments, update_plan),
             _ToolDefinition(
