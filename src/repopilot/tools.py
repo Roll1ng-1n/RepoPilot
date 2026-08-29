@@ -11,6 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from repopilot.environment import Command, ExecutionEnvironment
 from repopilot.model import ToolCall
+from repopilot.plan import PlanHistory, PlanInvariantError, PlanStep, PlanStepStatus
 
 
 class _ToolArguments(BaseModel):
@@ -39,6 +40,22 @@ class RunCommandArguments(_ToolArguments):
 
 class FinishTaskArguments(_ToolArguments):
     summary: str = Field(min_length=1)
+
+
+class UpdatePlanArguments(_ToolArguments):
+    step_id: str = Field(min_length=1)
+    status: PlanStepStatus
+
+
+class ReplanStepArguments(_ToolArguments):
+    id: str = Field(min_length=1)
+    description: str = Field(min_length=1)
+    completion_condition: str = Field(min_length=1)
+
+
+class ReplanArguments(_ToolArguments):
+    reason: str = Field(min_length=1)
+    steps: list[ReplanStepArguments] = Field(min_length=1)
 
 
 @dataclass(frozen=True)
@@ -79,12 +96,16 @@ class ToolRegistry:
             return {"ok": False, "error": "invalid_tool_arguments", "details": error.errors()}
         try:
             return {"ok": True, "result": definition.handler(arguments)}
+        except PlanInvariantError as error:
+            return {"ok": False, "error": "invalid_plan", "details": str(error)}
         except ValueError as error:
             return {"ok": False, "error": "invalid_repository_path", "details": str(error)}
 
 
-def create_tool_registry(environment: ExecutionEnvironment, target_repository: Path) -> ToolRegistry:
-    """Create the first vertical slice of read-only tools plus terminal Agent Control."""
+def create_tool_registry(
+    environment: ExecutionEnvironment, target_repository: Path, plan_history: PlanHistory
+) -> ToolRegistry:
+    """Create repository and Agent Control Tools without exposing the Environment to the Runtime."""
 
     root = target_repository.resolve()
 
@@ -131,6 +152,18 @@ def create_tool_registry(environment: ExecutionEnvironment, target_repository: P
     def finish_task(arguments: _ToolArguments) -> dict[str, Any]:
         return {"status": "UNVERIFIED", "summary": arguments.summary}  # type: ignore[attr-defined]
 
+    def update_plan(arguments: _ToolArguments) -> dict[str, Any]:
+        updated = plan_history.update_step(arguments.step_id, arguments.status)  # type: ignore[attr-defined]
+        return {"plan": updated.to_dict()}
+
+    def replan(arguments: _ToolArguments) -> dict[str, Any]:
+        replacement_steps = [
+            PlanStep(step.id, step.description, step.completion_condition)
+            for step in arguments.steps  # type: ignore[attr-defined]
+        ]
+        updated = plan_history.replan(replacement_steps, arguments.reason)  # type: ignore[attr-defined]
+        return {"plan": updated.to_dict(), "reason": arguments.reason}  # type: ignore[attr-defined]
+
     return ToolRegistry(
         [
             _ToolDefinition("list_files", "List files below a repository path.", ListFilesArguments, list_files),
@@ -141,6 +174,10 @@ def create_tool_registry(environment: ExecutionEnvironment, target_repository: P
             _ToolDefinition("run_command", "Run a command in the Target Repository.", RunCommandArguments, run_command),
             _ToolDefinition(
                 "finish_task", "Finish the Agent Run with an unverified summary.", FinishTaskArguments, finish_task
+            ),
+            _ToolDefinition("update_plan", "Update the status of one Plan Step.", UpdatePlanArguments, update_plan),
+            _ToolDefinition(
+                "replan", "Replace unfinished Plan Steps while preserving completed work.", ReplanArguments, replan
             ),
         ]
     )

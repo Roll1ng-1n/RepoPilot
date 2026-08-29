@@ -80,6 +80,7 @@ def test_cli_runs_a_read_only_native_tool_calling_agent_and_writes_safe_artifact
     assert metadata["status"] == "UNVERIFIED"
     assert [event["type"] for event in events] == [
         "run_started",
+        "plan_created",
         "tool_call",
         "tool_result",
         "tool_call",
@@ -99,6 +100,8 @@ def test_cli_runs_a_read_only_native_tool_calling_agent_and_writes_safe_artifact
         "read_file",
         "run_command",
         "finish_task",
+        "update_plan",
+        "replan",
     }
 
 
@@ -117,3 +120,111 @@ def test_cli_prompts_for_a_task_when_the_task_option_is_omitted(tmp_path: Path) 
 
     assert result.exit_code == 0, result.output
     assert model.requests[0][0][1]["content"] == "Inspect the repository."
+
+
+def test_cli_records_a_versioned_plan_and_replan_from_agent_control_tools(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+    model = ScriptedToolCallingModel(
+        [
+            AssistantTurn(
+                tool_calls=[
+                    ToolCall(
+                        "call-1",
+                        "replan",
+                        {
+                            "reason": "The repository needs inspection before implementation.",
+                            "steps": [
+                                {
+                                    "id": "inspect",
+                                    "description": "Inspect the repository structure.",
+                                    "completion_condition": "Relevant files are identified.",
+                                },
+                                {
+                                    "id": "implement",
+                                    "description": "Implement the requested change.",
+                                    "completion_condition": "The change is verified.",
+                                },
+                            ],
+                        },
+                    )
+                ]
+            ),
+            AssistantTurn(
+                tool_calls=[ToolCall("call-2", "update_plan", {"step_id": "inspect", "status": "IN_PROGRESS"})]
+            ),
+            AssistantTurn(
+                tool_calls=[ToolCall("call-3", "update_plan", {"step_id": "inspect", "status": "COMPLETED"})]
+            ),
+            AssistantTurn(
+                tool_calls=[
+                    ToolCall(
+                        "call-4",
+                        "replan",
+                        {
+                            "reason": "Inspection found a more direct implementation path.",
+                            "steps": [
+                                {
+                                    "id": "implement-directly",
+                                    "description": "Implement the direct change.",
+                                    "completion_condition": "The focused Runtime Test passes.",
+                                }
+                            ],
+                        },
+                    )
+                ]
+            ),
+            AssistantTurn(
+                tool_calls=[ToolCall("call-5", "update_plan", {"step_id": "implement-directly", "status": "COMPLETED"})]
+            ),
+            AssistantTurn(tool_calls=[ToolCall("call-6", "finish_task", {"summary": "Completed the plan."})]),
+        ]
+    )
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Implement a verified change.",
+            "--state-dir",
+            str(state_directory),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "Plan v3" in result.output
+    assert "[COMPLETED] Inspect the repository structure." in result.output
+    assert "[COMPLETED] Implement the direct change." in result.output
+    assert "Current Plan:" in model.requests[0][0][0]["content"]
+
+    run_directory = next(state_directory.iterdir())
+    metadata = json.loads((run_directory / "metadata.json").read_text())
+    events = [json.loads(line) for line in (run_directory / "trace.jsonl").read_text().splitlines()]
+
+    assert [plan["version"] for plan in metadata["plan_history"]] == [1, 2, 3]
+    assert metadata["plan_history"][2]["steps"] == [
+        {
+            "id": "inspect",
+            "description": "Inspect the repository structure.",
+            "completion_condition": "Relevant files are identified.",
+            "status": "COMPLETED",
+        },
+        {
+            "id": "implement-directly",
+            "description": "Implement the direct change.",
+            "completion_condition": "The focused Runtime Test passes.",
+            "status": "COMPLETED",
+        },
+    ]
+    assert [event["type"] for event in events if event["type"].startswith("plan_")] == [
+        "plan_created",
+        "plan_replanned",
+        "plan_updated",
+        "plan_updated",
+        "plan_replanned",
+        "plan_updated",
+    ]
+    assert events[-1] == {"type": "run_finished", "status": "UNVERIFIED"}

@@ -13,6 +13,7 @@ from platformdirs import user_state_dir
 from repopilot.artifacts import RunArtifacts
 from repopilot.environment import LocalExecutionEnvironment
 from repopilot.model import LiteLLMToolCallingModel, ToolCallingModel
+from repopilot.plan import PlanHistory
 from repopilot.runtime import AgentRuntime
 from repopilot.tools import create_tool_registry
 
@@ -57,15 +58,20 @@ def create_app(model_factory: ModelFactory | None = None) -> typer.Typer:
         secret_values = _credential_values(api_key)
         artifacts = RunArtifacts(state_dir or Path(user_state_dir("repopilot")) / "runs", secrets=secret_values)
         environment = LocalExecutionEnvironment(repository)
+        plan_history = PlanHistory.for_task(task)
         try:
             result = AgentRuntime(
                 tool_calling_model,
-                create_tool_registry(environment, repository),
+                create_tool_registry(environment, repository, plan_history),
                 artifacts,
+                plan_history,
             ).run(task, repository)
         finally:
             environment.close()
         typer.echo(f"Agent Run {result.run_id}: {result.status}")
+        typer.echo(f"Plan v{result.plan.version}")
+        for step in result.plan.steps:
+            typer.echo(f"- [{step.status.value}] {step.description}")
         typer.echo(f"Artifacts: {result.artifact_directory}")
 
     return app
