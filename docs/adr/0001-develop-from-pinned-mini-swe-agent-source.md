@@ -1,0 +1,3 @@
+# Develop from a pinned mini-SWE-agent source snapshot
+
+RepoPilot starts from the mini-SWE-agent v2.4.6 source snapshot and evolves it locally, while retaining its MIT license and recording the upstream version and commit in `UPSTREAM.md`. The snapshot will enter through a dedicated import commit so later Git history shows project changes; this was chosen over dependency-only composition or a rewrite to prioritize V1 capability breadth and permit cross-cutting changes without adapter overhead. Automatic compatibility with later mini-SWE-agent releases is not a goal, and project documentation must distinguish inherited capabilities from RepoPilot additions.
