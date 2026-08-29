@@ -1,10 +1,20 @@
 import json
+import os
+import shutil
 import subprocess
 from pathlib import Path
 
+import pytest
 from typer.testing import CliRunner
 
 from repopilot.cli import create_app
+from repopilot.environment import (
+    Command,
+    CommandResult,
+    EnvironmentCreationError,
+    EnvironmentRequest,
+    ExecutionEnvironment,
+)
 from repopilot.model import AssistantTurn, ToolCall
 
 
@@ -44,7 +54,31 @@ def _make_target_repository(path: Path) -> None:
     )
 
 
-def test_cli_completes_a_verified_patch_run_and_persists_its_evidence(tmp_path: Path) -> None:
+def _docker_available() -> bool:
+    executable = shutil.which("docker")
+    if executable is None:
+        return False
+    try:
+        subprocess.run([executable, "version"], capture_output=True, check=True, timeout=5)
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        return False
+    return True
+
+
+@pytest.mark.parametrize(
+    ("environment", "environment_arguments"),
+    [
+        ("local", []),
+        pytest.param(
+            "docker",
+            ["--image", os.environ.get("REPOPILOT_DOCKER_TEST_IMAGE", "python:3.12-bookworm")],
+            marks=pytest.mark.skipif(not _docker_available(), reason="Docker is unavailable"),
+        ),
+    ],
+)
+def test_cli_completes_a_verified_patch_run_and_persists_its_evidence(
+    tmp_path: Path, environment: str, environment_arguments: list[str]
+) -> None:
     target_repository = tmp_path / "target"
     _make_target_repository(target_repository)
     state_directory = tmp_path / "agent-runs"
@@ -101,11 +135,18 @@ diff --git a/README.md b/README.md
             "Replace the obsolete README text and verify it.",
             "--state-dir",
             str(state_directory),
+            "--environment",
+            environment,
+            *environment_arguments,
         ],
     )
 
     assert result.exit_code == 0, result.output
     assert "SUCCEEDED" in result.output
+    if environment == "local":
+        assert "Local Environment executes commands directly in the Target Repository." in result.output
+    else:
+        assert "not a security boundary" in result.output
     assert (target_repository / "README.md").read_text() == "RepoPilot verified change\n"
 
     run_directory = next(state_directory.iterdir())
@@ -154,6 +195,107 @@ diff --git a/README.md b/README.md
         "verify_task",
         "finish_task",
     }
+
+
+def test_cli_selects_an_environment_through_the_factory(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    requests: list[EnvironmentRequest] = []
+
+    class RecordingEnvironment:
+        closed = False
+
+        def execute(self, _command: Command) -> CommandResult:
+            return CommandResult(0, "", "", 0.0, False)
+
+        def close(self) -> None:
+            self.closed = True
+
+    environment = RecordingEnvironment()
+    model = ScriptedToolCallingModel(
+        [
+            AssistantTurn(
+                tool_calls=[
+                    ToolCall(
+                        "call-1",
+                        "finish_task",
+                        {
+                            "root_cause": "No changes were needed.",
+                            "changes": ["No repository changes were made."],
+                            "risks": ["No verification evidence was collected."],
+                        },
+                    )
+                ]
+            )
+        ]
+    )
+
+    def environment_factory(request: EnvironmentRequest) -> RecordingEnvironment:
+        requests.append(request)
+        return environment
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model, environment_factory),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Inspect the repository.",
+            "--state-dir",
+            str(tmp_path / "agent-runs"),
+            "--environment",
+            "docker",
+            "--image",
+            "repo-image",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert requests == [
+        EnvironmentRequest(target_repository=target_repository.resolve(), environment="docker", image="repo-image")
+    ]
+    assert environment.closed is True
+
+
+def test_cli_rejects_docker_without_an_image(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    model = ScriptedToolCallingModel([])
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model),
+        ["run", str(target_repository), "--task", "Inspect the repository.", "--environment", "docker"],
+    )
+
+    assert result.exit_code == 2
+    assert "requires an image" in result.output
+
+
+def test_cli_reports_an_unavailable_docker_environment_without_falling_back_to_local(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    model = ScriptedToolCallingModel([])
+
+    def unavailable_environment(_request: EnvironmentRequest) -> ExecutionEnvironment:
+        raise EnvironmentCreationError("Unable to start Docker Environment: docker is unavailable")
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model, unavailable_environment),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Inspect the repository.",
+            "--environment",
+            "docker",
+            "--image",
+            "repo-image",
+        ],
+    )
+
+    assert result.exit_code == 1
+    assert "docker is unavailable" in result.output
+    assert "Local Environment executes commands" not in result.output
 
 
 def test_cli_runs_a_read_only_native_tool_calling_agent_and_writes_safe_artifacts(tmp_path: Path) -> None:

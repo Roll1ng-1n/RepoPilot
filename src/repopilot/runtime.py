@@ -1,4 +1,4 @@
-"""A thin native Tool Calling runtime for one Local Agent Run."""
+"""A thin native Tool Calling runtime for one Agent Run."""
 
 from __future__ import annotations
 
