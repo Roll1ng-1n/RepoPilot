@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+import repopilot.benchmark as benchmark_module
 from repopilot.benchmark import (
     BenchmarkBudget,
     BenchmarkConfig,
@@ -132,6 +133,74 @@ def test_runner_runs_both_engines_in_order_on_independent_workspaces(tmp_path: P
     assert result.results[1].metrics["retries"] == 0
     assert result.results[1].metrics["replans"] == 1
     assert result.results[0].metrics["run_budget"] == result.results[1].metrics["run_budget"]
+
+
+def test_benchmark_redacts_api_key_from_baseline_trajectory_and_results(tmp_path: Path, monkeypatch) -> None:
+    api_key = "benchmark-api-key"
+    tasks_root = tmp_path / "tasks"
+    _write_task(tasks_root)
+    task = load_tasks(tasks_root)[0]
+    artifact_directory = tmp_path / "baseline"
+    artifact_directory.mkdir()
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    config = BenchmarkConfig(
+        tasks_directory=tasks_root,
+        output_directory=tmp_path / "results",
+        model=BenchmarkModel("test-model", api_key=api_key),
+        image="test-image",
+        engines=(BenchmarkEngine.BASELINE,),
+    )
+    request = benchmark_module.EngineRequest(
+        BenchmarkEngine.BASELINE,
+        task,
+        workspace,
+        artifact_directory,
+        config,
+        initial_head=None,
+    )
+
+    class FakeAgent:
+        def __init__(self) -> None:
+            self.saved_paths: list[Path | None] = []
+
+        def run(self, _task: str) -> dict[str, str]:
+            return {"exit_status": "Submitted"}
+
+        def save(self, path: Path | None, *_extra: dict) -> dict:
+            self.saved_paths.append(path)
+            trajectory = {
+                "info": {"exit_status": "Submitted"},
+                "messages": [{"content": api_key}],
+                "model": {"config": {"model_kwargs": {"api_key": api_key}}},
+            }
+            if path is not None:
+                path.write_text(json.dumps(trajectory))
+            return trajectory
+
+    agent = FakeAgent()
+    monkeypatch.setattr(benchmark_module, "get_model", lambda **_kwargs: object())
+    monkeypatch.setattr(benchmark_module, "get_config_from_spec", lambda *_args: {"agent": {}})
+    monkeypatch.setattr(benchmark_module, "get_environment", lambda *_args, **_kwargs: object())
+    monkeypatch.setattr(benchmark_module, "get_agent", lambda *_args, **_kwargs: agent)
+
+    run = benchmark_module._run_baseline(request)
+
+    assert api_key not in json.dumps(run.trajectory)
+    assert api_key not in (artifact_directory / "trajectory.json").read_text()
+    assert all(path is None for path in agent.saved_paths)
+
+    def fake_executor(_request):
+        return EngineRun(status="FAILED", error=f"provider error: {api_key}")
+
+    result = BenchmarkRunner(
+        config,
+        executors={BenchmarkEngine.BASELINE: fake_executor},
+    ).run()
+    output = config.output_directory
+    assert api_key not in json.dumps(result.to_dict())
+    assert api_key not in (output / "summary.json").read_text()
+    assert api_key not in (output / "seed-task" / "baseline" / "result.json").read_text()
 
 
 def test_runner_rejects_a_changed_snapshot_before_starting_an_engine(tmp_path: Path) -> None:

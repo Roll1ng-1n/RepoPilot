@@ -93,7 +93,8 @@ class BenchmarkModel:
     api_key: str | None = field(default=None, repr=False)
 
     def public_dict(self) -> dict[str, Any]:
-        result = {"model_name": self.model_name, "model_kwargs": self.model_kwargs}
+        model_kwargs = {key: value for key, value in self.model_kwargs.items() if key != "api_key"}
+        result = {"model_name": self.model_name, "model_kwargs": model_kwargs}
         if self.base_url is not None:
             result["base_url"] = self.base_url
         return result
@@ -406,6 +407,12 @@ class BenchmarkRunner:
                 else None
             )
             run = EngineRun(status=status, error=str(exception) or type(exception).__name__)
+        secrets = _benchmark_secret_values(self.config.model)
+        run.status = _redact_benchmark_value(run.status, secrets)
+        run.error = _redact_benchmark_value(run.error, secrets)
+        run.trajectory = _redact_benchmark_value(run.trajectory, secrets)
+        run.model_stats = _redact_benchmark_value(run.model_stats, secrets)
+        _redact_benchmark_artifacts(task_directory, secrets)
         if run.duration_seconds is None:
             run.duration_seconds = time.monotonic() - started
         if run.error is not None:
@@ -416,9 +423,13 @@ class BenchmarkRunner:
         patch_path.write_text(patch or "", encoding="utf-8")
         commits = capture_commits(workspace, initial_head)
         verifier = None if run.status == "ENVIRONMENT_UNAVAILABLE" else run_hidden_verifier(task, workspace)
+        verifier = _redact_benchmark_value(verifier, secrets)
         success = None if verifier is None else verifier.get("exit_code") == 0
-        metrics = _metrics_for_run(engine, run, task_directory, patch, commits, verifier)
+        metrics = _redact_benchmark_value(
+            _metrics_for_run(engine, run, task_directory, patch, commits, verifier), secrets
+        )
         metrics["run_budget"] = asdict(request.effective_budget)
+        error = _redact_benchmark_value(error, secrets)
         result = BenchmarkResult(task.task_id, engine, task_directory, run.status, success, metrics, verifier, error)
         (task_directory / "result.json").write_text(
             json.dumps(result.to_dict(), indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8"
@@ -552,7 +563,9 @@ def _run_baseline(request: EngineRequest) -> EngineRun:
             "step_limit": run_budget.max_steps,
             "wall_time_limit_seconds": max(1, int(run_budget.max_run_seconds)),
             "cost_limit": 0,
-            "output_path": trajectory_path,
+            # Upstream saves on every step.  Keep that intermediate serialization
+            # in memory so the benchmark seam can redact it before persistence.
+            "output_path": None,
         },
     )
     agent = get_agent(model, environment, agent_config, default_type="default")
@@ -566,14 +579,17 @@ def _run_baseline(request: EngineRequest) -> EngineRun:
     except Exception as exception:
         error = str(exception) or type(exception).__name__
     finally:
-        trajectory = agent.save(trajectory_path, {"benchmark": {"engine": BenchmarkEngine.BASELINE.value}})
+        raw_trajectory = agent.save(None, {"benchmark": {"engine": BenchmarkEngine.BASELINE.value}})
+        trajectory = _redact_benchmark_value(raw_trajectory, _benchmark_secret_values(config.model))
+        trajectory_path.parent.mkdir(parents=True, exist_ok=True)
+        trajectory_path.write_text(json.dumps(trajectory, indent=2), encoding="utf-8")
         _cleanup_baseline_environment(environment)
     return EngineRun(
         status=info.get("exit_status") or _trajectory_status(trajectory),
         duration_seconds=time.monotonic() - started,
         trajectory=trajectory,
         model_stats=_baseline_model_stats(trajectory),
-        error=error,
+        error=_redact_benchmark_value(error, _benchmark_secret_values(config.model)),
     )
 
 
@@ -632,7 +648,7 @@ def _run_repopilot(request: EngineRequest) -> EngineRun:
     model = _BenchmarkToolCallingModel(model=config.model)
     environment = DockerExecutionEnvironment(request.workspace, image=config.image)
     state_directory = request.artifact_directory / "run-state"
-    artifacts = RunArtifacts(state_directory, secrets=[])
+    artifacts = RunArtifacts(state_directory, secrets=_benchmark_secret_values(config.model))
     plan_history = PlanHistory.for_task(request.task.task)
     budget = request.effective_budget.to_run_budget()
     runtime = AgentRuntime(
@@ -649,7 +665,9 @@ def _run_repopilot(request: EngineRequest) -> EngineRun:
         checkpoint_model={
             "backend": "litellm",
             "model_name": config.model.model_name,
-            "model_kwargs": config.model.model_kwargs,
+            "model_kwargs": {
+                key: value for key, value in config.model.model_kwargs.items() if key != "api_key"
+            },
             "base_url": config.model.base_url,
         },
         checkpoint_environment={"backend": "docker", "image": config.image},
@@ -672,7 +690,7 @@ def _run_repopilot(request: EngineRequest) -> EngineRun:
         duration_seconds=time.monotonic() - started,
         run_result=result,
         model_stats=model.stats(),
-        error=error,
+        error=_redact_benchmark_value(error, _benchmark_secret_values(config.model)),
     )
 
 
@@ -683,6 +701,47 @@ def _copy_runtime_artifacts(source: Path, destination: Path) -> None:
         target = destination / path.name
         if path.is_file():
             shutil.copy2(path, target)
+
+
+def _benchmark_secret_values(model: BenchmarkModel) -> list[str]:
+    values: list[str] = []
+    for candidate in (model.api_key, model.model_kwargs.get("api_key")):
+        if isinstance(candidate, str) and candidate and candidate not in values:
+            values.append(candidate)
+    return values
+
+
+def _redact_benchmark_value(value: Any, secrets: Sequence[str]) -> Any:
+    if isinstance(value, str):
+        redacted = value
+        for secret in secrets:
+            redacted = redacted.replace(secret, "[REDACTED]")
+        return redacted
+    if isinstance(value, dict):
+        return {
+            _redact_benchmark_value(key, secrets): _redact_benchmark_value(item, secrets)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_redact_benchmark_value(item, secrets) for item in value]
+    if isinstance(value, tuple):
+        return tuple(_redact_benchmark_value(item, secrets) for item in value)
+    return value
+
+
+def _redact_benchmark_artifacts(directory: Path, secrets: Sequence[str]) -> None:
+    if not secrets:
+        return
+    for path in directory.rglob("*"):
+        if not path.is_file() or "workspace" in path.relative_to(directory).parts:
+            continue
+        try:
+            content = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        redacted = _redact_benchmark_value(content, secrets)
+        if redacted != content:
+            path.write_text(redacted, encoding="utf-8")
 
 
 def run_hidden_verifier(task: BenchmarkTask, workspace: Path) -> dict[str, Any] | None:
