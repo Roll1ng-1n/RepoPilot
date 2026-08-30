@@ -732,7 +732,14 @@ def _finish_result(
 
 
 def _publish_artifacts(source: Path, destination: Path) -> None:
-    for filename in ("metadata.json", "trace.jsonl", "checkpoint.json", "plan.json", "verification.json"):
+    for filename in (
+        "metadata.json",
+        "trace.jsonl",
+        "checkpoint.json",
+        "plan.json",
+        "verification.json",
+        "task_report.md",
+    ):
         source_file = source / filename
         if source_file.is_file():
             shutil.copy2(source_file, destination / filename)

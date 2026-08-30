@@ -9,10 +9,10 @@ evidence; it is not a claim that every external model, Docker host, or Target Re
 
 | Capability | Classification | Evidence |
 | --- | --- | --- |
-| Baseline Agent and trajectory execution | Upstream reuse | `src/repopilot/benchmark.py` composes `minisweagent.agents.get_agent`; baseline `trajectory.json` is retained by the benchmark. |
-| LiteLLM/provider model adapters | Upstream reuse | `minisweagent.models` and the pinned provenance in [UPSTREAM.md](../UPSTREAM.md); RepoPilot's model adapter keeps the upstream model boundary in `src/repopilot/model.py`. |
-| Basic Docker lifecycle | Upstream reuse with RepoPilot adapter | `src/repopilot/environment.py` delegates container lifecycle to `minisweagent.environments.docker.DockerEnvironment`; shared behavior is exercised in `tests/repopilot/test_environment.py`. |
-| Upstream step, cost, wall-time, retry, and trajectory primitives | Upstream reuse | The pinned source and verification record in [UPSTREAM.md](../UPSTREAM.md); RepoPilot benchmark metrics preserve unavailable values as `null`. |
+| Baseline Agent and trajectory execution | Upstream reuse | Trigger: `repopilot benchmark --engine baseline`; test: `tests/repopilot/test_benchmark.py`; artifact: baseline `trajectory.json`; limit: it has no RepoPilot Replan/structured Recovery metrics, which remain `null`. |
+| LiteLLM/provider model adapters | Upstream reuse | Trigger: `repopilot run --model ...` and both benchmark commands; test: `tests/repopilot/test_model_metrics.py`; Trace: `model_response` usage/cost; limit: native Tool Calling/provider availability and returned usage are external requirements. Provenance is in [UPSTREAM.md](../UPSTREAM.md). |
+| Basic Docker lifecycle | Upstream reuse with RepoPilot adapter | Trigger: `repopilot run --environment docker --image ...`, `benchmark`, and `swebench-smoke`; tests: `tests/repopilot/test_environment.py`; artifact: environment/preflight errors in result and Trace; limit: the host daemon and image must already be usable, and Docker is not claimed as a complete security boundary. |
+| Upstream step, cost, wall-time, retry, and trajectory primitives | Upstream reuse | Trigger: baseline benchmark budget flags; test: `tests/repopilot/test_benchmark.py`; artifact: baseline `trajectory.json` and normalized metrics; limit: unsupported structured metrics are `null`, and provider cost is not estimated. |
 
 These inherited pieces are intentionally not presented as RepoPilot inventions. RepoPilot keeps the recognizable
 `minisweagent` package and records the exact v2.4.6 source revision in [UPSTREAM.md](../UPSTREAM.md).

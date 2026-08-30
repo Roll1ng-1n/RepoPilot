@@ -98,6 +98,10 @@ The current SWE-bench Lite smoke record is deliberately not presented as a model
 A model-backed SWE-bench smoke additionally requires the official `swebench` Python package and the pinned image to
 be available locally. Missing verifier or image prerequisites are recorded before a model is constructed.
 
+```bash
+uv pip install swebench
+```
+
 Missing provider usage, cost, or timing data is recorded as JSON `null`; RepoPilot does not estimate it. The six-task
 benchmark is development-time regression evidence with a small fixed sample, not a statistically powered comparison
 or a generalization claim.

@@ -87,6 +87,8 @@ def test_ready_preflight_runs_model_and_persists_patch_cost_and_verifier(tmp_pat
         instance: dict[str, object], model: object, artifact_directory: Path, _config: SWEbenchSmokeConfig
     ) -> AgentExecution:
         agent_calls.append((instance, model))
+        run_state = next((artifact_directory / "run-state").iterdir())
+        (run_state / "task_report.md").write_text("# Task report\n", encoding="utf-8")
         return AgentExecution(
             status="SUCCEEDED",
             patch="diff --git a/foo.py b/foo.py\n",
@@ -109,6 +111,7 @@ def test_ready_preflight_runs_model_and_persists_patch_cost_and_verifier(tmp_pat
     assert len(agent_calls) == 1
     artifact_directory = tmp_path / "results" / INSTANCE_ID
     assert (artifact_directory / "patch.diff").read_text().startswith("diff --git")
+    assert (artifact_directory / "task_report.md").read_text() == "# Task report\n"
     assert json.loads((artifact_directory / "trajectory.json").read_text()) == {"messages": []}
     saved = json.loads((artifact_directory / "result.json").read_text())
     assert saved["metrics"]["model_calls"] == 2
