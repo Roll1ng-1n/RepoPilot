@@ -6,7 +6,7 @@ import json
 import os
 import uuid
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -38,6 +38,7 @@ from repopilot.inspection import load_run_inspection, render_human
 from repopilot.model import LiteLLMToolCallingModel, ToolCallingModel
 from repopilot.plan import PlanHistory, PlanInvariantError
 from repopilot.runtime import AgentRuntime
+from repopilot.swebench_smoke import DEFAULT_IMAGE, SWEbenchSmokeConfig, SWEbenchSmokeResult, run_swebench_smoke
 from repopilot.tools import create_tool_registry
 
 
@@ -46,10 +47,12 @@ class ModelOptions:
     model_name: str | None
     api_key: str | None
     base_url: str | None
+    model_kwargs: dict[str, Any] = field(default_factory=dict)
 
 
 ModelFactory = Callable[[ModelOptions], ToolCallingModel]
 BenchmarkRunner = Callable[[BenchmarkConfig], BenchmarkRun]
+SmokeRunner = Callable[[SWEbenchSmokeConfig], SWEbenchSmokeResult]
 
 _BUILTIN_BENCHMARK_TASKS = Path(__file__).with_name("benchmark_tasks")
 
@@ -67,6 +70,8 @@ def create_app(
     *,
     sleeper: Callable[[float], None] | None = None,
     benchmark_runner: BenchmarkRunner | None = None,
+    smoke_runner: SmokeRunner | None = None,
+    swebench_smoke_runner: SmokeRunner | None = None,
 ) -> typer.Typer:
     """Build the CLI, allowing Runtime Tests to replace composition boundaries."""
 
@@ -74,6 +79,7 @@ def create_app(
     selected_model_factory = model_factory or _create_litellm_model
     selected_environment_factory = environment_factory or create_execution_environment
     selected_benchmark_runner = benchmark_runner or run_benchmark
+    selected_smoke_runner = smoke_runner or swebench_smoke_runner
 
     def print_result(result: Any) -> None:
         typer.echo(f"Agent Run {result.run_id}: {result.status}")
@@ -100,7 +106,7 @@ def create_app(
             help="Execution Environment.",
         ),
         image: str | None = typer.Option(None, "--image", help="Container image required by --environment docker."),
-        max_steps: int = typer.Option(30, "--max-steps", min=1),
+        max_steps: int = typer.Option(50, "--max-steps", min=1),
         max_replans: int = typer.Option(2, "--max-replans", min=0),
         max_consecutive_failures: int = typer.Option(3, "--max-consecutive-failures", min=1),
         command_timeout_seconds: float = typer.Option(300.0, "--command-timeout-seconds", min=0.001),
@@ -287,6 +293,80 @@ def create_app(
             typer.echo(f"- {item.task_id} / {item.engine.value}: {success} (Agent Run: {item.status or 'unknown'})")
         typer.echo(f"Summary: {benchmark_run.output_directory / 'summary.json'}")
 
+    @app.command("swebench-smoke")
+    def swebench_smoke(
+        state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
+        model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
+        api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
+        base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+        image: str = typer.Option(DEFAULT_IMAGE, "--image", help="Locally available Docker image for the pinned SWE-bench instance."),
+        temperature: float = typer.Option(0.0, "--temperature"),
+        max_steps: int = typer.Option(30, "--max-steps", min=1),
+        max_replans: int = typer.Option(2, "--max-replans", min=0),
+        max_consecutive_failures: int = typer.Option(3, "--max-consecutive-failures", min=1),
+        command_timeout_seconds: float = typer.Option(300.0, "--command-timeout-seconds", min=0.001),
+        max_run_seconds: float = typer.Option(30.0 * 60.0, "--max-run-seconds", min=0.001),
+        max_cost_usd: float = typer.Option(3.0, "--max-cost-usd", min=0.0),
+        verifier_timeout_seconds: float = typer.Option(30.0 * 60.0, "--verifier-timeout-seconds", min=0.001),
+        docker_executable: str | None = typer.Option(None, "--docker-executable", envvar="MSWEA_DOCKER_EXECUTABLE"),
+    ) -> None:
+        """Run the one pinned SWE-bench Lite smoke and retain its artifacts."""
+
+        smoke_root = state_dir or Path(user_state_dir("repopilot")) / "swebench-smoke"
+        output_directory = smoke_root.resolve() / uuid.uuid4().hex
+        config_kwargs: dict[str, Any] = {
+            "output_directory": output_directory,
+            "model_name": model or "unspecified",
+            "model_kwargs": {"temperature": temperature},
+            "image": image,
+            "max_steps": max_steps,
+            "max_replans": max_replans,
+            "max_consecutive_failures": max_consecutive_failures,
+            "command_timeout_seconds": command_timeout_seconds,
+            "max_run_seconds": max_run_seconds,
+            "max_cost_usd": max_cost_usd,
+            "verifier_timeout_seconds": verifier_timeout_seconds,
+        }
+        if docker_executable is not None:
+            config_kwargs["docker_executable"] = docker_executable
+        try:
+            config = SWEbenchSmokeConfig(**config_kwargs)
+        except ValueError as error:
+            raise typer.BadParameter(str(error)) from error
+
+        smoke_model_factory = None
+        if model:
+            options = ModelOptions(
+                model_name=model,
+                api_key=api_key,
+                base_url=base_url,
+                model_kwargs=dict(config.model_kwargs),
+            )
+
+            def create_smoke_model(_instance: dict[str, Any]) -> ToolCallingModel:
+                return selected_model_factory(options)
+
+            smoke_model_factory = create_smoke_model
+
+        try:
+            smoke_result = (
+                selected_smoke_runner(config)
+                if selected_smoke_runner is not None
+                else run_swebench_smoke(config, model_factory=smoke_model_factory)
+            )
+        except (FileNotFoundError, OSError, RuntimeError, ValueError) as error:
+            typer.echo(f"Error: {error}", err=True)
+            typer.echo(f"Artifacts: {output_directory}")
+            raise typer.Exit(code=1) from error
+
+        typer.echo(f"SWE-bench Smoke: {smoke_result.status}")
+        typer.echo(f"Instance: {smoke_result.instance_id}")
+        typer.echo(f"Artifacts: {smoke_result.artifact_directory}")
+        if smoke_result.success is not None:
+            typer.echo(f"Success: {smoke_result.success}")
+        if smoke_result.error:
+            typer.echo(f"Error: {smoke_result.error}")
+
     def _resume(
         run_id: str = typer.Argument(..., help="The persisted Agent Run ID."),
         state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
@@ -443,6 +523,7 @@ def _create_litellm_model(options: ModelOptions) -> ToolCallingModel:
         model_name=options.model_name,
         api_key=options.api_key,
         base_url=options.base_url,
+        model_kwargs=options.model_kwargs,
     )
 
 

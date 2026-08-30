@@ -1,0 +1,35 @@
+{
+  "dataset_name": "SWE-bench/SWE-bench_Lite",
+  "dataset_revision": "b0dde1093fe417d83b7184254edf8199c1f0dff5",
+  "error": "Error response from daemon: No such image: swebench/sweb.eval.x86_64.sqlfluff_1776_sqlfluff-1625:latest\n",
+  "image": "docker.io/swebench/sweb.eval.x86_64.sqlfluff_1776_sqlfluff-1625:latest",
+  "instance_id": "sqlfluff__sqlfluff-1625",
+  "metrics": {
+    "cost_usd": null,
+    "model_calls": 0
+  },
+  "model": "not-called/environment-preflight",
+  "preflight": {
+    "checks": [
+      {
+        "command": [
+          "docker",
+          "image",
+          "inspect",
+          "docker.io/swebench/sweb.eval.x86_64.sqlfluff_1776_sqlfluff-1625:latest"
+        ],
+        "duration_seconds": 0.022793516000092495,
+        "exit_code": 1,
+        "stderr": "Error response from daemon: No such image: swebench/sweb.eval.x86_64.sqlfluff_1776_sqlfluff-1625:latest\n",
+        "stdout": "[]\n"
+      }
+    ],
+    "error": "Error response from daemon: No such image: swebench/sweb.eval.x86_64.sqlfluff_1776_sqlfluff-1625:latest\n",
+    "image": "docker.io/swebench/sweb.eval.x86_64.sqlfluff_1776_sqlfluff-1625:latest",
+    "status": "ENVIRONMENT_UNAVAILABLE"
+  },
+  "split": "dev",
+  "status": "ENVIRONMENT_UNAVAILABLE",
+  "success": null,
+  "verifier": null
+}

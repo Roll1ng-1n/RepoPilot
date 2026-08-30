@@ -1,0 +1,19 @@
+{
+  "checks": [
+    {
+      "command": [
+        "docker",
+        "image",
+        "inspect",
+        "docker.io/swebench/sweb.eval.x86_64.sqlfluff_1776_sqlfluff-1625:latest"
+      ],
+      "duration_seconds": 0.022793516000092495,
+      "exit_code": 1,
+      "stderr": "Error response from daemon: No such image: swebench/sweb.eval.x86_64.sqlfluff_1776_sqlfluff-1625:latest\n",
+      "stdout": "[]\n"
+    }
+  ],
+  "error": "Error response from daemon: No such image: swebench/sweb.eval.x86_64.sqlfluff_1776_sqlfluff-1625:latest\n",
+  "image": "docker.io/swebench/sweb.eval.x86_64.sqlfluff_1776_sqlfluff-1625:latest",
+  "status": "ENVIRONMENT_UNAVAILABLE"
+}
