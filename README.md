@@ -1,8 +1,132 @@
+# RepoPilot V1 — 可评测、可恢复的软件工程 Agent
+
+RepoPilot is a CLI-first software-engineering Agent for making bounded, explainable, and verifiable changes in a
+Target Repository. A run forms a Plan, uses structured Tool Calls to inspect and modify code, runs Task Verification,
+and leaves a Checkpoint, Trace, Patch, and human-readable report. The project is designed as a small, inspectable V1
+for engineering workflows and learning—not as a claim of autonomous production safety or model performance.
+
+RepoPilot is developed from the pinned mini-SWE-agent v2.4.6 source snapshot. The retained `minisweagent` package,
+upstream license, and source attribution are described in [UPSTREAM.md](UPSTREAM.md). The [capability source
+matrix](docs/repopilot-capabilities.md) separates upstream reuse, RepoPilot extensions, and RepoPilot additions.
+
+## Install and quick demo
+
+From a checkout, install the CLI and development dependencies in an isolated environment:
+
+```bash
+uv venv
+source .venv/bin/activate
+uv pip install -e ".[dev]"
+```
+
+`repopilot run` requires a model that supports OpenAI-compatible native Tool Calling and the provider's credentials.
+The following is a minimal Local Environment invocation; Local runs execute commands directly in the Target
+Repository:
+
+```bash
+export REPOPILOT_MODEL=provider/model-name
+repopilot run /path/to/target-repository \
+  --task "Fix the failing parser tests and verify the change." \
+  --environment local
+```
+
+The CLI prints an Agent Run ID, current Plan, terminal status, and artifact directory. A successful run is not
+assumed by this example: it depends on the configured model, repository, and verification evidence.
+
+## CLI workflow
+
+The same CLI exposes the main Agent Run lifecycle:
+
+```bash
+# Inspect a persisted run without executing it (use --json for one machine-readable document).
+repopilot inspect RUN_ID --state-dir /path/to/state --json
+
+# Resume a STOPPED run after recreating its Execution Environment.
+repopilot resume RUN_ID --state-dir /path/to/state --model provider/model-name
+
+# Resolve a pending Human Approval, then let the run continue from its Checkpoint.
+repopilot approve RUN_ID --state-dir /path/to/state
+repopilot reject RUN_ID --state-dir /path/to/state
+```
+
+`run` defaults to the Local Environment and prints an explicit warning because it can modify the Target Repository
+directly. Pass `--environment docker --image python:3.12-slim` to use the Docker backend instead. Docker bind-mounts
+the Target Repository at `/workspace`; it is an execution backend, not a complete security boundary. Docker may be
+unavailable on a particular machine, in which case the benchmark records `ENVIRONMENT_UNAVAILABLE` rather than
+silently falling back to Local execution.
+
+## Architecture at a glance
+
+The composition layer in `repopilot.cli` creates a model, Execution Environment, Tool Registry, Plan, Context
+Strategy, Run Budget, and artifact store. `AgentRuntime` drives the bounded Agent Run. The Tool Registry validates
+native Tool Calls and dispatches repository, command, verification, Git, and Agent Control operations. Local and
+Docker backends implement the same Execution Environment protocol. Checkpoints make STOPPED and
+`WAITING_FOR_APPROVAL` runs resumable; JSONL Trace events retain the complete audit history even when the prompt
+context is compressed.
+
+For a compact evidence map, see [Capability source matrix](docs/repopilot-capabilities.md). It links each stated
+capability to the relevant CLI path, Runtime Test, Trace/artifact, or implementation source. The
+[design validation record](docs/repopilot-design-validation-record.md) preserves selected failures, root causes,
+fixes, verification, and associated commits.
+
+## Fixed Agent Benchmark
+
+```bash
+repopilot benchmark \
+  --model provider/model-name \
+  --image python:3.12-slim \
+  --task seed-cross-file \
+  --task workflow-long-chain \
+  --engine repopilot
+```
+
+Repeat `--task` to run selected fixed tasks; omit it to run the six-task suite. Repeat `--engine` to choose the
+baseline, RepoPilot, or both. Each task has a fixed snapshot revision/hash, task statement, host-only hidden
+verifier, success condition, timeout, and Run Budget. The runner creates independent Git workspaces and preserves
+raw results, patches, commits, and verification output. See [benchmark details](docs/repopilot-benchmark.md) for the
+task list and behavior coverage.
+
+The checked-in [micro-benchmark summary](docs/evidence/micro-benchmark-v1/summary.md) contains 12 real
+task/engine attempts. All are `ENVIRONMENT_UNAVAILABLE` because the configured Docker image was unavailable; no
+model-backed task completed, so no success rate is reported.
+
+The current SWE-bench Lite smoke record is deliberately not presented as a model result:
+
+`ENVIRONMENT_UNAVAILABLE` — the pinned image preflight ran, but the Agent Run did not; no model was called. See the
+[raw result](docs/evidence/swebench-lite-smoke-v1/sqlfluff__sqlfluff-1625/result.json).
+
+A model-backed SWE-bench smoke additionally requires the official `swebench` Python package and the pinned image to
+be available locally. Missing verifier or image prerequisites are recorded before a model is constructed.
+
+Missing provider usage, cost, or timing data is recorded as JSON `null`; RepoPilot does not estimate it. The six-task
+benchmark is development-time regression evidence with a small fixed sample, not a statistically powered comparison
+or a generalization claim.
+
+## Known limitations and Out of Scope
+
+- Local execution directly affects the Target Repository and should be treated as a developer-controlled environment.
+- Docker isolation depends on the host and configured image; Docker is not presented as a complete security boundary.
+- Model/provider availability, credentials, native Tool Calling support, and returned usage data are external
+  dependencies. A failed or unavailable environment is evidence about execution availability, not task correctness.
+- The benchmark has six tiny fixed tasks and does not establish success rates, cost rankings, or general performance.
+- V1 formally verifies Python Target Repositories; other languages are not claimed as supported by this evidence.
+- Human Approval is a lightweight best-effort risk policy. Git support is local commit only; push, pull, rebase,
+  reset, and Pull Request creation are unsupported.
+- RAG Memory, multi-agent orchestration, Web UI, remote execution backends, and full SWE-bench runs are out of scope.
+- The SWE-bench Lite smoke is currently `ENVIRONMENT_UNAVAILABLE` and has no model-call result to report.
+
+---
+
+## Upstream mini-SWE-agent base
+
+The material below is the retained upstream project overview for attribution. Its Docker, model, and SWE-bench
+statements describe mini-SWE-agent upstream, not RepoPilot V1 runs or results.
+
 <div align="center">
 <a href="https://mini-swe-agent.com/latest/"><img src="https://github.com/SWE-agent/mini-swe-agent/raw/main/docs/assets/mini-swe-agent-banner.svg" alt="mini-swe-agent banner" style="height: 7em"/></a>
 </div>
 
-# The minimal AI software engineering agent
+### The minimal AI software engineering agent
 
 📣 [mini-swe-agent now powers Ramp SWE-Bench](https://labs.ramp.com/swebench)<br/>
 📣 [mini-swe-agent beats Claude Code and Codex on DeepSWE](https://deepswe.datacurve.ai/blog#evaluation-harness)<br/>

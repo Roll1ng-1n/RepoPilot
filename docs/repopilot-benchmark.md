@@ -85,5 +85,8 @@ The default run has six fixed tasks and two engine attempts per task (12 task/en
 development-time regression suite for comparing the two local execution paths and catching changes in Planning,
 Recovery, Replan, Human Approval, Git, and verification behavior. It is not a statistically powered benchmark and
 does not support generalization or performance claims about models, repositories, or production workloads. Results
-are raw evidence, including failures and unavailable environments; the repository contains no prefilled benchmark
-results. Running the command can make paid model calls and may pull the configured Docker image.
+are raw evidence, including failures and unavailable environments. The checked-in [summary at
+`docs/evidence/micro-benchmark-v1/summary.md`](evidence/micro-benchmark-v1/summary.md)
+contains the current 12-sample run: all 12 are `ENVIRONMENT_UNAVAILABLE`, with zero model calls and `success: null`.
+No model-backed task completed, so a model success rate is unavailable (0/0, not 0%). Running the command can make
+paid model calls and may pull the configured Docker image.
