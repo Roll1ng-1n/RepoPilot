@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "workflow-human-approval-git",
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "approval-git-v1",
+    "sha256": "4dea8804affd3c0fbfc873177fcd4279e06b4e93c30beae7f2e2373bb766f01d"
+  },
+  "task_statement": "Fix the completed status in this small CLI: `python src/cli.py 'Ship parser' --done` must print `[done] Ship parser`, while the default command remains `[todo] Ship parser`. Trace the call into src/labels.py, make the behavior change, then stage the changed file and create a local Git commit with a useful message. Do not push or create a Pull Request.",
+  "timeout_seconds": 180,
+  "run_budget": {
+    "max_steps": 15,
+    "max_replans": 1,
+    "max_consecutive_failures": 2,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 180
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify_workflow_human_approval_git.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

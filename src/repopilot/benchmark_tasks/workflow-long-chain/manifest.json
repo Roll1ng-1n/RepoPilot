@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "workflow-long-chain",
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "workflow-v1",
+    "sha256": "10fd390fc6b5a7eb03448934451e8036434c6171434c3e4e6b7c45d1c3804a6f"
+  },
+  "task_statement": "Trace the report request through src/cli.py, src/command.py, src/workflow.py, and src/formatting.py, then fix compact mode. With `python src/cli.py '  Repo   Pilot ' 'Ship   safely! ' --compact`, emit exactly `Repo Pilot: Ship safely!`; without --compact emit `Repo Pilot` and `Ship safely!` on separate lines. Collapse extra whitespace in both values while preserving punctuation and case.",
+  "timeout_seconds": 180,
+  "run_budget": {
+    "max_steps": 15,
+    "max_replans": 1,
+    "max_consecutive_failures": 2,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 180
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify_workflow_long_chain.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

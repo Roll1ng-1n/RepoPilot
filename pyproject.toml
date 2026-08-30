@@ -251,6 +251,9 @@ skip-magic-trailing-comma = false
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
 
+[tool.mypy]
+exclude = ["^src/repopilot/benchmark_tasks/"]
+
 [tool.typos.default.extend-identifiers]
 # *sigh* this just isn't worth the cost of fixing
 ACI = "ACI"

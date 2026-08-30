@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -152,14 +153,70 @@ def test_runner_rejects_a_changed_snapshot_before_starting_an_engine(tmp_path: P
     assert called is False
 
 
+def test_runner_records_an_unavailable_environment_without_running_the_verifier(tmp_path: Path) -> None:
+    tasks_root = tmp_path / "tasks"
+    _write_task(tasks_root)
+
+    def unavailable_environment(_request):
+        raise subprocess.CalledProcessError(125, ["docker", "run"])
+
+    config = BenchmarkConfig(
+        tasks_directory=tasks_root,
+        output_directory=tmp_path / "results",
+        model=BenchmarkModel("test"),
+        image="missing-image",
+        engines=(BenchmarkEngine.REPOPILOT,),
+    )
+
+    result = BenchmarkRunner(config, executors={BenchmarkEngine.REPOPILOT: unavailable_environment}).run()
+
+    assert result.results[0].status == "ENVIRONMENT_UNAVAILABLE"
+    assert result.results[0].success is None
+    assert result.results[0].verifier is None
+
+
+def test_runner_can_select_one_task_for_an_independent_repeat(tmp_path: Path) -> None:
+    tasks_root = tmp_path / "tasks"
+    _write_task(tasks_root, task_id="first-task")
+    _write_task(tasks_root, task_id="second-task")
+    seen: list[str] = []
+
+    def fake_executor(request):
+        seen.append(request.task.task_id)
+        (request.workspace / "value.txt").write_text("fixed\n")
+        return EngineRun(status="SUCCEEDED")
+
+    config = BenchmarkConfig(
+        tasks_directory=tasks_root,
+        output_directory=tmp_path / "results",
+        model=BenchmarkModel("test"),
+        image="test-image",
+        engines=(BenchmarkEngine.REPOPILOT,),
+        task_ids=("second-task",),
+    )
+
+    result = BenchmarkRunner(config, executors={BenchmarkEngine.REPOPILOT: fake_executor}).run()
+
+    assert seen == ["second-task"]
+    assert [task.task_id for task in result.tasks] == ["second-task"]
+
+
 def test_bundled_manifests_load_with_revisions_and_host_verifiers() -> None:
     tasks_root = Path(__file__).resolve().parents[2] / "src" / "repopilot" / "benchmark_tasks"
+    revisions = {
+        "seed-single-file": "seed-v1",
+        "seed-cross-file": "seed-v1",
+        "recovery-public-failure": "recovery-v1",
+        "replan-new-evidence": "replan-v1",
+        "workflow-long-chain": "workflow-v1",
+        "workflow-human-approval-git": "approval-git-v1",
+    }
 
     tasks = load_tasks(tasks_root)
 
-    assert {task.task_id for task in tasks} == {"seed-single-file", "seed-cross-file"}
+    assert {task.task_id for task in tasks} == set(revisions)
     for task in tasks:
-        assert task.snapshot_revision == "seed-v1"
+        assert task.snapshot_revision == revisions[task.task_id]
         assert task.verifier_path is not None and task.verifier_path.is_absolute()
         assert task.manifest_path is not None
         assert task.verifier_path.name == f"verify_{task.task_id.replace('-', '_')}.py"
@@ -179,3 +236,4 @@ def test_path_verifier_runs_outside_the_workspace(tmp_path: Path) -> None:
     assert result is not None
     assert result["exit_code"] != 0
     assert not (workspace / "verifier.py").exists()
+    assert not list(workspace.rglob("__pycache__"))

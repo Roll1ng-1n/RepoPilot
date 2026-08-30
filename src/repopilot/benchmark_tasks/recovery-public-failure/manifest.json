@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "recovery-public-failure",
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "recovery-v1",
+    "sha256": "dcf8a8bcabd8b765201bfb1bd9f469b8d091a16e8c6a01a8f552ea56af08fd47"
+  },
+  "task_statement": "Repair src/line_tools.py so unique_clean_lines strips each line, skips empty lines, and removes duplicates using Unicode case-insensitive semantics while preserving the first cleaned spelling and input order. Run the public tests first; if a shallow fix causes a public test failure, use that evidence to debug and recover before finishing.",
+  "timeout_seconds": 180,
+  "run_budget": {
+    "max_steps": 15,
+    "max_replans": 1,
+    "max_consecutive_failures": 2,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 180
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify_recovery_public_failure.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

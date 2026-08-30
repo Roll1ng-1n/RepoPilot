@@ -1,0 +1,23 @@
+{
+  "budget": {
+    "command_timeout_seconds": 1.0,
+    "max_consecutive_failures": 1,
+    "max_replans": 0,
+    "max_run_seconds": 1.0,
+    "max_steps": 1
+  },
+  "engines": [
+    "baseline",
+    "repopilot"
+  ],
+  "image": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "model": {
+    "model_kwargs": {
+      "temperature": 0.0
+    },
+    "model_name": "provider/fixed-model"
+  },
+  "output_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1",
+  "task_ids": [],
+  "tasks_directory": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks"
+}

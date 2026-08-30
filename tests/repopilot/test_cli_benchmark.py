@@ -34,6 +34,8 @@ def test_cli_builds_one_shared_docker_benchmark_configuration(tmp_path: Path) ->
             "provider/fixed-model",
             "--engine",
             "repopilot",
+            "--task",
+            "seed-single-file",
             "--image",
             "python:3.12-bookworm",
             "--temperature",
@@ -56,6 +58,7 @@ def test_cli_builds_one_shared_docker_benchmark_configuration(tmp_path: Path) ->
     assert len(received) == 1
     config = received[0]
     assert config.engines == (BenchmarkEngine.REPOPILOT,)
+    assert config.task_ids == ("seed-single-file",)
     assert config.model.model_name == "provider/fixed-model"
     assert config.model.model_kwargs == {"temperature": 0.2}
     assert config.image == "python:3.12-bookworm"

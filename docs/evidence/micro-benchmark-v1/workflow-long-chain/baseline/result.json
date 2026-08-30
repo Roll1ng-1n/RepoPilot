@@ -1,0 +1,33 @@
+{
+  "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-long-chain/baseline",
+  "engine": "baseline",
+  "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-3e007df9', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-long-chain/baseline/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+  "metrics": {
+    "commits": [],
+    "cost": null,
+    "duration_seconds": 0.017850443000497762,
+    "errors": null,
+    "patch": {
+      "changed": false,
+      "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-long-chain/baseline/patch.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "replans": null,
+    "retries": null,
+    "run_budget": {
+      "command_timeout_seconds": 1.0,
+      "max_consecutive_failures": 1,
+      "max_replans": 0,
+      "max_run_seconds": 1.0,
+      "max_steps": 1
+    },
+    "steps": null,
+    "tokens": null,
+    "tool_calls": null,
+    "trajectory_status": null
+  },
+  "status": "ENVIRONMENT_UNAVAILABLE",
+  "success": null,
+  "task_id": "workflow-long-chain",
+  "verifier": null
+}

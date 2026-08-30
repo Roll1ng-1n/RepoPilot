@@ -239,6 +239,7 @@ class BenchmarkConfig:
     image: str
     budget: BenchmarkBudget = field(default_factory=BenchmarkBudget)
     engines: tuple[BenchmarkEngine, ...] = (BenchmarkEngine.BASELINE, BenchmarkEngine.REPOPILOT)
+    task_ids: tuple[str, ...] = ()
 
     def public_dict(self) -> dict[str, Any]:
         return {
@@ -248,6 +249,7 @@ class BenchmarkConfig:
             "image": self.image,
             "budget": asdict(self.budget),
             "engines": [engine.value for engine in self.engines],
+            "task_ids": list(self.task_ids),
         }
 
 
@@ -343,7 +345,14 @@ class BenchmarkRunner:
             self._executors[_coerce_engine(engine)] = executor
 
     def load_tasks(self) -> tuple[BenchmarkTask, ...]:
-        return load_tasks(self.config.tasks_directory)
+        tasks = load_tasks(self.config.tasks_directory)
+        if not self.config.task_ids:
+            return tasks
+        by_id = {task.task_id: task for task in tasks}
+        missing = [task_id for task_id in self.config.task_ids if task_id not in by_id]
+        if missing:
+            raise ValueError(f"Unknown benchmark task IDs: {', '.join(missing)}")
+        return tuple(by_id[task_id] for task_id in self.config.task_ids)
 
     def run(self) -> BenchmarkRun:
         tasks = self.load_tasks()
@@ -391,7 +400,12 @@ class BenchmarkRunner:
         try:
             run = self._executors[engine](request)
         except Exception as exception:  # executor failures are benchmark results, not runner crashes
-            run = EngineRun(error=str(exception) or type(exception).__name__)
+            status = (
+                "ENVIRONMENT_UNAVAILABLE"
+                if isinstance(exception, (FileNotFoundError, subprocess.CalledProcessError))
+                else None
+            )
+            run = EngineRun(status=status, error=str(exception) or type(exception).__name__)
         if run.duration_seconds is None:
             run.duration_seconds = time.monotonic() - started
         if run.error is not None:
@@ -401,7 +415,7 @@ class BenchmarkRunner:
         patch_path = task_directory / "patch.diff"
         patch_path.write_text(patch or "", encoding="utf-8")
         commits = capture_commits(workspace, initial_head)
-        verifier = run_hidden_verifier(task, workspace)
+        verifier = None if run.status == "ENVIRONMENT_UNAVAILABLE" else run_hidden_verifier(task, workspace)
         success = None if verifier is None else verifier.get("exit_code") == 0
         metrics = _metrics_for_run(engine, run, task_directory, patch, commits, verifier)
         metrics["run_budget"] = asdict(request.effective_budget)
@@ -692,6 +706,7 @@ def run_hidden_verifier(task: BenchmarkTask, workspace: Path) -> dict[str, Any] 
             text=True,
             check=False,
             timeout=timeout_seconds,
+            env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
         )
         return {
             "exit_code": completed.returncode,

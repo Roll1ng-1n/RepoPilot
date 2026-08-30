@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "replan-new-evidence",
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "replan-v1",
+    "sha256": "b1dae03762472a199f9e3555aae0f2c65ec137cf43174557a08b288ff053ff90"
+  },
+  "task_statement": "Add a --json mode to the report CLI and renderer while keeping the existing human-readable output unchanged. Trace the current report flow and inspect docs/output-format.md and the public tests before choosing the machine-readable protocol. If an initial assumption of one JSON value conflicts with the repository's streaming contract, use that new evidence to replan the implementation.",
+  "timeout_seconds": 180,
+  "run_budget": {
+    "max_steps": 15,
+    "max_replans": 1,
+    "max_consecutive_failures": 2,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 180
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify_replan_new_evidence.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

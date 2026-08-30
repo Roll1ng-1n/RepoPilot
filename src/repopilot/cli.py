@@ -231,6 +231,11 @@ def create_app(
             "--engine",
             help="Engine to run; repeat to compare multiple engines.",
         ),
+        tasks: list[str] = typer.Option(
+            [],
+            "--task",
+            help="Task ID to run; repeat to select multiple fixed tasks.",
+        ),
         model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
         api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
         base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
@@ -268,6 +273,7 @@ def create_app(
                 max_run_seconds=max_run_seconds,
             ),
             engines=tuple(dict.fromkeys(engines)),
+            task_ids=tuple(dict.fromkeys(tasks)),
         )
         try:
             benchmark_run = selected_benchmark_runner(config)
