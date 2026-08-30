@@ -41,6 +41,9 @@ _TASK_REPORT_TEMPLATE = Template(
 {% for change in report.changes -%}
 - {{ change }}
 {% endfor %}
+## Rationale
+
+{{ report.rationale }}
 ## Verification
 
 {% if verifications -%}
@@ -122,6 +125,21 @@ class AgentRuntime:
     ) -> AgentRunResult:
         """Run a new Agent Run or continue its persisted in-progress state."""
 
+        trace_status = checkpoint.get("status") if isinstance(checkpoint, dict) else None
+        if not isinstance(trace_status, str):
+            trace_status = None
+
+        def record_status(status_value: str) -> None:
+            nonlocal trace_status
+            if status_value == trace_status:
+                return
+            self._artifacts.append_trace(
+                "status_changed",
+                previous_status=trace_status,
+                status=status_value,
+            )
+            trace_status = status_value
+
         if checkpoint is None:
             budget = self._budget.start()
             recovery = RecoveryController(self._budget.max_consecutive_failures)
@@ -149,6 +167,7 @@ class AgentRuntime:
                 target_repository=str(target_repository.resolve()),
                 model=self._model.model_name,
             )
+            self._artifacts.append_trace("budget_updated", reason="run_started", budget=budget.snapshot())
             self._artifacts.append_trace("plan_created", plan=self._plan_history.current.to_dict())
         else:
             budget = RunBudgetTracker.from_snapshot(self._budget, checkpoint["budget"])
@@ -177,6 +196,9 @@ class AgentRuntime:
             if approval_request is not None and approval_granted is None:
                 raise ValueError("Human Approval is required before this Agent Run can resume.")
             self._artifacts.append_trace("run_resumed", previous_status=checkpoint.get("status"))
+            self._artifacts.append_trace("budget_updated", reason="run_resumed", budget=budget.snapshot())
+
+        record_status("RUNNING")
 
         self._write_checkpoint(
             "RUNNING",
@@ -228,6 +250,7 @@ class AgentRuntime:
                 pending_tool_calls,
             )
         status = "FAILED"
+        completion: dict[str, Any] | None = None
         try:
             while True:
                 if pending_tool_calls:
@@ -236,6 +259,9 @@ class AgentRuntime:
                 else:
                     try:
                         budget.consume_step()
+                        self._artifacts.append_trace(
+                            "budget_updated", reason="agent_step_consumed", budget=budget.snapshot()
+                        )
                     except BudgetExceeded as error:
                         status = self._record_budget_exhausted(error, budget)
                         break
@@ -259,7 +285,21 @@ class AgentRuntime:
                             approval_request,
                             pending_tool_calls,
                         )
-                        turn = self._model.complete(context_selection.messages, self._registry.schemas)
+                        self._artifacts.append_trace(
+                            "model_request",
+                            model=self._model.model_name,
+                            step=budget.steps_used,
+                            message_count=len(context_selection.messages),
+                        )
+                        try:
+                            turn = self._model.complete(context_selection.messages, self._registry.schemas)
+                        except Exception as error:
+                            self._artifacts.append_trace(
+                                "model_response",
+                                model=self._model.model_name,
+                                error=str(error) or type(error).__name__,
+                            )
+                            raise
                     except Exception as error:
                         terminal_status = self._handle_failure(
                             Failure(FailureCategory.MODEL_ERROR, str(error) or type(error).__name__),
@@ -288,10 +328,16 @@ class AgentRuntime:
                             pending_tool_calls,
                         )
                         continue
-                    if turn.tool_calls and turn.content is not None:
-                        self._artifacts.append_trace("model_response", content=turn.content)
+                    self._artifacts.append_trace(
+                        "model_response",
+                        model=self._model.model_name,
+                        content=turn.content,
+                        tool_calls=[
+                            {"id": call.id, "name": call.name, "arguments": call.arguments}
+                            for call in turn.tool_calls
+                        ],
+                    )
                     if not turn.tool_calls:
-                        self._artifacts.append_trace("model_response", content=turn.content or "")
                         messages.append(self._assistant_message(turn))
                         terminal_status = self._handle_failure(
                             Failure(FailureCategory.NO_PROGRESS, "The model response contained no Tool Call."),
@@ -329,6 +375,9 @@ class AgentRuntime:
                     if tool_call.name == "replan":
                         try:
                             budget.consume_replan()
+                            self._artifacts.append_trace(
+                                "budget_updated", reason="replan_consumed", budget=budget.snapshot()
+                            )
                         except BudgetExceeded as error:
                             observation = {"ok": False, "error": "budget_exceeded", "limit": error.limit}
                             self._record_tool_result(tool_call, observation, tool_results, messages)
@@ -377,7 +426,7 @@ class AgentRuntime:
                         self._artifacts.append_trace(event_type, **observation["result"])
                     if tool_call.name == "finish_task" and observation.get("ok"):
                         status = observation["result"]["status"]
-                        self._write_terminal_artifacts(observation["result"], tool_results)
+                        completion = observation["result"]
                         should_finish = True
                         break
                     failure = classify_tool_failure(tool_call.name, observation)
@@ -425,6 +474,7 @@ class AgentRuntime:
         except KeyboardInterrupt:
             status = "STOPPED"
             self._artifacts.append_trace("run_stopped", reason="KeyboardInterrupt")
+        record_status(status)
         self._artifacts.append_trace("run_finished", status=status)
         self._write_checkpoint(
             status,
@@ -440,10 +490,12 @@ class AgentRuntime:
             approval_request,
             pending_tool_calls,
         )
+        self._write_terminal_artifacts(status, tool_results, completion)
         self._artifacts.write_metadata(
             {
                 "run_id": self._artifacts.run_id,
                 "status": status,
+                "task": task,
                 "target_repository": str(target_repository.resolve()),
                 "model": self._model.model_name,
                 "plan": self._plan_history.current.to_dict(),
@@ -455,6 +507,10 @@ class AgentRuntime:
                 "tool_results": tool_results,
                 "verifications": self._verifications,
                 "approval_context": self._approval_context.to_dict(),
+                "approval_request": approval_request.to_dict() if approval_request is not None else None,
+                "pending_tool_calls": [
+                    ToolCallSnapshot.from_tool_call(tool_call).to_dict() for tool_call in pending_tool_calls
+                ],
                 "git_commits": self._git_commits(tool_results),
                 "repository": capture_repository_state(target_repository),
             }
@@ -481,6 +537,17 @@ class AgentRuntime:
         self._artifacts.append_trace(
             "tool_result", tool_call_id=tool_call.id, tool_name=tool_call.name, observation=observation
         )
+        if tool_call.name == "verify_task" and observation.get("ok"):
+            verification = observation.get("result")
+            if isinstance(verification, dict):
+                self._artifacts.append_trace(
+                    "task_verification",
+                    tool_call_id=tool_call.id,
+                    command=verification.get("command"),
+                    scope=verification.get("scope"),
+                    reason=verification.get("reason"),
+                    result=verification.get("result"),
+                )
         tool_results.append(
             {
                 "tool_call_id": tool_call.id,
@@ -644,6 +711,7 @@ class AgentRuntime:
     ) -> str | None:
         try:
             budget.consume_replan()
+            self._artifacts.append_trace("budget_updated", reason="recovery_replan_consumed", budget=budget.snapshot())
         except BudgetExceeded as error:
             return self._record_budget_exhausted(error, budget)
         step_id = self._next_recovery_step_id(budget)
@@ -704,31 +772,94 @@ class AgentRuntime:
             return [AgentRuntime._without_volatile_timing(item) for item in value]
         return value
 
-    def _write_terminal_artifacts(self, completion: dict[str, Any], tool_results: list[dict[str, Any]]) -> None:
-        committed_patches = [
-            observation["result"]["patch"]
-            for item in tool_results
-            if item.get("tool_name") == "git_commit"
-            for observation in [item.get("observation")]
-            if isinstance(observation, dict)
-            and observation.get("ok")
-            and isinstance(observation.get("result"), dict)
-            and isinstance(observation["result"].get("patch"), str)
-        ]
-        self._artifacts.write_text("patch.diff", completion["final_patch"] or "\n".join(committed_patches))
-        self._artifacts.write_json("verification.json", {"verifications": completion["verifications"]})
-        report = completion["report"]
+    def _write_terminal_artifacts(
+        self,
+        status: str,
+        tool_results: list[dict[str, Any]],
+        completion: dict[str, Any] | None,
+    ) -> None:
+        """Write the complete machine- and human-readable terminal deliverables."""
+
+        verifications = self._verifications
+        report: dict[str, Any]
+        final_patch = ""
+        if completion is not None:
+            candidate_verifications = completion.get("verifications")
+            if isinstance(candidate_verifications, list):
+                verifications = candidate_verifications
+            candidate_report = completion.get("report")
+            if isinstance(candidate_report, dict):
+                report = candidate_report
+            else:
+                report = self._status_report(status)
+            candidate_patch = completion.get("final_patch")
+            if isinstance(candidate_patch, str):
+                final_patch = candidate_patch
+        else:
+            report = self._status_report(status)
+
+        if not final_patch:
+            final_patch = self._capture_patch(tool_results)
+        self._artifacts.write_json(
+            "plan.json",
+            {
+                "current": self._plan_history.current.to_dict(),
+                "history": [plan.to_dict() for plan in self._plan_history.versions],
+            },
+        )
+        self._artifacts.write_text("patch.diff", final_patch)
+        self._artifacts.write_json("verification.json", {"verifications": verifications})
         self._artifacts.write_text(
             "task_report.md",
-            self._format_task_report(report, completion["verifications"], self._git_commits(tool_results)),
+            self._format_task_report(report, verifications, self._git_commits(tool_results)),
         )
+
+    def _capture_patch(self, tool_results: list[dict[str, Any]]) -> str:
+        """Capture the final diff, retaining pre-commit patches as a fallback."""
+
+        diff_observation = self._registry.capture_diff()
+        if diff_observation.get("ok"):
+            result = diff_observation.get("result")
+            if isinstance(result, dict) and isinstance(result.get("patch"), str) and result["patch"]:
+                return result["patch"]
+
+        patches: list[str] = []
+        for item in tool_results:
+            if item.get("tool_name") != "git_commit":
+                continue
+            commit_observation = item.get("observation")
+            if not isinstance(commit_observation, dict) or not commit_observation.get("ok"):
+                continue
+            commit_result = commit_observation.get("result")
+            if (
+                isinstance(commit_result, dict)
+                and isinstance(commit_result.get("patch"), str)
+                and commit_result["patch"]
+            ):
+                patches.append(commit_result["patch"])
+        return "\n".join(patches)
+
+    @staticmethod
+    def _status_report(status: str) -> dict[str, Any]:
+        return {
+            "root_cause": f"The Agent Run paused or ended with status {status} before a completion report was provided.",
+            "changes": ["No completion report was provided by the model."],
+            "rationale": f"The terminal status was {status}.",
+            "risks": ["The requested work may be incomplete or lack sufficient Task Verification evidence."],
+        }
 
     @staticmethod
     def _format_task_report(
         report: dict[str, Any], verifications: list[dict[str, Any]], git_commits: list[dict[str, Any]]
     ) -> str:
+        normalized_report = {
+            "root_cause": report.get("root_cause") or "No root cause was provided.",
+            "changes": report.get("changes") or ["No changes were reported."],
+            "rationale": report.get("rationale") or "No overall modification rationale was provided.",
+            "risks": report.get("risks") or [],
+        }
         return _TASK_REPORT_TEMPLATE.render(
-            report=report,
+            report=normalized_report,
             verifications=verifications,
             git_commits=git_commits,
         ).strip() + "\n"

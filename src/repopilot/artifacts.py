@@ -42,6 +42,19 @@ class RunArtifacts:
     def write_metadata(self, metadata: dict[str, Any]) -> None:
         self._metadata_path.write_text(json.dumps(self._redact(metadata), indent=2, sort_keys=True) + "\n")
 
+    def read_metadata(self) -> dict[str, Any]:
+        """Load the persisted descriptive state for this Agent Run."""
+
+        if not self._metadata_path.is_file():
+            raise FileNotFoundError(f"Agent Run {self.run_id} has no Metadata.")
+        try:
+            value = json.loads(self._metadata_path.read_text())
+        except (json.JSONDecodeError, UnicodeDecodeError) as error:
+            raise ValueError(f"Agent Run {self.run_id} has invalid Metadata.") from error
+        if not isinstance(value, dict):
+            raise ValueError(f"Agent Run {self.run_id} has invalid Metadata.")
+        return value
+
     def write_text(self, filename: str, content: str) -> None:
         """Persist a named, redacted terminal Agent Run artifact."""
         (self.path / filename).write_text(self._redact(content))
@@ -54,6 +67,28 @@ class RunArtifacts:
         event = self._redact({"type": event_type, **data})
         with self._trace_path.open("a") as trace:
             trace.write(json.dumps(event, sort_keys=True) + "\n")
+
+    def read_trace(self) -> list[dict[str, Any]]:
+        """Load every persisted event from this Agent Run's append-only Trace."""
+
+        if not self._trace_path.is_file():
+            return []
+        events: list[dict[str, Any]] = []
+        try:
+            lines = self._trace_path.read_text().splitlines()
+        except UnicodeDecodeError as error:
+            raise ValueError(f"Agent Run {self.run_id} has invalid Trace.") from error
+        for line_number, line in enumerate(lines, start=1):
+            if not line.strip():
+                continue
+            try:
+                value = json.loads(line)
+            except json.JSONDecodeError as error:
+                raise ValueError(f"Agent Run {self.run_id} has invalid Trace at line {line_number}.") from error
+            if not isinstance(value, dict):
+                raise ValueError(f"Agent Run {self.run_id} has invalid Trace at line {line_number}.")
+            events.append(value)
+        return events
 
     def write_checkpoint(self, checkpoint: dict[str, Any]) -> None:
         """Atomically replace the resumable state for this Agent Run."""

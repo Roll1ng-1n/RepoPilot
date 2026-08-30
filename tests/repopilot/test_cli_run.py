@@ -518,6 +518,7 @@ diff --git a/README.md b/README.md
                         {
                             "root_cause": "The README still contained the obsolete text.",
                             "changes": ["Replaced the obsolete README text."],
+                            "rationale": "The obsolete text was the task's reported defect.",
                             "risks": ["No runtime behavior changed."],
                         },
                     )
@@ -563,32 +564,34 @@ diff --git a/README.md b/README.md
     assert verification["verifications"][0]["result"]["exit_code"] == 0
     assert "## Root cause\n\nThe README still contained the obsolete text." in report
     assert "## Changes\n\n- Replaced the obsolete README text." in report
+    assert "## Rationale\n\nThe obsolete text was the task's reported defect." in report
     assert (
         "## Verification\n\n- `README.md patch`: Proves the requested repository change is present. (passed)" in report
     )
     assert "## Risks\n\n- No runtime behavior changed." in report
-    assert [event["type"] for event in events] == [
-        "run_started",
-        "plan_created",
-        "tool_call",
-        "tool_result",
-        "tool_call",
-        "tool_result",
-        "tool_call",
-        "tool_result",
-        "tool_call",
-        "tool_result",
-        "run_finished",
-    ]
+    event_types = [event["type"] for event in events]
+    assert event_types[0] == "run_started"
+    assert event_types[-1] == "run_finished"
+    assert "plan_created" in event_types
+    assert event_types.count("model_request") == 4
+    assert event_types.count("model_response") == 4
+    assert event_types.count("tool_call") == 4
+    assert event_types.count("tool_result") == 4
+    assert event_types.count("task_verification") == 1
+    assert "status_changed" in event_types
+    assert "budget_updated" in event_types
     assert [event["tool_name"] for event in events if event["type"] == "tool_call"] == [
         "apply_patch",
         "view_diff",
         "verify_task",
         "finish_task",
     ]
-    assert events[2]["arguments"]["patch"] == patch
-    assert events[3]["observation"]["result"]["applied"] is True
-    assert "-RepoPilot needle" in events[5]["observation"]["result"]["patch"]
+    apply_call = next(event for event in events if event["type"] == "tool_call" and event["tool_name"] == "apply_patch")
+    apply_result = next(event for event in events if event["type"] == "tool_result" and event["tool_name"] == "apply_patch")
+    assert apply_call["arguments"]["patch"] == patch
+    assert apply_result["observation"]["result"]["applied"] is True
+    view_diff_result = next(event for event in events if event["type"] == "tool_result" and event["tool_name"] == "view_diff")
+    assert "-RepoPilot needle" in view_diff_result["observation"]["result"]["patch"]
     assert {schema["function"]["name"] for schema in model.requests[0][1]} >= {
         "apply_patch",
         "view_diff",
@@ -781,7 +784,7 @@ def test_cli_resume_rejects_a_target_repository_changed_after_its_checkpoint(tmp
             self.closed = True
 
     stopped = CliRunner().invoke(
-        create_app(lambda _: InterruptModel(), lambda _: RecordingEnvironment()),
+        create_app(lambda _: InterruptModel()),
         [
             "run",
             str(target_repository),
@@ -1001,27 +1004,22 @@ def test_cli_runs_a_read_only_native_tool_calling_agent_and_writes_safe_artifact
     assert len(run_directories) == 1
     metadata = json.loads((run_directories[0] / "metadata.json").read_text())
     events = [json.loads(line) for line in (run_directories[0] / "trace.jsonl").read_text().splitlines()]
-    persisted_artifacts = json.dumps({"metadata": metadata, "events": events})
+    persisted_artifacts = "\n".join(path.read_text() for path in run_directories[0].iterdir() if path.is_file())
 
     assert metadata["status"] == "UNVERIFIED"
     assert (run_directories[0] / "patch.diff").read_text() == ""
     assert json.loads((run_directories[0] / "verification.json").read_text()) == {"verifications": []}
     assert "No verification evidence was collected." in (run_directories[0] / "task_report.md").read_text()
-    assert [event["type"] for event in events] == [
-        "run_started",
-        "plan_created",
-        "tool_call",
-        "tool_result",
-        "tool_call",
-        "tool_result",
-        "tool_call",
-        "tool_result",
-        "tool_call",
-        "tool_result",
-        "tool_call",
-        "tool_result",
-        "run_finished",
-    ]
+    event_types = [event["type"] for event in events]
+    assert event_types[0] == "run_started"
+    assert event_types[-1] == "run_finished"
+    assert "plan_created" in event_types
+    assert event_types.count("model_request") == 5
+    assert event_types.count("model_response") == 5
+    assert event_types.count("tool_call") == 5
+    assert event_types.count("tool_result") == 5
+    assert "status_changed" in event_types
+    assert "budget_updated" in event_types
     assert "test-api-key" not in persisted_artifacts
     assert {schema["function"]["name"] for schema in model.requests[0][1]} == {
         "list_files",
@@ -1188,3 +1186,100 @@ def test_cli_records_a_versioned_plan_and_replan_from_agent_control_tools(tmp_pa
         "plan_updated",
     ]
     assert events[-1] == {"type": "run_finished", "status": "UNVERIFIED"}
+
+
+def test_cli_writes_all_terminal_artifacts_for_a_failed_run(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+
+    result = CliRunner().invoke(
+        create_app(lambda _: NonTransientFailingModel()),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Record a failed run for inspection.",
+            "--state-dir",
+            str(state_directory),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "FAILED" in result.output
+    run_directory = next(state_directory.iterdir())
+    assert {
+        "metadata.json",
+        "checkpoint.json",
+        "trace.jsonl",
+        "plan.json",
+        "patch.diff",
+        "verification.json",
+        "task_report.md",
+    }.issubset({path.name for path in run_directory.iterdir()})
+    assert json.loads((run_directory / "plan.json").read_text())["current"]["version"] == 1
+    assert "status FAILED" in (run_directory / "task_report.md").read_text()
+    events = [json.loads(line) for line in (run_directory / "trace.jsonl").read_text().splitlines()]
+    assert {event["type"] for event in events} >= {
+        "model_request",
+        "model_response",
+        "status_changed",
+        "run_finished",
+    }
+
+
+def test_cli_writes_all_terminal_artifacts_while_waiting_for_approval(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+    model = ScriptedToolCallingModel(
+        [
+            AssistantTurn(
+                tool_calls=[
+                    ToolCall(
+                        "commit",
+                        "git_commit",
+                        {"message": "Record work", "reason": "Keep local history.", "paths": ["README.md"]},
+                    )
+                ]
+            )
+        ]
+    )
+
+    result = CliRunner().invoke(
+        create_app(lambda _: model),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Wait for approval before committing.",
+            "--state-dir",
+            str(state_directory),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "WAITING_FOR_APPROVAL" in result.output
+    run_directory = next(state_directory.iterdir())
+    assert {
+        "metadata.json",
+        "checkpoint.json",
+        "trace.jsonl",
+        "plan.json",
+        "patch.diff",
+        "verification.json",
+        "task_report.md",
+    }.issubset({path.name for path in run_directory.iterdir()})
+    assert json.loads((run_directory / "verification.json").read_text()) == {"verifications": []}
+    assert "status WAITING_FOR_APPROVAL" in (run_directory / "task_report.md").read_text()
+    assert json.loads((run_directory / "metadata.json").read_text())["approval_request"]["tool_call"]["id"] == "commit"
+
+    inspected = CliRunner().invoke(
+        create_app(lambda _: model),
+        ["inspect", run_directory.name, "--state-dir", str(state_directory), "--json"],
+    )
+    assert inspected.exit_code == 0, inspected.output
+    inspection = json.loads(inspected.output)
+    assert inspection["status"] == "WAITING_FOR_APPROVAL"
+    assert inspection["approval_request"]["tool_call"]["id"] == "commit"
+    assert all(item["available"] for item in inspection["artifacts"].values())

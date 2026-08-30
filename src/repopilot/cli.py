@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -24,6 +25,7 @@ from repopilot.environment import (
     create_execution_environment,
     validate_environment_request,
 )
+from repopilot.inspection import load_run_inspection, render_human
 from repopilot.model import LiteLLMToolCallingModel, ToolCallingModel
 from repopilot.plan import PlanHistory, PlanInvariantError
 from repopilot.runtime import AgentRuntime
@@ -179,6 +181,25 @@ def create_app(
         finally:
             execution_environment.close()
         print_result(result)
+
+    @app.command()
+    def inspect(
+        run_id: str = typer.Argument(..., help="The persisted Agent Run ID."),
+        state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
+        json_output: bool = typer.Option(False, "--json", help="Print one machine-readable JSON inspection document."),
+    ) -> None:
+        """Inspect a persisted Agent Run without resuming or executing it."""
+
+        run_state_directory = state_dir or Path(user_state_dir("repopilot")) / "runs"
+        try:
+            inspection = load_run_inspection(run_state_directory, run_id)
+        except (FileNotFoundError, OSError, ValueError) as error:
+            typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(code=1) from error
+        if json_output:
+            typer.echo(json.dumps(inspection.to_dict(), indent=2, sort_keys=True))
+        else:
+            typer.echo(render_human(inspection), nl=False)
 
     def _resume(
         run_id: str = typer.Argument(..., help="The persisted Agent Run ID."),

@@ -62,6 +62,7 @@ class VerifyTaskArguments(_ToolArguments):
 class FinishTaskArguments(_ToolArguments):
     root_cause: str = Field(min_length=1)
     changes: list[str] = Field(min_length=1)
+    rationale: str | None = None
     risks: list[str] = Field(default_factory=list)
 
 
@@ -157,6 +158,14 @@ class ToolRegistry:
         """Backward-compatible prepare-and-execute dispatch for callers without approval."""
 
         prepared = self.prepare(tool_call)
+        if isinstance(prepared, dict):
+            return prepared
+        return self.execute(prepared)
+
+    def capture_diff(self) -> dict[str, Any]:
+        """Capture the current repository patch through the read-only Diff Tool."""
+
+        prepared = self.prepare(ToolCall("artifact-diff", "view_diff", {}))
         if isinstance(prepared, dict):
             return prepared
         return self.execute(prepared)
@@ -299,6 +308,7 @@ def create_tool_registry(
             "report": {
                 "root_cause": arguments.root_cause,  # type: ignore[attr-defined]
                 "changes": arguments.changes,  # type: ignore[attr-defined]
+                "rationale": arguments.rationale,  # type: ignore[attr-defined]
                 "risks": arguments.risks,  # type: ignore[attr-defined]
             },
         }
