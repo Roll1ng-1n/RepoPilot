@@ -203,6 +203,59 @@ def test_benchmark_redacts_api_key_from_baseline_trajectory_and_results(tmp_path
     assert api_key not in (output / "seed-task" / "baseline" / "result.json").read_text()
 
 
+def test_baseline_ignores_unknown_model_costs(tmp_path: Path, monkeypatch) -> None:
+    tasks_root = tmp_path / "tasks"
+    _write_task(tasks_root)
+    task = load_tasks(tasks_root)[0]
+    artifact_directory = tmp_path / "baseline"
+    artifact_directory.mkdir()
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    config = BenchmarkConfig(
+        tasks_directory=tasks_root,
+        output_directory=tmp_path / "results",
+        model=BenchmarkModel("custom/model"),
+        image="test-image",
+        engines=(BenchmarkEngine.BASELINE,),
+    )
+    request = benchmark_module.EngineRequest(
+        BenchmarkEngine.BASELINE,
+        task,
+        workspace,
+        artifact_directory,
+        config,
+        initial_head=None,
+    )
+    model_configs: list[dict] = []
+
+    class FakeAgent:
+        def run(self, _task: str) -> dict[str, str]:
+            return {"exit_status": "Submitted"}
+
+        def save(self, _path: Path | None, *_extra: dict) -> dict:
+            return {
+                "info": {"exit_status": "Submitted", "model_stats": {"api_calls": 1, "instance_cost": 0.0}},
+                "messages": [
+                    {
+                        "extra": {
+                            "cost": 0.0,
+                            "response": {"usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2}},
+                        }
+                    }
+                ],
+            }
+
+    monkeypatch.setattr(benchmark_module, "get_model", lambda **kwargs: model_configs.append(kwargs["config"]) or object())
+    monkeypatch.setattr(benchmark_module, "get_config_from_spec", lambda *_args: {"agent": {}})
+    monkeypatch.setattr(benchmark_module, "get_environment", lambda *_args, **_kwargs: object())
+    monkeypatch.setattr(benchmark_module, "get_agent", lambda *_args, **_kwargs: FakeAgent())
+
+    run = benchmark_module._run_baseline(request)
+
+    assert model_configs[0]["cost_tracking"] == "ignore_errors"
+    assert run.model_stats["cost"] is None
+
+
 def test_runner_rejects_a_changed_snapshot_before_starting_an_engine(tmp_path: Path) -> None:
     tasks_root = tmp_path / "tasks"
     manifest = _write_task(tasks_root)

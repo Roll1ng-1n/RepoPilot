@@ -540,6 +540,7 @@ def _run_baseline(request: EngineRequest) -> EngineRun:
     model_config: dict[str, Any] = {
         "model_name": config.model.model_name,
         "model_kwargs": model_kwargs,
+        "cost_tracking": "ignore_errors",
     }
     model = get_model(config=model_config)
     run_args = [
@@ -915,7 +916,11 @@ def _baseline_model_stats(trajectory: dict[str, Any]) -> dict[str, Any]:
         "steps": stats.get("api_calls") if isinstance(stats, dict) else None,
         "tokens": _sum_usage(usages),
         "cost": float(stats["instance_cost"])
-        if isinstance(stats, dict) and isinstance(stats.get("instance_cost"), (int, float)) and costs
+        if (
+            isinstance(stats, dict)
+            and isinstance(stats.get("instance_cost"), (int, float))
+            and any(cost > 0.0 for cost in costs)
+        )
         else None,
         "tool_calls": actions,
         "errors": errors,
