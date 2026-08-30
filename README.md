@@ -98,13 +98,15 @@ tokens, 9 Tool Calls, 0 retries, 0 replans, 19.723 seconds, and `cost: null`. Th
 redacted and the API-key scan is clean. This is one task with two engine attempts: smoke evidence, not a statistical
 win rate or a general performance claim.
 
-The current SWE-bench Lite smoke record is deliberately not presented as a model result:
+The current [SWE-bench Lite smoke result](docs/evidence/swebench-lite-smoke-v1/sqlfluff__sqlfluff-1625/result.json) is
+real negative smoke evidence, not a SWE-bench score. The pinned SQLFluff image was preloaded locally, `swebench`
+5.0.2 was installed, and Docker start, `/testbed`, and the official gold-patch verifier preflight all passed
+(`status: READY`, `gold resolved: true`). The authorized low-cost model was called 5 times over 27.4755 seconds
+with `cost: null`; under `max_steps=5`, the Agent ended `BUDGET_EXCEEDED` with no patch, the final verifier did not
+run, and `success: null`. The model name and endpoint are redacted; the API-key scan is clean.
 
-`ENVIRONMENT_UNAVAILABLE` — the pinned image preflight ran, but the Agent Run did not; no model was called. See the
-[raw result](docs/evidence/swebench-lite-smoke-v1/sqlfluff__sqlfluff-1625/result.json).
-
-A model-backed SWE-bench smoke additionally requires the official `swebench` Python package and the pinned image to
-be available locally. Missing verifier or image prerequisites are recorded before a model is constructed.
+Reproducing a model-backed SWE-bench smoke requires the official `swebench` Python package and the pinned image to be
+available locally. Missing verifier or image prerequisites are recorded before a model is constructed.
 
 ```bash
 uv pip install swebench
@@ -125,7 +127,8 @@ or a generalization claim.
 - Human Approval is a lightweight best-effort risk policy. Git support is local commit only; push, pull, rebase,
   reset, and Pull Request creation are unsupported.
 - RAG Memory, multi-agent orchestration, Web UI, remote execution backends, and full SWE-bench runs are out of scope.
-- The SWE-bench Lite smoke is currently `ENVIRONMENT_UNAVAILABLE` and has no model-call result to report.
+- The SWE-bench Lite smoke is one pinned negative run (`BUDGET_EXCEEDED` with no patch or final verifier result), not a
+  SWE-bench score or a general performance claim.
 
 ---
 

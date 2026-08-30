@@ -1,19 +1,21 @@
 {
-  "command_timeout_seconds": 300.0,
+  "command_timeout_seconds": 60.0,
   "dataset_name": "SWE-bench/SWE-bench_Lite",
   "dataset_revision": "b0dde1093fe417d83b7184254edf8199c1f0dff5",
   "image": "docker.io/swebench/sweb.eval.x86_64.sqlfluff_1776_sqlfluff-1625:latest",
   "instance_ids": [
     "sqlfluff__sqlfluff-1625"
   ],
-  "max_consecutive_failures": 3,
-  "max_cost_usd": 3.0,
-  "max_replans": 2,
-  "max_run_seconds": 1800.0,
-  "max_steps": 50,
+  "max_consecutive_failures": 2,
+  "max_cost_usd": 0.25,
+  "max_replans": 1,
+  "max_run_seconds": 180.0,
+  "max_steps": 5,
   "max_workers": 1,
-  "model_kwargs": {},
-  "model_name": "not-called/environment-preflight",
+  "model_kwargs": {
+    "temperature": 0.0
+  },
+  "model_name": "openai/[AUTHORIZED_LOW_COST_MODEL]",
   "split": "dev",
-  "verifier_timeout_seconds": 1800.0
+  "verifier_timeout_seconds": 300.0
 }

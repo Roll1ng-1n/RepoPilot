@@ -87,9 +87,14 @@ default `$3` cost guard stops another model call once observed cost reaches the
 limit; a provider that omits cost data cannot be hard-limited by that guard.
 Missing usage or cost is represented as JSON `null`, rather than estimated.
 
-A real preflight result is published in the evidence directory: the pinned
-image was absent, so its status is `ENVIRONMENT_UNAVAILABLE`, `success` is
-`null`, and model calls are zero. This is not reported as a task failure or a
-successful repair. The smoke covers only this one pinned instance;
+The [published result](evidence/swebench-lite-smoke-v1/sqlfluff__sqlfluff-1625/result.json)
+uses the locally preloaded pinned image and `swebench` 5.0.2. Docker start,
+`/testbed`, and the official gold-patch verifier preflight all passed
+(`status: READY`, `gold resolved: true`). The authorized low-cost model was
+called 5 times over 27.4755 seconds with `cost: null`; with `max_steps=5`, the
+Agent ended `BUDGET_EXCEEDED` with no patch, the final verifier did not run,
+and `success` is `null`. The model name and endpoint are redacted; the API-key
+scan is clean. This is real negative smoke evidence, not a SWE-bench score.
+The smoke covers only this one pinned instance;
 full/complete Lite, Verified, SWE-bench-wide, SWT-Bench, and ProgramBench
 evaluations remain out of scope for RepoPilot V1.

@@ -1,0 +1,28 @@
+{
+  "current": {
+    "reason": "Initial Plan for this Agent Run.",
+    "steps": [
+      {
+        "completion_condition": "The requested task is completed and Task Verification has run.",
+        "description": "TSQL - L031 incorrectly triggers \"Avoid using aliases in join condition\" when no join present\n## Expected Behaviour\r\n\r\nBoth of these queries should pass, the only difference is the addition of a table alias 'a':\r\n\r\n1/ no alias\r\n\r\n```\r\nSELECT [hello]\r\nFROM\r\n    mytable\r\n```\r\n\r\n2/ same query with alias\r\n\r\n```\r\nSELECT a.[hello]\r\nFROM\r\n    mytable AS a\r\n```\r\n\r\n## Observed Behaviour\r\n\r\n1/ passes\r\n2/ fails with: L031: Avoid using aliases in join condition.\r\n\r\nBut there is no join condition :-)\r\n\r\n## Steps to Reproduce\r\n\r\nLint queries above\r\n\r\n## Dialect\r\n\r\nTSQL\r\n\r\n## Version\r\n\r\nsqlfluff 0.6.9\r\nPython 3.6.9\r\n\r\n## Configuration\r\n\r\nN/A\n",
+        "id": "complete-task",
+        "status": "PENDING"
+      }
+    ],
+    "version": 1
+  },
+  "history": [
+    {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "TSQL - L031 incorrectly triggers \"Avoid using aliases in join condition\" when no join present\n## Expected Behaviour\r\n\r\nBoth of these queries should pass, the only difference is the addition of a table alias 'a':\r\n\r\n1/ no alias\r\n\r\n```\r\nSELECT [hello]\r\nFROM\r\n    mytable\r\n```\r\n\r\n2/ same query with alias\r\n\r\n```\r\nSELECT a.[hello]\r\nFROM\r\n    mytable AS a\r\n```\r\n\r\n## Observed Behaviour\r\n\r\n1/ passes\r\n2/ fails with: L031: Avoid using aliases in join condition.\r\n\r\nBut there is no join condition :-)\r\n\r\n## Steps to Reproduce\r\n\r\nLint queries above\r\n\r\n## Dialect\r\n\r\nTSQL\r\n\r\n## Version\r\n\r\nsqlfluff 0.6.9\r\nPython 3.6.9\r\n\r\n## Configuration\r\n\r\nN/A\n",
+          "id": "complete-task",
+          "status": "PENDING"
+        }
+      ],
+      "version": 1
+    }
+  ]
+}

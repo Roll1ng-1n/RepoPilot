@@ -41,12 +41,13 @@ These inherited pieces are intentionally not presented as RepoPilot inventions. 
 | Fixed, verifier-isolated Agent Benchmark | RepoPilot addition | `repopilot benchmark` and repeated `--task`; `src/repopilot/benchmark.py`; `tests/repopilot/test_benchmark.py`, `tests/repopilot/test_benchmark_workflow_tasks.py`, and [benchmark details](repopilot-benchmark.md). |
 | Explicit unavailable-environment result | RepoPilot addition | Benchmark result status `ENVIRONMENT_UNAVAILABLE` in `src/repopilot/benchmark.py`; `tests/repopilot/test_benchmark.py` covers no verifier execution when Docker setup fails. |
 | Model-backed fixed-task smoke evidence | RepoPilot addition | The [redacted smoke summary](evidence/model-backed-smoke-v1/summary.md) and [normalized results](evidence/model-backed-smoke-v1/summary.json) record one `seed-single-file` task under shared model, temperature, Run Budget, and Docker settings: baseline `Submitted`/hidden verifier `true` (7 steps, 19,660 tokens, 7 Tool Calls, 20.475s) and RepoPilot `SUCCEEDED`/verifier `true` (7 steps, 28,212 tokens, 9 Tool Calls, 0 retries, 0 replans, 19.723s); `cost` is `null`. The model name and endpoint are redacted, the API-key scan is clean, and this is smoke evidence, not a statistical win rate. |
-| SWE-bench Lite smoke preflight record | RepoPilot addition (preflight only) | `src/repopilot/swebench_smoke.py` and `tests/repopilot/test_swebench_smoke.py`; the [raw result](evidence/swebench-lite-smoke-v1/sqlfluff__sqlfluff-1625/result.json) is `ENVIRONMENT_UNAVAILABLE` and records zero model calls. |
+| SWE-bench Lite smoke evidence | RepoPilot addition | `src/repopilot/swebench_smoke.py` and `tests/repopilot/test_swebench_smoke.py`; the [raw result](evidence/swebench-lite-smoke-v1/sqlfluff__sqlfluff-1625/result.json) uses `swebench` 5.0.2 and records `READY` Docker/gold preflight (`resolved: true`), then 5 model calls before `BUDGET_EXCEEDED` at `max_steps=5`; no patch, final verifier not run, `success: null`, duration 27.4755s, `cost: null`. Model/endpoint are redacted, API-key scan is clean; this is negative smoke evidence, not a SWE-bench score. |
 
 ## Reading the evidence
 
 CLI output, metadata, Checkpoints, and JSONL Trace are the public seams for a Run. Tests named above are Runtime
 Tests, while the six benchmark task verifiers are separate host-side Task Verification. A passing Runtime Test proves
 the RepoPilot control flow under that test's controlled inputs; it does not prove a model call, Docker image, or
-external SWE-bench run is available. The current SWE-bench smoke status is deliberately reported as
-`ENVIRONMENT_UNAVAILABLE` / not called rather than as a success or a performance number.
+external SWE-bench run is available. The current SWE-bench smoke passed its `READY` preflight but ended
+`BUDGET_EXCEEDED` before producing a patch or running the final verifier (`success: null`); it is real negative smoke
+evidence, not a SWE-bench score or a performance number.
