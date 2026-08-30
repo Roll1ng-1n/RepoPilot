@@ -108,6 +108,23 @@ def classify_tool_failure(tool_name: str, observation: dict[str, Any]) -> Failur
         )
         return Failure(category, str(observation.get("details") or observation.get("error")), tool_name)
 
+    if tool_name == "git_commit":
+        result = observation.get("result")
+        if isinstance(result, dict) and result.get("committed") is False:
+            failed_command = next(
+                (
+                    result.get(key)
+                    for key in ("stage", "result", "revision")
+                    if isinstance(result.get(key), dict) and result[key].get("exit_code") != 0
+                ),
+                None,
+            )
+            if isinstance(failed_command, dict):
+                details = failed_command.get("stderr") or f"command exited with {failed_command.get('exit_code')}"
+            else:
+                details = "the commit did not produce a revision"
+            return Failure(FailureCategory.TOOL_ERROR, f"Git Commit failed: {details}", tool_name)
+
     command_result = _command_result(observation)
     if tool_name == "verify_task" and command_result and command_result.get("exit_code") != 0:
         return Failure(

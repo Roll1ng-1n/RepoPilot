@@ -12,6 +12,7 @@ from typing import Any
 import typer
 from platformdirs import user_state_dir
 
+from repopilot.approval import ApprovalContext
 from repopilot.artifacts import RunArtifacts
 from repopilot.budget import RunBudget
 from repopilot.checkpoint import RepositoryStateError, verify_repository_state
@@ -90,6 +91,11 @@ def create_app(
         max_run_seconds: float = typer.Option(30.0 * 60.0, "--max-run-seconds", min=0.001),
         context_strategy: ContextStrategy = typer.Option(ContextStrategy.NONE, "--context-strategy"),
         context_max_characters: int = typer.Option(12_000, "--context-max-characters", min=1),
+        auto_approve_disposable_docker_benchmark: bool = typer.Option(
+            False,
+            "--auto-approve-disposable-docker-benchmark",
+            help="Auto-approve high-risk calls only for an explicitly disposable Docker benchmark.",
+        ),
     ) -> None:
         if task is None:
             task = typer.prompt("Task")
@@ -99,6 +105,11 @@ def create_app(
         except ValueError as error:
             parameter = "--image" if environment_name is EnvironmentOption.DOCKER and not image else "--environment"
             raise typer.BadParameter(str(error), param_hint=parameter) from error
+        if auto_approve_disposable_docker_benchmark and environment_name is not EnvironmentOption.DOCKER:
+            raise typer.BadParameter(
+                "Automatic approval is available only for an explicitly disposable Docker benchmark.",
+                param_hint="--auto-approve-disposable-docker-benchmark",
+            )
         options = ModelOptions(model_name=model, api_key=api_key, base_url=base_url)
         try:
             tool_calling_model = selected_model_factory(options)
@@ -159,20 +170,25 @@ def create_app(
                 checkpoint_environment={"backend": request.environment, "image": request.image},
                 verifications=verifications,
                 context=context,
+                approval_context=ApprovalContext(
+                    environment=request.environment,
+                    disposable_benchmark=auto_approve_disposable_docker_benchmark,
+                    automatic_approval=auto_approve_disposable_docker_benchmark,
+                ),
             ).run(task, repository)
         finally:
             execution_environment.close()
         print_result(result)
 
-    @app.command()
-    def resume(
+    def _resume(
         run_id: str = typer.Argument(..., help="The persisted Agent Run ID."),
         state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
         model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
         api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
         base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+        approval_granted: bool | None = None,
     ) -> None:
-        """Resume a STOPPED Agent Run after recreating its Execution Environment."""
+        """Resume a STOPPED Agent Run or resolve one pending Human Approval."""
 
         run_state_directory = state_dir or Path(user_state_dir("repopilot")) / "runs"
         try:
@@ -186,11 +202,15 @@ def create_app(
             typer.echo(f"Error: Agent Run {run_id} has an invalid Checkpoint Run ID.", err=True)
             raise typer.Exit(code=1)
         status = checkpoint.get("status")
-        if status == "WAITING_FOR_APPROVAL":
-            typer.echo(f"Agent Run {run_id} is still waiting for Human Approval.")
-            return
-        if status != "STOPPED":
-            typer.echo(f"Error: Agent Run {run_id} cannot resume from {status!r}.", err=True)
+        if approval_granted is None:
+            if status == "WAITING_FOR_APPROVAL":
+                typer.echo(f"Agent Run {run_id} is still waiting for Human Approval.")
+                return
+            if status != "STOPPED":
+                typer.echo(f"Error: Agent Run {run_id} cannot resume from {status!r}.", err=True)
+                raise typer.Exit(code=1)
+        elif status != "WAITING_FOR_APPROVAL":
+            typer.echo(f"Error: Agent Run {run_id} has no pending Human Approval.", err=True)
             raise typer.Exit(code=1)
 
         try:
@@ -214,6 +234,14 @@ def create_app(
             context_state = checkpoint.get("context")
             if context_state is not None and not isinstance(context_state, dict):
                 raise ValueError("Checkpoint has invalid Context state.")
+            approval_context_value = checkpoint.get("approval_context")
+            approval_context = (
+                ApprovalContext(environment=request.environment)
+                if approval_context_value is None
+                else ApprovalContext.from_dict(_checkpoint_mapping(checkpoint, "approval_context"))
+            )
+            if approval_context.environment != request.environment:
+                raise ValueError("Checkpoint Approval Context does not match its Execution Environment.")
         except (KeyError, TypeError, ValueError, PlanInvariantError) as error:
             typer.echo(f"Error: {error}", err=True)
             raise typer.Exit(code=1) from error
@@ -253,13 +281,50 @@ def create_app(
                 checkpoint_environment=environment_state,
                 verifications=verifications,
                 context=context,
-            ).resume(checkpoint, target_repository)
+                approval_context=approval_context,
+            ).resume(checkpoint, target_repository, approval_granted=approval_granted)
         except (RepositoryStateError, ValueError) as error:
             typer.echo(f"Error: {error}", err=True)
             raise typer.Exit(code=1) from error
         finally:
             execution_environment.close()
         print_result(result)
+
+    @app.command()
+    def resume(
+        run_id: str = typer.Argument(..., help="The persisted Agent Run ID."),
+        state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
+        model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
+        api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
+        base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+    ) -> None:
+        """Resume a STOPPED Agent Run after recreating its Execution Environment."""
+
+        _resume(run_id, state_dir, model, api_key, base_url)
+
+    @app.command()
+    def approve(
+        run_id: str = typer.Argument(..., help="The Agent Run waiting for Human Approval."),
+        state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
+        model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
+        api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
+        base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+    ) -> None:
+        """Approve the persisted high-risk Tool Call, then resume the Agent Run."""
+
+        _resume(run_id, state_dir, model, api_key, base_url, approval_granted=True)
+
+    @app.command()
+    def reject(
+        run_id: str = typer.Argument(..., help="The Agent Run waiting for Human Approval."),
+        state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
+        model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
+        api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
+        base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+    ) -> None:
+        """Reject the persisted high-risk Tool Call and let the model revise its plan."""
+
+        _resume(run_id, state_dir, model, api_key, base_url, approval_granted=False)
 
     return app
 

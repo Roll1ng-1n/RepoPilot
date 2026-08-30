@@ -1029,6 +1029,7 @@ def test_cli_runs_a_read_only_native_tool_calling_agent_and_writes_safe_artifact
         "read_file",
         "run_command",
         "apply_patch",
+        "git_commit",
         "view_diff",
         "verify_task",
         "finish_task",

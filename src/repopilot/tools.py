@@ -5,10 +5,11 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
+from repopilot.approval import ToolCallSnapshot
 from repopilot.environment import Command, ExecutionEnvironment
 from repopilot.model import ToolCall
 from repopilot.plan import PlanHistory, PlanInvariantError, PlanStep, PlanStepStatus
@@ -40,6 +41,12 @@ class RunCommandArguments(_ToolArguments):
 
 class ApplyPatchArguments(_ToolArguments):
     patch: str = Field(min_length=1)
+
+
+class GitCommitArguments(_ToolArguments):
+    message: str = Field(min_length=1)
+    reason: str = Field(min_length=1)
+    paths: list[Annotated[str, Field(min_length=1)]] = Field(min_length=1)
 
 
 class ViewDiffArguments(_ToolArguments):
@@ -96,6 +103,16 @@ class _ToolDefinition:
         }
 
 
+@dataclass(frozen=True)
+class PreparedToolCall:
+    """A validated Tool Call ready for risk review and eventual execution."""
+
+    tool_call: ToolCall
+    snapshot: ToolCallSnapshot
+    _arguments: _ToolArguments
+    _handler: Callable[[_ToolArguments], dict[str, Any]]
+
+
 class ToolRegistry:
     """The Runtime's only route to repository capabilities."""
 
@@ -106,7 +123,9 @@ class ToolRegistry:
     def schemas(self) -> list[dict[str, Any]]:
         return [definition.schema() for definition in self._definitions.values()]
 
-    def dispatch(self, tool_call: ToolCall) -> dict[str, Any]:
+    def prepare(self, tool_call: ToolCall) -> PreparedToolCall | dict[str, Any]:
+        """Validate a Tool Call without causing repository side effects."""
+
         definition = self._definitions.get(tool_call.name)
         if definition is None:
             return {"ok": False, "error": "unknown_tool", "tool_name": tool_call.name}
@@ -114,14 +133,33 @@ class ToolRegistry:
             arguments = definition.arguments_type.model_validate(tool_call.arguments)
         except ValidationError as error:
             return {"ok": False, "error": "invalid_tool_arguments", "details": error.errors()}
+        normalized_call = ToolCall(tool_call.id, tool_call.name, arguments.model_dump(mode="json"))
+        return PreparedToolCall(
+            tool_call=normalized_call,
+            snapshot=ToolCallSnapshot.from_tool_call(normalized_call),
+            _arguments=arguments,
+            _handler=definition.handler,
+        )
+
+    def execute(self, prepared: PreparedToolCall) -> dict[str, Any]:
+        """Execute a previously validated Tool Call exactly once."""
+
         try:
-            return {"ok": True, "result": definition.handler(arguments)}
+            return {"ok": True, "result": prepared._handler(prepared._arguments)}
         except PlanInvariantError as error:
             return {"ok": False, "error": "invalid_plan", "details": str(error)}
         except ValueError as error:
             return {"ok": False, "error": "invalid_repository_path", "details": str(error)}
         except (OSError, TimeoutError) as error:
             return {"ok": False, "error": "environment_error", "details": str(error)}
+
+    def dispatch(self, tool_call: ToolCall) -> dict[str, Any]:
+        """Backward-compatible prepare-and-execute dispatch for callers without approval."""
+
+        prepared = self.prepare(tool_call)
+        if isinstance(prepared, dict):
+            return prepared
+        return self.execute(prepared)
 
 
 def create_tool_registry(
@@ -199,6 +237,43 @@ def create_tool_registry(
         )
         return {"applied": result["exit_code"] == 0, "result": result}
 
+    def git_commit(arguments: _ToolArguments) -> dict[str, Any]:
+        paths = [safe_path(path) for path in arguments.paths]  # type: ignore[attr-defined]
+        patch = current_diff()
+        stage = execute(Command(("git", "add", "--", *paths)))
+        if stage["exit_code"] != 0:
+            return {
+                "committed": False,
+                "message": arguments.message,  # type: ignore[attr-defined]
+                "reason": arguments.reason,  # type: ignore[attr-defined]
+                "paths": paths,
+                "patch": patch["stdout"],
+                "stage": stage,
+            }
+        commit = execute(Command(("git", "commit", "--message", arguments.message, "--", *paths)))  # type: ignore[attr-defined]
+        if commit["exit_code"] != 0:
+            return {
+                "committed": False,
+                "message": arguments.message,  # type: ignore[attr-defined]
+                "reason": arguments.reason,  # type: ignore[attr-defined]
+                "paths": paths,
+                "patch": patch["stdout"],
+                "stage": stage,
+                "result": commit,
+            }
+        revision = execute(Command(("git", "rev-parse", "HEAD")))
+        return {
+            "committed": revision["exit_code"] == 0,
+            "message": arguments.message,  # type: ignore[attr-defined]
+            "reason": arguments.reason,  # type: ignore[attr-defined]
+            "paths": paths,
+            "patch": patch["stdout"],
+            "commit_hash": revision["stdout"].strip() if revision["exit_code"] == 0 else None,
+            "stage": stage,
+            "result": commit,
+            "revision": revision,
+        }
+
     def view_diff(_arguments: _ToolArguments) -> dict[str, Any]:
         result = current_diff()
         return {"patch": result["stdout"], "result": result}
@@ -253,6 +328,12 @@ def create_tool_registry(
             _ToolDefinition("run_command", "Run a command in the Target Repository.", RunCommandArguments, run_command),
             _ToolDefinition(
                 "apply_patch", "Apply a unified diff patch to the Target Repository.", ApplyPatchArguments, apply_patch
+            ),
+            _ToolDefinition(
+                "git_commit",
+                "Create a local Git Commit for explicit repository paths after Human Approval.",
+                GitCommitArguments,
+                git_commit,
             ),
             _ToolDefinition(
                 "view_diff", "Show the current uncommitted Target Repository diff.", ViewDiffArguments, view_diff

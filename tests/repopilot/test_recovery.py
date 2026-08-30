@@ -1,11 +1,14 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from repopilot.artifacts import RunArtifacts
 from repopilot.budget import RunBudget
 from repopilot.environment import Command, CommandResult
 from repopilot.model import AssistantTurn, ToolCall
 from repopilot.plan import PlanHistory
+from repopilot.recovery import FailureCategory, classify_tool_failure
 from repopilot.runtime import AgentRuntime
 from repopilot.tools import create_tool_registry
 
@@ -32,6 +35,33 @@ class TimedOutEnvironment:
 
     def close(self) -> None:
         pass
+
+
+@pytest.mark.parametrize(
+    "observation",
+    [
+        {
+            "ok": True,
+            "result": {
+                "committed": False,
+                "stage": {"exit_code": 1, "stdout": "", "stderr": "pathspec failed"},
+            },
+        },
+        {
+            "ok": True,
+            "result": {
+                "committed": False,
+                "result": {"exit_code": 1, "stdout": "", "stderr": "nothing to commit"},
+            },
+        },
+    ],
+)
+def test_classifies_failed_git_commit_as_a_tool_error(observation: dict) -> None:
+    failure = classify_tool_failure("git_commit", observation)
+
+    assert failure is not None
+    assert failure.category is FailureCategory.TOOL_ERROR
+    assert failure.tool_name == "git_commit"
 
 
 def test_runtime_classifies_a_structured_environment_failure_without_inspecting_its_type(tmp_path: Path) -> None:
