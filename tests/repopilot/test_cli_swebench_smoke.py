@@ -80,7 +80,10 @@ def test_cli_swebench_smoke_builds_bounded_configuration(tmp_path: Path) -> None
 
 
 def test_cli_swebench_smoke_prints_environment_status_and_artifacts(tmp_path: Path) -> None:
+    received = []
+
     def fake_runner(config):
+        received.append(config)
         return _result(config)
 
     result = CliRunner().invoke(
@@ -89,6 +92,7 @@ def test_cli_swebench_smoke_prints_environment_status_and_artifacts(tmp_path: Pa
     )
 
     assert result.exit_code == 0, result.output
+    assert received[0].max_steps == 50
     assert "ENVIRONMENT_UNAVAILABLE" in result.output
     assert "Artifacts:" in result.output
     assert INSTANCE_ID in result.output
