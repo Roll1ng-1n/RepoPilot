@@ -74,6 +74,10 @@ class ReplanArguments(_ToolArguments):
     steps: list[ReplanStepArguments] = Field(min_length=1)
 
 
+class RecordFactArguments(_ToolArguments):
+    fact: str = Field(min_length=1, pattern=r".*\S.*")
+
+
 @dataclass(frozen=True)
 class _ToolDefinition:
     name: str
@@ -236,6 +240,9 @@ def create_tool_registry(
         updated = plan_history.replan(replacement_steps, arguments.reason)  # type: ignore[attr-defined]
         return {"plan": updated.to_dict(), "reason": arguments.reason}  # type: ignore[attr-defined]
 
+    def record_fact(arguments: _ToolArguments) -> dict[str, Any]:
+        return {"fact": arguments.fact.strip()}  # type: ignore[attr-defined]
+
     return ToolRegistry(
         [
             _ToolDefinition("list_files", "List files below a repository path.", ListFilesArguments, list_files),
@@ -265,6 +272,12 @@ def create_tool_registry(
             _ToolDefinition("update_plan", "Update the status of one Plan Step.", UpdatePlanArguments, update_plan),
             _ToolDefinition(
                 "replan", "Replace unfinished Plan Steps while preserving completed work.", ReplanArguments, replan
+            ),
+            _ToolDefinition(
+                "record_fact",
+                "Record an important fact that must remain in future model context.",
+                RecordFactArguments,
+                record_fact,
             ),
         ]
     )

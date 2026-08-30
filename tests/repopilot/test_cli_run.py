@@ -1034,6 +1034,7 @@ def test_cli_runs_a_read_only_native_tool_calling_agent_and_writes_safe_artifact
         "finish_task",
         "update_plan",
         "replan",
+        "record_fact",
     }
 
 

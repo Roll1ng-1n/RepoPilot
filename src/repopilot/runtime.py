@@ -12,6 +12,7 @@ from typing import Any
 from repopilot.artifacts import RunArtifacts
 from repopilot.budget import BudgetExceeded, RunBudget, RunBudgetTracker
 from repopilot.checkpoint import capture_repository_state
+from repopilot.context import ContextManager
 from repopilot.model import ToolCallingModel
 from repopilot.plan import Plan, PlanHistory, PlanStep
 from repopilot.recovery import (
@@ -49,6 +50,7 @@ class AgentRuntime:
         checkpoint_model: dict[str, object] | None = None,
         checkpoint_environment: dict[str, object] | None = None,
         verifications: list[dict[str, Any]] | None = None,
+        context: ContextManager | None = None,
     ):
         self._model = model
         self._registry = registry
@@ -59,6 +61,7 @@ class AgentRuntime:
         self._checkpoint_model = checkpoint_model or {"model_name": model.model_name}
         self._checkpoint_environment = checkpoint_environment or {}
         self._verifications = verifications if verifications is not None else []
+        self._context = context or ContextManager()
 
     def run(self, task: str, target_repository: Path, *, checkpoint: dict[str, Any] | None = None) -> AgentRunResult:
         """Run a new Agent Run or continue its persisted in-progress state."""
@@ -104,6 +107,11 @@ class AgentRuntime:
             if previous is not None and not isinstance(previous, str):
                 raise ValueError("Checkpoint has an invalid Tool Call observation.")
             previous_tool_observation = previous
+            context_data = checkpoint.get("context")
+            if context_data is not None:
+                if not isinstance(context_data, dict):
+                    raise ValueError("Checkpoint has invalid Context state.")
+                self._context.restore(context_data)
             self._artifacts.append_trace("run_resumed", previous_status=checkpoint.get("status"))
 
         self._write_checkpoint(
@@ -127,7 +135,24 @@ class AgentRuntime:
                     status = self._record_budget_exhausted(error, budget)
                     break
                 try:
-                    turn = self._model.complete(messages, self._registry.schemas)
+                    context_selection = self._context.prepare(messages, self._plan_history.current.to_dict())
+                    for event in context_selection.events:
+                        self._artifacts.append_trace(
+                            event["type"], **{key: value for key, value in event.items() if key != "type"}
+                        )
+                    self._write_checkpoint(
+                        "RUNNING",
+                        task,
+                        target_repository,
+                        budget,
+                        recovery,
+                        messages,
+                        failures,
+                        recoveries,
+                        previous_tool_observation,
+                        tool_results,
+                    )
+                    turn = self._model.complete(context_selection.messages, self._registry.schemas)
                 except Exception as error:
                     terminal_status = self._handle_failure(
                         Failure(FailureCategory.MODEL_ERROR, str(error) or type(error).__name__),
@@ -154,6 +179,8 @@ class AgentRuntime:
                         tool_results,
                     )
                     continue
+                if turn.tool_calls and turn.content is not None:
+                    self._artifacts.append_trace("model_response", content=turn.content)
                 if not turn.tool_calls:
                     self._artifacts.append_trace("model_response", content=turn.content or "")
                     messages.append(self._assistant_message(turn))
@@ -198,6 +225,9 @@ class AgentRuntime:
                             should_finish = True
                             break
                     observation = self._registry.dispatch(tool_call)
+                    if observation.get("ok") and tool_call.name == "record_fact":
+                        self._context.record_fact(observation["result"]["fact"])
+                        self._artifacts.append_trace("important_fact_recorded", fact=observation["result"]["fact"])
                     self._record_tool_result(tool_call, observation, tool_results, messages)
                     if observation.get("ok") and tool_call.name in {"update_plan", "replan"}:
                         event_type = "plan_replanned" if tool_call.name == "replan" else "plan_updated"
@@ -271,6 +301,7 @@ class AgentRuntime:
                 "model": self._model.model_name,
                 "plan": self._plan_history.current.to_dict(),
                 "plan_history": [plan.to_dict() for plan in self._plan_history.versions],
+                "context": self._context.to_checkpoint(),
                 "budget": budget.snapshot(),
                 "failures": failures,
                 "recoveries": recoveries,
@@ -334,6 +365,7 @@ class AgentRuntime:
                 "environment": self._checkpoint_environment,
                 "plan": self._plan_history.current.to_dict(),
                 "plan_history": [plan.to_dict() for plan in self._plan_history.versions],
+                "context": self._context.to_checkpoint(),
                 "messages": messages,
                 "budget": budget.snapshot(),
                 "recovery": {"consecutive_failures": recovery.consecutive_failures},

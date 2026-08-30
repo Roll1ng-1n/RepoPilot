@@ -15,6 +15,7 @@ from platformdirs import user_state_dir
 from repopilot.artifacts import RunArtifacts
 from repopilot.budget import RunBudget
 from repopilot.checkpoint import RepositoryStateError, verify_repository_state
+from repopilot.context import ContextManager, ContextStrategy, model_summary_generator
 from repopilot.environment import (
     EnvironmentCreationError,
     EnvironmentRequest,
@@ -87,6 +88,8 @@ def create_app(
         max_consecutive_failures: int = typer.Option(3, "--max-consecutive-failures", min=1),
         command_timeout_seconds: float = typer.Option(300.0, "--command-timeout-seconds", min=0.001),
         max_run_seconds: float = typer.Option(30.0 * 60.0, "--max-run-seconds", min=0.001),
+        context_strategy: ContextStrategy = typer.Option(ContextStrategy.NONE, "--context-strategy"),
+        context_max_characters: int = typer.Option(12_000, "--context-max-characters", min=1),
     ) -> None:
         if task is None:
             task = typer.prompt("Task")
@@ -127,6 +130,13 @@ def create_app(
             max_run_seconds=max_run_seconds,
         )
         verifications: list[dict[str, Any]] = []
+        context = ContextManager(
+            context_strategy,
+            max_characters=context_max_characters,
+            summarizer=model_summary_generator(tool_calling_model)
+            if context_strategy is ContextStrategy.SUMMARY
+            else None,
+        )
         try:
             result = AgentRuntime(
                 tool_calling_model,
@@ -148,6 +158,7 @@ def create_app(
                 },
                 checkpoint_environment={"backend": request.environment, "image": request.image},
                 verifications=verifications,
+                context=context,
             ).run(task, repository)
         finally:
             execution_environment.close()
@@ -200,6 +211,9 @@ def create_app(
             verifications = checkpoint.get("verifications")
             if not isinstance(verifications, list):
                 raise ValueError("Checkpoint has invalid Task Verifications.")
+            context_state = checkpoint.get("context")
+            if context_state is not None and not isinstance(context_state, dict):
+                raise ValueError("Checkpoint has invalid Context state.")
         except (KeyError, TypeError, ValueError, PlanInvariantError) as error:
             typer.echo(f"Error: {error}", err=True)
             raise typer.Exit(code=1) from error
@@ -221,6 +235,7 @@ def create_app(
                 base_url=base_url if base_url is not None else model_state.get("base_url"),
             )
             tool_calling_model = selected_model_factory(options)
+            context = ContextManager(summarizer=model_summary_generator(tool_calling_model))
             result = AgentRuntime(
                 tool_calling_model,
                 create_tool_registry(
@@ -237,6 +252,7 @@ def create_app(
                 checkpoint_model=model_state,
                 checkpoint_environment=environment_state,
                 verifications=verifications,
+                context=context,
             ).resume(checkpoint, target_repository)
         except (RepositoryStateError, ValueError) as error:
             typer.echo(f"Error: {error}", err=True)
