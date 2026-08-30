@@ -11,6 +11,7 @@ from typing import Any
 
 from repopilot.artifacts import RunArtifacts
 from repopilot.budget import BudgetExceeded, RunBudget, RunBudgetTracker
+from repopilot.checkpoint import capture_repository_state
 from repopilot.model import ToolCallingModel
 from repopilot.plan import Plan, PlanHistory, PlanStep
 from repopilot.recovery import (
@@ -44,6 +45,10 @@ class AgentRuntime:
         plan_history: PlanHistory,
         budget: RunBudget | None = None,
         sleeper: Callable[[float], None] | None = None,
+        *,
+        checkpoint_model: dict[str, object] | None = None,
+        checkpoint_environment: dict[str, object] | None = None,
+        verifications: list[dict[str, Any]] | None = None,
     ):
         self._model = model
         self._registry = registry
@@ -51,129 +56,213 @@ class AgentRuntime:
         self._plan_history = plan_history
         self._budget = budget or RunBudget()
         self._sleeper = sleeper or time.sleep
+        self._checkpoint_model = checkpoint_model or {"model_name": model.model_name}
+        self._checkpoint_environment = checkpoint_environment or {}
+        self._verifications = verifications if verifications is not None else []
 
-    def run(self, task: str, target_repository: Path) -> AgentRunResult:
-        budget = self._budget.start()
-        recovery = RecoveryController(self._budget.max_consecutive_failures)
-        failures: list[dict[str, str]] = []
-        recoveries: list[dict[str, str | float]] = []
-        previous_tool_observation: str | None = None
-        messages: list[dict[str, Any]] = [
-            {
-                "role": "system",
-                "content": (
-                    "Use the provided native tools to inspect the Target Repository. Do not emit text actions. "
-                    "Use the Agent Control Tools to update the explicit Plan, Replan when new facts change the "
-                    "unfinished work, and request task completion with finish_task. Current Plan: "
-                    f"{json.dumps(self._plan_history.current.to_dict(), sort_keys=True)}"
-                ),
-            },
-            {"role": "user", "content": task},
-        ]
-        self._artifacts.append_trace(
-            "run_started", task=task, target_repository=str(target_repository.resolve()), model=self._model.model_name
+    def run(self, task: str, target_repository: Path, *, checkpoint: dict[str, Any] | None = None) -> AgentRunResult:
+        """Run a new Agent Run or continue its persisted in-progress state."""
+
+        if checkpoint is None:
+            budget = self._budget.start()
+            recovery = RecoveryController(self._budget.max_consecutive_failures)
+            failures: list[dict[str, str]] = []
+            recoveries: list[dict[str, str | float]] = []
+            previous_tool_observation: str | None = None
+            tool_results: list[dict[str, Any]] = []
+            messages: list[dict[str, Any]] = [
+                {
+                    "role": "system",
+                    "content": (
+                        "Use the provided native tools to inspect the Target Repository. Do not emit text actions. "
+                        "Use the Agent Control Tools to update the explicit Plan, Replan when new facts change the "
+                        "unfinished work, and request task completion with finish_task. Current Plan: "
+                        f"{json.dumps(self._plan_history.current.to_dict(), sort_keys=True)}"
+                    ),
+                },
+                {"role": "user", "content": task},
+            ]
+            self._artifacts.append_trace(
+                "run_started",
+                task=task,
+                target_repository=str(target_repository.resolve()),
+                model=self._model.model_name,
+            )
+            self._artifacts.append_trace("plan_created", plan=self._plan_history.current.to_dict())
+        else:
+            budget = RunBudgetTracker.from_snapshot(self._budget, checkpoint["budget"])
+            recovery = RecoveryController(self._budget.max_consecutive_failures)
+            recovery_data = checkpoint.get("recovery", {})
+            if not isinstance(recovery_data, dict):
+                raise ValueError("Checkpoint has invalid Recovery state.")
+            recovery.restore_consecutive_failures(int(recovery_data.get("consecutive_failures", 0)))
+            messages = self._checkpoint_list(checkpoint, "messages")
+            failures = self._checkpoint_list(checkpoint, "failures")
+            recoveries = self._checkpoint_list(checkpoint, "recoveries")
+            tool_results = self._checkpoint_list(checkpoint, "tool_results")
+            previous = checkpoint.get("previous_tool_observation")
+            if previous is not None and not isinstance(previous, str):
+                raise ValueError("Checkpoint has an invalid Tool Call observation.")
+            previous_tool_observation = previous
+            self._artifacts.append_trace("run_resumed", previous_status=checkpoint.get("status"))
+
+        self._write_checkpoint(
+            "RUNNING",
+            task,
+            target_repository,
+            budget,
+            recovery,
+            messages,
+            failures,
+            recoveries,
+            previous_tool_observation,
+            tool_results,
         )
-        self._artifacts.append_trace("plan_created", plan=self._plan_history.current.to_dict())
         status = "FAILED"
-        while True:
-            try:
-                budget.consume_step()
-            except BudgetExceeded as error:
-                status = self._record_budget_exhausted(error, budget)
-                break
-            try:
-                turn = self._model.complete(messages, self._registry.schemas)
-            except Exception as error:
-                terminal_status = self._handle_failure(
-                    Failure(FailureCategory.MODEL_ERROR, str(error) or type(error).__name__),
-                    recovery,
-                    budget,
-                    messages,
-                    failures,
-                    recoveries,
-                    transient_model_error=is_transient_model_error(error),
-                )
-                if terminal_status is not None:
-                    status = terminal_status
+        try:
+            while True:
+                try:
+                    budget.consume_step()
+                except BudgetExceeded as error:
+                    status = self._record_budget_exhausted(error, budget)
                     break
-                continue
-            if not turn.tool_calls:
-                self._artifacts.append_trace("model_response", content=turn.content or "")
+                try:
+                    turn = self._model.complete(messages, self._registry.schemas)
+                except Exception as error:
+                    terminal_status = self._handle_failure(
+                        Failure(FailureCategory.MODEL_ERROR, str(error) or type(error).__name__),
+                        recovery,
+                        budget,
+                        messages,
+                        failures,
+                        recoveries,
+                        transient_model_error=is_transient_model_error(error),
+                    )
+                    if terminal_status is not None:
+                        status = terminal_status
+                        break
+                    self._write_checkpoint(
+                        "RUNNING",
+                        task,
+                        target_repository,
+                        budget,
+                        recovery,
+                        messages,
+                        failures,
+                        recoveries,
+                        previous_tool_observation,
+                        tool_results,
+                    )
+                    continue
+                if not turn.tool_calls:
+                    self._artifacts.append_trace("model_response", content=turn.content or "")
+                    messages.append(self._assistant_message(turn))
+                    terminal_status = self._handle_failure(
+                        Failure(FailureCategory.NO_PROGRESS, "The model response contained no Tool Call."),
+                        recovery,
+                        budget,
+                        messages,
+                        failures,
+                        recoveries,
+                    )
+                    if terminal_status is not None:
+                        status = terminal_status
+                        break
+                    self._write_checkpoint(
+                        "RUNNING",
+                        task,
+                        target_repository,
+                        budget,
+                        recovery,
+                        messages,
+                        failures,
+                        recoveries,
+                        previous_tool_observation,
+                        tool_results,
+                    )
+                    continue
                 messages.append(self._assistant_message(turn))
-                terminal_status = self._handle_failure(
-                    Failure(FailureCategory.NO_PROGRESS, "The model response contained no Tool Call."),
-                    recovery,
-                    budget,
-                    messages,
-                    failures,
-                    recoveries,
-                )
-                if terminal_status is not None:
-                    status = terminal_status
-                    break
-                continue
-            messages.append(self._assistant_message(turn))
-            should_finish = False
-            for tool_call in turn.tool_calls:
-                self._artifacts.append_trace(
-                    "tool_call", tool_call_id=tool_call.id, tool_name=tool_call.name, arguments=tool_call.arguments
-                )
-                observation: dict[str, Any]
-                if tool_call.name == "replan":
-                    try:
-                        budget.consume_replan()
-                    except BudgetExceeded as error:
-                        observation = {"ok": False, "error": "budget_exceeded", "limit": error.limit}
-                        self._artifacts.append_trace(
-                            "tool_result", tool_call_id=tool_call.id, tool_name=tool_call.name, observation=observation
-                        )
-                        status = self._record_budget_exhausted(error, budget)
+                should_finish = False
+                for tool_call in turn.tool_calls:
+                    self._artifacts.append_trace(
+                        "tool_call", tool_call_id=tool_call.id, tool_name=tool_call.name, arguments=tool_call.arguments
+                    )
+                    observation: dict[str, Any]
+                    if tool_call.name == "replan":
+                        try:
+                            budget.consume_replan()
+                        except BudgetExceeded as error:
+                            observation = {"ok": False, "error": "budget_exceeded", "limit": error.limit}
+                            self._record_tool_result(tool_call, observation, tool_results, messages)
+                            status = self._record_budget_exhausted(error, budget)
+                            should_finish = True
+                            break
+                    observation = self._registry.dispatch(tool_call)
+                    self._record_tool_result(tool_call, observation, tool_results, messages)
+                    if observation.get("ok") and tool_call.name in {"update_plan", "replan"}:
+                        event_type = "plan_replanned" if tool_call.name == "replan" else "plan_updated"
+                        self._artifacts.append_trace(event_type, **observation["result"])
+                    if tool_call.name == "finish_task" and observation.get("ok"):
+                        status = observation["result"]["status"]
+                        self._write_terminal_artifacts(observation["result"])
                         should_finish = True
                         break
-                observation = self._registry.dispatch(tool_call)
-                self._artifacts.append_trace(
-                    "tool_result", tool_call_id=tool_call.id, tool_name=tool_call.name, observation=observation
-                )
-                if observation.get("ok") and tool_call.name in {"update_plan", "replan"}:
-                    event_type = "plan_replanned" if tool_call.name == "replan" else "plan_updated"
-                    self._artifacts.append_trace(event_type, **observation["result"])
-                messages.append(
-                    {"role": "tool", "tool_call_id": tool_call.id, "content": json.dumps(observation, sort_keys=True)}
-                )
-                if tool_call.name == "finish_task" and observation.get("ok"):
-                    status = observation["result"]["status"]
-                    self._write_terminal_artifacts(observation["result"])
-                    should_finish = True
-                    break
-                failure = classify_tool_failure(tool_call.name, observation)
-                observation_signature = self._tool_observation_signature(
-                    tool_call.name, tool_call.arguments, observation
-                )
-                if failure is None and observation_signature == previous_tool_observation:
-                    failure = Failure(
-                        FailureCategory.NO_PROGRESS,
-                        "The Tool Call and its Observation repeated without new progress.",
-                        tool_call.name,
+                    failure = classify_tool_failure(tool_call.name, observation)
+                    observation_signature = self._tool_observation_signature(
+                        tool_call.name, tool_call.arguments, observation
                     )
-                previous_tool_observation = observation_signature
-                if failure is None:
-                    recovery.record_success()
-                    continue
-                terminal_status = self._handle_failure(
-                    failure,
-                    recovery,
+                    if failure is None and observation_signature == previous_tool_observation:
+                        failure = Failure(
+                            FailureCategory.NO_PROGRESS,
+                            "The Tool Call and its Observation repeated without new progress.",
+                            tool_call.name,
+                        )
+                    previous_tool_observation = observation_signature
+                    if failure is None:
+                        recovery.record_success()
+                        continue
+                    terminal_status = self._handle_failure(
+                        failure,
+                        recovery,
+                        budget,
+                        messages,
+                        failures,
+                        recoveries,
+                    )
+                    if terminal_status is not None:
+                        status = terminal_status
+                        should_finish = True
+                        break
+                if should_finish:
+                    break
+                self._write_checkpoint(
+                    "RUNNING",
+                    task,
+                    target_repository,
                     budget,
+                    recovery,
                     messages,
                     failures,
                     recoveries,
+                    previous_tool_observation,
+                    tool_results,
                 )
-                if terminal_status is not None:
-                    status = terminal_status
-                    should_finish = True
-                    break
-            if should_finish:
-                break
+        except KeyboardInterrupt:
+            status = "STOPPED"
+            self._artifacts.append_trace("run_stopped", reason="KeyboardInterrupt")
         self._artifacts.append_trace("run_finished", status=status)
+        self._write_checkpoint(
+            status,
+            task,
+            target_repository,
+            budget,
+            recovery,
+            messages,
+            failures,
+            recoveries,
+            previous_tool_observation,
+            tool_results,
+        )
         self._artifacts.write_metadata(
             {
                 "run_id": self._artifacts.run_id,
@@ -185,9 +274,84 @@ class AgentRuntime:
                 "budget": budget.snapshot(),
                 "failures": failures,
                 "recoveries": recoveries,
+                "tool_results": tool_results,
+                "verifications": self._verifications,
+                "repository": capture_repository_state(target_repository),
             }
         )
         return AgentRunResult(self._artifacts.run_id, status, self._artifacts.path, self._plan_history.current)
+
+    def resume(self, checkpoint: dict[str, Any], target_repository: Path) -> AgentRunResult:
+        """Continue a stopped Agent Run from its already validated Checkpoint."""
+
+        task = checkpoint.get("task")
+        if not isinstance(task, str) or not task:
+            raise ValueError("Checkpoint has no task to resume.")
+        return self.run(task, target_repository, checkpoint=checkpoint)
+
+    def _record_tool_result(
+        self,
+        tool_call: Any,
+        observation: dict[str, Any],
+        tool_results: list[dict[str, Any]],
+        messages: list[dict[str, Any]],
+    ) -> None:
+        self._artifacts.append_trace(
+            "tool_result", tool_call_id=tool_call.id, tool_name=tool_call.name, observation=observation
+        )
+        tool_results.append(
+            {
+                "tool_call_id": tool_call.id,
+                "tool_name": tool_call.name,
+                "arguments": tool_call.arguments,
+                "observation": observation,
+            }
+        )
+        messages.append(
+            {"role": "tool", "tool_call_id": tool_call.id, "content": json.dumps(observation, sort_keys=True)}
+        )
+
+    def _write_checkpoint(
+        self,
+        status: str,
+        task: str,
+        target_repository: Path,
+        budget: RunBudgetTracker,
+        recovery: RecoveryController,
+        messages: list[dict[str, Any]],
+        failures: list[dict[str, str]],
+        recoveries: list[dict[str, str | float]],
+        previous_tool_observation: str | None,
+        tool_results: list[dict[str, Any]],
+    ) -> None:
+        self._artifacts.write_checkpoint(
+            {
+                "schema_version": 1,
+                "run_id": self._artifacts.run_id,
+                "status": status,
+                "task": task,
+                "model": self._checkpoint_model,
+                "environment": self._checkpoint_environment,
+                "plan": self._plan_history.current.to_dict(),
+                "plan_history": [plan.to_dict() for plan in self._plan_history.versions],
+                "messages": messages,
+                "budget": budget.snapshot(),
+                "recovery": {"consecutive_failures": recovery.consecutive_failures},
+                "failures": failures,
+                "recoveries": recoveries,
+                "previous_tool_observation": previous_tool_observation,
+                "tool_results": tool_results,
+                "verifications": self._verifications,
+                "repository": capture_repository_state(target_repository),
+            }
+        )
+
+    @staticmethod
+    def _checkpoint_list(checkpoint: dict[str, Any], key: str) -> list[Any]:
+        value = checkpoint.get(key)
+        if not isinstance(value, list):
+            raise ValueError(f"Checkpoint has invalid {key}.")
+        return value
 
     def _handle_failure(
         self,

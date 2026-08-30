@@ -65,6 +65,13 @@ class RecoveryController:
     def record_success(self) -> None:
         self.consecutive_failures = 0
 
+    def restore_consecutive_failures(self, value: int) -> None:
+        """Restore the bounded recovery counter from a Checkpoint."""
+
+        if value < 0:
+            raise ValueError("Checkpoint has an invalid consecutive failure counter.")
+        self.consecutive_failures = value
+
     def recover(self, failure: Failure, *, transient_model_error: bool = False) -> RecoveryDecision:
         self.consecutive_failures += 1
         if self.consecutive_failures >= self._max_consecutive_failures:

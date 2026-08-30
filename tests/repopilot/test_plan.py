@@ -51,3 +51,19 @@ def test_replan_keeps_completed_steps_and_replaces_the_unfinished_portion() -> N
     ]
     assert [step.id for step in plan_history.versions[1].steps] == ["inspect", "implement"]
     assert plan_history.versions[1].steps[0].status is PlanStepStatus.COMPLETED
+
+
+def test_plan_history_restores_every_version_and_step_status_from_a_checkpoint() -> None:
+    plan_history = PlanHistory.for_task("Complete the task.")
+    plan_history.replan([_step("inspect", "Inspect the code.")], "Inspect before changing it.")
+    plan_history.update_step("inspect", PlanStepStatus.COMPLETED)
+    plan_history.replan([_step("implement", "Implement the change.")], "Inspection is complete.")
+
+    restored = PlanHistory.from_dict([plan.to_dict() for plan in plan_history.versions])
+
+    assert [plan.version for plan in restored.versions] == [1, 2, 3]
+    assert restored.current.reason == "Inspection is complete."
+    assert [(step.id, step.status) for step in restored.current.steps] == [
+        ("inspect", PlanStepStatus.COMPLETED),
+        ("implement", PlanStepStatus.PENDING),
+    ]

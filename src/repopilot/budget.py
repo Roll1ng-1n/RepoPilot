@@ -76,6 +76,29 @@ class RunBudgetTracker:
             "max_run_seconds": self._budget.max_run_seconds,
         }
 
+    @classmethod
+    def from_snapshot(
+        cls,
+        budget: RunBudget,
+        snapshot: dict[str, int | float],
+        clock: Callable[[], float] = time.monotonic,
+    ) -> RunBudgetTracker:
+        """Resume the counters of one persisted Agent Run."""
+
+        tracker = cls(budget, clock)
+        try:
+            steps_used = int(snapshot["steps_used"])
+            replans_used = int(snapshot["replans_used"])
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValueError("Checkpoint has invalid Run Budget counters.") from error
+        if not 0 <= steps_used <= budget.max_steps:
+            raise ValueError("Checkpoint has invalid used Agent Steps.")
+        if not 0 <= replans_used <= budget.max_replans:
+            raise ValueError("Checkpoint has invalid used Replans.")
+        tracker.steps_used = steps_used
+        tracker.replans_used = replans_used
+        return tracker
+
     def _check_run_time(self) -> None:
         if self._clock() - self._started_at >= self._budget.max_run_seconds:
             raise BudgetExceeded("run_time")

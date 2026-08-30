@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
+from repopilot.artifacts import RunArtifacts
 from repopilot.cli import create_app
 from repopilot.environment import (
     Command,
@@ -14,6 +15,7 @@ from repopilot.environment import (
     EnvironmentCreationError,
     EnvironmentRequest,
     ExecutionEnvironment,
+    LocalExecutionEnvironment,
 )
 from repopilot.model import AssistantTurn, ToolCall
 
@@ -593,6 +595,250 @@ diff --git a/README.md b/README.md
         "verify_task",
         "finish_task",
     }
+
+
+def test_cli_resumes_a_stopped_run_in_a_new_environment_without_reapplying_the_patch(tmp_path: Path) -> None:
+    """A stopped Agent Run resumes its full context but never restores its old Environment."""
+
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+    patch = """\\
+diff --git a/README.md b/README.md
+--- a/README.md
++++ b/README.md
+@@ -1 +1 @@
+-RepoPilot needle
++RepoPilot checkpointed change
+"""
+    verification_command = (
+        "python -c \"from pathlib import Path; assert Path('README.md').read_text() == "
+        "'RepoPilot checkpointed change\\n'\""
+    )
+
+    class InterruptAfterPatchModel:
+        model_name = "interrupt-after-patch"
+
+        def __init__(self) -> None:
+            self.requests: list[tuple[list[dict], list[dict]]] = []
+
+        def complete(self, messages: list[dict], tools: list[dict]) -> AssistantTurn:
+            self.requests.append((messages, tools))
+            if len(self.requests) == 1:
+                return AssistantTurn(tool_calls=[ToolCall("apply", "apply_patch", {"patch": patch})])
+            raise KeyboardInterrupt()
+
+    class ResumeModel:
+        model_name = "resume-model"
+
+        def __init__(self) -> None:
+            self.requests: list[tuple[list[dict], list[dict]]] = []
+
+        def complete(self, messages: list[dict], tools: list[dict]) -> AssistantTurn:
+            self.requests.append((messages, tools))
+            turns = [
+                AssistantTurn(tool_calls=[ToolCall("diff", "view_diff", {})]),
+                AssistantTurn(
+                    tool_calls=[
+                        ToolCall(
+                            "verify",
+                            "verify_task",
+                            {
+                                "command": verification_command,
+                                "scope": "README checkpointed patch",
+                                "reason": "Proves the side effect from before Ctrl+C is still present.",
+                            },
+                        )
+                    ]
+                ),
+                AssistantTurn(
+                    tool_calls=[
+                        ToolCall(
+                            "finish",
+                            "finish_task",
+                            {
+                                "root_cause": "The task was interrupted after applying its patch.",
+                                "changes": ["Kept the one already-applied README change."],
+                            },
+                        )
+                    ]
+                ),
+            ]
+            return turns[len(self.requests) - 1]
+
+    class RecordingEnvironment:
+        def __init__(self) -> None:
+            self.closed = False
+
+        def execute(self, command: Command) -> CommandResult:
+            return LocalExecutionEnvironment(target_repository).execute(command)
+
+        def close(self) -> None:
+            self.closed = True
+
+    first_model = InterruptAfterPatchModel()
+    first_environments: list[RecordingEnvironment] = []
+
+    def first_environment_factory(_request: EnvironmentRequest) -> RecordingEnvironment:
+        environment = RecordingEnvironment()
+        first_environments.append(environment)
+        return environment
+
+    stopped = CliRunner().invoke(
+        create_app(lambda _: first_model, first_environment_factory),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Change the README once, then verify it.",
+            "--state-dir",
+            str(state_directory),
+            "--api-key",
+            "test-api-key",
+        ],
+    )
+
+    assert stopped.exit_code == 0, stopped.output
+    assert "STOPPED" in stopped.output
+    assert first_environments[0].closed is True
+    run_directory = next(state_directory.iterdir())
+    checkpoint = json.loads((run_directory / "checkpoint.json").read_text())
+    assert checkpoint["status"] == "STOPPED"
+    assert checkpoint["task"] == "Change the README once, then verify it."
+    assert checkpoint["budget"]["steps_used"] == 2
+    assert checkpoint["tool_results"][0]["tool_name"] == "apply_patch"
+    assert checkpoint["repository"]["resolved_target_repository"] == str(target_repository.resolve())
+    assert checkpoint["environment"] == {"backend": "local", "image": None}
+    assert "test-api-key" not in json.dumps(checkpoint)
+    assert (target_repository / "README.md").read_text() == "RepoPilot checkpointed change\n"
+
+    resumed_model = ResumeModel()
+    resumed_environments: list[RecordingEnvironment] = []
+
+    def resumed_environment_factory(_request: EnvironmentRequest) -> RecordingEnvironment:
+        environment = RecordingEnvironment()
+        resumed_environments.append(environment)
+        return environment
+
+    resumed = CliRunner().invoke(
+        create_app(lambda _: resumed_model, resumed_environment_factory),
+        ["resume", run_directory.name, "--state-dir", str(state_directory)],
+    )
+
+    assert resumed.exit_code == 0, resumed.output
+    assert "SUCCEEDED" in resumed.output
+    assert resumed_environments[0].closed is True
+    assert len(resumed_model.requests) == 3
+    assert any(
+        message["role"] == "tool" and message["tool_call_id"] == "apply" for message in resumed_model.requests[0][0]
+    )
+    assert (target_repository / "README.md").read_text() == "RepoPilot checkpointed change\n"
+
+    metadata = json.loads((run_directory / "metadata.json").read_text())
+    events = [json.loads(line) for line in (run_directory / "trace.jsonl").read_text().splitlines()]
+    checkpoint = json.loads((run_directory / "checkpoint.json").read_text())
+    assert metadata["status"] == "SUCCEEDED"
+    assert [
+        item["scope"] for item in json.loads((run_directory / "verification.json").read_text())["verifications"]
+    ] == ["README checkpointed patch"]
+    assert checkpoint["status"] == "SUCCEEDED"
+    assert checkpoint["verifications"][0]["command"] == verification_command
+    assert [event["type"] for event in events if event["type"] in {"run_stopped", "run_resumed"}] == [
+        "run_stopped",
+        "run_resumed",
+    ]
+
+
+def test_cli_resume_rejects_a_target_repository_changed_after_its_checkpoint(tmp_path: Path) -> None:
+    target_repository = tmp_path / "target"
+    _make_target_repository(target_repository)
+    state_directory = tmp_path / "agent-runs"
+
+    class InterruptModel:
+        model_name = "interrupt-model"
+
+        def complete(self, _messages: list[dict], _tools: list[dict]) -> AssistantTurn:
+            raise KeyboardInterrupt()
+
+    class NoCallsModel:
+        model_name = "must-not-run"
+
+        def __init__(self) -> None:
+            self.calls = 0
+
+        def complete(self, _messages: list[dict], _tools: list[dict]) -> AssistantTurn:
+            self.calls += 1
+            raise AssertionError("The model must not run after repository validation fails.")
+
+    class RecordingEnvironment:
+        def __init__(self) -> None:
+            self.closed = False
+
+        def execute(self, _command: Command) -> CommandResult:
+            raise AssertionError("No Tool Call should occur before repository validation.")
+
+        def close(self) -> None:
+            self.closed = True
+
+    stopped = CliRunner().invoke(
+        create_app(lambda _: InterruptModel(), lambda _: RecordingEnvironment()),
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Do not run after the repository changes.",
+            "--state-dir",
+            str(state_directory),
+        ],
+    )
+    assert stopped.exit_code == 0, stopped.output
+    run_directory = next(state_directory.iterdir())
+    (target_repository / "README.md").write_text("Changed after checkpoint\n")
+
+    model = NoCallsModel()
+    environments: list[RecordingEnvironment] = []
+
+    def environment_factory(_request: EnvironmentRequest) -> RecordingEnvironment:
+        environment = RecordingEnvironment()
+        environments.append(environment)
+        return environment
+
+    resumed = CliRunner().invoke(
+        create_app(lambda _: model, environment_factory),
+        ["resume", run_directory.name, "--state-dir", str(state_directory)],
+    )
+
+    assert resumed.exit_code == 1
+    assert "Target Repository changed since the Checkpoint" in resumed.output
+    assert model.calls == 0
+    assert environments[0].closed is True
+
+
+@pytest.mark.parametrize("status", ["RUNNING", "SUCCEEDED", "UNVERIFIED", "FAILED", "BUDGET_EXCEEDED"])
+def test_cli_resume_rejects_runs_that_are_not_stopped_or_waiting_for_approval(tmp_path: Path, status: str) -> None:
+    artifacts = RunArtifacts(tmp_path / "agent-runs", secrets=[])
+    artifacts.write_checkpoint({"run_id": artifacts.run_id, "status": status})
+
+    result = CliRunner().invoke(
+        create_app(lambda _: (_ for _ in ()).throw(AssertionError("Model factory must not run."))),
+        ["resume", artifacts.run_id, "--state-dir", str(tmp_path / "agent-runs")],
+    )
+
+    assert result.exit_code == 1
+    assert f"cannot resume from '{status}'" in result.output
+
+
+def test_cli_resume_keeps_a_waiting_run_waiting_for_human_approval(tmp_path: Path) -> None:
+    artifacts = RunArtifacts(tmp_path / "agent-runs", secrets=[])
+    artifacts.write_checkpoint({"run_id": artifacts.run_id, "status": "WAITING_FOR_APPROVAL"})
+
+    result = CliRunner().invoke(
+        create_app(lambda _: (_ for _ in ()).throw(AssertionError("Model factory must not run."))),
+        ["resume", artifacts.run_id, "--state-dir", str(tmp_path / "agent-runs")],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "still waiting for Human Approval" in result.output
 
 
 def test_cli_selects_an_environment_through_the_factory(tmp_path: Path) -> None:

@@ -126,11 +126,12 @@ def create_tool_registry(
     plan_history: PlanHistory,
     *,
     command_timeout_seconds: float = 300.0,
+    verifications: list[dict[str, Any]] | None = None,
 ) -> ToolRegistry:
     """Create repository and Agent Control Tools without exposing the Environment to the Runtime."""
 
     root = target_repository.resolve()
-    verifications: list[dict[str, Any]] = []
+    verifications = verifications if verifications is not None else []
 
     def safe_path(path: str) -> str:
         resolved = (root / path).resolve()

@@ -46,6 +46,20 @@ class PlanStep:
             "status": self.status.value,
         }
 
+    @classmethod
+    def from_dict(cls, value: dict[str, object]) -> PlanStep:
+        """Recreate a persisted Plan Step while retaining its lifecycle state."""
+
+        try:
+            return cls(
+                id=str(value["id"]),
+                description=str(value["description"]),
+                completion_condition=str(value["completion_condition"]),
+                status=PlanStepStatus(str(value["status"])),
+            )
+        except (KeyError, ValueError) as error:
+            raise PlanInvariantError("Invalid persisted Plan Step.") from error
+
 
 @dataclass(frozen=True)
 class Plan:
@@ -93,6 +107,26 @@ class Plan:
             "steps": [step.to_dict() for step in self.steps],
         }
 
+    @classmethod
+    def from_dict(cls, value: dict[str, object]) -> Plan:
+        """Recreate one persisted Plan version."""
+
+        try:
+            steps = value["steps"]
+            if not isinstance(steps, list):
+                raise PlanInvariantError("Persisted Plan Steps must be a list.")
+            version = value["version"]
+            reason = value["reason"]
+            if not isinstance(version, int) or isinstance(version, bool) or not isinstance(reason, str):
+                raise PlanInvariantError("Persisted Plan has invalid fields.")
+            return cls(
+                version=version,
+                steps=tuple(PlanStep.from_dict(step) for step in steps if isinstance(step, dict)),
+                reason=reason,
+            )
+        except (KeyError, TypeError, ValueError) as error:
+            raise PlanInvariantError("Invalid persisted Plan.") from error
+
 
 class PlanHistory:
     """The mutable version history owned by one Agent Run."""
@@ -139,3 +173,14 @@ class PlanHistory:
         replanned = self.current.replan(replacement_steps, reason)
         self._versions.append(replanned)
         return replanned
+
+    @classmethod
+    def from_dict(cls, versions: list[dict[str, object]]) -> PlanHistory:
+        """Restore the complete version history of a persisted Plan."""
+
+        if not versions:
+            raise PlanInvariantError("A persisted Plan History must contain a Plan.")
+        restored_versions = [Plan.from_dict(value) for value in versions]
+        history = cls(restored_versions[0])
+        history._versions = restored_versions
+        return history

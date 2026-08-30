@@ -7,12 +7,14 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
+from typing import Any
 
 import typer
 from platformdirs import user_state_dir
 
 from repopilot.artifacts import RunArtifacts
 from repopilot.budget import RunBudget
+from repopilot.checkpoint import RepositoryStateError, verify_repository_state
 from repopilot.environment import (
     EnvironmentCreationError,
     EnvironmentRequest,
@@ -21,7 +23,7 @@ from repopilot.environment import (
     validate_environment_request,
 )
 from repopilot.model import LiteLLMToolCallingModel, ToolCallingModel
-from repopilot.plan import PlanHistory
+from repopilot.plan import PlanHistory, PlanInvariantError
 from repopilot.runtime import AgentRuntime
 from repopilot.tools import create_tool_registry
 
@@ -54,6 +56,13 @@ def create_app(
     app = typer.Typer(add_completion=False, help="Run RepoPilot against a Target Repository.")
     selected_model_factory = model_factory or _create_litellm_model
     selected_environment_factory = environment_factory or create_execution_environment
+
+    def print_result(result: Any) -> None:
+        typer.echo(f"Agent Run {result.run_id}: {result.status}")
+        typer.echo(f"Plan v{result.plan.version}")
+        for step in result.plan.steps:
+            typer.echo(f"- [{step.status.value}] {step.description}")
+        typer.echo(f"Artifacts: {result.artifact_directory}")
 
     @app.callback()
     def main() -> None:
@@ -117,6 +126,7 @@ def create_app(
             command_timeout_seconds=command_timeout_seconds,
             max_run_seconds=max_run_seconds,
         )
+        verifications: list[dict[str, Any]] = []
         try:
             result = AgentRuntime(
                 tool_calling_model,
@@ -125,19 +135,115 @@ def create_app(
                     repository,
                     plan_history,
                     command_timeout_seconds=budget.command_timeout_seconds,
+                    verifications=verifications,
                 ),
                 artifacts,
                 plan_history,
                 budget,
                 sleeper,
+                checkpoint_model={
+                    "backend": "litellm",
+                    "model_name": tool_calling_model.model_name,
+                    "base_url": base_url,
+                },
+                checkpoint_environment={"backend": request.environment, "image": request.image},
+                verifications=verifications,
             ).run(task, repository)
         finally:
             execution_environment.close()
-        typer.echo(f"Agent Run {result.run_id}: {result.status}")
-        typer.echo(f"Plan v{result.plan.version}")
-        for step in result.plan.steps:
-            typer.echo(f"- [{step.status.value}] {step.description}")
-        typer.echo(f"Artifacts: {result.artifact_directory}")
+        print_result(result)
+
+    @app.command()
+    def resume(
+        run_id: str = typer.Argument(..., help="The persisted Agent Run ID."),
+        state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
+        model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
+        api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
+        base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+    ) -> None:
+        """Resume a STOPPED Agent Run after recreating its Execution Environment."""
+
+        run_state_directory = state_dir or Path(user_state_dir("repopilot")) / "runs"
+        try:
+            artifacts = RunArtifacts.reopen(run_state_directory, run_id, secrets=_credential_values(api_key))
+            checkpoint = artifacts.read_checkpoint()
+        except (FileNotFoundError, ValueError) as error:
+            typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(code=1) from error
+
+        if checkpoint.get("run_id") != run_id:
+            typer.echo(f"Error: Agent Run {run_id} has an invalid Checkpoint Run ID.", err=True)
+            raise typer.Exit(code=1)
+        status = checkpoint.get("status")
+        if status == "WAITING_FOR_APPROVAL":
+            typer.echo(f"Agent Run {run_id} is still waiting for Human Approval.")
+            return
+        if status != "STOPPED":
+            typer.echo(f"Error: Agent Run {run_id} cannot resume from {status!r}.", err=True)
+            raise typer.Exit(code=1)
+
+        try:
+            repository_state = _checkpoint_mapping(checkpoint, "repository")
+            target_repository = Path(_checkpoint_string(repository_state, "resolved_target_repository"))
+            environment_state = _checkpoint_mapping(checkpoint, "environment")
+            request = EnvironmentRequest(
+                target_repository=target_repository,
+                environment=_checkpoint_string(environment_state, "backend"),
+                image=environment_state.get("image") if isinstance(environment_state.get("image"), str) else None,
+            )
+            validate_environment_request(request)
+            plan_history_value = checkpoint.get("plan_history")
+            if not isinstance(plan_history_value, list):
+                raise ValueError("Checkpoint has invalid Plan History.")
+            plan_history = PlanHistory.from_dict(plan_history_value)
+            budget = _budget_from_checkpoint(_checkpoint_mapping(checkpoint, "budget"))
+            verifications = checkpoint.get("verifications")
+            if not isinstance(verifications, list):
+                raise ValueError("Checkpoint has invalid Task Verifications.")
+        except (KeyError, TypeError, ValueError, PlanInvariantError) as error:
+            typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(code=1) from error
+
+        try:
+            execution_environment = selected_environment_factory(request)
+        except ValueError as error:
+            typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(code=1) from error
+        except EnvironmentCreationError as error:
+            typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(code=1) from error
+        try:
+            verify_repository_state(repository_state, target_repository)
+            model_state = _checkpoint_mapping(checkpoint, "model")
+            options = ModelOptions(
+                model_name=model or _checkpoint_string(model_state, "model_name"),
+                api_key=api_key,
+                base_url=base_url if base_url is not None else model_state.get("base_url"),
+            )
+            tool_calling_model = selected_model_factory(options)
+            result = AgentRuntime(
+                tool_calling_model,
+                create_tool_registry(
+                    execution_environment,
+                    target_repository,
+                    plan_history,
+                    command_timeout_seconds=budget.command_timeout_seconds,
+                    verifications=verifications,
+                ),
+                artifacts,
+                plan_history,
+                budget,
+                sleeper,
+                checkpoint_model=model_state,
+                checkpoint_environment=environment_state,
+                verifications=verifications,
+            ).resume(checkpoint, target_repository)
+        except (RepositoryStateError, ValueError) as error:
+            typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(code=1) from error
+        finally:
+            execution_environment.close()
+        print_result(result)
 
     return app
 
@@ -158,6 +264,33 @@ def _credential_values(api_key: str | None) -> list[str]:
         if any(marker in name.upper() for marker in ("KEY", "TOKEN", "SECRET", "PASSWORD")):
             values.append(value)
     return values
+
+
+def _checkpoint_mapping(checkpoint: dict[str, Any], key: str) -> dict[str, Any]:
+    value = checkpoint.get(key)
+    if not isinstance(value, dict):
+        raise ValueError(f"Checkpoint has invalid {key}.")
+    return value
+
+
+def _checkpoint_string(value: dict[str, Any], key: str) -> str:
+    item = value.get(key)
+    if not isinstance(item, str) or not item:
+        raise ValueError(f"Checkpoint has invalid {key}.")
+    return item
+
+
+def _budget_from_checkpoint(value: dict[str, Any]) -> RunBudget:
+    try:
+        return RunBudget(
+            max_steps=int(value["max_steps"]),
+            max_replans=int(value["max_replans"]),
+            max_consecutive_failures=int(value["max_consecutive_failures"]),
+            command_timeout_seconds=float(value["command_timeout_seconds"]),
+            max_run_seconds=float(value["max_run_seconds"]),
+        )
+    except (KeyError, TypeError, ValueError) as error:
+        raise ValueError("Checkpoint has invalid Run Budget.") from error
 
 
 app = create_app()
