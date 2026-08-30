@@ -1,0 +1,36 @@
+diff --git a/src/slugify.py b/src/slugify.py
+index 04a3549..88f6db6 100644
+--- a/src/slugify.py
++++ b/src/slugify.py
+@@ -1,7 +1,9 @@
+ """Small text utility used by the single-file seed task."""
+ 
++import re
++
+ 
+ def slugify(value: str) -> str:
+     """Return a lower-case hyphen-separated representation of a title."""
+ 
+-    return "-".join(value.strip().lower().split(" "))
++    return re.sub(r"\s+", "-", value.strip().lower())
+diff --git a/src/__pycache__/slugify.cpython-312.pyc b/src/__pycache__/slugify.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..587f1c6be42beb10f29345319ac221c49146103f
+GIT binary patch
+literal 585
+zcmV-P0=E6j4Gjta0000Tg_LUQ0002v0000000000000001ONa400000^B@2K0G9w{
+z09pWK0b~Mf0a^iM17!ka1Z4td1Y`w-1X=@m0x1T1HB)V2Y-}KOWq5QTb#!TLX>@rY
+zb#rB8AYyqSbZBKDb7^j8Y-KHGX>4U6b7f^@Aar4KYcA;k0000^+68uDY;|SY26AO|
+zb#iWF0RR9100000000001^@s60{{R3^JoA70G9xC0RR91000000BQmN0000000000
+z00000000000AvAV0(<~!1poj500000000000000000021000000001L2LJ#700000
+z00000000000002100000000210{{R30000}04W1{KT>6Mb#iVXVIXX8cV%)dV_|b;
+zAZU4TXk~6Kb7gR0a$$63WFT^7aB^jHWo~p~bZKvHAa7<MVIXvAbZliVdIMZ@E7}1q
+zDFoUAa%I{Bb9G|c1#@(AX>i&FY;SjEaw!3F0{{R3a{&MV03iAqFL!TpYjbd6V`VRM
+za$_%ZY;|X8W_d1fdD;haY;|X8W_fZ9000060001UCIA2cfB^Ic01OU~Hi<TnCYU3b
+zb)S2gdz*dNA2QJ&GSeS4(+f4w1U2&j0000f1lk8*Uu17%Ute+u0002m19Nn8atr_f
+z0I2|S4FCWDati<e0NMyVZEs|CY-K)j5dZ)H0RR91a~=Qy0Pq6=0Rh<nJL3Qe@CE|`
+XHjp#$00RLwm^1VM0|7R24FCWDmx_yl
+
+literal 0
+KcmV+b0RR6000031
+

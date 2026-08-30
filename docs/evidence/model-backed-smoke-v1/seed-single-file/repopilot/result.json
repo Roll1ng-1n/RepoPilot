@@ -1,0 +1,46 @@
+{
+  "artifact_directory": "/tmp/repopilot-benchmark-final.AG83B5/78efbb17ee844ec0bae722200d08ec65/seed-single-file/repopilot",
+  "engine": "repopilot",
+  "error": null,
+  "metrics": {
+    "commits": [],
+    "cost": null,
+    "duration_seconds": 19.723480570999527,
+    "errors": [],
+    "patch": {
+      "changed": true,
+      "path": "/tmp/repopilot-benchmark-final.AG83B5/78efbb17ee844ec0bae722200d08ec65/seed-single-file/repopilot/patch.diff",
+      "sha256": "3188d67ed83e9e92fd1bb591086a459e1d535f78fc11045d43248745c7f8c641"
+    },
+    "replans": 0,
+    "retries": 0,
+    "run_budget": {
+      "command_timeout_seconds": 30.0,
+      "max_consecutive_failures": 2,
+      "max_replans": 1,
+      "max_run_seconds": 180.0,
+      "max_steps": 10
+    },
+    "steps": 7,
+    "tokens": {
+      "completion": 2049,
+      "prompt": 26163,
+      "total": 28212
+    },
+    "tool_calls": 9,
+    "trajectory_status": "SUCCEEDED",
+    "verifier_success": true
+  },
+  "status": "SUCCEEDED",
+  "success": true,
+  "task_id": "seed-single-file",
+  "verifier": {
+    "duration_seconds": 0.0297666520018538,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "",
+    "success_condition": {
+      "verifier_exit_code": 0
+    }
+  }
+}

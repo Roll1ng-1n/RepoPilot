@@ -1,0 +1,30 @@
+diff --git a/src/slugify.py b/src/slugify.py
+index 04a3549..da6c127 100644
+--- a/src/slugify.py
++++ b/src/slugify.py
+@@ -4,4 +4,4 @@
+ def slugify(value: str) -> str:
+     """Return a lower-case hyphen-separated representation of a title."""
+ 
+-    return "-".join(value.strip().lower().split(" "))
++    return "-".join(value.lower().split())
+diff --git a/src/__pycache__/slugify.cpython-312.pyc b/src/__pycache__/slugify.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..d5e3f8aea28049f405bed964ae99aa87a66be1cb
+GIT binary patch
+literal 540
+zcmV+%0^|M54Gjta0000og_LU40002v0000000000000001ONa400000^B4dC0G9w{
+z09pWK0c8PX0%ZYa1Y`q*1X==l1Sti2HB)V2Y-}KOWq5QTb#!TLX>@rYb#rB8AYyqS
+zbZBKDb7^j8Y-KHGX>4U6b7f^@Aar4KYcARac42IFW!eUEWps6NZesxe0000000000
+z000C400093008q`0001&0AvAb0RR910000000000000000001d0BQpO0000000000
+z00000000000IL81000000BQvQ000000000000000000000IL81000000ILB200000
+z08;=d0(w7EWps6NZXjVGY;SjEaxG(Fb7dfCd2ncDZY^_VaA9&`bY)~9a%FIGWpib2
+zbYXO9Z*CxOW*}i8bZK;KWiHwQEhz)q1Zr<-ZrTNGZ+B&K+68lPY-w~U0dfKW0046V
+z0000W`WY{GZ*psMaA9L*FLQEZFLP{lXK7}6E^v9;2Xkz7XK7}6atZ(d00aO40COS$
+z004jh@CE=3505yBIFLn`OOZ>HP1h7B(G(}s6e-gSD$oQf^8f$<08S|b+6P}>WN%|%
+zU)lq6baHYE0001~0CEce0043c0002m2s~|XWOZz1K5`EL000310046v0002+0|5a6
+e*#JB61_J>rkTdWA0|6_TGxPuh0V{F~0002*Y=HCt
+
+literal 0
+KcmV+b0RR6000031
+

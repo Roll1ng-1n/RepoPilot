@@ -86,9 +86,17 @@ verifier, success condition, timeout, and Run Budget. The runner creates indepen
 raw results, patches, commits, and verification output. See [benchmark details](docs/repopilot-benchmark.md) for the
 task list and behavior coverage.
 
-The checked-in [micro-benchmark summary](docs/evidence/micro-benchmark-v1/summary.md) contains 12 real
-task/engine attempts. All are `ENVIRONMENT_UNAVAILABLE` because the configured Docker image was unavailable; no
-model-backed task completed, so no success rate is reported.
+The checked-in [micro-benchmark summary](docs/evidence/micro-benchmark-v1/summary.md) is the retained historical
+12-sample Docker-unavailable run. All 12 task/engine attempts are `ENVIRONMENT_UNAVAILABLE`, with zero model calls
+and `success: null`; that run therefore has no model-backed result (0/0, not 0%).
+
+The separate [model-backed smoke evidence](docs/evidence/model-backed-smoke-v1/summary.md) records one real
+`seed-single-file` task for both engines under the same redacted low-cost authorized model, temperature, Run Budget,
+and Docker image. The baseline was `Submitted` with hidden verifier `true`, 7 steps, 19,660 total tokens, 7 Tool
+Calls, 20.475 seconds, and `cost: null`; RepoPilot was `SUCCEEDED` with verifier `true`, 7 steps, 28,212 total
+tokens, 9 Tool Calls, 0 retries, 0 replans, 19.723 seconds, and `cost: null`. The model name and endpoint are
+redacted and the API-key scan is clean. This is one task with two engine attempts: smoke evidence, not a statistical
+win rate or a general performance claim.
 
 The current SWE-bench Lite smoke record is deliberately not presented as a model result:
 
