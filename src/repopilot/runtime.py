@@ -291,13 +291,21 @@ class AgentRuntime:
                             step=budget.steps_used,
                             message_count=len(context_selection.messages),
                         )
+                        model_started_at: float | None = None
                         try:
+                            model_started_at = time.monotonic()
                             turn = self._model.complete(context_selection.messages, self._registry.schemas)
                         except Exception as error:
+                            duration_seconds = (
+                                time.monotonic() - model_started_at if model_started_at is not None else None
+                            )
                             self._artifacts.append_trace(
                                 "model_response",
                                 model=self._model.model_name,
                                 error=str(error) or type(error).__name__,
+                                usage=None,
+                                cost_usd=None,
+                                duration_seconds=duration_seconds,
                             )
                             raise
                     except Exception as error:
@@ -332,9 +340,13 @@ class AgentRuntime:
                         "model_response",
                         model=self._model.model_name,
                         content=turn.content,
+                        usage=getattr(turn, "usage", None),
+                        cost_usd=getattr(turn, "cost", None),
+                        duration_seconds=(
+                            time.monotonic() - model_started_at if model_started_at is not None else None
+                        ),
                         tool_calls=[
-                            {"id": call.id, "name": call.name, "arguments": call.arguments}
-                            for call in turn.tool_calls
+                            {"id": call.id, "name": call.name, "arguments": call.arguments} for call in turn.tool_calls
                         ],
                     )
                     if not turn.tool_calls:
@@ -858,11 +870,14 @@ class AgentRuntime:
             "rationale": report.get("rationale") or "No overall modification rationale was provided.",
             "risks": report.get("risks") or [],
         }
-        return _TASK_REPORT_TEMPLATE.render(
-            report=normalized_report,
-            verifications=verifications,
-            git_commits=git_commits,
-        ).strip() + "\n"
+        return (
+            _TASK_REPORT_TEMPLATE.render(
+                report=normalized_report,
+                verifications=verifications,
+                git_commits=git_commits,
+            ).strip()
+            + "\n"
+        )
 
     @staticmethod
     def _assistant_message(turn: Any) -> dict[str, Any]:

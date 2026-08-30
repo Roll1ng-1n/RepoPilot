@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import uuid
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
@@ -15,6 +16,14 @@ from platformdirs import user_state_dir
 
 from repopilot.approval import ApprovalContext
 from repopilot.artifacts import RunArtifacts
+from repopilot.benchmark import (
+    BenchmarkBudget,
+    BenchmarkConfig,
+    BenchmarkEngine,
+    BenchmarkModel,
+    BenchmarkRun,
+    run_benchmark,
+)
 from repopilot.budget import RunBudget
 from repopilot.checkpoint import RepositoryStateError, verify_repository_state
 from repopilot.context import ContextManager, ContextStrategy, model_summary_generator
@@ -40,6 +49,9 @@ class ModelOptions:
 
 
 ModelFactory = Callable[[ModelOptions], ToolCallingModel]
+BenchmarkRunner = Callable[[BenchmarkConfig], BenchmarkRun]
+
+_BUILTIN_BENCHMARK_TASKS = Path(__file__).with_name("benchmark_tasks")
 
 
 class EnvironmentOption(str, Enum):
@@ -54,12 +66,14 @@ def create_app(
     environment_factory: ExecutionEnvironmentFactory | None = None,
     *,
     sleeper: Callable[[float], None] | None = None,
+    benchmark_runner: BenchmarkRunner | None = None,
 ) -> typer.Typer:
     """Build the CLI, allowing Runtime Tests to replace composition boundaries."""
 
     app = typer.Typer(add_completion=False, help="Run RepoPilot against a Target Repository.")
     selected_model_factory = model_factory or _create_litellm_model
     selected_environment_factory = environment_factory or create_execution_environment
+    selected_benchmark_runner = benchmark_runner or run_benchmark
 
     def print_result(result: Any) -> None:
         typer.echo(f"Agent Run {result.run_id}: {result.status}")
@@ -200,6 +214,72 @@ def create_app(
             typer.echo(json.dumps(inspection.to_dict(), indent=2, sort_keys=True))
         else:
             typer.echo(render_human(inspection), nl=False)
+
+    @app.command()
+    def benchmark(
+        state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
+        tasks_dir: Path = typer.Option(
+            _BUILTIN_BENCHMARK_TASKS,
+            "--tasks-dir",
+            exists=True,
+            file_okay=False,
+            resolve_path=True,
+            help="Directory containing fixed benchmark task manifests.",
+        ),
+        engines: list[BenchmarkEngine] = typer.Option(
+            [BenchmarkEngine.BASELINE, BenchmarkEngine.REPOPILOT],
+            "--engine",
+            help="Engine to run; repeat to compare multiple engines.",
+        ),
+        model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
+        api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
+        base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+        image: str = typer.Option("python:3.12-slim", "--image", help="Docker image shared by both engines."),
+        temperature: float = typer.Option(0.0, "--temperature"),
+        max_steps: int = typer.Option(15, "--max-steps", min=1),
+        max_replans: int = typer.Option(1, "--max-replans", min=0),
+        max_consecutive_failures: int = typer.Option(2, "--max-consecutive-failures", min=1),
+        command_timeout_seconds: float = typer.Option(30.0, "--command-timeout-seconds", min=0.001),
+        max_run_seconds: float = typer.Option(180.0, "--max-run-seconds", min=0.001),
+    ) -> None:
+        """Compare the mini-SWE-agent baseline and RepoPilot on fixed Docker tasks."""
+
+        if not model:
+            raise typer.BadParameter("Provide --model or set REPOPILOT_MODEL.", param_hint="--model")
+        if not engines:
+            raise typer.BadParameter("Select at least one benchmark engine.", param_hint="--engine")
+        benchmark_root = state_dir or Path(user_state_dir("repopilot")) / "benchmarks"
+        output_directory = benchmark_root.resolve() / uuid.uuid4().hex
+        config = BenchmarkConfig(
+            tasks_directory=tasks_dir,
+            output_directory=output_directory,
+            model=BenchmarkModel(
+                model_name=model,
+                model_kwargs={"temperature": temperature},
+                api_key=api_key,
+                base_url=base_url,
+            ),
+            image=image,
+            budget=BenchmarkBudget(
+                max_steps=max_steps,
+                max_replans=max_replans,
+                max_consecutive_failures=max_consecutive_failures,
+                command_timeout_seconds=command_timeout_seconds,
+                max_run_seconds=max_run_seconds,
+            ),
+            engines=tuple(dict.fromkeys(engines)),
+        )
+        try:
+            benchmark_run = selected_benchmark_runner(config)
+        except (FileNotFoundError, OSError, RuntimeError, ValueError) as error:
+            typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(code=1) from error
+
+        typer.echo(f"Agent Benchmark: {benchmark_run.output_directory}")
+        for item in benchmark_run.results:
+            success = "passed" if item.success else "failed" if item.success is False else "unknown"
+            typer.echo(f"- {item.task_id} / {item.engine.value}: {success} (Agent Run: {item.status or 'unknown'})")
+        typer.echo(f"Summary: {benchmark_run.output_directory / 'summary.json'}")
 
     def _resume(
         run_id: str = typer.Argument(..., help="The persisted Agent Run ID."),

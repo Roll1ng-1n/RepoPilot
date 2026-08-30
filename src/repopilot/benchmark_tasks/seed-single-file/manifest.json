@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "seed-single-file",
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "seed-v1",
+    "sha256": "703811f56ac8d521fc1f0bcbcc240087f0dac49ad0509d78692428cdd9f6057a"
+  },
+  "task_statement": "Fix src/slugify.py so leading and trailing whitespace is ignored, every run of whitespace becomes one hyphen, whitespace-only input returns an empty string, and punctuation is preserved.",
+  "timeout_seconds": 180,
+  "run_budget": {
+    "max_steps": 15,
+    "max_replans": 1,
+    "max_consecutive_failures": 2,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 180
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify_seed_single_file.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

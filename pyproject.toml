@@ -105,6 +105,7 @@ include = ["minisweagent*", "repopilot*"]
 
 [tool.setuptools.package-data]
 minisweagent = ["config/**/*"]
+repopilot = ["benchmark_tasks/**/*"]
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.

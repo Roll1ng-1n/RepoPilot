@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "seed-cross-file",
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "seed-v1",
+    "sha256": "78ee6da1f131d7d0db69110a84e344e50fa7f5701c32b3eb23e68cda4110759d"
+  },
+  "task_statement": "Add an --excited option to the greeting library and CLI. format_greeting(name, excited=True) must return an upper-case greeting ending in !, the CLI must pass the parsed option to the library, and the default output must remain unchanged.",
+  "timeout_seconds": 180,
+  "run_budget": {
+    "max_steps": 15,
+    "max_replans": 1,
+    "max_consecutive_failures": 2,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 180
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify_seed_cross_file.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}
