@@ -1,0 +1,551 @@
+{
+  "config": {
+    "budget": {
+      "command_timeout_seconds": 1.0,
+      "max_consecutive_failures": 1,
+      "max_replans": 0,
+      "max_run_seconds": 1.0,
+      "max_steps": 1
+    },
+    "engines": [
+      "baseline",
+      "repopilot"
+    ],
+    "image": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "model": {
+      "model_kwargs": {
+        "temperature": 0.0
+      },
+      "model_name": "provider/fixed-model"
+    },
+    "output_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1",
+    "task_ids": [],
+    "tasks_directory": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks"
+  },
+  "results": [
+    {
+      "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/recovery-public-failure/baseline",
+      "engine": "baseline",
+      "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-568bef34', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/recovery-public-failure/baseline/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+      "metrics": {
+        "commits": [],
+        "cost": null,
+        "duration_seconds": 2.927275126000495,
+        "errors": null,
+        "patch": {
+          "changed": false,
+          "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/recovery-public-failure/baseline/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "replans": null,
+        "retries": null,
+        "run_budget": {
+          "command_timeout_seconds": 1.0,
+          "max_consecutive_failures": 1,
+          "max_replans": 0,
+          "max_run_seconds": 1.0,
+          "max_steps": 1
+        },
+        "steps": null,
+        "tokens": null,
+        "tool_calls": null,
+        "trajectory_status": null
+      },
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "success": null,
+      "task_id": "recovery-public-failure",
+      "verifier": null
+    },
+    {
+      "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/recovery-public-failure/repopilot",
+      "engine": "repopilot",
+      "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-36b0b334', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/recovery-public-failure/repopilot/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+      "metrics": {
+        "commits": [],
+        "cost": null,
+        "duration_seconds": 0.015944415999911143,
+        "errors": [],
+        "patch": {
+          "changed": false,
+          "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/recovery-public-failure/repopilot/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "replans": null,
+        "retries": 0,
+        "run_budget": {
+          "command_timeout_seconds": 1.0,
+          "max_consecutive_failures": 1,
+          "max_replans": 0,
+          "max_run_seconds": 1.0,
+          "max_steps": 1
+        },
+        "steps": null,
+        "tokens": null,
+        "tool_calls": 0,
+        "trajectory_status": "ENVIRONMENT_UNAVAILABLE",
+        "verifier_success": null
+      },
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "success": null,
+      "task_id": "recovery-public-failure",
+      "verifier": null
+    },
+    {
+      "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/replan-new-evidence/baseline",
+      "engine": "baseline",
+      "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-07857be0', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/replan-new-evidence/baseline/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+      "metrics": {
+        "commits": [],
+        "cost": null,
+        "duration_seconds": 0.01728114499928779,
+        "errors": null,
+        "patch": {
+          "changed": false,
+          "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/replan-new-evidence/baseline/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "replans": null,
+        "retries": null,
+        "run_budget": {
+          "command_timeout_seconds": 1.0,
+          "max_consecutive_failures": 1,
+          "max_replans": 0,
+          "max_run_seconds": 1.0,
+          "max_steps": 1
+        },
+        "steps": null,
+        "tokens": null,
+        "tool_calls": null,
+        "trajectory_status": null
+      },
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "success": null,
+      "task_id": "replan-new-evidence",
+      "verifier": null
+    },
+    {
+      "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/replan-new-evidence/repopilot",
+      "engine": "repopilot",
+      "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-e4848b08', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/replan-new-evidence/repopilot/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+      "metrics": {
+        "commits": [],
+        "cost": null,
+        "duration_seconds": 0.016024997999920743,
+        "errors": [],
+        "patch": {
+          "changed": false,
+          "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/replan-new-evidence/repopilot/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "replans": null,
+        "retries": 0,
+        "run_budget": {
+          "command_timeout_seconds": 1.0,
+          "max_consecutive_failures": 1,
+          "max_replans": 0,
+          "max_run_seconds": 1.0,
+          "max_steps": 1
+        },
+        "steps": null,
+        "tokens": null,
+        "tool_calls": 0,
+        "trajectory_status": "ENVIRONMENT_UNAVAILABLE",
+        "verifier_success": null
+      },
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "success": null,
+      "task_id": "replan-new-evidence",
+      "verifier": null
+    },
+    {
+      "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/seed-cross-file/baseline",
+      "engine": "baseline",
+      "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-eb4f361b', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/seed-cross-file/baseline/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+      "metrics": {
+        "commits": [],
+        "cost": null,
+        "duration_seconds": 0.016112420999888855,
+        "errors": null,
+        "patch": {
+          "changed": false,
+          "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/seed-cross-file/baseline/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "replans": null,
+        "retries": null,
+        "run_budget": {
+          "command_timeout_seconds": 1.0,
+          "max_consecutive_failures": 1,
+          "max_replans": 0,
+          "max_run_seconds": 1.0,
+          "max_steps": 1
+        },
+        "steps": null,
+        "tokens": null,
+        "tool_calls": null,
+        "trajectory_status": null
+      },
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "success": null,
+      "task_id": "seed-cross-file",
+      "verifier": null
+    },
+    {
+      "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/seed-cross-file/repopilot",
+      "engine": "repopilot",
+      "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-d8fed08d', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/seed-cross-file/repopilot/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+      "metrics": {
+        "commits": [],
+        "cost": null,
+        "duration_seconds": 0.015415915000630775,
+        "errors": [],
+        "patch": {
+          "changed": false,
+          "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/seed-cross-file/repopilot/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "replans": null,
+        "retries": 0,
+        "run_budget": {
+          "command_timeout_seconds": 1.0,
+          "max_consecutive_failures": 1,
+          "max_replans": 0,
+          "max_run_seconds": 1.0,
+          "max_steps": 1
+        },
+        "steps": null,
+        "tokens": null,
+        "tool_calls": 0,
+        "trajectory_status": "ENVIRONMENT_UNAVAILABLE",
+        "verifier_success": null
+      },
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "success": null,
+      "task_id": "seed-cross-file",
+      "verifier": null
+    },
+    {
+      "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/seed-single-file/baseline",
+      "engine": "baseline",
+      "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-d4fc7970', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/seed-single-file/baseline/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+      "metrics": {
+        "commits": [],
+        "cost": null,
+        "duration_seconds": 0.013064201999441138,
+        "errors": null,
+        "patch": {
+          "changed": false,
+          "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/seed-single-file/baseline/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "replans": null,
+        "retries": null,
+        "run_budget": {
+          "command_timeout_seconds": 1.0,
+          "max_consecutive_failures": 1,
+          "max_replans": 0,
+          "max_run_seconds": 1.0,
+          "max_steps": 1
+        },
+        "steps": null,
+        "tokens": null,
+        "tool_calls": null,
+        "trajectory_status": null
+      },
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "success": null,
+      "task_id": "seed-single-file",
+      "verifier": null
+    },
+    {
+      "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/seed-single-file/repopilot",
+      "engine": "repopilot",
+      "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-c6aecc03', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/seed-single-file/repopilot/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+      "metrics": {
+        "commits": [],
+        "cost": null,
+        "duration_seconds": 0.016152277000401227,
+        "errors": [],
+        "patch": {
+          "changed": false,
+          "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/seed-single-file/repopilot/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "replans": null,
+        "retries": 0,
+        "run_budget": {
+          "command_timeout_seconds": 1.0,
+          "max_consecutive_failures": 1,
+          "max_replans": 0,
+          "max_run_seconds": 1.0,
+          "max_steps": 1
+        },
+        "steps": null,
+        "tokens": null,
+        "tool_calls": 0,
+        "trajectory_status": "ENVIRONMENT_UNAVAILABLE",
+        "verifier_success": null
+      },
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "success": null,
+      "task_id": "seed-single-file",
+      "verifier": null
+    },
+    {
+      "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-human-approval-git/baseline",
+      "engine": "baseline",
+      "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-998d3fc5', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-human-approval-git/baseline/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+      "metrics": {
+        "commits": [],
+        "cost": null,
+        "duration_seconds": 0.014576509000107762,
+        "errors": null,
+        "patch": {
+          "changed": false,
+          "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-human-approval-git/baseline/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "replans": null,
+        "retries": null,
+        "run_budget": {
+          "command_timeout_seconds": 1.0,
+          "max_consecutive_failures": 1,
+          "max_replans": 0,
+          "max_run_seconds": 1.0,
+          "max_steps": 1
+        },
+        "steps": null,
+        "tokens": null,
+        "tool_calls": null,
+        "trajectory_status": null
+      },
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "success": null,
+      "task_id": "workflow-human-approval-git",
+      "verifier": null
+    },
+    {
+      "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-human-approval-git/repopilot",
+      "engine": "repopilot",
+      "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-2e25f325', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-human-approval-git/repopilot/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+      "metrics": {
+        "commits": [],
+        "cost": null,
+        "duration_seconds": 0.016494319000230462,
+        "errors": [],
+        "patch": {
+          "changed": false,
+          "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-human-approval-git/repopilot/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "replans": null,
+        "retries": 0,
+        "run_budget": {
+          "command_timeout_seconds": 1.0,
+          "max_consecutive_failures": 1,
+          "max_replans": 0,
+          "max_run_seconds": 1.0,
+          "max_steps": 1
+        },
+        "steps": null,
+        "tokens": null,
+        "tool_calls": 0,
+        "trajectory_status": "ENVIRONMENT_UNAVAILABLE",
+        "verifier_success": null
+      },
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "success": null,
+      "task_id": "workflow-human-approval-git",
+      "verifier": null
+    },
+    {
+      "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-long-chain/baseline",
+      "engine": "baseline",
+      "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-3e007df9', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-long-chain/baseline/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+      "metrics": {
+        "commits": [],
+        "cost": null,
+        "duration_seconds": 0.017850443000497762,
+        "errors": null,
+        "patch": {
+          "changed": false,
+          "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-long-chain/baseline/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "replans": null,
+        "retries": null,
+        "run_budget": {
+          "command_timeout_seconds": 1.0,
+          "max_consecutive_failures": 1,
+          "max_replans": 0,
+          "max_run_seconds": 1.0,
+          "max_steps": 1
+        },
+        "steps": null,
+        "tokens": null,
+        "tool_calls": null,
+        "trajectory_status": null
+      },
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "success": null,
+      "task_id": "workflow-long-chain",
+      "verifier": null
+    },
+    {
+      "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-long-chain/repopilot",
+      "engine": "repopilot",
+      "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-bcf2c01a', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-long-chain/repopilot/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+      "metrics": {
+        "commits": [],
+        "cost": null,
+        "duration_seconds": 0.015217392999147705,
+        "errors": [],
+        "patch": {
+          "changed": false,
+          "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-long-chain/repopilot/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "replans": null,
+        "retries": 0,
+        "run_budget": {
+          "command_timeout_seconds": 1.0,
+          "max_consecutive_failures": 1,
+          "max_replans": 0,
+          "max_run_seconds": 1.0,
+          "max_steps": 1
+        },
+        "steps": null,
+        "tokens": null,
+        "tool_calls": 0,
+        "trajectory_status": "ENVIRONMENT_UNAVAILABLE",
+        "verifier_success": null
+      },
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "success": null,
+      "task_id": "workflow-long-chain",
+      "verifier": null
+    }
+  ],
+  "tasks": [
+    {
+      "run_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "snapshot": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/recovery-public-failure/snapshot",
+      "snapshot_revision": "recovery-v1",
+      "snapshot_sha256": "dcf8a8bcabd8b765201bfb1bd9f469b8d091a16e8c6a01a8f552ea56af08fd47",
+      "success_condition": {
+        "verifier_exit_code": 0
+      },
+      "task": "Repair src/line_tools.py so unique_clean_lines strips each line, skips empty lines, and removes duplicates using Unicode case-insensitive semantics while preserving the first cleaned spelling and input order. Run the public tests first; if a shallow fix causes a public test failure, use that evidence to debug and recover before finishing.",
+      "task_id": "recovery-public-failure",
+      "timeout_seconds": 180.0,
+      "verifier_path": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py",
+      "verifier_timeout_seconds": 20.0
+    },
+    {
+      "run_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "snapshot": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/replan-new-evidence/snapshot",
+      "snapshot_revision": "replan-v1",
+      "snapshot_sha256": "b1dae03762472a199f9e3555aae0f2c65ec137cf43174557a08b288ff053ff90",
+      "success_condition": {
+        "verifier_exit_code": 0
+      },
+      "task": "Add a --json mode to the report CLI and renderer while keeping the existing human-readable output unchanged. Trace the current report flow and inspect docs/output-format.md and the public tests before choosing the machine-readable protocol. If an initial assumption of one JSON value conflicts with the repository's streaming contract, use that new evidence to replan the implementation.",
+      "task_id": "replan-new-evidence",
+      "timeout_seconds": 180.0,
+      "verifier_path": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/replan-new-evidence/verify_replan_new_evidence.py",
+      "verifier_timeout_seconds": 20.0
+    },
+    {
+      "run_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "snapshot": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/seed-cross-file/snapshot",
+      "snapshot_revision": "seed-v1",
+      "snapshot_sha256": "78ee6da1f131d7d0db69110a84e344e50fa7f5701c32b3eb23e68cda4110759d",
+      "success_condition": {
+        "verifier_exit_code": 0
+      },
+      "task": "Add an --excited option to the greeting library and CLI. format_greeting(name, excited=True) must return an upper-case greeting ending in !, the CLI must pass the parsed option to the library, and the default output must remain unchanged.",
+      "task_id": "seed-cross-file",
+      "timeout_seconds": 180.0,
+      "verifier_path": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/seed-cross-file/verify_seed_cross_file.py",
+      "verifier_timeout_seconds": 20.0
+    },
+    {
+      "run_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "snapshot": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/seed-single-file/snapshot",
+      "snapshot_revision": "seed-v1",
+      "snapshot_sha256": "703811f56ac8d521fc1f0bcbcc240087f0dac49ad0509d78692428cdd9f6057a",
+      "success_condition": {
+        "verifier_exit_code": 0
+      },
+      "task": "Fix src/slugify.py so leading and trailing whitespace is ignored, every run of whitespace becomes one hyphen, whitespace-only input returns an empty string, and punctuation is preserved.",
+      "task_id": "seed-single-file",
+      "timeout_seconds": 180.0,
+      "verifier_path": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/seed-single-file/verify_seed_single_file.py",
+      "verifier_timeout_seconds": 20.0
+    },
+    {
+      "run_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "snapshot": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/workflow-human-approval-git/snapshot",
+      "snapshot_revision": "approval-git-v1",
+      "snapshot_sha256": "4dea8804affd3c0fbfc873177fcd4279e06b4e93c30beae7f2e2373bb766f01d",
+      "success_condition": {
+        "verifier_exit_code": 0
+      },
+      "task": "Fix the completed status in this small CLI: `python src/cli.py 'Ship parser' --done` must print `[done] Ship parser`, while the default command remains `[todo] Ship parser`. Trace the call into src/labels.py, make the behavior change, then stage the changed file and create a local Git commit with a useful message. Do not push or create a Pull Request.",
+      "task_id": "workflow-human-approval-git",
+      "timeout_seconds": 180.0,
+      "verifier_path": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/workflow-human-approval-git/verify_workflow_human_approval_git.py",
+      "verifier_timeout_seconds": 20.0
+    },
+    {
+      "run_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "snapshot": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/workflow-long-chain/snapshot",
+      "snapshot_revision": "workflow-v1",
+      "snapshot_sha256": "10fd390fc6b5a7eb03448934451e8036434c6171434c3e4e6b7c45d1c3804a6f",
+      "success_condition": {
+        "verifier_exit_code": 0
+      },
+      "task": "Trace the report request through src/cli.py, src/command.py, src/workflow.py, and src/formatting.py, then fix compact mode. With `python src/cli.py '  Repo   Pilot ' 'Ship   safely! ' --compact`, emit exactly `Repo Pilot: Ship safely!`; without --compact emit `Repo Pilot` and `Ship safely!` on separate lines. Collapse extra whitespace in both values while preserving punctuation and case.",
+      "task_id": "workflow-long-chain",
+      "timeout_seconds": 180.0,
+      "verifier_path": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/workflow-long-chain/verify_workflow_long_chain.py",
+      "verifier_timeout_seconds": 20.0
+    }
+  ]
+}

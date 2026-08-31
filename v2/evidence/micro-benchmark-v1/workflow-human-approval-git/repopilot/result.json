@@ -1,0 +1,34 @@
+{
+  "artifact_directory": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-human-approval-git/repopilot",
+  "engine": "repopilot",
+  "error": "Command '['docker', 'run', '-d', '--name', 'minisweagent-2e25f325', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-human-approval-git/repopilot/workspace,target=/workspace', '--user=1000:1000', 'sha256:0000000000000000000000000000000000000000000000000000000000000000', 'sleep', '2h']' returned non-zero exit status 125.",
+  "metrics": {
+    "commits": [],
+    "cost": null,
+    "duration_seconds": 0.016494319000230462,
+    "errors": [],
+    "patch": {
+      "changed": false,
+      "path": "/home/waaaaa/vibe coding/RepoPilot/docs/evidence/micro-benchmark-v1/workflow-human-approval-git/repopilot/patch.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "replans": null,
+    "retries": 0,
+    "run_budget": {
+      "command_timeout_seconds": 1.0,
+      "max_consecutive_failures": 1,
+      "max_replans": 0,
+      "max_run_seconds": 1.0,
+      "max_steps": 1
+    },
+    "steps": null,
+    "tokens": null,
+    "tool_calls": 0,
+    "trajectory_status": "ENVIRONMENT_UNAVAILABLE",
+    "verifier_success": null
+  },
+  "status": "ENVIRONMENT_UNAVAILABLE",
+  "success": null,
+  "task_id": "workflow-human-approval-git",
+  "verifier": null
+}

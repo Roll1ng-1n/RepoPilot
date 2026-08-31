@@ -1,0 +1,26 @@
+{
+  "budget": {
+    "command_timeout_seconds": 30.0,
+    "max_consecutive_failures": 2,
+    "max_replans": 1,
+    "max_run_seconds": 180.0,
+    "max_steps": 10
+  },
+  "engines": [
+    "baseline",
+    "repopilot"
+  ],
+  "image": "python:3.12-bookworm",
+  "model": {
+    "base_url": "[OPENAI_COMPATIBLE_BASE_URL]",
+    "model_kwargs": {
+      "temperature": 0.0
+    },
+    "model_name": "openai/[AUTHORIZED_LOW_COST_MODEL]"
+  },
+  "output_directory": "/tmp/repopilot-benchmark-final.AG83B5/78efbb17ee844ec0bae722200d08ec65",
+  "task_ids": [
+    "seed-single-file"
+  ],
+  "tasks_directory": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks"
+}

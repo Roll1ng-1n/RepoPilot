@@ -1,0 +1,16 @@
+{
+  "verifications": [
+    {
+      "command": "python -c \"\nfrom src.slugify import slugify\nassert slugify('  Hello World  ') == 'hello-world'\nassert slugify('Hello   World') == 'hello-world'\nassert slugify('Hello\\tWorld\\nAgain') == 'hello-world-again'\nassert slugify('   ') == ''\nassert slugify('') == ''\nassert slugify('Hello, World!') == 'hello,-world!'\nassert slugify('  A  B  C  ') == 'a-b-c'\nprint('All task verification assertions passed')\n\"",
+      "reason": "Verify leading/trailing whitespace is ignored, whitespace runs become one hyphen, whitespace-only returns empty string, and punctuation is preserved.",
+      "result": {
+        "duration_seconds": 0.08209950599848526,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "All task verification assertions passed\n",
+        "truncated": false
+      },
+      "scope": "src/slugify.py slugify behavior"
+    }
+  ]
+}
