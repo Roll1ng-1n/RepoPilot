@@ -2638,9 +2638,13 @@ model performance in general.</p>
 integration seam, not a statistically powered benchmark. The model name and
 provider credentials are supplied by the caller and are not written into this
 document.</p>
-<p>The complete path also requires the official <code>swebench</code> Python package in the
-RepoPilot environment. If it is absent, verifier preflight records
-<code>VERIFIER_UNAVAILABLE</code> before any model is constructed.</p>
+<p>The complete path also requires the official <code>swebench==5.0.2</code> Python package
+in the RepoPilot environment. Install the optional evaluator dependency
+together with development dependencies:</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[dev,swebench]"</span>
+</code></pre></div>
+<p>If it is absent, verifier preflight records <code>VERIFIER_UNAVAILABLE</code> before any
+model is constructed and prints the same installation hint.</p>
 <h2 id="execution-order">Execution order</h2>
 <p>Use the smoke entry point with a model name for a complete model-backed run:</p>
 <div class="highlight"><pre><span></span><code>repopilot<span class="w"> </span>swebench-smoke<span class="w"> </span><span class="se">\</span>

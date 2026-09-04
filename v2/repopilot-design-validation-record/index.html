@@ -2569,6 +2569,9 @@
 <li><strong>验证</strong>：回归断言检查 <code>workspace.rglob("__pycache__")</code> 为空；修复已随 <code>dc9aa0f</code> 固化。</li>
 <li><strong>关联 Commit/Issue</strong>：Commit <code>dc9aa0f</code>（<code>feat: expand agent benchmark task suite (#13)</code>）；Issue <code>#13</code>。</li>
 </ul>
+<p>2026-09-04 的后续验证发现，开发者或 Agent 直接运行快照测试仍可能在源快照或 workspace 留下字节码，
+使 canonical hash 或输出 patch 发生变化。当前快照身份、复制和 patch 捕获统一排除 <code>__pycache__</code>、<code>.pyc</code>
+和 <code>.pyo</code>；各 host verifier 及其 Python 子进程也明确禁用字节码写入。普通源文件变化仍会改变 canonical hash。</p>
 <h2 id="2swe-bench-verifier-exit-code-resolved">案例 2：SWE-bench verifier 的 exit code 不等于 <code>resolved</code></h2>
 <ul>
 <li><strong>现象</strong>：Issue #14 验收时发现，不能把官方 evaluator 进程的 <code>exit_code == 0</code> 直接解释为目标实例 <code>resolved</code>。进程正常结束只说明 evaluator 调用完成，实例级结果仍需读取报告中的 <code>resolved</code> 字段。当前真实 smoke 的 Docker、<code>/testbed</code> 和官方 gold patch verifier 前置均通过，preflight status 为 <code>READY</code> 且 <code>gold resolved=true</code>；随后授权低成本模型真实调用 5 次，Agent 在 <code>max_steps=5</code> 下以 <code>BUDGET_EXCEEDED</code> 结束、无 patch，最终 verifier 未运行，<code>success: null</code>。这是负面 smoke 证据，不是 SWE-bench 分数。</li>
