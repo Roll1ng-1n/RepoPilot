@@ -1,0 +1,159 @@
+{
+  "method": {
+    "api": "OpenAI-compatible Chat Completions",
+    "base_url": "[OPENAI_COMPATIBLE_BASE_URL]",
+    "max_retries": 0,
+    "probes_per_model": [
+      "plain_text",
+      "required_tool_call"
+    ],
+    "pricing": {
+      "basis": "OpenAI Standard pricing as published on 2026-09-04",
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "warning": "Estimated costs are not intermediary billing data."
+    }
+  },
+  "results": [
+    {
+      "model": "gpt-5.6-luna",
+      "kind": "plain_text",
+      "success": true,
+      "duration_seconds": 2.581,
+      "finish_reason": "stop",
+      "content_exact_ok": true,
+      "usage": {
+        "prompt_tokens": 4393,
+        "cached_tokens": 3840,
+        "completion_tokens": 5,
+        "total_tokens": 4398
+      },
+      "provider_cost_usd": null,
+      "openai_standard_estimated_cost_usd": 0.0001934
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "kind": "required_tool_call",
+      "success": true,
+      "duration_seconds": 3.197,
+      "finish_reason": "tool_calls",
+      "tool_call_count": 1,
+      "tool_name": "add",
+      "arguments_valid_json": true,
+      "usage": {
+        "prompt_tokens": 1495,
+        "cached_tokens": 0,
+        "completion_tokens": 21,
+        "total_tokens": 1516
+      },
+      "provider_cost_usd": null,
+      "openai_standard_estimated_cost_usd": 0.0003242
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "kind": "plain_text",
+      "success": true,
+      "duration_seconds": 32.931,
+      "finish_reason": "stop",
+      "content_exact_ok": true,
+      "usage": {
+        "prompt_tokens": 4391,
+        "cached_tokens": 3840,
+        "completion_tokens": 5,
+        "total_tokens": 4396
+      },
+      "provider_cost_usd": null,
+      "openai_standard_estimated_cost_usd": 0.00193
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "kind": "required_tool_call",
+      "success": true,
+      "duration_seconds": 39.7,
+      "finish_reason": "tool_calls",
+      "tool_call_count": 1,
+      "tool_name": "add",
+      "arguments_valid_json": true,
+      "usage": {
+        "prompt_tokens": 4438,
+        "cached_tokens": 0,
+        "completion_tokens": 21,
+        "total_tokens": 4459
+      },
+      "provider_cost_usd": null,
+      "openai_standard_estimated_cost_usd": 0.009128
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "kind": "plain_text",
+      "success": true,
+      "duration_seconds": 2.487,
+      "finish_reason": "stop",
+      "content_exact_ok": true,
+      "usage": {
+        "prompt_tokens": 307,
+        "cached_tokens": 0,
+        "completion_tokens": 5,
+        "total_tokens": 312
+      },
+      "provider_cost_usd": null,
+      "openai_standard_estimated_cost_usd": 0.001328
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "kind": "required_tool_call",
+      "success": true,
+      "duration_seconds": 2.893,
+      "finish_reason": "tool_calls",
+      "tool_call_count": 1,
+      "tool_name": "add",
+      "arguments_valid_json": true,
+      "usage": {
+        "prompt_tokens": 4438,
+        "cached_tokens": 0,
+        "completion_tokens": 21,
+        "total_tokens": 4459
+      },
+      "provider_cost_usd": null,
+      "openai_standard_estimated_cost_usd": 0.018172
+    },
+    {
+      "model": "gpt-5.5",
+      "kind": "plain_text",
+      "success": true,
+      "duration_seconds": 2.011,
+      "finish_reason": "stop",
+      "content_exact_ok": true,
+      "usage": {
+        "prompt_tokens": 4393,
+        "cached_tokens": 3840,
+        "completion_tokens": 5,
+        "total_tokens": 4398
+      },
+      "provider_cost_usd": null,
+      "openai_standard_estimated_cost_usd": 0.004835
+    },
+    {
+      "model": "gpt-5.5",
+      "kind": "required_tool_call",
+      "success": true,
+      "duration_seconds": 4.347,
+      "finish_reason": "tool_calls",
+      "tool_call_count": 1,
+      "tool_name": "add",
+      "arguments_valid_json": true,
+      "usage": {
+        "prompt_tokens": 4438,
+        "cached_tokens": 0,
+        "completion_tokens": 21,
+        "total_tokens": 4459
+      },
+      "provider_cost_usd": null,
+      "openai_standard_estimated_cost_usd": 0.02282
+    }
+  ],
+  "totals": {
+    "requests": 8,
+    "successful_requests": 8,
+    "openai_standard_estimated_cost_usd": 0.0587306
+  }
+}
