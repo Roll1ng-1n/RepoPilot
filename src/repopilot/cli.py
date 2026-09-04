@@ -25,6 +25,7 @@ from repopilot.benchmark import (
     run_benchmark,
 )
 from repopilot.budget import RunBudget
+from repopilot.campaign import CampaignConfig, CampaignRun, run_campaign
 from repopilot.checkpoint import RepositoryStateError, verify_repository_state
 from repopilot.context import ContextManager, ContextStrategy, model_summary_generator
 from repopilot.environment import (
@@ -37,6 +38,7 @@ from repopilot.environment import (
 )
 from repopilot.inspection import load_run_inspection, render_human
 from repopilot.model import LiteLLMToolCallingModel, ToolCallingModel
+from repopilot.model_probe import ProbeReport, run_model_probe
 from repopilot.plan import PlanHistory, PlanInvariantError
 from repopilot.runtime import AgentRuntime
 from repopilot.swebench_smoke import DEFAULT_IMAGE, SWEbenchSmokeConfig, SWEbenchSmokeResult, run_swebench_smoke
@@ -54,6 +56,8 @@ class ModelOptions:
 ModelFactory = Callable[[ModelOptions], ToolCallingModel]
 BenchmarkRunner = Callable[[BenchmarkConfig], BenchmarkRun]
 SmokeRunner = Callable[[SWEbenchSmokeConfig], SWEbenchSmokeResult]
+ProbeRunner = Callable[..., ProbeReport]
+CampaignExecutor = Callable[[CampaignConfig], CampaignRun]
 
 _BUILTIN_BENCHMARK_TASKS = Path(__file__).with_name("benchmark_tasks")
 
@@ -71,6 +75,8 @@ def create_app(
     *,
     sleeper: Callable[[float], None] | None = None,
     benchmark_runner: BenchmarkRunner | None = None,
+    probe_runner: ProbeRunner | None = None,
+    campaign_runner: CampaignExecutor | None = None,
     smoke_runner: SmokeRunner | None = None,
     swebench_smoke_runner: SmokeRunner | None = None,
 ) -> typer.Typer:
@@ -80,6 +86,8 @@ def create_app(
     selected_model_factory = model_factory or _create_litellm_model
     selected_environment_factory = environment_factory or create_execution_environment
     selected_benchmark_runner = benchmark_runner or run_benchmark
+    selected_probe_runner = probe_runner or run_model_probe
+    selected_campaign_runner = campaign_runner or run_campaign
     selected_smoke_runner = smoke_runner or swebench_smoke_runner
 
     def print_result(result: Any) -> None:
@@ -344,6 +352,141 @@ def create_app(
             typer.echo(f"- {item.task_id} / {item.engine.value}: {success} (Agent Run: {item.status or 'unknown'})")
         typer.echo(f"Summary: {benchmark_run.output_directory / 'summary.json'}")
 
+    @app.command("probe")
+    def probe_models(
+        models: list[str] = typer.Option([], "--model", help="Model ID to probe; repeat for multiple models."),
+        state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
+        api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
+        base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+        env_file: Path | None = typer.Option(
+            Path(".env"),
+            "--env-file",
+            dir_okay=False,
+            help="Optional dotenv file used only for missing API credentials.",
+        ),
+        temperature: float | None = typer.Option(
+            None,
+            "--temperature",
+            help="Optional compatibility parameter; omitted by default.",
+        ),
+    ) -> None:
+        """Probe text and required native Tool Calling before paid Agent Runs."""
+
+        selected_models = tuple(dict.fromkeys(model.strip() for model in models if model.strip()))
+        if not selected_models:
+            raise typer.BadParameter("Provide at least one --model.", param_hint="--model")
+        api_key, base_url = _credentials_from_env_file(api_key, base_url, env_file)
+        if not api_key:
+            raise typer.BadParameter(
+                "Provide --api-key, set REPOPILOT_API_KEY, or configure it in --env-file.",
+                param_hint="--api-key",
+            )
+        request_kwargs = {} if temperature is None else {"temperature": temperature}
+        report = selected_probe_runner(
+            selected_models,
+            api_key=api_key,
+            base_url=base_url,
+            request_kwargs=request_kwargs,
+        )
+        output_root = (state_dir or Path(user_state_dir("repopilot")) / "model-probes").resolve()
+        output_directory = output_root / uuid.uuid4().hex
+        report.write_json(output_directory / "summary.json")
+        report.write_markdown(output_directory / "summary.md")
+        typer.echo(f"Model Probe: {output_directory}")
+        for result in report.results:
+            typer.echo(f"- {result.model}: {'passed' if result.passed else 'failed'}")
+        typer.echo(f"Summary: {output_directory / 'summary.json'}")
+        if not all(result.passed for result in report.results):
+            raise typer.Exit(code=1)
+
+    @app.command("campaign")
+    def benchmark_campaign(
+        models: list[str] = typer.Option([], "--model", help="Model ID to run; repeat for multiple models."),
+        rounds: int = typer.Option(1, "--rounds", min=1),
+        state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
+        tasks_dir: Path = typer.Option(
+            _BUILTIN_BENCHMARK_TASKS,
+            "--tasks-dir",
+            exists=True,
+            file_okay=False,
+            resolve_path=True,
+        ),
+        engines: list[BenchmarkEngine] = typer.Option(
+            [BenchmarkEngine.BASELINE, BenchmarkEngine.REPOPILOT],
+            "--engine",
+        ),
+        tasks: list[str] = typer.Option([], "--task", help="Task ID to run; repeat for multiple tasks."),
+        api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
+        base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+        env_file: Path | None = typer.Option(
+            Path(".env"),
+            "--env-file",
+            dir_okay=False,
+            help="Optional dotenv file used only for missing API credentials.",
+        ),
+        image: str = typer.Option("python:3.12-slim", "--image"),
+        docker_proxy_mode: DockerProxyMode = typer.Option(
+            DockerProxyMode.NONE,
+            "--docker-proxy-mode",
+            envvar="REPOPILOT_DOCKER_PROXY_MODE",
+        ),
+        docker_proxy_url: str | None = typer.Option(
+            None,
+            "--docker-proxy-url",
+            envvar="REPOPILOT_DOCKER_PROXY_URL",
+            show_default=False,
+        ),
+        temperature: float = typer.Option(0.0, "--temperature"),
+        max_steps: int = typer.Option(15, "--max-steps", min=1),
+        max_replans: int = typer.Option(1, "--max-replans", min=0),
+        max_consecutive_failures: int = typer.Option(2, "--max-consecutive-failures", min=1),
+        command_timeout_seconds: float = typer.Option(30.0, "--command-timeout-seconds", min=0.001),
+        max_run_seconds: float = typer.Option(180.0, "--max-run-seconds", min=0.001),
+    ) -> None:
+        """Run a sequential multi-model campaign using the paired Agent Benchmark."""
+
+        selected_models = tuple(dict.fromkeys(model.strip() for model in models if model.strip()))
+        if not selected_models:
+            raise typer.BadParameter("Provide at least one --model.", param_hint="--model")
+        if not engines:
+            raise typer.BadParameter("Select at least one benchmark engine.", param_hint="--engine")
+        api_key, base_url = _credentials_from_env_file(api_key, base_url, env_file)
+        if not api_key:
+            raise typer.BadParameter(
+                "Provide --api-key, set REPOPILOT_API_KEY, or configure it in --env-file.",
+                param_hint="--api-key",
+            )
+        output_root = (state_dir or Path(user_state_dir("repopilot")) / "campaigns").resolve()
+        output_directory = output_root / uuid.uuid4().hex
+        try:
+            config = CampaignConfig(
+                output_directory=output_directory,
+                tasks_directory=tasks_dir,
+                models=selected_models,
+                rounds=rounds,
+                image=image,
+                budget=BenchmarkBudget(
+                    max_steps=max_steps,
+                    max_replans=max_replans,
+                    max_consecutive_failures=max_consecutive_failures,
+                    command_timeout_seconds=command_timeout_seconds,
+                    max_run_seconds=max_run_seconds,
+                ),
+                engines=tuple(dict.fromkeys(engines)),
+                task_ids=tuple(dict.fromkeys(tasks)),
+                temperature=temperature,
+                api_key=api_key,
+                base_url=base_url,
+                proxy_mode=docker_proxy_mode,
+                proxy_url=docker_proxy_url,
+            )
+            campaign_run = selected_campaign_runner(config)
+        except ValueError as error:
+            raise typer.BadParameter(str(error)) from error
+        typer.echo(f"Benchmark Campaign: {campaign_run.output_directory}")
+        typer.echo(f"Samples: {len(campaign_run.results)}; batch errors: {len(campaign_run.errors)}")
+        typer.echo(f"Summary: {campaign_run.output_directory / 'summary.json'}")
+
     @app.command("swebench-smoke")
     def swebench_smoke(
         state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
@@ -607,6 +750,26 @@ def _credential_values(api_key: str | None) -> list[str]:
         if any(marker in name.upper() for marker in ("KEY", "TOKEN", "SECRET", "PASSWORD")):
             values.append(value)
     return values
+
+
+def _credentials_from_env_file(
+    api_key: str | None,
+    base_url: str | None,
+    env_file: Path | None,
+) -> tuple[str | None, str | None]:
+    """Fill missing model credentials from one local dotenv file without mutating the process."""
+
+    if env_file is None or not env_file.is_file() or (api_key is not None and base_url is not None):
+        return api_key, base_url
+    from dotenv import dotenv_values
+
+    values = dotenv_values(env_file)
+    env_api_key = values.get("REPOPILOT_API_KEY")
+    env_base_url = values.get("REPOPILOT_BASE_URL")
+    return (
+        api_key or (env_api_key if isinstance(env_api_key, str) and env_api_key else None),
+        base_url or (env_base_url if isinstance(env_base_url, str) and env_base_url else None),
+    )
 
 
 def _checkpoint_mapping(checkpoint: dict[str, Any], key: str) -> dict[str, Any]:

@@ -32,6 +32,11 @@ from repopilot.context import ContextManager
 from repopilot.environment import DockerExecutionEnvironment, DockerProxyMode, docker_proxy_run_args
 from repopilot.model import AssistantTurn, LiteLLMToolCallingModel
 from repopilot.plan import PlanHistory
+from repopilot.pricing import (
+    OPENAI_STANDARD_PRICING_AS_OF,
+    OPENAI_STANDARD_PRICING_SOURCE,
+    estimate_openai_standard_cost,
+)
 from repopilot.runtime import AgentRunResult, AgentRuntime
 from repopilot.tools import create_tool_registry
 
@@ -333,6 +338,12 @@ class BenchmarkRun:
     def to_dict(self) -> dict[str, Any]:
         return {
             "config": self.config.public_dict(),
+            "pricing_basis": {
+                "tier": "standard",
+                "as_of": OPENAI_STANDARD_PRICING_AS_OF,
+                "source": OPENAI_STANDARD_PRICING_SOURCE,
+                "note": "Estimate only; not provider or intermediary invoice data.",
+            },
             "tasks": [_task_public_dict(task) for task in self.tasks],
             "results": [result.to_dict() for result in self.results],
         }
@@ -436,7 +447,16 @@ class BenchmarkRunner:
         verifier = _redact_benchmark_value(verifier, secrets)
         success = None if verifier is None else verifier.get("exit_code") == 0
         metrics = _redact_benchmark_value(
-            _metrics_for_run(engine, run, task_directory, patch, commits, verifier), secrets
+            _metrics_for_run(
+                engine,
+                run,
+                task_directory,
+                patch,
+                commits,
+                verifier,
+                model_name=self.config.model.model_name,
+            ),
+            secrets,
         )
         metrics["run_budget"] = asdict(request.effective_budget)
         error = _redact_benchmark_value(error, secrets)
@@ -625,24 +645,43 @@ class _BenchmarkToolCallingModel(LiteLLMToolCallingModel):
         self.prompt_tokens: int | None = None
         self.completion_tokens: int | None = None
         self.total_tokens: int | None = None
+        self.cached_tokens: int | None = None
+        self.cache_write_tokens: int | None = None
+        self.reasoning_tokens: int | None = None
         self.cost: float | None = None
         self._saw_usage = False
+        self._usage_missing: dict[str, bool] = {
+            "prompt_tokens": False,
+            "completion_tokens": False,
+            "total_tokens": False,
+            "cached_tokens": False,
+            "cache_write_tokens": False,
+            "reasoning_tokens": False,
+        }
         self._saw_cost = False
 
     def complete(self, messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> AssistantTurn:
         turn = super().complete(messages, tools)
         self.calls += 1
         usage = turn.usage
-        if usage is not None:
-            self._saw_usage = True
-            for attribute, key in (
-                ("prompt_tokens", "prompt_tokens"),
-                ("completion_tokens", "completion_tokens"),
-                ("total_tokens", "total_tokens"),
-            ):
-                value = usage.get(key)
-                if isinstance(value, int):
+        self._saw_usage = True
+        for attribute, key in (
+            ("prompt_tokens", "prompt_tokens"),
+            ("completion_tokens", "completion_tokens"),
+            ("total_tokens", "total_tokens"),
+            ("cached_tokens", "cached_tokens"),
+            ("cache_write_tokens", "cache_write_tokens"),
+            ("reasoning_tokens", "reasoning_tokens"),
+        ):
+            value = usage.get(key) if usage is not None else None
+            if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+                if not self._usage_missing[key]:
                     setattr(self, attribute, (getattr(self, attribute) or 0) + value)
+            else:
+                # A partial provider usage response cannot be safely summed;
+                # preserve null for that aggregate instead of implying a
+                # complete count.
+                self._usage_missing[key] = True
         cost_value = turn.cost
         if isinstance(cost_value, (float, int)) and not isinstance(cost_value, bool):
             self._saw_cost = True
@@ -653,9 +692,20 @@ class _BenchmarkToolCallingModel(LiteLLMToolCallingModel):
         return {
             "steps": self.calls,
             "tokens": {
-                "prompt": self.prompt_tokens if self._saw_usage else None,
-                "completion": self.completion_tokens if self._saw_usage else None,
-                "total": self.total_tokens if self._saw_usage else None,
+                "prompt": self.prompt_tokens if self._saw_usage and not self._usage_missing["prompt_tokens"] else None,
+                "completion": self.completion_tokens
+                if self._saw_usage and not self._usage_missing["completion_tokens"]
+                else None,
+                "total": self.total_tokens if self._saw_usage and not self._usage_missing["total_tokens"] else None,
+                "cached": self.cached_tokens
+                if self._saw_usage and not self._usage_missing["cached_tokens"]
+                else None,
+                "cache_write": self.cache_write_tokens
+                if self._saw_usage and not self._usage_missing["cache_write_tokens"]
+                else None,
+                "reasoning": self.reasoning_tokens
+                if self._saw_usage and not self._usage_missing["reasoning_tokens"]
+                else None,
             },
             "cost": self.cost if self._saw_cost else None,
         }
@@ -881,13 +931,17 @@ def _metrics_for_run(
     patch: str | None,
     commits: list[dict[str, str]] | None,
     verifier: dict[str, Any] | None,
+    *,
+    model_name: str | None = None,
 ) -> dict[str, Any]:
     if engine is BenchmarkEngine.BASELINE:
         trajectory = run.trajectory or {}
+        tokens = run.model_stats.get("tokens")
         return {
             "steps": run.model_stats.get("steps"),
-            "tokens": run.model_stats.get("tokens"),
+            "tokens": tokens,
             "cost": run.model_stats.get("cost"),
+            "openai_standard_estimated_cost_usd": _estimated_standard_cost(model_name, tokens),
             "tool_calls": run.model_stats.get("tool_calls"),
             "errors": run.model_stats.get("errors"),
             "retries": None,
@@ -903,10 +957,12 @@ def _metrics_for_run(
     failures = metadata.get("failures", []) if isinstance(metadata.get("failures"), list) else []
     retries = sum(1 for item in recoveries if isinstance(item, dict) and item.get("action") == "RETRY_MODEL")
     budget = metadata.get("budget", {}) if isinstance(metadata.get("budget"), dict) else {}
+    tokens = run.model_stats.get("tokens")
     return {
         "steps": budget.get("steps_used"),
-        "tokens": run.model_stats.get("tokens"),
+        "tokens": tokens,
         "cost": run.model_stats.get("cost"),
+        "openai_standard_estimated_cost_usd": _estimated_standard_cost(model_name, tokens),
         "tool_calls": sum(1 for event in trace if event.get("type") == "tool_call"),
         "errors": failures,
         "retries": retries,
@@ -919,13 +975,38 @@ def _metrics_for_run(
     }
 
 
+def _estimated_standard_cost(model_name: str | None, tokens: Any) -> float | None:
+    """Return a labelled OpenAI Standard estimate for aggregated benchmark usage."""
+
+    if not isinstance(model_name, str) or not isinstance(tokens, Mapping):
+        return None
+    # ``tokens`` is the benchmark's stable public shape.  Adapt it to the
+    # pricing seam's provider-shaped usage mapping without changing the
+    # existing ``metrics.cost`` provider/LiteLLM meaning.
+    usage = {
+        "prompt_tokens": tokens.get("prompt"),
+        "completion_tokens": tokens.get("completion"),
+        "cached_tokens": tokens.get("cached"),
+        "cache_write_tokens": tokens.get("cache_write"),
+    }
+    try:
+        value = estimate_openai_standard_cost(model_name, usage)
+    except (KeyError, TypeError, ValueError):
+        # Custom relay model IDs are expected.  An unavailable catalog price
+        # should not make a benchmark run fail or turn into a fake invoice.
+        return None
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return float(value)
+    return None
+
+
 def _baseline_model_stats(trajectory: dict[str, Any]) -> dict[str, Any]:
     info = trajectory.get("info", {}) if isinstance(trajectory, dict) else {}
     stats = info.get("model_stats", {}) if isinstance(info, dict) else {}
     messages = trajectory.get("messages", []) if isinstance(trajectory, dict) else []
     if not isinstance(messages, list):
         messages = []
-    usages: list[dict[str, int]] = []
+    usages: list[dict[str, int | None]] = []
     costs: list[float] = []
     actions = 0
     errors: list[dict[str, Any]] = []
@@ -970,26 +1051,38 @@ def _baseline_model_stats(trajectory: dict[str, Any]) -> dict[str, Any]:
     return model_stats
 
 
-def _sum_usage(usages: Sequence[dict[str, int]]) -> dict[str, int] | None:
+def _sum_usage(usages: Sequence[Mapping[str, int | None]]) -> dict[str, int | None] | None:
     if not usages:
-        return {"prompt": None, "completion": None, "total": None}  # type: ignore[dict-item]
+        return {
+            "prompt": None,
+            "completion": None,
+            "total": None,
+            "cached": None,
+            "cache_write": None,
+            "reasoning": None,
+        }
     result: dict[str, int | None] = {"prompt": 0, "completion": 0, "total": 0}
+    result.update({"cached": 0, "cache_write": 0, "reasoning": 0})
     for usage in usages:
         for destination, source in (
             ("prompt", "prompt_tokens"),
             ("completion", "completion_tokens"),
             ("total", "total_tokens"),
+            ("cached", "cached_tokens"),
+            ("cache_write", "cache_write_tokens"),
+            ("reasoning", "reasoning_tokens"),
         ):
             if result[destination] is None:
                 continue
-            if isinstance(usage.get(source), int):
-                result[destination] = (result[destination] or 0) + usage[source]
+            value = usage.get(source)
+            if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+                result[destination] = (result[destination] or 0) + value
             else:
                 result[destination] = None
-    return result  # type: ignore[return-value]
+    return result
 
 
-def _usage_dict(response: Any) -> dict[str, int] | None:
+def _usage_dict(response: Any) -> dict[str, int | None] | None:
     if response is None:
         return None
     if isinstance(response, dict):
@@ -1004,20 +1097,50 @@ def _usage_dict(response: Any) -> dict[str, int] | None:
             usage = dumped.get("usage") if isinstance(dumped, dict) else None
     if hasattr(usage, "model_dump"):
         usage = usage.model_dump()
-    if not isinstance(usage, dict):
+    if not isinstance(usage, Mapping):
         return None
-    result: dict[str, int] = {}
-    aliases = {
-        "prompt_tokens": ("prompt_tokens", "input_tokens"),
-        "completion_tokens": ("completion_tokens", "output_tokens"),
-        "total_tokens": ("total_tokens",),
+    result: dict[str, int | None] = {
+        "prompt_tokens": _usage_token(usage, ("prompt_tokens", "input_tokens")),
+        "completion_tokens": _usage_token(usage, ("completion_tokens", "output_tokens")),
+        "total_tokens": _usage_token(usage, ("total_tokens",)),
+        "cached_tokens": _usage_token(
+            usage,
+            ("cached_tokens", "cache_read_tokens", "cache_read_input_tokens", "cached_input_tokens"),
+        ),
+        "cache_write_tokens": _usage_token(
+            usage,
+            ("cache_write_tokens", "cache_write_input_tokens", "cache_creation_input_tokens", "cache_creation_tokens"),
+        ),
+        "reasoning_tokens": _usage_token(usage, ("reasoning_tokens", "reasoning")),
     }
-    for destination, candidates in aliases.items():
-        for candidate in candidates:
-            if isinstance(usage.get(candidate), int):
-                result[destination] = usage[candidate]
-                break
-    return result or None
+    return result
+
+
+def _usage_token(usage: Mapping[str, Any], aliases: Sequence[str]) -> int | None:
+    """Read one token count from top-level usage or a provider detail object."""
+
+    for alias in aliases:
+        value = usage.get(alias)
+        if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+            return value
+    for details_key in (
+        "prompt_tokens_details",
+        "input_tokens_details",
+        "prompt_token_details",
+        "input_token_details",
+        "completion_tokens_details",
+        "output_tokens_details",
+        "completion_token_details",
+        "output_token_details",
+    ):
+        details = usage.get(details_key)
+        if not isinstance(details, Mapping):
+            continue
+        for alias in aliases:
+            value = details.get(alias)
+            if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+                return value
+    return None
 
 
 def _patch_metric(path: Path, patch: str | None) -> dict[str, Any] | None:
@@ -1137,18 +1260,25 @@ def _summary_markdown(benchmark_run: BenchmarkRun) -> str:
     lines = [
         "# Agent Benchmark Summary",
         "",
-        "| Task | Snapshot Revision | Engine | Status | Success | Steps | Cost |",
-        "| --- | --- | --- | --- | --- | ---: | ---: |",
+        "| Task | Snapshot Revision | Engine | Status | Success | Steps | Total tokens | Provider/LiteLLM cost | OpenAI Standard estimate | Duration (s) |",
+        "| --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |",
     ]
     for result in benchmark_run.results:
         metrics = result.metrics
+        tokens = metrics.get("tokens")
+        total_tokens = tokens.get("total") if isinstance(tokens, Mapping) else None
         cost = metrics.get("cost")
         cost_text = "null" if cost is None else str(cost)
+        estimate = metrics.get("openai_standard_estimated_cost_usd")
+        estimate_text = "null" if estimate is None else str(estimate)
+        duration = metrics.get("duration_seconds")
+        duration_text = "null" if duration is None else str(duration)
         lines.append(
             f"| {result.task_id} | {revisions.get(result.task_id) or 'null'} | {result.engine.value} | "
             f"{result.status or 'null'} | "
             f"{str(result.success).lower() if result.success is not None else 'null'} | "
-            f"{metrics.get('steps', 'null')} | {cost_text} |"
+            f"{metrics.get('steps', 'null')} | {total_tokens if total_tokens is not None else 'null'} | "
+            f"{cost_text} | {estimate_text} | {duration_text} |"
         )
     lines.extend(["", "Results are raw development evidence; no performance numbers are prefilled.", ""])
     return "\n".join(lines)

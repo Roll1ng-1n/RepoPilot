@@ -85,6 +85,24 @@ class LiteLLMToolCallingModel:
             "prompt_tokens": cls._token_value(usage, "prompt_tokens", "input_tokens"),
             "completion_tokens": cls._token_value(usage, "completion_tokens", "output_tokens"),
             "total_tokens": cls._token_value(usage, "total_tokens"),
+            # Providers do not agree on where these optional usage details
+            # live.  Keep them in the normalized response, including an
+            # explicit null when the provider did not report them.
+            "cached_tokens": cls._token_value(
+                usage,
+                "cached_tokens",
+                "cache_read_tokens",
+                "cache_read_input_tokens",
+                "cached_input_tokens",
+            ),
+            "cache_write_tokens": cls._token_value(
+                usage,
+                "cache_write_tokens",
+                "cache_write_input_tokens",
+                "cache_creation_input_tokens",
+                "cache_creation_tokens",
+            ),
+            "reasoning_tokens": cls._token_value(usage, "reasoning_tokens", "reasoning"),
         }
 
     def _cost(self, response: Any, litellm: Any) -> float | None:
@@ -115,8 +133,27 @@ class LiteLLMToolCallingModel:
     def _token_value(cls, usage: Any, *keys: str) -> int | None:
         for key in keys:
             value = cls._value(usage, key)
-            if isinstance(value, int) and not isinstance(value, bool):
+            if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
                 return value
+        # OpenAI-compatible providers commonly put cache and reasoning
+        # counters in prompt/completion token detail objects.  Looking in all
+        # known detail objects keeps the adapter tolerant of either dict or
+        # SDK-object response shapes.
+        for details_key in (
+            "prompt_tokens_details",
+            "input_tokens_details",
+            "prompt_token_details",
+            "input_token_details",
+            "completion_tokens_details",
+            "output_tokens_details",
+            "completion_token_details",
+            "output_token_details",
+        ):
+            details = cls._value(usage, details_key)
+            for key in keys:
+                value = cls._value(details, key)
+                if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+                    return value
         return None
 
     @staticmethod

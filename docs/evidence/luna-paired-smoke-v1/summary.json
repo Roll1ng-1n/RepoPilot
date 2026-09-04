@@ -1,0 +1,135 @@
+{
+  "config": {
+    "date": "2026-09-04",
+    "model": "gpt-5.6-luna",
+    "model_transport": "OpenAI-compatible intermediary via LiteLLM",
+    "base_url": "[OPENAI_COMPATIBLE_BASE_URL]",
+    "tasks": [
+      "seed-single-file",
+      "seed-cross-file"
+    ],
+    "image": "python:3.12-slim",
+    "temperature": 0.0,
+    "budget": {
+      "max_steps": 15,
+      "max_replans": 1,
+      "max_consecutive_failures": 2,
+      "command_timeout_seconds": 30.0,
+      "max_run_seconds": 180.0
+    }
+  },
+  "results": [
+    {
+      "engine": "baseline",
+      "task": "seed-single-file",
+      "status": "Submitted",
+      "hidden_verifier_success": true,
+      "steps": 5,
+      "tool_calls": 5,
+      "tokens": {
+        "prompt": 7817,
+        "completion": 1235,
+        "total": 9052
+      },
+      "litellm_calculated_cost_usd": 0.00276892,
+      "duration_seconds": 37.541287244999694,
+      "errors": [
+        {
+          "type": "command",
+          "returncode": 127
+        }
+      ],
+      "patch_sha256": "4b8085e0eef6482d23528974efdacf4bc93510592c61582ac8dd4f48151fc476"
+    },
+    {
+      "engine": "repopilot",
+      "task": "seed-single-file",
+      "status": "SUCCEEDED",
+      "hidden_verifier_success": true,
+      "steps": 7,
+      "tool_calls": 10,
+      "tokens": {
+        "prompt": 11920,
+        "completion": 899,
+        "total": 12819
+      },
+      "litellm_calculated_cost_usd": 0.0028075999999999995,
+      "duration_seconds": 47.42210834099933,
+      "errors": [],
+      "retries": 0,
+      "replans": 0,
+      "patch_sha256": "c9f41c7574fc95bd35711e88f194ed9fef94ffcc8c5705f7d2b2c7ce65628c34"
+    },
+    {
+      "engine": "baseline",
+      "task": "seed-cross-file",
+      "status": "Submitted",
+      "hidden_verifier_success": true,
+      "steps": 9,
+      "tool_calls": 11,
+      "tokens": {
+        "prompt": 21819,
+        "completion": 2507,
+        "total": 24326,
+        "cached": 4096,
+        "cache_write": null,
+        "reasoning": 0
+      },
+      "litellm_calculated_cost_usd": 0.006634919999999999,
+      "openai_standard_estimated_cost_usd": 0.00663492,
+      "duration_seconds": 113.43445670499932,
+      "errors": [
+        {
+          "type": "command",
+          "returncode": 127
+        },
+        {
+          "type": "command",
+          "returncode": 123
+        },
+        {
+          "type": "command",
+          "returncode": 1
+        }
+      ],
+      "patch_sha256": "b088cad7d5e9ee0a82a6671c950e643c4fa768da9dd64c5d7cf6dba8f02091e0"
+    },
+    {
+      "engine": "repopilot",
+      "task": "seed-cross-file",
+      "status": "BUDGET_EXCEEDED",
+      "hidden_verifier_success": true,
+      "steps": 6,
+      "tool_calls": 10,
+      "tokens": {
+        "prompt": 9272,
+        "completion": 946,
+        "total": 10218,
+        "cached": 1360,
+        "cache_write": null,
+        "reasoning": 0
+      },
+      "litellm_calculated_cost_usd": 0.0027448,
+      "openai_standard_estimated_cost_usd": 0.0027448000000000004,
+      "duration_seconds": 196.10564407200036,
+      "errors": [],
+      "retries": 0,
+      "replans": 0,
+      "patch_sha256": "b088cad7d5e9ee0a82a6671c950e643c4fa768da9dd64c5d7cf6dba8f02091e0"
+    }
+  ],
+  "totals": {
+    "agent_runs": 4,
+    "hidden_verifier_passes": 4,
+    "tokens": 56415,
+    "litellm_calculated_cost_usd": 0.01495624,
+    "duration_seconds": 394.5034963629987
+  },
+  "notes": [
+    "Both engines used the same model, task snapshot, Docker image, temperature, and Run Budget.",
+    "The agents intentionally use different prompts and tool schemas; those are part of the engine being compared.",
+    "The cost values were calculated by LiteLLM from returned usage and are not intermediary invoice data.",
+    "The baseline recovered after command failures on both tasks and still passed the host-only hidden verifier.",
+    "RepoPilot produced the same passing cross-file patch as the baseline, but its final status was BUDGET_EXCEEDED after an in-flight model call crossed the 180-second wall-time budget."
+  ]
+}

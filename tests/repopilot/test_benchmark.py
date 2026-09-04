@@ -137,6 +137,84 @@ def test_runner_runs_both_engines_in_order_on_independent_workspaces(tmp_path: P
     assert result.results[0].metrics["run_budget"] == result.results[1].metrics["run_budget"]
 
 
+def test_baseline_aggregates_cache_write_and_reasoning_tokens() -> None:
+    trajectory = {
+        "info": {"model_stats": {"api_calls": 2}},
+        "messages": [
+            {
+                "extra": {
+                    "response": {
+                        "usage": {
+                            "prompt_tokens": 100,
+                            "completion_tokens": 20,
+                            "total_tokens": 120,
+                            "prompt_tokens_details": {"cached_tokens": 10, "cache_write_tokens": 2},
+                            "completion_tokens_details": {"reasoning_tokens": 5},
+                        }
+                    }
+                }
+            },
+            {
+                "extra": {
+                    "response": {
+                        "usage": {
+                            "prompt_tokens": 200,
+                            "completion_tokens": 30,
+                            "total_tokens": 230,
+                            "prompt_tokens_details": {"cached_tokens": 20, "cache_write_tokens": 3},
+                            "completion_tokens_details": {"reasoning_tokens": 7},
+                        }
+                    }
+                }
+            },
+        ],
+    }
+
+    assert benchmark_module._baseline_model_stats(trajectory)["tokens"] == {
+        "prompt": 300,
+        "completion": 50,
+        "total": 350,
+        "cached": 30,
+        "cache_write": 5,
+        "reasoning": 12,
+    }
+
+
+def test_metrics_keep_provider_cost_and_add_openai_standard_estimate(tmp_path: Path) -> None:
+    tasks_root = tmp_path / "tasks"
+    _write_task(tasks_root)
+
+    def fake_executor(request):
+        (request.workspace / "value.txt").write_text("fixed\n")
+        return EngineRun(
+            status="SUCCEEDED",
+            model_stats={
+                "tokens": {
+                    "prompt": 1_000,
+                    "completion": 200,
+                    "total": 1_200,
+                    "cached": 100,
+                    "cache_write": 50,
+                    "reasoning": 20,
+                },
+                "cost": 0.9,
+            },
+        )
+
+    config = BenchmarkConfig(
+        tasks_directory=tasks_root,
+        output_directory=tmp_path / "results",
+        model=BenchmarkModel("gpt-5.6-luna"),
+        image="test-image",
+        engines=(BenchmarkEngine.REPOPILOT,),
+    )
+    result = BenchmarkRunner(config, executors={BenchmarkEngine.REPOPILOT: fake_executor}).run()
+
+    metrics = result.results[0].metrics
+    assert metrics["cost"] == 0.9
+    assert metrics["openai_standard_estimated_cost_usd"] == pytest.approx(0.0004345)
+
+
 def test_benchmark_redacts_api_key_from_baseline_trajectory_and_results(tmp_path: Path, monkeypatch) -> None:
     api_key = "benchmark-api-key"
     proxy_url = "http://proxy-user:proxy-password@127.0.0.1:7897"

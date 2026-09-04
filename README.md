@@ -79,6 +79,34 @@ fixes, verification, and associated commits.
 
 ## Fixed Agent Benchmark
 
+Before a paid Agent Benchmark, probe an OpenAI-compatible endpoint for ordinary text and required native Tool
+Calling. Repeat `--model` to test multiple model IDs; the command reads missing credentials from `.env` by default
+and retains only a credential-free JSON/Markdown summary:
+
+```bash
+repopilot probe \
+  --model gpt-5.6-sol \
+  --model gpt-5.6-terra \
+  --model gpt-5.6-luna \
+  --model gpt-5.5
+```
+
+Run multiple models or repeated rounds through the same paired benchmark seam with `campaign`. Bare OpenAI model
+IDs receive the LiteLLM provider prefix internally, while reports preserve the requested model ID:
+
+```bash
+repopilot campaign \
+  --model gpt-5.6-luna \
+  --model gpt-5.5 \
+  --task seed-single-file \
+  --rounds 1
+```
+
+Provider/LiteLLM cost and the separately labelled OpenAI Standard price estimate are both retained when usage is
+available. See the [four-model test plan](docs/model-comparison-test-plan.md), the checked-in [API probe
+evidence](docs/evidence/four-model-api-probe-v1/summary.md), and the [Luna paired smoke
+evidence](docs/evidence/luna-paired-smoke-v1/summary.md).
+
 ```bash
 repopilot benchmark \
   --model provider/model-name \
@@ -121,9 +149,10 @@ verifier or image prerequisites are recorded before a model is constructed.
 uv pip install -e ".[dev,swebench]"
 ```
 
-Missing provider usage, cost, or timing data is recorded as JSON `null`; RepoPilot does not estimate it. The six-task
-benchmark is development-time regression evidence with a small fixed sample, not a statistically powered comparison
-or a generalization claim.
+Missing provider usage, cost, or timing data is recorded as JSON `null`; RepoPilot never infers token counts or
+timing. For the four documented comparison models, a separate OpenAI Standard price estimate is calculated only
+from returned usage and is never presented as intermediary billing. The six-task benchmark is development-time
+regression evidence with a small fixed sample, not a statistically powered comparison or a generalization claim.
 
 ## Known limitations and Out of Scope
 

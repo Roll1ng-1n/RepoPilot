@@ -37,7 +37,14 @@ def test_litellm_model_passes_model_kwargs_and_normalizes_usage_and_cost(monkeyp
     turn = LiteLLMToolCallingModel(model_name="test/model", model_kwargs={"temperature": 0}).complete([], [])
 
     assert calls[0]["temperature"] == 0
-    assert turn.usage == {"prompt_tokens": 11, "completion_tokens": 7, "total_tokens": 18}
+    assert turn.usage == {
+        "prompt_tokens": 11,
+        "completion_tokens": 7,
+        "total_tokens": 18,
+        "cached_tokens": None,
+        "cache_write_tokens": None,
+        "reasoning_tokens": None,
+    }
     assert turn.cost == 0.031
 
 
@@ -52,8 +59,42 @@ def test_litellm_model_supports_input_output_tokens_and_missing_cost(monkeypatch
 
     turn = LiteLLMToolCallingModel(model_name="test/model").complete([], [])
 
-    assert turn.usage == {"prompt_tokens": 13, "completion_tokens": 5, "total_tokens": 18}
+    assert turn.usage == {
+        "prompt_tokens": 13,
+        "completion_tokens": 5,
+        "total_tokens": 18,
+        "cached_tokens": None,
+        "cache_write_tokens": None,
+        "reasoning_tokens": None,
+    }
     assert turn.cost is None
+
+
+def test_litellm_model_preserves_nested_cache_and_reasoning_usage(monkeypatch) -> None:
+    fake_litellm = SimpleNamespace(
+        completion=lambda **_kwargs: _fake_response(
+            usage=SimpleNamespace(
+                prompt_tokens=100,
+                completion_tokens=20,
+                total_tokens=120,
+                prompt_tokens_details=SimpleNamespace(cached_tokens=17, cache_write_tokens=3),
+                completion_tokens_details=SimpleNamespace(reasoning_tokens=5),
+            )
+        ),
+        cost_calculator=SimpleNamespace(completion_cost=lambda *_args, **_kwargs: 0.0),
+    )
+    monkeypatch.setitem(sys.modules, "litellm", fake_litellm)
+
+    turn = LiteLLMToolCallingModel(model_name="test/model").complete([], [])
+
+    assert turn.usage == {
+        "prompt_tokens": 100,
+        "completion_tokens": 20,
+        "total_tokens": 120,
+        "cached_tokens": 17,
+        "cache_write_tokens": 3,
+        "reasoning_tokens": 5,
+    }
 
 
 def _make_repository(path) -> None:

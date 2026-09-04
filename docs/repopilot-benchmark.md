@@ -79,13 +79,20 @@ Every invocation creates a new directory below the platform RepoPilot state dire
 - an independent workspace and `result.json` for each task/engine pair;
 - the baseline's complete `trajectory.json` or RepoPilot's Run artifacts;
 - hidden verification output, elapsed time, the final patch, and commits after the fixed initial revision;
-- steps, tokens, cost, Tool Calls, errors, Retry, and Replan metrics when the engine exposes real values.
+- steps, prompt/completion/total/cache/reasoning tokens, provider/LiteLLM cost, a separately labelled OpenAI
+  Standard price estimate, Tool Calls, errors, Retry, and Replan metrics when the required source values exist.
 
 If Docker cannot be started or the configured image is unavailable, the affected run is recorded as
 `ENVIRONMENT_UNAVAILABLE`. This is an execution-environment result, not evidence that the task's code change failed;
 the benchmark retains the result and does not fabricate a verifier success. If an engine or provider does not
-return a metric, the corresponding token, cost, or duration field is JSON `null`. The runner never estimates missing
-usage, price, or timing data.
+return a metric, the corresponding token, provider cost, or duration field is JSON `null`. The runner never infers
+missing token counts or timing. For the four documented comparison models only, it may calculate
+`openai_standard_estimated_cost_usd` from returned usage and the checked-in OpenAI Standard price table; missing
+cache details are charged as ordinary input, while missing prompt/completion usage leaves the estimate `null`.
+This estimate is not presented as an intermediary invoice.
+
+For a staged multi-model run, use `repopilot probe` first and then `repopilot campaign`; see the
+[four-model comparison plan](model-comparison-test-plan.md).
 
 The default run has six fixed tasks and two engine attempts per task (12 task/engine samples). This is a small,
 development-time regression suite for comparing the two local execution paths and catching changes in Planning,
