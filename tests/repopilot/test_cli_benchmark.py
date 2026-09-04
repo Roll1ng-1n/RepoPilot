@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from click.utils import strip_ansi
 from typer.testing import CliRunner
 
 from repopilot.benchmark import BenchmarkEngine, BenchmarkResult, BenchmarkRun
@@ -81,7 +82,7 @@ def test_cli_benchmark_defaults_to_both_engines_and_requires_a_model(tmp_path: P
         ["benchmark", "--state-dir", str(tmp_path)],
     )
     assert missing_model.exit_code == 2
-    assert "Provide --model" in missing_model.output
+    assert "Provide --model" in strip_ansi(missing_model.output)
 
     result = CliRunner().invoke(
         create_app(benchmark_runner=fake_runner),

@@ -10,12 +10,12 @@ evidence; it is not a claim that every external model, Docker host, or Target Re
 | Capability | Classification | Evidence |
 | --- | --- | --- |
 | Baseline Agent and trajectory execution | Upstream reuse | Trigger: `repopilot benchmark --engine baseline`; test: `tests/repopilot/test_benchmark.py`; artifact: baseline `trajectory.json`; limit: it has no RepoPilot Replan/structured Recovery metrics, which remain `null`. |
-| LiteLLM/provider model adapters | Upstream reuse | Trigger: `repopilot run --model ...` and both benchmark commands; test: `tests/repopilot/test_model_metrics.py`; Trace: `model_response` usage/cost; limit: native Tool Calling/provider availability and returned usage are external requirements. Provenance is in [UPSTREAM.md](../UPSTREAM.md). |
+| LiteLLM/provider model adapters | Upstream reuse | Trigger: `repopilot run --model ...` and both benchmark commands; test: `tests/repopilot/test_model_metrics.py`; Trace: `model_response` usage/cost; limit: native Tool Calling/provider availability and returned usage are external requirements. Provenance is in [UPSTREAM.md](https://github.com/Roll1ng-1n/RepoPilot/blob/main/UPSTREAM.md). |
 | Basic Docker lifecycle | Upstream reuse with RepoPilot adapter | Trigger: `repopilot run --environment docker --image ...`, `benchmark`, and `swebench-smoke`; tests: `tests/repopilot/test_environment.py`; artifact: environment/preflight errors in result and Trace; limit: the host daemon and image must already be usable, and Docker is not claimed as a complete security boundary. |
 | Upstream step, cost, wall-time, retry, and trajectory primitives | Upstream reuse | Trigger: baseline benchmark budget flags; test: `tests/repopilot/test_benchmark.py`; artifact: baseline `trajectory.json` and normalized metrics; limit: unsupported structured metrics are `null`, and provider cost is not estimated. |
 
 These inherited pieces are intentionally not presented as RepoPilot inventions. RepoPilot keeps the recognizable
-`minisweagent` package and records the exact v2.4.6 source revision in [UPSTREAM.md](../UPSTREAM.md).
+`minisweagent` package and records the exact v2.4.6 source revision in [UPSTREAM.md](https://github.com/Roll1ng-1n/RepoPilot/blob/main/UPSTREAM.md).
 
 ## RepoPilot extensions
 

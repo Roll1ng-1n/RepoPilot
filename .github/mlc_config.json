@@ -7,6 +7,9 @@
       "pattern": "https://platform.openai.com/docs/.*"
     },
     {
+      "pattern": "^https://join\\.slack\\.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ$"
+    },
+    {
       "pattern": ".*localhost.*"
     },
     {
