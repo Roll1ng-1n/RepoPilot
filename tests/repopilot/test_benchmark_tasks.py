@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
-import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
+
+from repopilot.benchmark import canonical_snapshot_sha256, copy_snapshot
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 TASKS_ROOT = REPOSITORY_ROOT / "src" / "repopilot" / "benchmark_tasks"
@@ -28,17 +28,6 @@ def _load_manifest(task_id: str) -> tuple[Path, dict[str, object]]:
     task_directory = TASKS_ROOT / task_id
     manifest_path = task_directory / "manifest.json"
     return task_directory, json.loads(manifest_path.read_text())
-
-
-def _canonical_snapshot_hash(snapshot: Path) -> str:
-    digest = hashlib.sha256()
-    for path in sorted(path for path in snapshot.rglob("*") if path.is_file()):
-        relative_path = path.relative_to(snapshot).as_posix()
-        digest.update(relative_path.encode())
-        digest.update(b"\0")
-        digest.update(path.read_bytes())
-        digest.update(b"\0")
-    return digest.hexdigest()
 
 
 def _run_verifier(task_directory: Path, repository: Path) -> subprocess.CompletedProcess[str]:
@@ -66,7 +55,7 @@ def test_seed_manifest_and_snapshot_are_stable(task_id: str) -> None:
     assert manifest["id"] == task_id
     assert snapshot.is_dir()
     assert snapshot_metadata["revision"] == "seed-v1"
-    assert snapshot_metadata["sha256"] == _canonical_snapshot_hash(snapshot)
+    assert snapshot_metadata["sha256"] == canonical_snapshot_sha256(snapshot)
     assert isinstance(manifest["task_statement"], str) and manifest["task_statement"]
     assert manifest["timeout_seconds"] == 180
     assert manifest["run_budget"] == EXPECTED_RUN_BUDGET
@@ -95,7 +84,7 @@ def test_known_gold_fix_passes_host_verifier_without_mounting_verifier(task_id: 
     task_directory, manifest = _load_manifest(task_id)
     snapshot = task_directory / str(manifest["snapshot"]["path"])  # type: ignore[index]
     repository = tmp_path / task_id
-    shutil.copytree(snapshot, repository)
+    copy_snapshot(snapshot, repository)
 
     if task_id == "seed-single-file":
         (repository / "src" / "slugify.py").write_text(

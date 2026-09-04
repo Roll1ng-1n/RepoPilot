@@ -8,6 +8,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+sys.dont_write_bytecode = True
+
 
 def main(repository: str) -> int:
     root = Path(repository).resolve()
@@ -16,7 +18,7 @@ def main(repository: str) -> int:
         input_path = Path(handle.name)
         handle.write("first,1\nsecond,20\nfirst,3\n")
     try:
-        command = [sys.executable, str(root / "src" / "cli.py"), str(input_path), "--json"]
+        command = [sys.executable, "-B", str(root / "src" / "cli.py"), str(input_path), "--json"]
         result = subprocess.run(command, cwd=root, capture_output=True, text=True, check=False, timeout=10)
         assert result.returncode == 0, result.stderr
         lines = result.stdout.splitlines()
@@ -29,7 +31,7 @@ def main(repository: str) -> int:
         ]
 
         human = subprocess.run(
-            [sys.executable, str(root / "src" / "cli.py"), str(input_path)],
+            [sys.executable, "-B", str(root / "src" / "cli.py"), str(input_path)],
             cwd=root,
             capture_output=True,
             text=True,

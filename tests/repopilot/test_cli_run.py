@@ -12,6 +12,7 @@ from repopilot.cli import create_app
 from repopilot.environment import (
     Command,
     CommandResult,
+    DockerProxyMode,
     EnvironmentCreationError,
     EnvironmentRequest,
     ExecutionEnvironment,
@@ -587,10 +588,14 @@ diff --git a/README.md b/README.md
         "finish_task",
     ]
     apply_call = next(event for event in events if event["type"] == "tool_call" and event["tool_name"] == "apply_patch")
-    apply_result = next(event for event in events if event["type"] == "tool_result" and event["tool_name"] == "apply_patch")
+    apply_result = next(
+        event for event in events if event["type"] == "tool_result" and event["tool_name"] == "apply_patch"
+    )
     assert apply_call["arguments"]["patch"] == patch
     assert apply_result["observation"]["result"]["applied"] is True
-    view_diff_result = next(event for event in events if event["type"] == "tool_result" and event["tool_name"] == "view_diff")
+    view_diff_result = next(
+        event for event in events if event["type"] == "tool_result" and event["tool_name"] == "view_diff"
+    )
     assert "-RepoPilot needle" in view_diff_result["observation"]["result"]["patch"]
     assert {schema["function"]["name"] for schema in model.requests[0][1]} >= {
         "apply_patch",
@@ -681,8 +686,10 @@ diff --git a/README.md b/README.md
 
     first_model = InterruptAfterPatchModel()
     first_environments: list[RecordingEnvironment] = []
+    first_requests: list[EnvironmentRequest] = []
 
-    def first_environment_factory(_request: EnvironmentRequest) -> RecordingEnvironment:
+    def first_environment_factory(request: EnvironmentRequest) -> RecordingEnvironment:
+        first_requests.append(request)
         environment = RecordingEnvironment()
         first_environments.append(environment)
         return environment
@@ -698,6 +705,14 @@ diff --git a/README.md b/README.md
             str(state_directory),
             "--api-key",
             "test-api-key",
+            "--environment",
+            "docker",
+            "--image",
+            "repo-image",
+            "--docker-proxy-mode",
+            "explicit",
+            "--docker-proxy-url",
+            "http://user:password@proxy.example:8080",
         ],
     )
 
@@ -711,26 +726,39 @@ diff --git a/README.md b/README.md
     assert checkpoint["budget"]["steps_used"] == 2
     assert checkpoint["tool_results"][0]["tool_name"] == "apply_patch"
     assert checkpoint["repository"]["resolved_target_repository"] == str(target_repository.resolve())
-    assert checkpoint["environment"] == {"backend": "local", "image": None}
+    assert checkpoint["environment"] == {"backend": "docker", "image": "repo-image", "proxy_mode": "explicit"}
     assert "test-api-key" not in json.dumps(checkpoint)
+    assert "user:password" not in json.dumps(checkpoint)
+    assert first_requests[0].proxy_url == "http://user:password@proxy.example:8080"
     assert (target_repository / "README.md").read_text() == "RepoPilot checkpointed change\n"
 
     resumed_model = ResumeModel()
     resumed_environments: list[RecordingEnvironment] = []
+    resumed_requests: list[EnvironmentRequest] = []
 
-    def resumed_environment_factory(_request: EnvironmentRequest) -> RecordingEnvironment:
+    def resumed_environment_factory(request: EnvironmentRequest) -> RecordingEnvironment:
+        resumed_requests.append(request)
         environment = RecordingEnvironment()
         resumed_environments.append(environment)
         return environment
 
     resumed = CliRunner().invoke(
         create_app(lambda _: resumed_model, resumed_environment_factory),
-        ["resume", run_directory.name, "--state-dir", str(state_directory)],
+        [
+            "resume",
+            run_directory.name,
+            "--state-dir",
+            str(state_directory),
+            "--docker-proxy-url",
+            "http://user:password@proxy.example:9090",
+        ],
     )
 
     assert resumed.exit_code == 0, resumed.output
     assert "SUCCEEDED" in resumed.output
     assert resumed_environments[0].closed is True
+    assert resumed_requests[0].proxy_mode is DockerProxyMode.EXPLICIT
+    assert resumed_requests[0].proxy_url == "http://user:password@proxy.example:9090"
     assert len(resumed_model.requests) == 3
     assert any(
         message["role"] == "tool" and message["tool_call_id"] == "apply" for message in resumed_model.requests[0][0]
@@ -894,14 +922,27 @@ def test_cli_selects_an_environment_through_the_factory(tmp_path: Path) -> None:
             "docker",
             "--image",
             "repo-image",
+            "--docker-proxy-mode",
+            "explicit",
+            "--docker-proxy-url",
+            "http://user:password@proxy.example:8080",
         ],
     )
 
     assert result.exit_code == 0, result.output
     assert requests == [
-        EnvironmentRequest(target_repository=target_repository.resolve(), environment="docker", image="repo-image")
+        EnvironmentRequest(
+            target_repository=target_repository.resolve(),
+            environment="docker",
+            image="repo-image",
+            proxy_mode=DockerProxyMode.EXPLICIT,
+            proxy_url="http://user:password@proxy.example:8080",
+        )
     ]
     assert environment.closed is True
+    checkpoint = json.loads((next((tmp_path / "agent-runs").iterdir()) / "checkpoint.json").read_text())
+    assert checkpoint["environment"] == {"backend": "docker", "image": "repo-image", "proxy_mode": "explicit"}
+    assert "user:password" not in json.dumps(checkpoint)
 
 
 def test_cli_rejects_docker_without_an_image(tmp_path: Path) -> None:

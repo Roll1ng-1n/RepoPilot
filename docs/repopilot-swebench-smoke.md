@@ -29,9 +29,16 @@ integration seam, not a statistically powered benchmark. The model name and
 provider credentials are supplied by the caller and are not written into this
 document.
 
-The complete path also requires the official `swebench` Python package in the
-RepoPilot environment. If it is absent, verifier preflight records
-`VERIFIER_UNAVAILABLE` before any model is constructed.
+The complete path also requires the official `swebench==5.0.2` Python package
+in the RepoPilot environment. Install the optional evaluator dependency
+together with development dependencies:
+
+```bash
+uv pip install -e ".[dev,swebench]"
+```
+
+If it is absent, verifier preflight records `VERIFIER_UNAVAILABLE` before any
+model is constructed and prints the same installation hint.
 
 ## Execution order
 

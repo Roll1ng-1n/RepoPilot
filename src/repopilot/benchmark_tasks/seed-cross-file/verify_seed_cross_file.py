@@ -17,7 +17,7 @@ def verify(repository: Path) -> None:
     assert format_greeting("Ada", excited=True) == "HELLO, ADA!"  # type: ignore[call-arg]
 
     result = subprocess.run(
-        [sys.executable, str(repository / "src" / "cli.py"), "Ada", "--excited"],
+        [sys.executable, "-B", str(repository / "src" / "cli.py"), "Ada", "--excited"],
         cwd=repository,
         capture_output=True,
         text=True,
@@ -28,7 +28,7 @@ def verify(repository: Path) -> None:
     assert result.stdout == "HELLO, ADA!\n"
 
     default_result = subprocess.run(
-        [sys.executable, str(repository / "src" / "cli.py"), "Ada"],
+        [sys.executable, "-B", str(repository / "src" / "cli.py"), "Ada"],
         cwd=repository,
         capture_output=True,
         text=True,

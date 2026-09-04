@@ -28,6 +28,7 @@ from repopilot.budget import RunBudget
 from repopilot.checkpoint import RepositoryStateError, verify_repository_state
 from repopilot.context import ContextManager, ContextStrategy, model_summary_generator
 from repopilot.environment import (
+    DockerProxyMode,
     EnvironmentCreationError,
     EnvironmentRequest,
     ExecutionEnvironmentFactory,
@@ -106,6 +107,19 @@ def create_app(
             help="Execution Environment.",
         ),
         image: str | None = typer.Option(None, "--image", help="Container image required by --environment docker."),
+        docker_proxy_mode: DockerProxyMode = typer.Option(
+            DockerProxyMode.NONE,
+            "--docker-proxy-mode",
+            envvar="REPOPILOT_DOCKER_PROXY_MODE",
+            help="Container proxy policy: none, inherit, or explicit.",
+        ),
+        docker_proxy_url: str | None = typer.Option(
+            None,
+            "--docker-proxy-url",
+            envvar="REPOPILOT_DOCKER_PROXY_URL",
+            show_default=False,
+            help="Container proxy URL required by --docker-proxy-mode explicit.",
+        ),
         max_steps: int = typer.Option(30, "--max-steps", min=1),
         max_replans: int = typer.Option(2, "--max-replans", min=0),
         max_consecutive_failures: int = typer.Option(3, "--max-consecutive-failures", min=1),
@@ -121,11 +135,22 @@ def create_app(
     ) -> None:
         if task is None:
             task = typer.prompt("Task")
-        request = EnvironmentRequest(target_repository=repository, environment=environment_name.value, image=image)
+        request = EnvironmentRequest(
+            target_repository=repository,
+            environment=environment_name.value,
+            image=image,
+            proxy_mode=docker_proxy_mode,
+            proxy_url=docker_proxy_url,
+        )
         try:
             validate_environment_request(request)
         except ValueError as error:
-            parameter = "--image" if environment_name is EnvironmentOption.DOCKER and not image else "--environment"
+            if docker_proxy_mode is DockerProxyMode.EXPLICIT and not docker_proxy_url:
+                parameter = "--docker-proxy-url"
+            elif environment_name is EnvironmentOption.DOCKER and not image:
+                parameter = "--image"
+            else:
+                parameter = "--environment"
             raise typer.BadParameter(str(error), param_hint=parameter) from error
         if auto_approve_disposable_docker_benchmark and environment_name is not EnvironmentOption.DOCKER:
             raise typer.BadParameter(
@@ -189,7 +214,15 @@ def create_app(
                     "model_name": tool_calling_model.model_name,
                     "base_url": base_url,
                 },
-                checkpoint_environment={"backend": request.environment, "image": request.image},
+                checkpoint_environment={
+                    "backend": request.environment,
+                    "image": request.image,
+                    **(
+                        {"proxy_mode": request.proxy_mode.value}
+                        if request.environment == EnvironmentOption.DOCKER.value
+                        else {}
+                    ),
+                },
                 verifications=verifications,
                 context=context,
                 approval_context=ApprovalContext(
@@ -246,6 +279,19 @@ def create_app(
         api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
         base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
         image: str = typer.Option("python:3.12-slim", "--image", help="Docker image shared by both engines."),
+        docker_proxy_mode: DockerProxyMode = typer.Option(
+            DockerProxyMode.NONE,
+            "--docker-proxy-mode",
+            envvar="REPOPILOT_DOCKER_PROXY_MODE",
+            help="Shared container proxy policy for both benchmark engines.",
+        ),
+        docker_proxy_url: str | None = typer.Option(
+            None,
+            "--docker-proxy-url",
+            envvar="REPOPILOT_DOCKER_PROXY_URL",
+            show_default=False,
+            help="Shared proxy URL required by --docker-proxy-mode explicit.",
+        ),
         temperature: float = typer.Option(0.0, "--temperature"),
         max_steps: int = typer.Option(15, "--max-steps", min=1),
         max_replans: int = typer.Option(1, "--max-replans", min=0),
@@ -261,26 +307,31 @@ def create_app(
             raise typer.BadParameter("Select at least one benchmark engine.", param_hint="--engine")
         benchmark_root = state_dir or Path(user_state_dir("repopilot")) / "benchmarks"
         output_directory = benchmark_root.resolve() / uuid.uuid4().hex
-        config = BenchmarkConfig(
-            tasks_directory=tasks_dir,
-            output_directory=output_directory,
-            model=BenchmarkModel(
-                model_name=model,
-                model_kwargs={"temperature": temperature},
-                api_key=api_key,
-                base_url=base_url,
-            ),
-            image=image,
-            budget=BenchmarkBudget(
-                max_steps=max_steps,
-                max_replans=max_replans,
-                max_consecutive_failures=max_consecutive_failures,
-                command_timeout_seconds=command_timeout_seconds,
-                max_run_seconds=max_run_seconds,
-            ),
-            engines=tuple(dict.fromkeys(engines)),
-            task_ids=tuple(dict.fromkeys(tasks)),
-        )
+        try:
+            config = BenchmarkConfig(
+                tasks_directory=tasks_dir,
+                output_directory=output_directory,
+                model=BenchmarkModel(
+                    model_name=model,
+                    model_kwargs={"temperature": temperature},
+                    api_key=api_key,
+                    base_url=base_url,
+                ),
+                image=image,
+                proxy_mode=docker_proxy_mode,
+                proxy_url=docker_proxy_url,
+                budget=BenchmarkBudget(
+                    max_steps=max_steps,
+                    max_replans=max_replans,
+                    max_consecutive_failures=max_consecutive_failures,
+                    command_timeout_seconds=command_timeout_seconds,
+                    max_run_seconds=max_run_seconds,
+                ),
+                engines=tuple(dict.fromkeys(engines)),
+                task_ids=tuple(dict.fromkeys(tasks)),
+            )
+        except ValueError as error:
+            raise typer.BadParameter(str(error), param_hint="--docker-proxy-url") from error
         try:
             benchmark_run = selected_benchmark_runner(config)
         except (FileNotFoundError, OSError, RuntimeError, ValueError) as error:
@@ -373,6 +424,7 @@ def create_app(
         model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
         api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
         base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+        docker_proxy_url: str | None = None,
         approval_granted: bool | None = None,
     ) -> None:
         """Resume a STOPPED Agent Run or resolve one pending Human Approval."""
@@ -404,10 +456,13 @@ def create_app(
             repository_state = _checkpoint_mapping(checkpoint, "repository")
             target_repository = Path(_checkpoint_string(repository_state, "resolved_target_repository"))
             environment_state = _checkpoint_mapping(checkpoint, "environment")
+            proxy_mode = environment_state.get("proxy_mode", DockerProxyMode.NONE.value)
             request = EnvironmentRequest(
                 target_repository=target_repository,
                 environment=_checkpoint_string(environment_state, "backend"),
                 image=environment_state.get("image") if isinstance(environment_state.get("image"), str) else None,
+                proxy_mode=proxy_mode,
+                proxy_url=docker_proxy_url if proxy_mode == DockerProxyMode.EXPLICIT.value else None,
             )
             validate_environment_request(request)
             plan_history_value = checkpoint.get("plan_history")
@@ -484,10 +539,17 @@ def create_app(
         model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
         api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
         base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+        docker_proxy_url: str | None = typer.Option(
+            None,
+            "--docker-proxy-url",
+            envvar="REPOPILOT_DOCKER_PROXY_URL",
+            show_default=False,
+            help="Re-supply an explicit container proxy URL; URLs are not stored in Checkpoints.",
+        ),
     ) -> None:
         """Resume a STOPPED Agent Run after recreating its Execution Environment."""
 
-        _resume(run_id, state_dir, model, api_key, base_url)
+        _resume(run_id, state_dir, model, api_key, base_url, docker_proxy_url)
 
     @app.command()
     def approve(
@@ -496,10 +558,16 @@ def create_app(
         model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
         api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
         base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+        docker_proxy_url: str | None = typer.Option(
+            None,
+            "--docker-proxy-url",
+            envvar="REPOPILOT_DOCKER_PROXY_URL",
+            show_default=False,
+        ),
     ) -> None:
         """Approve the persisted high-risk Tool Call, then resume the Agent Run."""
 
-        _resume(run_id, state_dir, model, api_key, base_url, approval_granted=True)
+        _resume(run_id, state_dir, model, api_key, base_url, docker_proxy_url, approval_granted=True)
 
     @app.command()
     def reject(
@@ -508,10 +576,16 @@ def create_app(
         model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
         api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
         base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
+        docker_proxy_url: str | None = typer.Option(
+            None,
+            "--docker-proxy-url",
+            envvar="REPOPILOT_DOCKER_PROXY_URL",
+            show_default=False,
+        ),
     ) -> None:
         """Reject the persisted high-risk Tool Call and let the model revise its plan."""
 
-        _resume(run_id, state_dir, model, api_key, base_url, approval_granted=False)
+        _resume(run_id, state_dir, model, api_key, base_url, docker_proxy_url, approval_granted=False)
 
     return app
 

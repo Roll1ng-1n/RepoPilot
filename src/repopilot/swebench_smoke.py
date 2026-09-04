@@ -35,6 +35,10 @@ DATASET_REVISION = "b0dde1093fe417d83b7184254edf8199c1f0dff5"
 SPLIT = "dev"
 INSTANCE_ID = "sqlfluff__sqlfluff-1625"
 DEFAULT_IMAGE = "docker.io/swebench/sweb.eval.x86_64.sqlfluff_1776_sqlfluff-1625:latest"
+SWEBENCH_VERSION = "5.0.2"
+SWEBENCH_INSTALL_HINT = (
+    f'Install the optional SWE-bench dependency with: uv pip install -e ".[swebench]" (swebench=={SWEBENCH_VERSION}).'
+)
 
 
 class DatasetLoader(Protocol):
@@ -273,12 +277,7 @@ def preflight_swebench(
         encoding="utf-8",
     )
     if verifier_error is not None or verified["exit_code"] != 0 or report_error is not None:
-        detail = (
-            verifier_error
-            or report_error
-            or verified.get("stderr")
-            or "The official SWE-bench verifier preflight failed."
-        )
+        detail = _verifier_failure_detail(verifier_error, verified, report_error)
         return PreflightResult("VERIFIER_UNAVAILABLE", config.image, tuple(checks), str(detail))
     if INSTANCE_ID not in verified["resolved_ids"]:
         return PreflightResult(
@@ -591,6 +590,22 @@ def _attach_official_report(result: dict[str, Any], report_directory: Path) -> s
     result["report_path"] = str(report["_path"])
     del report["_path"]
     return None
+
+
+def _verifier_failure_detail(
+    verifier_error: str | None,
+    verified: Mapping[str, Any],
+    report_error: str | None,
+) -> str:
+    """Prefer the actionable verifier error and explain a missing package."""
+
+    detail = (
+        verifier_error or verified.get("stderr") or report_error or "The official SWE-bench verifier preflight failed."
+    )
+    detail = str(detail)
+    if "No module named" in detail and "swebench" in detail.lower():
+        return f"{detail} {SWEBENCH_INSTALL_HINT}"
+    return detail
 
 
 def _read_official_report(report_directory: Path) -> tuple[dict[str, Any] | None, str | None]:

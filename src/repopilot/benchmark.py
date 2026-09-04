@@ -29,7 +29,7 @@ from repopilot.approval import ApprovalContext
 from repopilot.artifacts import RunArtifacts
 from repopilot.budget import RunBudget
 from repopilot.context import ContextManager
-from repopilot.environment import DockerExecutionEnvironment
+from repopilot.environment import DockerExecutionEnvironment, DockerProxyMode, docker_proxy_run_args
 from repopilot.model import AssistantTurn, LiteLLMToolCallingModel
 from repopilot.plan import PlanHistory
 from repopilot.runtime import AgentRunResult, AgentRuntime
@@ -241,6 +241,15 @@ class BenchmarkConfig:
     budget: BenchmarkBudget = field(default_factory=BenchmarkBudget)
     engines: tuple[BenchmarkEngine, ...] = (BenchmarkEngine.BASELINE, BenchmarkEngine.REPOPILOT)
     task_ids: tuple[str, ...] = ()
+    proxy_mode: DockerProxyMode = DockerProxyMode.NONE
+    proxy_url: str | None = field(default=None, repr=False)
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.proxy_mode, DockerProxyMode):
+            object.__setattr__(self, "proxy_mode", DockerProxyMode(str(self.proxy_mode).lower()))
+        # Resolve validation without persisting the URL. The actual run args
+        # are built by each engine at container start.
+        docker_proxy_run_args(self.proxy_mode, self.proxy_url, environment={})
 
     def public_dict(self) -> dict[str, Any]:
         return {
@@ -248,6 +257,7 @@ class BenchmarkConfig:
             "output_directory": str(self.output_directory),
             "model": self.model.public_dict(),
             "image": self.image,
+            "proxy_mode": self.proxy_mode.value,
             "budget": asdict(self.budget),
             "engines": [engine.value for engine in self.engines],
             "task_ids": list(self.task_ids),
@@ -407,7 +417,7 @@ class BenchmarkRunner:
                 else None
             )
             run = EngineRun(status=status, error=str(exception) or type(exception).__name__)
-        secrets = _benchmark_secret_values(self.config.model)
+        secrets = _benchmark_secret_values(self.config)
         run.status = _redact_benchmark_value(run.status, secrets)
         run.error = _redact_benchmark_value(run.error, secrets)
         run.trajectory = _redact_benchmark_value(run.trajectory, secrets)
@@ -457,16 +467,14 @@ def load_tasks(tasks_directory: Path) -> tuple[BenchmarkTask, ...]:
 
 
 def canonical_snapshot_sha256(snapshot: Path) -> str:
-    """Hash a directory's path/content stream, excluding any existing Git metadata."""
+    """Hash a snapshot while ignoring source-control and Python-generated files."""
 
     root = snapshot.resolve()
     if not root.is_dir():
         raise FileNotFoundError(f"Benchmark snapshot does not exist: {root}")
     digest = hashlib.sha256()
-    paths = sorted(path for path in root.rglob("*") if ".git" not in path.relative_to(root).parts)
+    paths = sorted(path for path in root.rglob("*") if path.is_file() and not _is_ignored_snapshot_path(path, root))
     for path in paths:
-        if not path.is_file():
-            continue
         relative = path.relative_to(root).as_posix().encode()
         digest.update(relative)
         digest.update(b"\0")
@@ -476,12 +484,21 @@ def canonical_snapshot_sha256(snapshot: Path) -> str:
 
 
 def copy_snapshot(snapshot: Path, workspace: Path) -> None:
-    """Copy a clean snapshot without carrying over source-control metadata."""
+    """Copy a clean snapshot without source-control or Python-generated files."""
+
+    root = snapshot.resolve()
 
     def ignore(directory: str, names: list[str]) -> set[str]:
-        return {".git"} if ".git" in names else set()
+        return {name for name in names if _is_ignored_snapshot_path((Path(directory) / name).resolve(), root)}
 
-    shutil.copytree(snapshot, workspace, ignore=ignore)
+    shutil.copytree(root, workspace, ignore=ignore)
+
+
+def _is_ignored_snapshot_path(path: Path, root: Path) -> bool:
+    """Return whether a path is generated metadata excluded from a snapshot."""
+
+    relative = path.relative_to(root)
+    return ".git" in relative.parts or "__pycache__" in relative.parts or path.suffix in {".pyc", ".pyo"}
 
 
 def initialize_git_snapshot(workspace: Path) -> str | None:
@@ -554,7 +571,7 @@ def _run_baseline(request: EngineRequest) -> EngineRun:
         "environment_class": "docker",
         "image": config.image,
         "cwd": "/workspace",
-        "run_args": run_args,
+        "run_args": run_args + docker_proxy_run_args(config.proxy_mode, config.proxy_url),
         "timeout": max(1, int(run_budget.command_timeout_seconds)),
     }
     environment = get_environment(environment_config, default_type="docker")
@@ -581,7 +598,7 @@ def _run_baseline(request: EngineRequest) -> EngineRun:
         error = str(exception) or type(exception).__name__
     finally:
         raw_trajectory = agent.save(None, {"benchmark": {"engine": BenchmarkEngine.BASELINE.value}})
-        trajectory = _redact_benchmark_value(raw_trajectory, _benchmark_secret_values(config.model))
+        trajectory = _redact_benchmark_value(raw_trajectory, _benchmark_secret_values(config))
         trajectory_path.parent.mkdir(parents=True, exist_ok=True)
         trajectory_path.write_text(json.dumps(trajectory, indent=2), encoding="utf-8")
         _cleanup_baseline_environment(environment)
@@ -590,7 +607,7 @@ def _run_baseline(request: EngineRequest) -> EngineRun:
         duration_seconds=time.monotonic() - started,
         trajectory=trajectory,
         model_stats=_baseline_model_stats(trajectory),
-        error=_redact_benchmark_value(error, _benchmark_secret_values(config.model)),
+        error=_redact_benchmark_value(error, _benchmark_secret_values(config)),
     )
 
 
@@ -647,9 +664,14 @@ class _BenchmarkToolCallingModel(LiteLLMToolCallingModel):
 def _run_repopilot(request: EngineRequest) -> EngineRun:
     config = request.config
     model = _BenchmarkToolCallingModel(model=config.model)
-    environment = DockerExecutionEnvironment(request.workspace, image=config.image)
+    environment = DockerExecutionEnvironment(
+        request.workspace,
+        image=config.image,
+        proxy_mode=config.proxy_mode,
+        proxy_url=config.proxy_url,
+    )
     state_directory = request.artifact_directory / "run-state"
-    artifacts = RunArtifacts(state_directory, secrets=_benchmark_secret_values(config.model))
+    artifacts = RunArtifacts(state_directory, secrets=_benchmark_secret_values(config))
     plan_history = PlanHistory.for_task(request.task.task)
     budget = request.effective_budget.to_run_budget()
     runtime = AgentRuntime(
@@ -691,7 +713,7 @@ def _run_repopilot(request: EngineRequest) -> EngineRun:
         duration_seconds=time.monotonic() - started,
         run_result=result,
         model_stats=model.stats(),
-        error=_redact_benchmark_value(error, _benchmark_secret_values(config.model)),
+        error=_redact_benchmark_value(error, _benchmark_secret_values(config)),
     )
 
 
@@ -704,11 +726,18 @@ def _copy_runtime_artifacts(source: Path, destination: Path) -> None:
             shutil.copy2(path, target)
 
 
-def _benchmark_secret_values(model: BenchmarkModel) -> list[str]:
+def _benchmark_secret_values(config: BenchmarkConfig) -> list[str]:
+    model = config.model
     values: list[str] = []
     for candidate in (model.api_key, model.model_kwargs.get("api_key")):
         if isinstance(candidate, str) and candidate and candidate not in values:
             values.append(candidate)
+    if config.proxy_url and config.proxy_url not in values:
+        values.append(config.proxy_url)
+    for argument in docker_proxy_run_args(config.proxy_mode, config.proxy_url):
+        name, separator, value = argument.partition("=")
+        if separator and name.upper() in {"HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY"} and value not in values:
+            values.append(value)
     return values
 
 
@@ -798,7 +827,18 @@ def capture_patch(workspace: Path, initial_head: str | None) -> str | None:
     if initial_head is None:
         return None
     tracked = subprocess.run(
-        ["git", "diff", "--no-ext-diff", "--binary", initial_head, "--"],
+        [
+            "git",
+            "diff",
+            "--no-ext-diff",
+            "--binary",
+            initial_head,
+            "--",
+            ".",
+            ":(exclude,glob)**/__pycache__/**",
+            ":(exclude,glob)**/*.pyc",
+            ":(exclude,glob)**/*.pyo",
+        ],
         cwd=workspace,
         capture_output=True,
         text=True,
@@ -808,6 +848,8 @@ def capture_patch(workspace: Path, initial_head: str | None) -> str | None:
     chunks = [tracked]
     for relative in untracked.decode(errors="surrogateescape").split("\0"):
         if not relative:
+            continue
+        if _is_ignored_snapshot_path((workspace / relative).resolve(), workspace.resolve()):
             continue
         result = subprocess.run(
             ["git", "diff", "--no-index", "--binary", "/dev/null", relative],

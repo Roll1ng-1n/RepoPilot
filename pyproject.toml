@@ -50,9 +50,14 @@ dependencies = [
 [project.optional-dependencies]
 full = [
     "mini-swe-agent[dev]",
+    "mini-swe-agent[swebench]",
     "swe-rex>=1.4.0",
     "mini-swe-agent[modal]",
     "mini-swe-agent[contree]",
+]
+
+swebench = [
+    "swebench==5.0.2",
 ]
 
 modal = [

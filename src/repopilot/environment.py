@@ -2,18 +2,150 @@
 
 from __future__ import annotations
 
+import ipaddress
 import os
+import platform
 import subprocess
 import time
-from collections.abc import Callable
-from dataclasses import dataclass
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass, field
+from enum import Enum
 from pathlib import Path
 from typing import Protocol
+from urllib.parse import SplitResult, urlsplit, urlunsplit
 
 from minisweagent.environments.docker import DockerEnvironment
 
 DEFAULT_MAXIMUM_OUTPUT_CHARACTERS = 20_000
 CONTAINER_REPOSITORY_PATH = "/workspace"
+_DOCKER_HOST_GATEWAY = "host.docker.internal"
+_PROXY_URL_ENVIRONMENT = (
+    "HTTP_PROXY",
+    "HTTPS_PROXY",
+    "ALL_PROXY",
+    "http_proxy",
+    "https_proxy",
+    "all_proxy",
+)
+_PROXY_ENVIRONMENT = _PROXY_URL_ENVIRONMENT + ("NO_PROXY", "no_proxy")
+
+
+class DockerProxyMode(str, Enum):
+    """How a Docker container receives outbound proxy settings."""
+
+    NONE = "none"
+    INHERIT = "inherit"
+    EXPLICIT = "explicit"
+
+
+def docker_proxy_run_args(
+    mode: DockerProxyMode | str = DockerProxyMode.NONE,
+    proxy_url: str | None = None,
+    *,
+    environment: Mapping[str, str] | None = None,
+    system: str | None = None,
+) -> list[str]:
+    """Build the minimal Docker ``run`` arguments for a proxy policy.
+
+    Proxy values are intentionally runtime-only. Callers should use the mode,
+    not the returned arguments, for persisted/public configuration.
+    """
+
+    selected_mode = _coerce_proxy_mode(mode)
+    if selected_mode is DockerProxyMode.NONE:
+        if proxy_url:
+            raise ValueError("A Docker proxy URL requires proxy mode 'explicit'.")
+        return []
+    if selected_mode is DockerProxyMode.EXPLICIT:
+        if not proxy_url or not proxy_url.strip():
+            raise ValueError("Docker proxy mode 'explicit' requires a proxy URL.")
+        explicit_url = _validate_proxy_url(proxy_url)
+        values = {name: explicit_url for name in _PROXY_URL_ENVIRONMENT}
+    else:
+        if proxy_url:
+            raise ValueError("Docker proxy mode 'inherit' reads proxy URLs from the host environment.")
+        source = os.environ if environment is None else environment
+        values = {name: source[name] for name in _PROXY_ENVIRONMENT if source.get(name)}
+
+    resolved_values: dict[str, str] = {}
+    needs_host_gateway = False
+    for name, value in values.items():
+        if name in _PROXY_URL_ENVIRONMENT:
+            value, was_loopback = _rewrite_loopback_proxy(value, system=system)
+            needs_host_gateway = needs_host_gateway or was_loopback
+        resolved_values[name] = value
+
+    args: list[str] = []
+    if needs_host_gateway and (system or platform.system()).lower() == "linux":
+        args.append(f"--add-host={_DOCKER_HOST_GATEWAY}:host-gateway")
+    for name, value in resolved_values.items():
+        args.extend(["--env", f"{name}={value}"])
+    return args
+
+
+def _coerce_proxy_mode(mode: DockerProxyMode | str) -> DockerProxyMode:
+    if isinstance(mode, DockerProxyMode):
+        return mode
+    try:
+        return DockerProxyMode(str(mode).lower())
+    except ValueError as error:
+        choices = ", ".join(item.value for item in DockerProxyMode)
+        raise ValueError(f"Unknown Docker proxy mode: {mode!r}. Choose {choices}.") from error
+
+
+def _rewrite_loopback_proxy(value: str, *, system: str | None) -> tuple[str, bool]:
+    """Make a host loopback proxy reachable from a Linux container."""
+
+    if "://" not in value:
+        raise ValueError("Docker proxy URL is invalid; include a scheme such as http://proxy:8080.")
+    try:
+        parsed = urlsplit(value)
+        hostname = parsed.hostname
+        # Accessing port validates malformed values while preserving the URL.
+        parsed.port
+    except ValueError as error:
+        raise ValueError("Docker proxy URL is invalid; expected a URL such as http://proxy:8080.") from error
+    if not hostname or not _is_loopback_hostname(hostname):
+        return value, False
+
+    rewritten = _replace_proxy_hostname(parsed, _DOCKER_HOST_GATEWAY)
+    # Docker Desktop provides this name on macOS/Windows; Linux needs the
+    # explicit host-gateway run argument added by docker_proxy_run_args().
+    return rewritten, (system or platform.system()).lower() == "linux"
+
+
+def _validate_proxy_url(value: str) -> str:
+    candidate = value.strip()
+    try:
+        parsed = urlsplit(candidate)
+        hostname = parsed.hostname
+        parsed.port
+    except ValueError as error:
+        raise ValueError("Docker proxy URL is invalid; expected a URL such as http://proxy:8080.") from error
+    if parsed.scheme.lower() not in {"http", "https", "socks", "socks5", "socks5h"} or not hostname:
+        raise ValueError("Docker proxy URL must include a supported scheme and host.")
+    return candidate
+
+
+def _is_loopback_hostname(hostname: str) -> bool:
+    normalized = hostname.rstrip(".").lower()
+    if normalized == "localhost":
+        return True
+    try:
+        return ipaddress.ip_address(normalized).is_loopback
+    except ValueError:
+        return False
+
+
+def _replace_proxy_hostname(parsed: SplitResult, hostname: str) -> str:
+    userinfo = ""
+    if "@" in parsed.netloc:
+        userinfo = parsed.netloc.rsplit("@", 1)[0] + "@"
+    port = parsed.port
+    hostpart = f"[{hostname}]" if ":" in hostname else hostname
+    if port is not None:
+        hostpart = f"{hostpart}:{port}"
+    return urlunsplit((parsed.scheme, userinfo + hostpart, parsed.path, parsed.query, parsed.fragment))
 
 
 @dataclass(frozen=True)
@@ -66,6 +198,11 @@ class EnvironmentRequest:
     environment: str = "docker"
     image: str | None = None
     maximum_output_characters: int = DEFAULT_MAXIMUM_OUTPUT_CHARACTERS
+    proxy_mode: DockerProxyMode = field(default=DockerProxyMode.NONE)
+    proxy_url: str | None = field(default=None, repr=False)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "proxy_mode", _coerce_proxy_mode(self.proxy_mode))
 
 
 class EnvironmentCreationError(RuntimeError):
@@ -152,6 +289,8 @@ class DockerExecutionEnvironment:
         image: str,
         maximum_output_characters: int = DEFAULT_MAXIMUM_OUTPUT_CHARACTERS,
         executable: str | None = None,
+        proxy_mode: DockerProxyMode | str = DockerProxyMode.NONE,
+        proxy_url: str | None = None,
     ):
         self._maximum_output_characters = maximum_output_characters
         self._closed = False
@@ -163,6 +302,7 @@ class DockerExecutionEnvironment:
         ]
         if host_identity := self._host_identity():
             run_args.append(f"--user={host_identity}")
+        run_args.extend(docker_proxy_run_args(proxy_mode, proxy_url))
         if executable is not None:
             self._docker = DockerEnvironment(
                 image=image,
@@ -286,6 +426,8 @@ def create_execution_environment(request: EnvironmentRequest) -> ExecutionEnviro
             target_repository,
             image=request.image,
             maximum_output_characters=request.maximum_output_characters,
+            proxy_mode=request.proxy_mode,
+            proxy_url=request.proxy_url,
         )
     except (OSError, subprocess.SubprocessError) as error:
         raise EnvironmentCreationError(f"Unable to start Docker Environment: {error}") from error
@@ -297,3 +439,9 @@ def validate_environment_request(request: EnvironmentRequest) -> None:
         raise ValueError(f"Unknown Execution Environment: {request.environment}. Choose local or docker.")
     if request.environment == "docker" and (not request.image or not request.image.strip()):
         raise ValueError("Docker Environment requires an image via --image.")
+    if request.environment != "docker" and (request.proxy_mode is not DockerProxyMode.NONE or request.proxy_url):
+        raise ValueError("Docker proxy settings require the Docker Execution Environment.")
+    if request.environment == "docker":
+        # Validate mode/URL before starting the backend. Inherit is resolved
+        # by DockerExecutionEnvironment immediately before docker run.
+        docker_proxy_run_args(request.proxy_mode, request.proxy_url)

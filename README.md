@@ -55,6 +55,14 @@ the Target Repository at `/workspace`; it is an execution backend, not a complet
 unavailable on a particular machine, in which case the benchmark records `ENVIRONMENT_UNAVAILABLE` rather than
 silently falling back to Local execution.
 
+Docker image pulls use the host Docker daemon's machine-specific proxy configuration; RepoPilot never stores a
+daemon proxy address in the repository. Container networking is separate and defaults to `none`. Use
+`--docker-proxy-mode inherit` to pass the host's standard proxy environment into the container, or use
+`--docker-proxy-mode explicit --docker-proxy-url URL` (equivalently `REPOPILOT_DOCKER_PROXY_MODE` and
+`REPOPILOT_DOCKER_PROXY_URL`) for a deployment-specific endpoint. Host loopback addresses are rewritten to
+`host.docker.internal`; on Linux RepoPilot adds the host-gateway mapping. The proxy service must accept connections
+from the Docker bridge. Checkpoints retain only the mode, so an explicit URL must be supplied again when resuming.
+
 ## Architecture at a glance
 
 The composition layer in `repopilot.cli` creates a model, Execution Environment, Tool Registry, Plan, Context
@@ -105,11 +113,12 @@ real negative smoke evidence, not a SWE-bench score. The pinned SQLFluff image w
 with `cost: null`; under `max_steps=5`, the Agent ended `BUDGET_EXCEEDED` with no patch, the final verifier did not
 run, and `success: null`. The model name and endpoint are redacted; the API-key scan is clean.
 
-Reproducing a model-backed SWE-bench smoke requires the official `swebench` Python package and the pinned image to be
-available locally. Missing verifier or image prerequisites are recorded before a model is constructed.
+Reproducing a model-backed SWE-bench smoke requires the pinned image to be available locally. The `swebench` optional
+dependency group installs the official evaluator (`swebench==5.0.2`) alongside development dependencies; missing
+verifier or image prerequisites are recorded before a model is constructed.
 
 ```bash
-uv pip install swebench
+uv pip install -e ".[dev,swebench]"
 ```
 
 Missing provider usage, cost, or timing data is recorded as JSON `null`; RepoPilot does not estimate it. The six-task

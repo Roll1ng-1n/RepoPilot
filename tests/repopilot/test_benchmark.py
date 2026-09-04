@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import shutil
 import subprocess
 from pathlib import Path
 
@@ -16,6 +15,9 @@ from repopilot.benchmark import (
     BenchmarkRunner,
     EngineRun,
     canonical_snapshot_sha256,
+    capture_patch,
+    copy_snapshot,
+    initialize_git_snapshot,
     load_tasks,
     run_hidden_verifier,
 )
@@ -137,6 +139,8 @@ def test_runner_runs_both_engines_in_order_on_independent_workspaces(tmp_path: P
 
 def test_benchmark_redacts_api_key_from_baseline_trajectory_and_results(tmp_path: Path, monkeypatch) -> None:
     api_key = "benchmark-api-key"
+    proxy_url = "http://proxy-user:proxy-password@127.0.0.1:7897"
+    container_proxy_url = "http://proxy-user:proxy-password@host.docker.internal:7897"
     tasks_root = tmp_path / "tasks"
     _write_task(tasks_root)
     task = load_tasks(tasks_root)[0]
@@ -150,6 +154,8 @@ def test_benchmark_redacts_api_key_from_baseline_trajectory_and_results(tmp_path
         model=BenchmarkModel("test-model", api_key=api_key),
         image="test-image",
         engines=(BenchmarkEngine.BASELINE,),
+        proxy_mode="explicit",
+        proxy_url=proxy_url,
     )
     request = benchmark_module.EngineRequest(
         BenchmarkEngine.BASELINE,
@@ -173,6 +179,7 @@ def test_benchmark_redacts_api_key_from_baseline_trajectory_and_results(tmp_path
                 "info": {"exit_status": "Submitted"},
                 "messages": [{"content": api_key}],
                 "model": {"config": {"model_kwargs": {"api_key": api_key}}},
+                "environment": {"run_args": [f"HTTP_PROXY={proxy_url}", f"HTTP_PROXY={container_proxy_url}"]},
             }
             if path is not None:
                 path.write_text(json.dumps(trajectory))
@@ -187,11 +194,12 @@ def test_benchmark_redacts_api_key_from_baseline_trajectory_and_results(tmp_path
     run = benchmark_module._run_baseline(request)
 
     assert api_key not in json.dumps(run.trajectory)
+    assert "proxy-password" not in json.dumps(run.trajectory)
     assert api_key not in (artifact_directory / "trajectory.json").read_text()
     assert all(path is None for path in agent.saved_paths)
 
     def fake_executor(_request):
-        return EngineRun(status="FAILED", error=f"provider error: {api_key}")
+        return EngineRun(status="FAILED", error=f"provider error: {api_key}; proxy: {container_proxy_url}")
 
     result = BenchmarkRunner(
         config,
@@ -201,6 +209,8 @@ def test_benchmark_redacts_api_key_from_baseline_trajectory_and_results(tmp_path
     assert api_key not in json.dumps(result.to_dict())
     assert api_key not in (output / "summary.json").read_text()
     assert api_key not in (output / "seed-task" / "baseline" / "result.json").read_text()
+    assert "proxy-password" not in json.dumps(result.to_dict())
+    assert "proxy-password" not in (output / "summary.json").read_text()
 
 
 def test_baseline_ignores_unknown_model_costs(tmp_path: Path, monkeypatch) -> None:
@@ -297,6 +307,55 @@ def test_runner_records_an_unavailable_environment_without_running_the_verifier(
     assert result.results[0].verifier is None
 
 
+def test_snapshot_hash_and_copy_ignore_python_bytecode(tmp_path: Path) -> None:
+    snapshot = tmp_path / "snapshot"
+    (snapshot / "src").mkdir(parents=True)
+    (snapshot / "src" / "module.py").write_text("value = 1\n")
+    expected = canonical_snapshot_sha256(snapshot)
+
+    (snapshot / "src" / "__pycache__").mkdir()
+    (snapshot / "src" / "__pycache__" / "module.cpython-312.pyc").write_bytes(b"cache")
+    (snapshot / "module.pyc").write_bytes(b"cache")
+    (snapshot / "module.pyo").write_bytes(b"cache")
+
+    assert canonical_snapshot_sha256(snapshot) == expected
+    workspace = tmp_path / "workspace"
+    copy_snapshot(snapshot, workspace)
+    assert (workspace / "src" / "module.py").is_file()
+    assert not (workspace / "src" / "__pycache__").exists()
+    assert not (workspace / "module.pyc").exists()
+    assert not (workspace / "module.pyo").exists()
+
+    (snapshot / "src" / "module.py").write_text("value = 2\n")
+    assert canonical_snapshot_sha256(snapshot) != expected
+
+
+def test_capture_patch_ignores_untracked_python_bytecode(tmp_path: Path) -> None:
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    (workspace / "module.py").write_text("value = 1\n")
+    initial_head = initialize_git_snapshot(workspace)
+
+    (workspace / "module.py").write_text("value = 2\n")
+    (workspace / "module.pyc").write_bytes(b"cache")
+    cache_directory = workspace / "__pycache__"
+    cache_directory.mkdir()
+    (cache_directory / "module.cpython-312.pyc").write_bytes(b"cache")
+
+    patch = capture_patch(workspace, initial_head)
+
+    assert patch is not None and "value = 2" in patch
+    assert "module.pyc" not in patch
+    assert "__pycache__" not in patch
+
+    subprocess.run(["git", "add", "--all"], cwd=workspace, check=True)
+    subprocess.run(["git", "commit", "--quiet", "--message", "agent change"], cwd=workspace, check=True)
+    committed_patch = capture_patch(workspace, initial_head)
+    assert committed_patch is not None and "value = 2" in committed_patch
+    assert "module.pyc" not in committed_patch
+    assert "__pycache__" not in committed_patch
+
+
 def test_runner_can_select_one_task_for_an_independent_repeat(tmp_path: Path) -> None:
     tasks_root = tmp_path / "tasks"
     _write_task(tasks_root, task_id="first-task")
@@ -351,7 +410,7 @@ def test_path_verifier_runs_outside_the_workspace(tmp_path: Path) -> None:
     tasks_root = Path(__file__).resolve().parents[2] / "src" / "repopilot" / "benchmark_tasks"
     task = load_tasks(tasks_root)[0]
     workspace = tmp_path / "workspace"
-    shutil.copytree(task.snapshot, workspace)
+    copy_snapshot(task.snapshot, workspace)
 
     result = run_hidden_verifier(task, workspace)
 

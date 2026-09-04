@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
-import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
+
+from repopilot.benchmark import canonical_snapshot_sha256, copy_snapshot
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 TASKS_ROOT = REPOSITORY_ROOT / "src" / "repopilot" / "benchmark_tasks"
@@ -32,17 +32,6 @@ def _load_manifest(task_id: str) -> tuple[Path, dict[str, object]]:
     task_directory = TASKS_ROOT / task_id
     manifest_path = task_directory / "manifest.json"
     return task_directory, json.loads(manifest_path.read_text(encoding="utf-8"))
-
-
-def _canonical_snapshot_hash(snapshot: Path) -> str:
-    digest = hashlib.sha256()
-    for path in sorted(path for path in snapshot.rglob("*") if path.is_file()):
-        relative_path = path.relative_to(snapshot).as_posix()
-        digest.update(relative_path.encode())
-        digest.update(b"\0")
-        digest.update(path.read_bytes())
-        digest.update(b"\0")
-    return digest.hexdigest()
 
 
 def _run_verifier(task_directory: Path, repository: Path) -> subprocess.CompletedProcess[str]:
@@ -84,7 +73,7 @@ def test_manifest_and_snapshot_are_fixed_and_verifier_is_host_only(task_id: str)
     assert manifest["id"] == task_id
     assert snapshot.is_dir()
     assert snapshot_metadata["revision"] == EXPECTED_REVISIONS[task_id]  # type: ignore[index]
-    assert snapshot_metadata["sha256"] == _canonical_snapshot_hash(snapshot)  # type: ignore[index]
+    assert snapshot_metadata["sha256"] == canonical_snapshot_sha256(snapshot)  # type: ignore[index]
     assert isinstance(manifest["task_statement"], str) and manifest["task_statement"]
     assert manifest["timeout_seconds"] == 180
     assert manifest["run_budget"] == EXPECTED_RUN_BUDGET
@@ -112,7 +101,7 @@ def test_recovery_shallow_casefold_fix_fails_public_tests(tmp_path: Path) -> Non
     task_directory, manifest = _load_manifest("recovery-public-failure")
     snapshot = task_directory / str(manifest["snapshot"]["path"])  # type: ignore[index]
     repository = tmp_path / "recovery-public-failure"
-    shutil.copytree(snapshot, repository)
+    copy_snapshot(snapshot, repository)
 
     (repository / "src" / "line_tools.py").write_text(
         """\
@@ -143,7 +132,7 @@ def test_recovery_corrected_fix_passes_hidden_verifier(tmp_path: Path) -> None:
     task_directory, manifest = _load_manifest("recovery-public-failure")
     snapshot = task_directory / str(manifest["snapshot"]["path"])  # type: ignore[index]
     repository = tmp_path / "recovery-public-failure"
-    shutil.copytree(snapshot, repository)
+    copy_snapshot(snapshot, repository)
 
     (repository / "src" / "line_tools.py").write_text(
         """\
@@ -173,7 +162,7 @@ def test_replan_initial_json_array_plan_is_rejected_by_public_contract(tmp_path:
     task_directory, manifest = _load_manifest("replan-new-evidence")
     snapshot = task_directory / str(manifest["snapshot"]["path"])  # type: ignore[index]
     repository = tmp_path / "replan-new-evidence"
-    shutil.copytree(snapshot, repository)
+    copy_snapshot(snapshot, repository)
 
     (repository / "src" / "report.py").write_text(
         """\
@@ -233,7 +222,7 @@ def test_replan_ndjson_plan_passes_hidden_verifier(tmp_path: Path) -> None:
     task_directory, manifest = _load_manifest("replan-new-evidence")
     snapshot = task_directory / str(manifest["snapshot"]["path"])  # type: ignore[index]
     repository = tmp_path / "replan-new-evidence"
-    shutil.copytree(snapshot, repository)
+    copy_snapshot(snapshot, repository)
 
     (repository / "src" / "report.py").write_text(
         """\

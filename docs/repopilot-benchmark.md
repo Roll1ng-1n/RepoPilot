@@ -28,6 +28,12 @@ accepts one model temperature and one Run Budget (`--max-steps`, `--max-replans`
 statement, step limit, command timeout, and wall-time limit are passed to both engines. Baseline concepts with no
 equivalent, including Replan and structured Recovery counts, are recorded as `null` rather than inferred.
 
+Container proxying defaults to `none`. `--docker-proxy-mode inherit` uses the host's standard proxy environment;
+`--docker-proxy-mode explicit --docker-proxy-url URL` uses one deployment-specific endpoint. The selected policy is
+shared by both engines for a fair comparison. Public benchmark configuration records only the mode, while proxy URLs
+and credentials are redacted from retained results and trajectories. Docker daemon proxy configuration remains a
+machine-level concern used for image pulls and is not managed by RepoPilot.
+
 ## Fixed task suite
 
 Every manifest records a fixed snapshot revision and canonical SHA-256, a task statement, a host-only hidden

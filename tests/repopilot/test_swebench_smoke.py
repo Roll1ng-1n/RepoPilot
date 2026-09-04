@@ -12,6 +12,7 @@ from repopilot.swebench_smoke import (
     AgentExecution,
     SWEbenchSmokeConfig,
     load_pinned_instance,
+    preflight_swebench,
     run_swebench_smoke,
 )
 
@@ -63,6 +64,34 @@ def test_missing_image_is_persisted_without_building_a_model(tmp_path: Path) -> 
     assert (artifact_directory / "trace.jsonl").is_file()
 
 
+def test_missing_official_verifier_includes_install_hint(tmp_path: Path) -> None:
+    rows = [{"instance_id": INSTANCE_ID, "problem_statement": "Fix sqlfluff."}]
+
+    def command_runner(argv: list[str], timeout: float) -> subprocess.CompletedProcess[str]:
+        if argv[1:3] == ["image", "inspect"] or argv[1:3] == ["run", "--rm"]:
+            return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+        return subprocess.CompletedProcess(
+            argv,
+            1,
+            stdout="",
+            stderr="ModuleNotFoundError: No module named 'swebench'",
+        )
+
+    artifact_directory = tmp_path / "artifacts"
+    artifact_directory.mkdir()
+    result = preflight_swebench(
+        SWEbenchSmokeConfig(output_directory=tmp_path / "results", image="local/ready:latest"),
+        artifact_directory=artifact_directory,
+        command_runner=command_runner,
+        loader=lambda _name, **_kwargs: rows,
+    )
+
+    assert result.status == "VERIFIER_UNAVAILABLE"
+    assert result.error is not None
+    assert 'uv pip install -e ".[swebench]"' in result.error
+    assert "swebench==5.0.2" in result.error
+
+
 def test_ready_preflight_runs_model_and_persists_patch_cost_and_verifier(tmp_path: Path) -> None:
     model_calls: list[dict[str, object]] = []
     agent_calls: list[tuple[dict[str, object], object]] = []
@@ -74,9 +103,7 @@ def test_ready_preflight_runs_model_and_persists_patch_cost_and_verifier(tmp_pat
         if "--report_dir" in argv:
             report_directory = Path(argv[argv.index("--report_dir") + 1])
             report_directory.mkdir(parents=True, exist_ok=True)
-            (report_directory / "report.json").write_text(
-                json.dumps({"resolved_ids": [INSTANCE_ID]}), encoding="utf-8"
-            )
+            (report_directory / "report.json").write_text(json.dumps({"resolved_ids": [INSTANCE_ID]}), encoding="utf-8")
         return subprocess.CompletedProcess(argv, 0, stdout="ok", stderr="")
 
     def model_factory(instance: dict[str, object]) -> object:
