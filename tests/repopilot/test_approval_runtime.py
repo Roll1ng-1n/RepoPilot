@@ -30,14 +30,14 @@ def _make_target_repository(path: Path) -> None:
     path.mkdir()
     (path / "README.md").write_text("RepoPilot needle\n")
     subprocess.run(["git", "init", "--quiet"], cwd=path, check=True)
+    subprocess.run(["git", "config", "user.name", "RepoPilot Runtime Test"], cwd=path, check=True)
+    subprocess.run(
+        ["git", "config", "user.email", "runtime-test@example.invalid"], cwd=path, check=True
+    )
     subprocess.run(["git", "add", "README.md"], cwd=path, check=True)
     subprocess.run(
         [
             "git",
-            "-c",
-            "user.name=RepoPilot Runtime Test",
-            "-c",
-            "user.email=runtime-test@example.invalid",
             "commit",
             "--quiet",
             "-m",
