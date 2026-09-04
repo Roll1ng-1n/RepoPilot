@@ -10,6 +10,9 @@
       "pattern": "^https://join\\.slack\\.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ$"
     },
     {
+      "pattern": "^https://docs\\.vllm\\.ai/en/latest/$"
+    },
+    {
       "pattern": ".*localhost.*"
     },
     {
