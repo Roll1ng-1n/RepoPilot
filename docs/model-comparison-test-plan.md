@@ -240,7 +240,7 @@ campaign 会在 LiteLLM 内部自动补 `openai/` provider 路由前缀；发给
 仍是官网一致的 `gpt-5.6-luna`。`probe` 直接使用 Chat Completions，每个模型只做一次
 text 和一次 `tool_choice="required"` 请求，失败不自动重试。
 
-## 已观测初始结果（用于 Stage 1/2 gate 基线）
+## 已观测结果
 
 以下是本计划建立前已完成的低成本实测；费用是按上面的官网 Standard 价格和返回 usage
 做的估算，不是中转站账单。脱敏结果分别保存在 [四模型 API probe](evidence/four-model-api-probe-v1/summary.md)
@@ -264,3 +264,15 @@ text 和一次 `tool_choice="required"` 请求，失败不自动重试。
 Stage 2 的四个 Target Repository 均通过 verifier，说明 endpoint、Agent、Docker 与 verifier
 链路已经贯通；`BUDGET_EXCEEDED` 同时说明全量运行必须把“代码最终正确”和“Agent 在预算内
 干净结束”分开报告。这些仍只有两对任务样本，不能作为四模型或长期胜率结论。
+
+### Stage 3 单轮结果
+
+2026-09-05 已完成四模型、六任务、双 engine 的 48 个样本，完整的脱敏汇总见
+[Stage 3 evidence](evidence/four-model-stage3-v1/summary.md)。campaign 无 batch error，隐藏 verifier
+总计通过 32/48；baseline 与 RepoPilot 都是 16/24。总使用量为 949,636 tokens，官网 Standard
+估算为 `$3.25369592`，不是中转站账单。
+
+本轮暴露出两个进入 Stage 4 前必须处理的限制：中转站存在显著长尾延迟，在途模型请求可越过
+180 秒 Agent 预算后才返回；同时 `python:3.12-slim` 容器没有 Git，使
+`workflow-human-approval-git` 被环境因素混淆。后者的 8 个样本保留在原始结果中，但不能用于
+engine 排名；修复并固定包含 Git 的 benchmark image 后再执行 Stage 4。
