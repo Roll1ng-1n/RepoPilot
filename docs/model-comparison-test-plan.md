@@ -107,7 +107,10 @@ Token 时，`tokens` 和 `cost` 均记录为 `null`；不能用总 Token、响�
 
 冻结四个模型 ID、temperature、预算、六个任务清单、Docker image、代理模式和输出目录
 规则。确认 `.env` 中两个变量存在但不打印值；确认 Docker daemon、镜像和隐藏 verifier
-可用。代理可以是无代理、继承宿主代理或显式 URL，但一轮成对运行必须采用同一策略。
+可用。使用下方固定 Python digest 和 Debian snapshot 构建的 Git 镜像；Stage 0 在容器内验证
+`python --version` 和 `git --version`，缺失时在付费 Agent Run 前记录 `ENVIRONMENT_UNAVAILABLE`。
+成对运行使用同一解析后的不可变镜像标识，并保留预检结果。代理可以是无代理、继承宿主代理或显式 URL，
+但一轮成对运行必须采用同一策略。
 
 ### Stage 1：API 能力探针（8 次）
 
@@ -192,6 +195,9 @@ artifact”的顺序确定首要分类，其余写入 `errors`。环境/API 问�
 `REPOPILOT_BASE_URL`；也可显式传 `--env-file`。它们不会把 Key 或 endpoint 写入汇总。
 
 ```bash
+# Stage 0：构建默认 Git-enabled benchmark image
+docker build -t repopilot-benchmark:py312-git docker/benchmark
+
 # Stage 1：四模型 text + required Tool Call，共 8 个请求
 .venv/bin/repopilot probe \
   --model gpt-5.6-sol \
@@ -201,12 +207,14 @@ artifact”的顺序确定首要分类，其余写入 `errors`。环境/API 问�
 
 # Stage 2：Luna 两个 seed task 的 4 次 Agent Run
 .venv/bin/repopilot campaign \
+  --image repopilot-benchmark:py312-git \
   --model gpt-5.6-luna \
   --task seed-single-file \
   --task seed-cross-file
 
 # Stage 3：四模型、全部六任务、两个 engine，共 48 次 Agent Run
 .venv/bin/repopilot campaign \
+  --image repopilot-benchmark:py312-git \
   --model gpt-5.6-sol \
   --model gpt-5.6-terra \
   --model gpt-5.6-luna \
@@ -215,11 +223,19 @@ artifact”的顺序确定首要分类，其余写入 `errors`。环境/API 问�
 
 # Stage 4：相同矩阵三轮，共 144 次 Agent Run
 .venv/bin/repopilot campaign \
+  --image repopilot-benchmark:py312-git \
   --model gpt-5.6-sol \
   --model gpt-5.6-terra \
   --model gpt-5.6-luna \
   --model gpt-5.5 \
   --rounds 3
+
+# Issue #18：Stage 4 前仅复测 Luna Git task 一对（2 次 Agent Run）
+.venv/bin/repopilot campaign \
+  --image repopilot-benchmark:py312-git \
+  --model gpt-5.6-luna \
+  --task workflow-human-approval-git \
+  --engine baseline --engine repopilot --rounds 1
 ```
 
 若开发机需要代理，将同一个策略传给成对 engine；没有代理时显式保持默认 `none`：
@@ -276,3 +292,7 @@ Stage 2 的四个 Target Repository 均通过 verifier，说明 endpoint、Agent
 180 秒 Agent 预算后才返回；同时 `python:3.12-slim` 容器没有 Git，使
 `workflow-human-approval-git` 被环境因素混淆。后者的 8 个样本保留在原始结果中，但不能用于
 engine 排名；修复并固定包含 Git 的 benchmark image 后再执行 Stage 4。
+
+Issue #18 的 [Git 镜像复测证据](evidence/luna-git-image-smoke-v1/summary.md) 已记录：同一固定
+digest 的 Python/Git 预检通过，但 Luna 的 baseline 和 RepoPilot 分别用时约 413 秒和 290 秒，
+均超预算且未通过 verifier。容器缺 Git 已修复；Stage 4 仍应等待后续官方 API 测试确认运行链路。

@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any
 
 from repopilot.benchmark import (
+    DEFAULT_BENCHMARK_IMAGE,
     BenchmarkBudget,
     BenchmarkConfig,
     BenchmarkEngine,
@@ -65,7 +66,7 @@ class CampaignConfig:
         output_root: Path | None = None,
         tasks_dir: Path | None = None,
         rounds: int = 1,
-        image: str = "python:3.12-slim",
+        image: str = DEFAULT_BENCHMARK_IMAGE,
         budget: BenchmarkBudget | None = None,
         engines: Sequence[BenchmarkEngine | str] = (
             BenchmarkEngine.BASELINE,

@@ -4,10 +4,17 @@
 mini-SWE-agent baseline with RepoPilot under one shared configuration. Each task is a small, fixed workflow that
 is cheap to repeat while exercising a different Agent engineering behavior.
 
+Build the Git-enabled image once from the repository root. The Dockerfile pins the Python base digest and
+Debian package snapshot; it contains no developer proxy configuration:
+
+```bash
+docker build -t repopilot-benchmark:py312-git docker/benchmark
+```
+
 ```bash
 repopilot benchmark \
   --model provider/model-name \
-  --image python:3.12-slim
+  --image repopilot-benchmark:py312-git
 ```
 
 Both engines run by default. Repeat `--engine baseline` or `--engine repopilot` to select a subset. Repeat `--task`
@@ -16,7 +23,7 @@ to select one or more fixed tasks for an independent run, for example:
 ```bash
 repopilot benchmark \
   --model provider/model-name \
-  --image python:3.12-slim \
+  --image repopilot-benchmark:py312-git \
   --task seed-cross-file \
   --task workflow-long-chain \
   --task workflow-human-approval-git
@@ -82,7 +89,12 @@ Every invocation creates a new directory below the platform RepoPilot state dire
 - steps, prompt/completion/total/cache/reasoning tokens, provider/LiteLLM cost, a separately labelled OpenAI
   Standard price estimate, Tool Calls, errors, Retry, and Replan metrics when the required source values exist.
 
-If Docker cannot be started or the configured image is unavailable, the affected run is recorded as
+Stage 0 resolves the selected image to an immutable identifier and checks `python --version` and `git --version`
+inside that container before model calls. Both engines use the resolved image, retained with the preflight
+evidence in benchmark artifacts. A locally built image may have only a content-addressed image ID rather than
+a registry RepoDigest; publishing to a registry is not required for local paired runs.
+
+If Docker cannot be started, the configured image is unavailable, or Python/Git is missing, the affected run is recorded as
 `ENVIRONMENT_UNAVAILABLE`. This is an execution-environment result, not evidence that the task's code change failed;
 the benchmark retains the result and does not fabricate a verifier success. If an engine or provider does not
 return a metric, the corresponding token, provider cost, or duration field is JSON `null`. The runner never infers

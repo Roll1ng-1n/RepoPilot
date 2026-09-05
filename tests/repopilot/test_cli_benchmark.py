@@ -5,7 +5,7 @@ from pathlib import Path
 from click.utils import strip_ansi
 from typer.testing import CliRunner
 
-from repopilot.benchmark import BenchmarkEngine, BenchmarkResult, BenchmarkRun
+from repopilot.benchmark import DEFAULT_BENCHMARK_IMAGE, BenchmarkEngine, BenchmarkResult, BenchmarkRun
 from repopilot.cli import create_app
 from repopilot.environment import DockerProxyMode
 
@@ -99,6 +99,7 @@ def test_cli_benchmark_defaults_to_both_engines_and_requires_a_model(tmp_path: P
     )
     assert result.exit_code == 0, result.output
     assert received[0].engines == (BenchmarkEngine.BASELINE, BenchmarkEngine.REPOPILOT)
+    assert received[0].image == DEFAULT_BENCHMARK_IMAGE
 
     missing_proxy_url = CliRunner().invoke(
         create_app(benchmark_runner=fake_runner),

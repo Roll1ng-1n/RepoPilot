@@ -17,6 +17,7 @@ from platformdirs import user_state_dir
 from repopilot.approval import ApprovalContext
 from repopilot.artifacts import RunArtifacts
 from repopilot.benchmark import (
+    DEFAULT_BENCHMARK_IMAGE,
     BenchmarkBudget,
     BenchmarkConfig,
     BenchmarkEngine,
@@ -286,7 +287,7 @@ def create_app(
         model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
         api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
         base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
-        image: str = typer.Option("python:3.12-slim", "--image", help="Docker image shared by both engines."),
+        image: str = typer.Option(DEFAULT_BENCHMARK_IMAGE, "--image", help="Docker image shared by both engines."),
         docker_proxy_mode: DockerProxyMode = typer.Option(
             DockerProxyMode.NONE,
             "--docker-proxy-mode",
@@ -424,7 +425,7 @@ def create_app(
             dir_okay=False,
             help="Optional dotenv file used only for missing API credentials.",
         ),
-        image: str = typer.Option("python:3.12-slim", "--image"),
+        image: str = typer.Option(DEFAULT_BENCHMARK_IMAGE, "--image"),
         docker_proxy_mode: DockerProxyMode = typer.Option(
             DockerProxyMode.NONE,
             "--docker-proxy-mode",
@@ -493,7 +494,9 @@ def create_app(
         model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
         api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
         base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
-        image: str = typer.Option(DEFAULT_IMAGE, "--image", help="Locally available Docker image for the pinned SWE-bench instance."),
+        image: str = typer.Option(
+            DEFAULT_IMAGE, "--image", help="Locally available Docker image for the pinned SWE-bench instance."
+        ),
         temperature: float = typer.Option(0.0, "--temperature"),
         max_steps: int = typer.Option(50, "--max-steps", min=1),
         max_replans: int = typer.Option(2, "--max-replans", min=0),

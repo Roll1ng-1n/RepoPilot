@@ -1,0 +1,10 @@
+diff --git a/src/labels.py b/src/labels.py
+index 10fb130..30cfa70 100644
+--- a/src/labels.py
++++ b/src/labels.py
+@@ -4,4 +4,4 @@ from __future__ import annotations
+ 
+ 
+ def status_label(done: bool) -> str:
+-    return "todo"
++    return "done" if done else "todo"

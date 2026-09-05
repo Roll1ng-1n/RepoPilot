@@ -14,8 +14,8 @@ import shutil
 import subprocess
 import sys
 import time
-from collections.abc import Mapping, Sequence
-from dataclasses import asdict, dataclass, field
+from collections.abc import Callable, Mapping, Sequence
+from dataclasses import asdict, dataclass, field, replace
 from enum import Enum
 from pathlib import Path
 from typing import Any, Protocol
@@ -39,6 +39,8 @@ from repopilot.pricing import (
 )
 from repopilot.runtime import AgentRunResult, AgentRuntime
 from repopilot.tools import create_tool_registry
+
+DEFAULT_BENCHMARK_IMAGE = "repopilot-benchmark:py312-git"
 
 
 class BenchmarkEngine(str, Enum):
@@ -98,11 +100,14 @@ class BenchmarkModel:
     api_key: str | None = field(default=None, repr=False)
 
     def public_dict(self) -> dict[str, Any]:
-        model_kwargs = {key: value for key, value in self.model_kwargs.items() if key != "api_key"}
-        result = {"model_name": self.model_name, "model_kwargs": model_kwargs}
-        if self.base_url is not None:
-            result["base_url"] = self.base_url
-        return result
+        # Provider credentials and endpoint URLs are runtime-only.  The model
+        # shape remains useful in public reports without retaining either.
+        model_kwargs = {
+            key: value
+            for key, value in self.model_kwargs.items()
+            if key not in {"api_key", "api_base", "base_url", "base_url_override"}
+        }
+        return {"model_name": self.model_name, "model_kwargs": model_kwargs}
 
 
 @dataclass(frozen=True)
@@ -248,6 +253,12 @@ class BenchmarkConfig:
     task_ids: tuple[str, ...] = ()
     proxy_mode: DockerProxyMode = DockerProxyMode.NONE
     proxy_url: str | None = field(default=None, repr=False)
+    # ``image`` is the user-selected tag/reference.  ``image_id`` and
+    # ``image_digest`` are populated by Stage 0 after Docker inspection; the
+    # former is always usable as an immutable local image reference, while the
+    # latter is retained when Docker reports a registry RepoDigest.
+    image_id: str | None = None
+    image_digest: str | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.proxy_mode, DockerProxyMode):
@@ -262,11 +273,204 @@ class BenchmarkConfig:
             "output_directory": str(self.output_directory),
             "model": self.model.public_dict(),
             "image": self.image,
+            "image_id": self.image_id,
+            "image_digest": self.image_digest,
+            "resolved_image": self.resolved_image,
             "proxy_mode": self.proxy_mode.value,
             "budget": asdict(self.budget),
             "engines": [engine.value for engine in self.engines],
             "task_ids": list(self.task_ids),
         }
+
+    @property
+    def resolved_image(self) -> str:
+        """Image reference used by both engines after Stage 0 resolution."""
+
+        return self.image_id or self.image_digest or self.image
+
+
+@dataclass(frozen=True)
+class BenchmarkPreflight:
+    """No-model Docker checks for one paired benchmark invocation."""
+
+    status: str
+    image: str
+    resolved_image: str | None
+    image_id: str | None
+    image_digest: str | None
+    checks: tuple[dict[str, Any], ...]
+    error: str | None = None
+
+    @property
+    def ready(self) -> bool:
+        return self.status == "READY"
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "status": self.status,
+            "image": self.image,
+            "resolved_image": self.resolved_image,
+            "image_id": self.image_id,
+            "image_digest": self.image_digest,
+            "checks": list(self.checks),
+            "error": self.error,
+        }
+
+
+BenchmarkPreflightRunner = Callable[[BenchmarkConfig], BenchmarkPreflight]
+
+
+def preflight_benchmark_image(
+    config: BenchmarkConfig,
+    *,
+    command_runner: Callable[[list[str], float], subprocess.CompletedProcess[str]] | None = None,
+) -> BenchmarkPreflight:
+    """Resolve and validate the Docker image before any model is created.
+
+    ``docker image inspect`` supplies a content-addressed local image ID.  The
+    ID is used for both engines so a mutable tag cannot change between the
+    baseline and RepoPilot attempts.  A registry RepoDigest is retained when
+    Docker reports one, but locally built images need not have one.
+    """
+
+    run_command = command_runner or _run_benchmark_command
+    docker = os.environ.get("MSWEA_DOCKER_EXECUTABLE", "docker")
+    checks: list[dict[str, Any]] = []
+    proxy_args: list[str]
+    try:
+        proxy_args = docker_proxy_run_args(config.proxy_mode, config.proxy_url)
+    except (TypeError, ValueError) as error:
+        return BenchmarkPreflight("ENVIRONMENT_UNAVAILABLE", config.image, None, None, None, (), str(error))
+    proxy_secrets = _benchmark_secret_values(config)
+
+    # Restrict inspect output to identity fields. Full image metadata may
+    # contain build environment details and is not useful benchmark evidence.
+    inspect_argv = [
+        docker,
+        "image",
+        "inspect",
+        '--format={"Id":{{json .Id}},"RepoDigests":{{json .RepoDigests}}}',
+        config.image,
+    ]
+    inspected, inspect_error = _run_preflight_check(
+        "image_inspect", inspect_argv, config.budget.command_timeout_seconds, run_command, proxy_secrets
+    )
+    checks.append(inspected)
+    if inspect_error is not None or inspected["exit_code"] != 0:
+        detail = inspect_error or inspected.get("stderr") or "Docker image is not available locally."
+        return BenchmarkPreflight(
+            "ENVIRONMENT_UNAVAILABLE",
+            config.image,
+            None,
+            None,
+            None,
+            tuple(checks),
+            _redact_benchmark_value(str(detail), proxy_secrets),
+        )
+
+    try:
+        image_id, image_digest = _parse_image_inspection(inspected.get("stdout", ""))
+    except ValueError as error:
+        return BenchmarkPreflight("ENVIRONMENT_UNAVAILABLE", config.image, None, None, None, tuple(checks), str(error))
+
+    for command_name, command in (
+        ("python", "python --version"),
+        ("git", "git --version"),
+    ):
+        argv = [docker, "run", "--rm", "--pull=never", *proxy_args, image_id, *command.split()]
+        check, check_error = _run_preflight_check(
+            command_name, argv, config.budget.command_timeout_seconds, run_command, proxy_secrets
+        )
+        checks.append(check)
+        if check_error is not None or check["exit_code"] != 0:
+            detail = check_error or check.get("stderr") or f"Docker image does not provide {command.split()[0]}."
+            return BenchmarkPreflight(
+                "ENVIRONMENT_UNAVAILABLE",
+                config.image,
+                image_id,
+                image_id,
+                image_digest,
+                tuple(checks),
+                _redact_benchmark_value(str(detail), proxy_secrets),
+            )
+
+    return BenchmarkPreflight("READY", config.image, image_id, image_id, image_digest, tuple(checks))
+
+
+def _run_benchmark_command(argv: list[str], timeout: float) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(argv, capture_output=True, check=False, text=True, timeout=timeout)
+
+
+def _run_preflight_check(
+    name: str,
+    argv: list[str],
+    timeout: float,
+    command_runner: Callable[[list[str], float], subprocess.CompletedProcess[str]],
+    secrets: Sequence[str],
+) -> tuple[dict[str, Any], str | None]:
+    started = time.monotonic()
+    error: str | None = None
+    try:
+        completed = command_runner(argv, timeout)
+        stdout = _text(completed.stdout)
+        stderr = _text(completed.stderr)
+        exit_code = completed.returncode
+    except subprocess.TimeoutExpired as exception:
+        stdout = _text(exception.stdout)
+        stderr = _text(exception.stderr)
+        exit_code = -1
+        error = f"Command timed out after {timeout} seconds."
+    except (OSError, subprocess.SubprocessError) as exception:
+        stdout = ""
+        stderr = str(exception)
+        exit_code = -1
+        error = str(exception) or type(exception).__name__
+    check = {
+        "name": name,
+        "command": _redact_benchmark_value(argv, secrets),
+        "exit_code": exit_code,
+        "stdout": _redact_benchmark_value(stdout, secrets),
+        "stderr": _redact_benchmark_value(stderr, secrets),
+        "duration_seconds": time.monotonic() - started,
+    }
+    return check, error
+
+
+def _redact_preflight_result(preflight: BenchmarkPreflight, config: BenchmarkConfig) -> BenchmarkPreflight:
+    try:
+        secrets = _benchmark_secret_values(config)
+    except (TypeError, ValueError):
+        secrets = []
+    return replace(
+        preflight,
+        checks=tuple(_redact_benchmark_value(check, secrets) for check in preflight.checks),
+        error=_redact_benchmark_value(preflight.error, secrets),
+    )
+
+
+def _parse_image_inspection(output: str) -> tuple[str, str | None]:
+    try:
+        payload = json.loads(output)
+    except (TypeError, json.JSONDecodeError) as error:
+        raise ValueError("Docker image inspection returned invalid JSON.") from error
+    if isinstance(payload, list):
+        payload = payload[0] if payload else None
+    if not isinstance(payload, Mapping):
+        raise ValueError("Docker image inspection returned no image metadata.")
+    image_id = payload.get("Id", payload.get("ID"))
+    if not isinstance(image_id, str) or not image_id.strip():
+        raise ValueError("Docker image inspection returned no immutable image ID.")
+    image_id = image_id.strip()
+    repo_digests = payload.get("RepoDigests")
+    image_digest = (
+        next(
+            (value.strip() for value in repo_digests if isinstance(value, str) and value.strip()),
+            None,
+        )
+        if isinstance(repo_digests, list)
+        else None
+    )
+    return image_id, image_digest
 
 
 @dataclass(frozen=True)
@@ -357,8 +561,16 @@ class BenchmarkRunner:
         config: BenchmarkConfig,
         *,
         executors: Mapping[BenchmarkEngine | str, EngineExecutor] | None = None,
+        preflight_runner: BenchmarkPreflightRunner | None = None,
     ):
         self.config = config
+        # Injectable executors are the benchmark test seam and stand in for
+        # Docker, so they do not require a host Docker daemon. Production runs
+        # (or an explicit preflight runner) always execute Stage 0.
+        injected_engines = {_coerce_engine(engine) for engine in (executors or {})}
+        selected_engines = {_coerce_engine(engine) for engine in config.engines}
+        self._run_preflight = preflight_runner is not None or not selected_engines.issubset(injected_engines)
+        self._preflight_runner = preflight_runner
         self._executors: dict[BenchmarkEngine, EngineExecutor] = {
             BenchmarkEngine.BASELINE: _run_baseline,
             BenchmarkEngine.REPOPILOT: _run_repopilot,
@@ -380,8 +592,20 @@ class BenchmarkRunner:
         tasks = self.load_tasks()
         output_directory = self.config.output_directory.resolve()
         output_directory.mkdir(parents=True, exist_ok=True)
+        preflight = self._resolve_preflight()
+        image_id = preflight.image_id
+        if image_id is None and preflight.ready:
+            image_id = preflight.resolved_image
+        self.config = replace(
+            self.config,
+            image_id=image_id,
+            image_digest=preflight.image_digest,
+        )
         (output_directory / "config.json").write_text(
             json.dumps(self.config.public_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        (output_directory / "preflight.json").write_text(
+            json.dumps(preflight.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
         results: list[BenchmarkResult] = []
         for task in tasks:
@@ -391,7 +615,7 @@ class BenchmarkRunner:
                     f"Snapshot SHA256 mismatch for {task.task_id}: expected {task.snapshot_sha256}, got {actual_sha}"
                 )
             for engine in self.config.engines:
-                results.append(self._run_one(task, _coerce_engine(engine), output_directory))
+                results.append(self._run_one(task, _coerce_engine(engine), output_directory, preflight))
 
         benchmark_run = BenchmarkRun(self.config, tasks, tuple(results), output_directory)
         (output_directory / "summary.json").write_text(
@@ -400,7 +624,45 @@ class BenchmarkRunner:
         (output_directory / "summary.md").write_text(_summary_markdown(benchmark_run), encoding="utf-8")
         return benchmark_run
 
-    def _run_one(self, task: BenchmarkTask, engine: BenchmarkEngine, output_directory: Path) -> BenchmarkResult:
+    def _resolve_preflight(self) -> BenchmarkPreflight:
+        if not self._run_preflight:
+            return BenchmarkPreflight(
+                "READY",
+                self.config.image,
+                self.config.resolved_image,
+                self.config.image_id,
+                self.config.image_digest,
+                (),
+            )
+        try:
+            if self._preflight_runner is not None:
+                preflight = self._preflight_runner(self.config)
+            else:
+                preflight = preflight_benchmark_image(self.config)
+            return _redact_preflight_result(preflight, self.config)
+        except Exception as exception:
+            error = str(exception) or type(exception).__name__
+            try:
+                error = _redact_benchmark_value(error, _benchmark_secret_values(self.config))
+            except (TypeError, ValueError):
+                pass
+            return BenchmarkPreflight(
+                "ENVIRONMENT_UNAVAILABLE",
+                self.config.image,
+                None,
+                None,
+                None,
+                (),
+                error,
+            )
+
+    def _run_one(
+        self,
+        task: BenchmarkTask,
+        engine: BenchmarkEngine,
+        output_directory: Path,
+        preflight: BenchmarkPreflight | None = None,
+    ) -> BenchmarkResult:
         task_directory = output_directory / task.task_id / engine.value
         if task_directory.exists():
             shutil.rmtree(task_directory)
@@ -408,6 +670,10 @@ class BenchmarkRunner:
         workspace = task_directory / "workspace"
         copy_snapshot(task.snapshot, workspace)
         initial_head = initialize_git_snapshot(workspace)
+        if preflight is not None:
+            (task_directory / "preflight.json").write_text(
+                json.dumps(preflight.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
         request = EngineRequest(
             engine,
             task,
@@ -419,15 +685,20 @@ class BenchmarkRunner:
         )
         started = time.monotonic()
         error: str | None = None
-        try:
-            run = self._executors[engine](request)
-        except Exception as exception:  # executor failures are benchmark results, not runner crashes
-            status = (
-                "ENVIRONMENT_UNAVAILABLE"
-                if isinstance(exception, (FileNotFoundError, subprocess.CalledProcessError))
-                else None
-            )
-            run = EngineRun(status=status, error=str(exception) or type(exception).__name__)
+        if preflight is not None and not preflight.ready:
+            # Stage 0 failures become paired results without constructing a
+            # model or entering either paid Agent Run executor.
+            run = EngineRun(status="ENVIRONMENT_UNAVAILABLE", error=preflight.error)
+        else:
+            try:
+                run = self._executors[engine](request)
+            except Exception as exception:  # executor failures are benchmark results, not runner crashes
+                status = (
+                    "ENVIRONMENT_UNAVAILABLE"
+                    if isinstance(exception, (FileNotFoundError, subprocess.CalledProcessError))
+                    else None
+                )
+                run = EngineRun(status=status, error=str(exception) or type(exception).__name__)
         secrets = _benchmark_secret_values(self.config)
         run.status = _redact_benchmark_value(run.status, secrets)
         run.error = _redact_benchmark_value(run.error, secrets)
@@ -459,6 +730,11 @@ class BenchmarkRunner:
             secrets,
         )
         metrics["run_budget"] = asdict(request.effective_budget)
+        metrics["image"] = self.config.resolved_image
+        metrics["image_id"] = self.config.image_id
+        metrics["image_digest"] = self.config.image_digest
+        if preflight is not None:
+            metrics["preflight"] = preflight.to_dict()
         error = _redact_benchmark_value(error, secrets)
         result = BenchmarkResult(task.task_id, engine, task_directory, run.status, success, metrics, verifier, error)
         (task_directory / "result.json").write_text(
@@ -544,10 +820,11 @@ def run_benchmark(
     config: BenchmarkConfig,
     *,
     executors: Mapping[BenchmarkEngine | str, EngineExecutor] | None = None,
+    preflight_runner: BenchmarkPreflightRunner | None = None,
 ) -> BenchmarkRun:
     """Convenience entry point for the benchmark runner."""
 
-    return BenchmarkRunner(config, executors=executors).run()
+    return BenchmarkRunner(config, executors=executors, preflight_runner=preflight_runner).run()
 
 
 def _effective_budget(config: BenchmarkConfig, task: BenchmarkTask) -> BenchmarkBudget:
@@ -589,7 +866,7 @@ def _run_baseline(request: EngineRequest) -> EngineRun:
         run_args.append(f"--user={host_identity}")
     environment_config = {
         "environment_class": "docker",
-        "image": config.image,
+        "image": config.resolved_image,
         "cwd": "/workspace",
         "run_args": run_args + docker_proxy_run_args(config.proxy_mode, config.proxy_url),
         "timeout": max(1, int(run_budget.command_timeout_seconds)),
@@ -697,9 +974,7 @@ class _BenchmarkToolCallingModel(LiteLLMToolCallingModel):
                 if self._saw_usage and not self._usage_missing["completion_tokens"]
                 else None,
                 "total": self.total_tokens if self._saw_usage and not self._usage_missing["total_tokens"] else None,
-                "cached": self.cached_tokens
-                if self._saw_usage and not self._usage_missing["cached_tokens"]
-                else None,
+                "cached": self.cached_tokens if self._saw_usage and not self._usage_missing["cached_tokens"] else None,
                 "cache_write": self.cache_write_tokens
                 if self._saw_usage and not self._usage_missing["cache_write_tokens"]
                 else None,
@@ -716,7 +991,7 @@ def _run_repopilot(request: EngineRequest) -> EngineRun:
     model = _BenchmarkToolCallingModel(model=config.model)
     environment = DockerExecutionEnvironment(
         request.workspace,
-        image=config.image,
+        image=config.resolved_image,
         proxy_mode=config.proxy_mode,
         proxy_url=config.proxy_url,
     )
@@ -738,12 +1013,10 @@ def _run_repopilot(request: EngineRequest) -> EngineRun:
         checkpoint_model={
             "backend": "litellm",
             "model_name": config.model.model_name,
-            "model_kwargs": {
-                key: value for key, value in config.model.model_kwargs.items() if key != "api_key"
-            },
+            "model_kwargs": {key: value for key, value in config.model.model_kwargs.items() if key != "api_key"},
             "base_url": config.model.base_url,
         },
-        checkpoint_environment={"backend": "docker", "image": config.image},
+        checkpoint_environment={"backend": "docker", "image": config.resolved_image},
         context=ContextManager(),
         approval_context=ApprovalContext(environment="docker", disposable_benchmark=True, automatic_approval=True),
     )
@@ -779,7 +1052,13 @@ def _copy_runtime_artifacts(source: Path, destination: Path) -> None:
 def _benchmark_secret_values(config: BenchmarkConfig) -> list[str]:
     model = config.model
     values: list[str] = []
-    for candidate in (model.api_key, model.model_kwargs.get("api_key")):
+    for candidate in (
+        model.api_key,
+        model.base_url,
+        model.model_kwargs.get("api_key"),
+        model.model_kwargs.get("api_base"),
+        model.model_kwargs.get("base_url"),
+    ):
         if isinstance(candidate, str) and candidate and candidate not in values:
             values.append(candidate)
     if config.proxy_url and config.proxy_url not in values:
@@ -799,8 +1078,7 @@ def _redact_benchmark_value(value: Any, secrets: Sequence[str]) -> Any:
         return redacted
     if isinstance(value, dict):
         return {
-            _redact_benchmark_value(key, secrets): _redact_benchmark_value(item, secrets)
-            for key, item in value.items()
+            _redact_benchmark_value(key, secrets): _redact_benchmark_value(item, secrets) for key, item in value.items()
         }
     if isinstance(value, list):
         return [_redact_benchmark_value(item, secrets) for item in value]
@@ -1289,6 +1567,7 @@ __all__ = [
     "BenchmarkConfig",
     "BenchmarkEngine",
     "BenchmarkModel",
+    "BenchmarkPreflight",
     "BenchmarkResult",
     "BenchmarkRun",
     "BenchmarkRunner",
@@ -1304,6 +1583,7 @@ __all__ = [
     "initialize_git_snapshot",
     "load_task_manifest",
     "load_tasks",
+    "preflight_benchmark_image",
     "run_benchmark",
     "run_hidden_verifier",
 ]

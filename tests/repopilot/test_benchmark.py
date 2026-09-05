@@ -12,6 +12,7 @@ from repopilot.benchmark import (
     BenchmarkConfig,
     BenchmarkEngine,
     BenchmarkModel,
+    BenchmarkPreflight,
     BenchmarkRunner,
     EngineRun,
     canonical_snapshot_sha256,
@@ -19,6 +20,7 @@ from repopilot.benchmark import (
     copy_snapshot,
     initialize_git_snapshot,
     load_tasks,
+    preflight_benchmark_image,
     run_hidden_verifier,
 )
 
@@ -333,7 +335,9 @@ def test_baseline_ignores_unknown_model_costs(tmp_path: Path, monkeypatch) -> No
                 ],
             }
 
-    monkeypatch.setattr(benchmark_module, "get_model", lambda **kwargs: model_configs.append(kwargs["config"]) or object())
+    monkeypatch.setattr(
+        benchmark_module, "get_model", lambda **kwargs: model_configs.append(kwargs["config"]) or object()
+    )
     monkeypatch.setattr(benchmark_module, "get_config_from_spec", lambda *_args: {"agent": {}})
     monkeypatch.setattr(benchmark_module, "get_environment", lambda *_args, **_kwargs: object())
     monkeypatch.setattr(benchmark_module, "get_agent", lambda *_args, **_kwargs: FakeAgent())
@@ -383,6 +387,112 @@ def test_runner_records_an_unavailable_environment_without_running_the_verifier(
     assert result.results[0].status == "ENVIRONMENT_UNAVAILABLE"
     assert result.results[0].success is None
     assert result.results[0].verifier is None
+
+
+def test_benchmark_image_preflight_resolves_image_id_and_checks_python_and_git(tmp_path: Path) -> None:
+    tasks_root = tmp_path / "tasks"
+    _write_task(tasks_root)
+    config = BenchmarkConfig(
+        tasks_directory=tasks_root,
+        output_directory=tmp_path / "results",
+        model=BenchmarkModel("test"),
+        image="repopilot-benchmark:py312-git",
+    )
+    calls: list[list[str]] = []
+
+    def command_runner(argv: list[str], _timeout: float) -> subprocess.CompletedProcess[str]:
+        calls.append(argv)
+        if argv[1:3] == ["image", "inspect"]:
+            return subprocess.CompletedProcess(
+                argv,
+                0,
+                stdout=json.dumps(
+                    {
+                        "Id": "sha256:local-image-id",
+                        "RepoDigests": ["repopilot-benchmark@sha256:registry-digest"],
+                    }
+                ),
+                stderr="",
+            )
+        return subprocess.CompletedProcess(
+            argv, 0, stdout="Python 3.12.14\n" if argv[-2] == "python" else "git version 2.47.3\n", stderr=""
+        )
+
+    preflight = preflight_benchmark_image(config, command_runner=command_runner)
+
+    assert preflight.ready
+    assert preflight.image_id == "sha256:local-image-id"
+    assert preflight.image_digest == "repopilot-benchmark@sha256:registry-digest"
+    assert preflight.resolved_image == "sha256:local-image-id"
+    assert [check["name"] for check in preflight.checks] == ["image_inspect", "python", "git"]
+    assert calls[1][-3:] == ["sha256:local-image-id", "python", "--version"]
+    assert calls[2][-3:] == ["sha256:local-image-id", "git", "--version"]
+
+
+def test_runner_preflight_failure_skips_both_engine_executors(tmp_path: Path) -> None:
+    tasks_root = tmp_path / "tasks"
+    _write_task(tasks_root)
+    config = BenchmarkConfig(
+        tasks_directory=tasks_root,
+        output_directory=tmp_path / "results",
+        model=BenchmarkModel("test"),
+        image="image-without-git",
+    )
+    calls: list[str] = []
+    unavailable = BenchmarkPreflight(
+        "ENVIRONMENT_UNAVAILABLE",
+        config.image,
+        "sha256:local-image-id",
+        "sha256:local-image-id",
+        None,
+        ({"name": "git", "exit_code": 127},),
+        "git --version failed",
+    )
+
+    def executor(_request):
+        calls.append("executor")
+        raise AssertionError("an unavailable preflight must not enter an Agent Run")
+
+    result = BenchmarkRunner(
+        config,
+        executors={BenchmarkEngine.BASELINE: executor, BenchmarkEngine.REPOPILOT: executor},
+        preflight_runner=lambda _config: unavailable,
+    ).run()
+
+    assert calls == []
+    assert [item.status for item in result.results] == ["ENVIRONMENT_UNAVAILABLE", "ENVIRONMENT_UNAVAILABLE"]
+    assert all(item.success is None and item.verifier is None for item in result.results)
+    assert json.loads((config.output_directory / "preflight.json").read_text())["image_id"] == "sha256:local-image-id"
+    assert all((item.artifact_directory / "preflight.json").is_file() for item in result.results)
+
+
+def test_runner_uses_one_resolved_image_for_both_engine_requests(tmp_path: Path) -> None:
+    tasks_root = tmp_path / "tasks"
+    _write_task(tasks_root)
+    config = BenchmarkConfig(
+        tasks_directory=tasks_root,
+        output_directory=tmp_path / "results",
+        model=BenchmarkModel("test"),
+        image="mutable-tag",
+    )
+    resolved = BenchmarkPreflight("READY", config.image, "sha256:stable-id", "sha256:stable-id", None, ())
+    seen: list[str] = []
+
+    def executor(request):
+        seen.append(request.config.resolved_image)
+        (request.workspace / "value.txt").write_text("fixed\n")
+        return EngineRun(status="SUCCEEDED")
+
+    result = BenchmarkRunner(
+        config,
+        executors={BenchmarkEngine.BASELINE: executor, BenchmarkEngine.REPOPILOT: executor},
+        preflight_runner=lambda _config: resolved,
+    ).run()
+
+    assert seen == ["sha256:stable-id", "sha256:stable-id"]
+    assert result.config.image == "mutable-tag"
+    assert result.config.resolved_image == "sha256:stable-id"
+    assert all(item.metrics["image"] == "sha256:stable-id" for item in result.results)
 
 
 def test_snapshot_hash_and_copy_ignore_python_bytecode(tmp_path: Path) -> None:

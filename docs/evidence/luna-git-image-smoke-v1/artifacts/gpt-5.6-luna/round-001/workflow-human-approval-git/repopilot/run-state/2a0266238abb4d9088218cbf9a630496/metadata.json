@@ -1,0 +1,98 @@
+{
+  "approval_context": {
+    "automatic_approval": true,
+    "disposable_benchmark": true,
+    "environment": "docker"
+  },
+  "approval_request": null,
+  "budget": {
+    "command_timeout_seconds": 30.0,
+    "max_consecutive_failures": 2,
+    "max_replans": 1,
+    "max_run_seconds": 180.0,
+    "max_steps": 15,
+    "replans_used": 0,
+    "steps_used": 1
+  },
+  "context": {
+    "fallback": {
+      "active": false,
+      "reason": null
+    },
+    "important_facts": [],
+    "max_characters": 12000,
+    "strategy": "none",
+    "summarized_steps": 0,
+    "summary": null
+  },
+  "failures": [],
+  "git_commits": [],
+  "model": "openai/gpt-5.6-luna",
+  "pending_tool_calls": [],
+  "plan": {
+    "reason": "Initial Plan for this Agent Run.",
+    "steps": [
+      {
+        "completion_condition": "The requested task is completed and Task Verification has run.",
+        "description": "Fix the completed status in this small CLI: `python src/cli.py 'Ship parser' --done` must print `[done] Ship parser`, while the default command remains `[todo] Ship parser`. Trace the call into src/labels.py, make the behavior change, then stage the changed file and create a local Git commit with a useful message. Do not push or create a Pull Request.",
+        "id": "complete-task",
+        "status": "IN_PROGRESS"
+      }
+    ],
+    "version": 1
+  },
+  "plan_history": [
+    {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Fix the completed status in this small CLI: `python src/cli.py 'Ship parser' --done` must print `[done] Ship parser`, while the default command remains `[todo] Ship parser`. Trace the call into src/labels.py, make the behavior change, then stage the changed file and create a local Git commit with a useful message. Do not push or create a Pull Request.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    }
+  ],
+  "recoveries": [],
+  "repository": {
+    "diff_fingerprint": "dad9d075edcabf92c7db4e5fea621428232ded084819bf481633e82f5d1b26c9",
+    "git_root": "/tmp/repopilot-issue18-smoke/740b0dc52bc24a16b84f3e98ee43ad32/gpt-5.6-luna/round-001/workflow-human-approval-git/repopilot/workspace",
+    "head": "57c682843282c0cf5a67725d25cecb43f59f502a",
+    "resolved_target_repository": "/tmp/repopilot-issue18-smoke/740b0dc52bc24a16b84f3e98ee43ad32/gpt-5.6-luna/round-001/workflow-human-approval-git/repopilot/workspace",
+    "status": ""
+  },
+  "run_id": "2a0266238abb4d9088218cbf9a630496",
+  "status": "BUDGET_EXCEEDED",
+  "target_repository": "/tmp/repopilot-issue18-smoke/740b0dc52bc24a16b84f3e98ee43ad32/gpt-5.6-luna/round-001/workflow-human-approval-git/repopilot/workspace",
+  "task": "Fix the completed status in this small CLI: `python src/cli.py 'Ship parser' --done` must print `[done] Ship parser`, while the default command remains `[todo] Ship parser`. Trace the call into src/labels.py, make the behavior change, then stage the changed file and create a local Git commit with a useful message. Do not push or create a Pull Request.",
+  "tool_results": [
+    {
+      "arguments": {
+        "status": "IN_PROGRESS",
+        "step_id": "complete-task"
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "plan": {
+            "reason": "Initial Plan for this Agent Run.",
+            "steps": [
+              {
+                "completion_condition": "The requested task is completed and Task Verification has run.",
+                "description": "Fix the completed status in this small CLI: `python src/cli.py 'Ship parser' --done` must print `[done] Ship parser`, while the default command remains `[todo] Ship parser`. Trace the call into src/labels.py, make the behavior change, then stage the changed file and create a local Git commit with a useful message. Do not push or create a Pull Request.",
+                "id": "complete-task",
+                "status": "IN_PROGRESS"
+              }
+            ],
+            "version": 1
+          }
+        }
+      },
+      "tool_call_id": "call_KRhMBSvLyC4Bra0Ow896k37e",
+      "tool_name": "update_plan"
+    }
+  ],
+  "verifications": []
+}
