@@ -1,0 +1,1 @@
+Implement the inventory reconciliation pipeline: parse JSON events; validate nonempty SKU and integer delta; casefold/strip SKU; sum deltas; omit zero balances; render sorted sku=balance lines. Track progress across the pipeline, validate the end-to-end result, respect the execution budget and stop once the task is complete.

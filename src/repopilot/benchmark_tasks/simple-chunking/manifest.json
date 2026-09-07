@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "id": "simple-chunking",
+  "category": "simple",
+  "capabilities": [],
+  "behavior_requirements": [],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "9e5bb7834e7552dee58aa0990158942cb4c53cba0ecf5abc8ebf81ba23211102"
+  },
+  "task_statement": "Implement chunks(values, size) returning a list of lists, retaining a short final chunk, never changing the input, and rejecting size <= 0 with ValueError.",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

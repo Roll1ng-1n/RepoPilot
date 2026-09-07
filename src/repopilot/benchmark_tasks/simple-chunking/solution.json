@@ -1,0 +1,3 @@
+{
+  "src/chunks.py": "def chunks(values, size):\n    if size <= 0:\n        raise ValueError(\"size must be positive\")\n    return [list(values[i:i+size]) for i in range(0, len(values), size)]\n"
+}

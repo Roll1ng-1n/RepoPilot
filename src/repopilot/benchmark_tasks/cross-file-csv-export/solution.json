@@ -1,0 +1,4 @@
+{
+  "src/schema.py": "fields = [\"name\", \"note\"]\n",
+  "src/export.py": "import csv\nimport io\nfrom schema import fields\ndef render(rows):\n    stream = io.StringIO(newline=\"\")\n    writer = csv.DictWriter(stream, fieldnames=fields, lineterminator=\"\\n\")\n    writer.writeheader()\n    writer.writerows(rows)\n    return stream.getvalue()\n"
+}

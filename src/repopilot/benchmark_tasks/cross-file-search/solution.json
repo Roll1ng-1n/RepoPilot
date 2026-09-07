@@ -1,0 +1,4 @@
+{
+  "src/index.py": "def build_index(records):\n    result = {}\n    for record in records:\n        for word in set(record[\"text\"].casefold().split()):\n            result.setdefault(word, set()).add(record[\"id\"])\n    return result\n",
+  "src/search.py": "from index import build_index\ndef search(records, query):\n    words = query.casefold().split()\n    if not words:\n        return []\n    index = build_index(records)\n    return sorted(set.intersection(*(index.get(word, set()) for word in words)))\n"
+}

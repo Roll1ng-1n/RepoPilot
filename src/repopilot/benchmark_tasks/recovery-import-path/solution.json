@@ -1,0 +1,3 @@
+{
+  "src/loader.py": "from parsers.records import parse\ndef load(text):\n    return parse(text)\n"
+}

@@ -1,0 +1,3 @@
+{
+  "src/feature.py": "def release_tag(version):\n    value = version.strip()\n    return value if value.startswith(\"v\") else \"v\" + value\n"
+}

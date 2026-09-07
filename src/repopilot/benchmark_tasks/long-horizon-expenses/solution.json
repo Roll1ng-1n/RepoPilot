@@ -1,0 +1,8 @@
+{
+  "src/decode.py": "import csv, io\ndef decode(data):\n    return list(csv.DictReader(io.StringIO(data)))\n",
+  "src/validate.py": "from decimal import Decimal, InvalidOperation\ndef validate(rows):\n    result = []\n    for row in rows:\n        try:\n            valid = Decimal(row[\"amount\"]).is_finite()\n        except (InvalidOperation, KeyError):\n            continue\n        if row.get(\"owner\", \"\").strip() and valid:\n            result.append(row)\n    return result\n",
+  "src/normalize.py": "from decimal import Decimal\ndef normalize(rows):\n    return [(r[\"owner\"].strip().casefold(), Decimal(r[\"amount\"])) for r in rows]\n",
+  "src/aggregate.py": "from decimal import Decimal\ndef aggregate(rows):\n    result = {}\n    for owner, amount in rows:\n        result[owner] = result.get(owner, Decimal(0)) + amount\n    return result\n",
+  "src/render.py": "from decimal import Decimal, ROUND_HALF_UP\ndef render(totals):\n    return \"\\n\".join(f\"{k}:{totals[k].quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)}\" for k in sorted(totals))\n",
+  "src/selection.py": "def select(totals):\n    return {k:v for k,v in totals.items() if v > 0}\n"
+}

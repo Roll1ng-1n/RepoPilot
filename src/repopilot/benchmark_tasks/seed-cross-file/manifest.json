@@ -22,5 +22,12 @@
     "path": "verify_seed_cross_file.py",
     "execution": "host",
     "timeout_seconds": 20
-  }
+  },
+  "category": "cross-file",
+  "capabilities": [
+    "planning",
+    "exploration",
+    "state"
+  ],
+  "behavior_requirements": []
 }

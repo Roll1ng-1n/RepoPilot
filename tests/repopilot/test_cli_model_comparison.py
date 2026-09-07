@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 from typer.testing import CliRunner
 
 from repopilot.campaign import CampaignRun
@@ -9,7 +10,15 @@ from repopilot.cli import create_app
 from repopilot.model_probe import ProbeAttempt, ProbeReport, ProbeResult
 
 
-def test_cli_probe_loads_credentials_from_env_file_and_writes_reports(tmp_path: Path) -> None:
+def test_cli_probe_loads_credentials_from_env_file_and_writes_reports(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Upstream imports (e.g. LiteLLM) can load a workspace/global .env into
+    # os.environ during collection; without clearing these, typer's envvar
+    # defaults would win over the --env-file under test and make this test
+    # order-dependent. Isolate the process env for the probe invocation.
+    monkeypatch.delenv("REPOPILOT_API_KEY", raising=False)
+    monkeypatch.delenv("REPOPILOT_BASE_URL", raising=False)
     env_file = tmp_path / ".env"
     env_file.write_text("REPOPILOT_API_KEY=test-secret\nREPOPILOT_BASE_URL=https://relay.invalid/v1\n")
     received = []

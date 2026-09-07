@@ -1,0 +1,3 @@
+{
+  "src/feature.py": "def license_header(name):\n    return \"Copyright (c) 2026 \" + name.strip()\n"
+}

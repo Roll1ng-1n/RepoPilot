@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "recovery-malformed-record",
+  "category": "recovery",
+  "capabilities": [
+    "recovery"
+  ],
+  "behavior_requirements": [
+    "recovery"
+  ],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "ecfc105a1f22e934d96d7eb7b4283ed6037c20779504da6095ce69650b736119"
+  },
+  "task_statement": "Before editing, run `python public_test.py`; its initial failure is required evidence. Diagnose that failure, repair the implementation and rerun the tests successfully. Fix parse_rows so blank/comment lines are skipped, valid key=value lines are stripped and accepted, and malformed non-comment lines are skipped without discarding later valid records. Last value wins.",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  },
+  "behavior_spec": {
+    "recovery_command": "python public_test.py",
+    "recovery_files": [
+      "public_test.py"
+    ]
+  }
+}

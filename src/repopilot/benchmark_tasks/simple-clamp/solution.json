@@ -1,0 +1,3 @@
+{
+  "src/clamp.py": "def clamp(value, low, high):\n    if low > high:\n        raise ValueError(\"reversed bounds\")\n    return min(high, max(low, value))\n"
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "cross-file-pricing",
+  "category": "cross-file",
+  "capabilities": [
+    "planning",
+    "exploration",
+    "state"
+  ],
+  "behavior_requirements": [],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "bf01fa912c4ba41f5f6bf7d5c1b15e42455106b1dca6382040496cf2557bb278"
+  },
+  "task_statement": "Repair quote(items, tax_rate) across money.py and checkout.py: use Decimal amounts, sum quantity times price, apply tax once, round HALF_UP to two decimals and return a string. Do not mutate items.",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

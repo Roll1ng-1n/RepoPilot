@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "replan-tombstones",
+  "category": "replan",
+  "capabilities": [
+    "replan",
+    "planning"
+  ],
+  "behavior_requirements": [
+    "replan"
+  ],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "bbf2d3413dcd7323868f8189d1981919c4b20a321cdc7fa4ee689d5f38cd2c82"
+  },
+  "task_statement": "Before running `python reveal.py`, write an initial PLAN.md containing `update-only` and concrete steps for the old contract. After observing the new evidence, revise PLAN.md to replace `update-only` with `delete-aware-fold` and concrete steps addressing that evidence. First record an initial implementation plan using README.md. Then run `python reveal.py` to obtain NEW_EVIDENCE; explicitly revise the invalidated plan and implement the revised contract. Implement materialize(events), producing a dictionary of current key/value entries.",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  },
+  "behavior_spec": {
+    "evidence_command": "python reveal.py",
+    "evidence_marker": "NEW_EVIDENCE",
+    "plan_path": "PLAN.md",
+    "before_strategy": "update-only",
+    "after_strategy": "delete-aware-fold"
+  }
+}

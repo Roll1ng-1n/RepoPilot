@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "long-horizon-inventory",
+  "category": "long-horizon",
+  "capabilities": [
+    "state",
+    "planning",
+    "budget",
+    "termination"
+  ],
+  "behavior_requirements": [
+    "budget",
+    "termination"
+  ],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "54e36f0d14504db691acaaaac02f7386f083144333945cca5188f4fe750b139e"
+  },
+  "task_statement": "Implement the inventory reconciliation pipeline: parse JSON events; validate nonempty SKU and integer delta; casefold/strip SKU; sum deltas; omit zero balances; render sorted sku=balance lines. Track progress across the pipeline, validate the end-to-end result, respect the execution budget and stop once the task is complete.",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

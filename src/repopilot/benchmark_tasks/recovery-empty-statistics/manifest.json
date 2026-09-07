@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "recovery-empty-statistics",
+  "category": "recovery",
+  "capabilities": [
+    "recovery"
+  ],
+  "behavior_requirements": [
+    "recovery"
+  ],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "8d4b5d33aa95ab797056ed8b0018de30c3d7c93f2d612885dc5b6470aecaefa9"
+  },
+  "task_statement": "Before editing, run `python public_test.py`; its initial failure is required evidence. Diagnose that failure, repair the implementation and rerun the tests successfully. Fix summarize(values): empty input returns count=0, mean=None, maximum=None; nonempty input returns count, arithmetic mean and maximum, including all-negative values.",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  },
+  "behavior_spec": {
+    "recovery_command": "python public_test.py",
+    "recovery_files": [
+      "public_test.py"
+    ]
+  }
+}

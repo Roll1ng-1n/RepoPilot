@@ -6,7 +6,7 @@
     "revision": "replan-v1",
     "sha256": "b1dae03762472a199f9e3555aae0f2c65ec137cf43174557a08b288ff053ff90"
   },
-  "task_statement": "Add a --json mode to the report CLI and renderer while keeping the existing human-readable output unchanged. Trace the current report flow and inspect docs/output-format.md and the public tests before choosing the machine-readable protocol. If an initial assumption of one JSON value conflicts with the repository's streaming contract, use that new evidence to replan the implementation.",
+  "task_statement": "Add a --json mode to the report CLI and renderer while keeping the existing human-readable output unchanged. Before running `cat docs/output-format.md`, write an initial PLAN.md containing `json-array` and concrete steps for a single JSON array contract. Run `cat docs/output-format.md` to obtain the streaming contract. After observing the new evidence, revise PLAN.md to replace `json-array` with `jsonl` and concrete steps addressing that evidence. Implement and test the revised protocol.",
   "timeout_seconds": 180,
   "run_budget": {
     "max_steps": 15,
@@ -22,5 +22,20 @@
     "path": "verify_replan_new_evidence.py",
     "execution": "host",
     "timeout_seconds": 20
+  },
+  "category": "replan",
+  "capabilities": [
+    "replan",
+    "planning"
+  ],
+  "behavior_requirements": [
+    "replan"
+  ],
+  "behavior_spec": {
+    "evidence_command": "cat docs/output-format.md",
+    "evidence_marker": "newline-delimited JSON",
+    "plan_path": "PLAN.md",
+    "before_strategy": "json-array",
+    "after_strategy": "jsonl"
   }
 }

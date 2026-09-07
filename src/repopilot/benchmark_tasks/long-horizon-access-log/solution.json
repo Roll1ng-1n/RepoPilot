@@ -1,0 +1,8 @@
+{
+  "src/decode.py": "def decode(data):\n    return [line.split() for line in data.splitlines() if line.strip()]\n",
+  "src/validate.py": "def validate(rows):\n    return [r for r in rows if len(r) == 3 and r[2].isdigit()]\n",
+  "src/normalize.py": "def normalize(rows):\n    return [(r[0].upper(), int(r[2])) for r in rows]\n",
+  "src/aggregate.py": "def aggregate(rows):\n    result = {}\n    for method, status in rows:\n        result[method] = result.get(method, 0) + 1\n    return result\n",
+  "src/render.py": "def render(totals):\n    return \"\\n\".join(f\"{k}:{totals[k]}\" for k in sorted(totals))\n",
+  "src/selection.py": "def select(rows):\n    return [r for r in rows if r[1] >= 400]\n"
+}

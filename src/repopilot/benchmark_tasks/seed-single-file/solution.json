@@ -1,0 +1,3 @@
+{
+  "src/slugify.py": "def slugify(text):\n    return \"-\".join(text.lower().split())\n"
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "recovery-argument-contract",
+  "category": "recovery",
+  "capabilities": [
+    "recovery"
+  ],
+  "behavior_requirements": [
+    "recovery"
+  ],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "86c7a5dfda6c775e6489175cd6ea586364e2a3b00731752c41ceeb35f251971a"
+  },
+  "task_statement": "Before editing, run `python public_test.py`; its initial failure is required evidence. Diagnose that failure, repair the implementation and rerun the tests successfully. Fix collect in src/collect.py to call the existing keyword-only transport.fetch API and return its data; preserve the timeout parameter.",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  },
+  "behavior_spec": {
+    "recovery_command": "python public_test.py",
+    "recovery_files": [
+      "public_test.py"
+    ]
+  }
+}

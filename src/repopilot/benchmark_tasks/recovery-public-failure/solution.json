@@ -1,0 +1,3 @@
+{
+  "src/line_tools.py": "def unique_clean_lines(lines):\n    result = []\n    seen = set()\n    for line in lines:\n        cleaned = line.strip()\n        if cleaned and cleaned.casefold() not in seen:\n            result.append(cleaned)\n            seen.add(cleaned.casefold())\n    return result\n"
+}

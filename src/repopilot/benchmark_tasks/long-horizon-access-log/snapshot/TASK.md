@@ -1,0 +1,1 @@
+Implement the access-log report pipeline: parse nonblank lines as METHOD PATH STATUS; reject malformed/noninteger statuses; uppercase methods; group counts by method; retain only status >= 400; render sorted METHOD:count lines. Track progress across the pipeline, validate the end-to-end result, respect the execution budget and stop once the task is complete.

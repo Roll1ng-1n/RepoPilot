@@ -1,0 +1,3 @@
+{
+  "src/config.py": "def parse_bool(text):\n    value = text.strip().casefold()\n    if value in {\"true\", \"1\", \"yes\", \"on\"}:\n        return True\n    if value in {\"false\", \"0\", \"no\", \"off\"}:\n        return False\n    raise ValueError(text)\n"
+}

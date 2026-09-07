@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "long-horizon-access-log",
+  "category": "long-horizon",
+  "capabilities": [
+    "state",
+    "planning",
+    "budget",
+    "termination"
+  ],
+  "behavior_requirements": [
+    "budget",
+    "termination"
+  ],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "c5ad68b2fb7d4d0840bd70b2e6c6bde66a9066c1ff4f8e1b7c7dc32f1b54fad8"
+  },
+  "task_statement": "Implement the access-log report pipeline: parse nonblank lines as METHOD PATH STATUS; reject malformed/noninteger statuses; uppercase methods; group counts by method; retain only status >= 400; render sorted METHOD:count lines. Track progress across the pipeline, validate the end-to-end result, respect the execution budget and stop once the task is complete.",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

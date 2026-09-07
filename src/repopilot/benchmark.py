@@ -14,6 +14,7 @@ import shutil
 import subprocess
 import sys
 import time
+import uuid
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict, dataclass, field, replace
 from enum import Enum
@@ -30,6 +31,16 @@ from repopilot.artifacts import RunArtifacts
 from repopilot.budget import RunBudget
 from repopilot.context import ContextManager
 from repopilot.environment import DockerExecutionEnvironment, DockerProxyMode, docker_proxy_run_args
+from repopilot.evaluation import (
+    CATEGORIES,
+    REQUIREMENTS,
+    ScenarioObserver,
+    aggregate,
+    evaluate,
+    markdown,
+    normalize_trace,
+    scenario_audit,
+)
 from repopilot.model import AssistantTurn, LiteLLMToolCallingModel
 from repopilot.plan import PlanHistory
 from repopilot.pricing import (
@@ -43,6 +54,14 @@ from repopilot.tools import create_tool_registry
 DEFAULT_BENCHMARK_IMAGE = "repopilot-benchmark:py312-git"
 
 
+class EngineVariant(str):
+    """Stable adapter/ablation identity, independent of the two built-in engines."""
+
+    @property
+    def value(self) -> str:
+        return str(self)
+
+
 class BenchmarkEngine(str, Enum):
     """Engines which can solve one benchmark task."""
 
@@ -51,6 +70,21 @@ class BenchmarkEngine(str, Enum):
 
 
 Engine = BenchmarkEngine
+
+
+BUDGET_FIELD_ALIASES: dict[str, tuple[str, ...]] = {
+    "max_steps": ("max_steps", "steps"),
+    "max_replans": ("max_replans", "replans"),
+    "max_consecutive_failures": ("max_consecutive_failures", "consecutive_failures"),
+    "command_timeout_seconds": ("command_timeout_seconds", "command_timeout", "command_timeout_s"),
+    "max_run_seconds": ("max_run_seconds", "run_timeout_seconds", "timeout_seconds"),
+}
+
+
+def declared_budget_fields(value: Mapping[str, Any]) -> frozenset[str]:
+    """Return the canonical budget fields an explicit mapping declares."""
+
+    return frozenset(destination for destination, candidates in BUDGET_FIELD_ALIASES.items() if any(c in value for c in candidates))
 
 
 @dataclass(frozen=True)
@@ -74,15 +108,8 @@ class BenchmarkBudget:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> BenchmarkBudget:
-        names = {
-            "max_steps": ("max_steps", "steps"),
-            "max_replans": ("max_replans", "replans"),
-            "max_consecutive_failures": ("max_consecutive_failures", "consecutive_failures"),
-            "command_timeout_seconds": ("command_timeout_seconds", "command_timeout", "command_timeout_s"),
-            "max_run_seconds": ("max_run_seconds", "run_timeout_seconds", "timeout_seconds"),
-        }
         values: dict[str, Any] = {}
-        for destination, candidates in names.items():
+        for destination, candidates in BUDGET_FIELD_ALIASES.items():
             for candidate in candidates:
                 if candidate in value:
                     values[destination] = value[candidate]
@@ -126,6 +153,14 @@ class BenchmarkTask:
     verifier_path: Path | None = None
     verifier_timeout_seconds: float | None = None
     run_budget: BenchmarkBudget | None = None
+    run_budget_declared: frozenset[str] = frozenset()
+    category: str = "simple"
+    capabilities: tuple[str, ...] = ()
+    behavior_requirements: tuple[str, ...] = ()
+    behavior_spec: dict[str, Any] = field(default_factory=dict)
+    behavior_verifier_path: Path | None = None
+    approval_policy: str = "approve"
+    experimental: bool = False
 
     @property
     def id(self) -> str:
@@ -224,7 +259,25 @@ class BenchmarkTask:
             if not isinstance(run_budget_value, Mapping):
                 raise ValueError(f"Benchmark manifest has invalid run_budget: {manifest_path}")
             run_budget = BenchmarkBudget.from_dict(run_budget_value)
+        behavior_path = payload.get("behavior_verifier")
+        behavior_path = (manifest_path.parent / behavior_path).resolve() if isinstance(behavior_path, str) else None
+        if behavior_path is not None and not behavior_path.is_file():
+            raise FileNotFoundError(f"Behavior verifier does not exist: {behavior_path}")
+        approval_policy = payload.get("approval_policy", "approve")
+        if approval_policy not in {"approve", "reject"}:
+            raise ValueError("approval_policy must be approve or reject")
+        category = payload.get("category", "simple")
+        requirements = tuple(payload.get("behavior_requirements", ()))
+        if category not in CATEGORIES or set(requirements) - REQUIREMENTS:
+            raise ValueError(f"Invalid category or behavior requirements: {manifest_path}")
         return cls(
+            behavior_verifier_path=behavior_path,
+            approval_policy=approval_policy,
+            experimental=payload.get("experimental", False),
+            category=category,
+            capabilities=tuple(payload.get("capabilities", ())),
+            behavior_requirements=requirements,
+            behavior_spec=payload.get("behavior_spec", {}),
             task_id=task_id,
             task=task,
             snapshot=snapshot,
@@ -237,6 +290,11 @@ class BenchmarkTask:
             verifier_path=verifier_path,
             verifier_timeout_seconds=verifier_timeout_seconds,
             run_budget=run_budget,
+            run_budget_declared=(
+                declared_budget_fields(run_budget_value)
+                if isinstance(run_budget_value, Mapping)
+                else frozenset()
+            ),
         )
 
 
@@ -259,8 +317,14 @@ class BenchmarkConfig:
     # latter is retained when Docker reports a registry RepoDigest.
     image_id: str | None = None
     image_digest: str | None = None
+    repeats: int = 1
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "engines", tuple(_coerce_engine(e) for e in self.engines))
+        if len(set(self.engines)) != len(self.engines) or not self.engines:
+            raise ValueError("engines must be unique and nonempty")
+        if isinstance(self.repeats, bool) or not isinstance(self.repeats, int) or self.repeats < 1:
+            raise ValueError("repeats must be a positive integer")
         if not isinstance(self.proxy_mode, DockerProxyMode):
             object.__setattr__(self, "proxy_mode", DockerProxyMode(str(self.proxy_mode).lower()))
         # Resolve validation without persisting the URL. The actual run args
@@ -280,6 +344,7 @@ class BenchmarkConfig:
             "budget": asdict(self.budget),
             "engines": [engine.value for engine in self.engines],
             "task_ids": list(self.task_ids),
+            "repeats": self.repeats,
         }
 
     @property
@@ -502,6 +567,7 @@ class EngineRun:
     run_result: AgentRunResult | None = None
     model_stats: dict[str, Any] = field(default_factory=dict)
     error: str | None = None
+    evaluation_events: list[dict[str, Any]] = field(default_factory=list)
 
 
 class EngineExecutor(Protocol):
@@ -518,9 +584,24 @@ class BenchmarkResult:
     metrics: dict[str, Any]
     verifier: dict[str, Any] | None
     error: str | None = None
+    evaluation: dict[str, Any] = field(default_factory=dict)
+    category: str = "simple"
+    capabilities: tuple[str, ...] = ()
+    run_id: str = field(default_factory=lambda: uuid.uuid4().hex)
+    repeat: int = 1
+    model: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
+            "run_id": self.run_id,
+            "repeat": self.repeat,
+            "model": self.model,
+            "category": self.category,
+            "capabilities": list(self.capabilities),
+            "evaluation": self.evaluation,
+            "repository_pass": self.evaluation.get("repository_pass", self.success),
+            "behavior_pass": self.evaluation.get("behavior_pass"),
+            "task_pass": self.evaluation.get("task_pass"),
             "task_id": self.task_id,
             "engine": self.engine.value,
             "artifact_directory": str(self.artifact_directory),
@@ -550,6 +631,7 @@ class BenchmarkRun:
             },
             "tasks": [_task_public_dict(task) for task in self.tasks],
             "results": [result.to_dict() for result in self.results],
+            "evaluation_summary": aggregate([result.to_dict() for result in self.results]),
         }
 
 
@@ -577,6 +659,9 @@ class BenchmarkRunner:
         }
         for engine, executor in (executors or {}).items():
             self._executors[_coerce_engine(engine)] = executor
+        missing = selected_engines - self._executors.keys()
+        if missing:
+            raise ValueError(f"No registered executor for engines: {sorted(missing)}")
 
     def load_tasks(self) -> tuple[BenchmarkTask, ...]:
         tasks = load_tasks(self.config.tasks_directory)
@@ -591,6 +676,8 @@ class BenchmarkRunner:
     def run(self) -> BenchmarkRun:
         tasks = self.load_tasks()
         output_directory = self.config.output_directory.resolve()
+        if (output_directory / "config.json").exists():
+            raise FileExistsError(f"Refusing to overwrite benchmark configuration: {output_directory}")
         output_directory.mkdir(parents=True, exist_ok=True)
         preflight = self._resolve_preflight()
         image_id = preflight.image_id
@@ -614,8 +701,12 @@ class BenchmarkRunner:
                 raise ValueError(
                     f"Snapshot SHA256 mismatch for {task.task_id}: expected {task.snapshot_sha256}, got {actual_sha}"
                 )
-            for engine in self.config.engines:
-                results.append(self._run_one(task, _coerce_engine(engine), output_directory, preflight))
+            for repeat in range(1, self.config.repeats + 1):
+                trial_directory = (
+                    output_directory if self.config.repeats == 1 else output_directory / f"repeat-{repeat:03d}"
+                )
+                for engine in self.config.engines:
+                    results.append(self._run_one(task, _coerce_engine(engine), trial_directory, preflight, repeat))
 
         benchmark_run = BenchmarkRun(self.config, tasks, tuple(results), output_directory)
         (output_directory / "summary.json").write_text(
@@ -662,10 +753,11 @@ class BenchmarkRunner:
         engine: BenchmarkEngine,
         output_directory: Path,
         preflight: BenchmarkPreflight | None = None,
+        repeat: int = 1,
     ) -> BenchmarkResult:
         task_directory = output_directory / task.task_id / engine.value
         if task_directory.exists():
-            shutil.rmtree(task_directory)
+            raise FileExistsError(f"Refusing to overwrite trial artifacts: {task_directory}")
         task_directory.mkdir(parents=True, exist_ok=True)
         workspace = task_directory / "workspace"
         copy_snapshot(task.snapshot, workspace)
@@ -736,7 +828,41 @@ class BenchmarkRunner:
         if preflight is not None:
             metrics["preflight"] = preflight.to_dict()
         error = _redact_benchmark_value(error, secrets)
-        result = BenchmarkResult(task.task_id, engine, task_directory, run.status, success, metrics, verifier, error)
+        trace = _read_trace(task_directory / "trace.jsonl")
+        events = normalize_trace(trace) + run.evaluation_events
+        metrics["llm_calls"] = (
+            sum(e.get("type") == "model_request" for e in trace) if trace else run.model_stats.get("steps")
+        )
+        evaluation = evaluate(success, run.status, metrics, events, task.behavior_requirements)
+        metrics["tool_failures"] = evaluation["tool_quality"]["failure_count"]
+        if engine is BenchmarkEngine.BASELINE and metrics["tool_failures"] is None:
+            errors = metrics.get("errors")
+            if isinstance(errors, list):
+                metrics["tool_failures"] = sum(e.get("type") == "command" for e in errors)
+                evaluation["tool_quality"]["failure_count"] = metrics["tool_failures"]
+                count = metrics.get("tool_calls")
+                evaluation["tool_quality"]["failure_rate"] = metrics["tool_failures"] / count if count else None
+        evaluation = _redact_benchmark_value(evaluation, secrets)
+        (task_directory / "evaluation-events.json").write_text(
+            json.dumps(_redact_benchmark_value(events, secrets), indent=2) + "\n", encoding="utf-8"
+        )
+        if task.behavior_verifier_path is not None and verifier is not None:
+            evaluation = _run_behavior_verifier(task, task_directory, evaluation, secrets)
+        result = BenchmarkResult(
+            task.task_id,
+            engine,
+            task_directory,
+            run.status,
+            success,
+            metrics,
+            verifier,
+            error,
+            evaluation=evaluation,
+            category=task.category,
+            capabilities=task.capabilities,
+            repeat=repeat,
+            model=self.config.model.model_name,
+        )
         (task_directory / "result.json").write_text(
             json.dumps(result.to_dict(), indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8"
         )
@@ -828,15 +954,38 @@ def run_benchmark(
 
 
 def _effective_budget(config: BenchmarkConfig, task: BenchmarkTask) -> BenchmarkBudget:
-    """Apply the shared invocation budget and cap every Agent Run by its task timeout."""
+    """Apply the shared invocation budget, then task manifest overrides.
+
+    The shared CLI/invocation budget is the base for every task.  A manifest
+    ``run_budget`` overrides only the fields it explicitly declares (documented
+    as "the manifest budget overrides benchmark defaults"), so a task that
+    declares a larger step/wall-clock ceiling keeps the shared command timeout
+    and consecutive-failure policy.  Every Agent Run is then capped by the
+    task's own timeout so a permissive manifest cannot exceed it.
+    """
 
     configured = config.budget
-    max_run_seconds = min(configured.max_run_seconds, task.timeout_seconds)
+    declared = task.run_budget_declared
+    task_budget = task.run_budget
+    if not declared or task_budget is None:
+        merged = configured
+    else:
+        kwargs: dict[str, Any] = {
+            "max_steps": configured.max_steps,
+            "max_replans": configured.max_replans,
+            "max_consecutive_failures": configured.max_consecutive_failures,
+            "command_timeout_seconds": configured.command_timeout_seconds,
+            "max_run_seconds": configured.max_run_seconds,
+        }
+        for destination in declared:
+            kwargs[destination] = getattr(task_budget, destination)
+        merged = BenchmarkBudget(**kwargs)
+    max_run_seconds = min(merged.max_run_seconds, task.timeout_seconds)
     return BenchmarkBudget(
-        max_steps=configured.max_steps,
-        max_replans=configured.max_replans,
-        max_consecutive_failures=configured.max_consecutive_failures,
-        command_timeout_seconds=configured.command_timeout_seconds,
+        max_steps=merged.max_steps,
+        max_replans=merged.max_replans,
+        max_consecutive_failures=merged.max_consecutive_failures,
+        command_timeout_seconds=merged.command_timeout_seconds,
         max_run_seconds=max_run_seconds,
     )
 
@@ -856,6 +1005,11 @@ def _run_baseline(request: EngineRequest) -> EngineRun:
         "model_kwargs": model_kwargs,
         "cost_tracking": "ignore_errors",
     }
+    if model_kwargs.get("stream"):
+        # Some OpenAI-compatible intermediaries restrict an account to
+        # streaming-only requests.  Point the baseline at RepoPilot's streaming
+        # subclass instead of the vendored non-streaming LitellmModel.
+        model_config["model_class"] = "repopilot.litellm_streaming.StreamingLitellmModel"
     model = get_model(config=model_config)
     run_args = [
         "--rm",
@@ -871,7 +1025,9 @@ def _run_baseline(request: EngineRequest) -> EngineRun:
         "run_args": run_args + docker_proxy_run_args(config.proxy_mode, config.proxy_url),
         "timeout": max(1, int(run_budget.command_timeout_seconds)),
     }
-    environment = get_environment(environment_config, default_type="docker")
+    environment = ScenarioObserver(
+        get_environment(environment_config, default_type="docker"), request.workspace, request.task.behavior_spec
+    )
     agent_config = recursive_merge(
         get_config_from_spec(builtin_config_dir / "mini.yaml").get("agent", {}),
         {
@@ -904,6 +1060,7 @@ def _run_baseline(request: EngineRequest) -> EngineRun:
         duration_seconds=time.monotonic() - started,
         trajectory=trajectory,
         model_stats=_baseline_model_stats(trajectory),
+        evaluation_events=environment.events + [scenario_audit(request.task.behavior_spec)],
         error=_redact_benchmark_value(error, _benchmark_secret_values(config)),
     )
 
@@ -995,6 +1152,7 @@ def _run_repopilot(request: EngineRequest) -> EngineRun:
         proxy_mode=config.proxy_mode,
         proxy_url=config.proxy_url,
     )
+    environment = ScenarioObserver(environment, request.workspace, request.task.behavior_spec)
     state_directory = request.artifact_directory / "run-state"
     artifacts = RunArtifacts(state_directory, secrets=_benchmark_secret_values(config))
     plan_history = PlanHistory.for_task(request.task.task)
@@ -1018,13 +1176,28 @@ def _run_repopilot(request: EngineRequest) -> EngineRun:
         },
         checkpoint_environment={"backend": "docker", "image": config.resolved_image},
         context=ContextManager(),
-        approval_context=ApprovalContext(environment="docker", disposable_benchmark=True, automatic_approval=True),
+        approval_context=ApprovalContext(
+            environment="docker", disposable_benchmark=True, automatic_approval=request.task.category != "hitl"
+        ),
     )
     started = time.monotonic()
     result: AgentRunResult | None = None
     error: str | None = None
     try:
         result = runtime.run(request.task.task, request.workspace)
+        approvals = 0
+        while (
+            result.status == "WAITING_FOR_APPROVAL"
+            and approvals < budget.max_steps
+            and time.monotonic() - started < budget.max_run_seconds
+        ):
+            approvals += 1
+            result = runtime.run(
+                request.task.task,
+                request.workspace,
+                checkpoint=artifacts.read_checkpoint(),
+                approval_granted=request.task.approval_policy == "approve",
+            )
     except Exception as exception:
         error = str(exception) or type(exception).__name__
     finally:
@@ -1036,6 +1209,7 @@ def _run_repopilot(request: EngineRequest) -> EngineRun:
         duration_seconds=time.monotonic() - started,
         run_result=result,
         model_stats=model.stats(),
+        evaluation_events=environment.events + [scenario_audit(request.task.behavior_spec)],
         error=_redact_benchmark_value(error, _benchmark_secret_values(config)),
     )
 
@@ -1212,7 +1386,7 @@ def _metrics_for_run(
     *,
     model_name: str | None = None,
 ) -> dict[str, Any]:
-    if engine is BenchmarkEngine.BASELINE:
+    if engine is not BenchmarkEngine.REPOPILOT:
         trajectory = run.trajectory or {}
         tokens = run.model_stats.get("tokens")
         return {
@@ -1251,6 +1425,47 @@ def _metrics_for_run(
         "trajectory_status": run.status,
         "verifier_success": None if verifier is None else verifier.get("exit_code") == 0,
     }
+
+
+def _run_behavior_verifier(task, directory, evaluation, secrets):
+    """Run a trusted host-only checker against retained normalized evidence."""
+    context_path = directory / "evaluation-context.json"
+    context_path.write_text(json.dumps(evaluation, indent=2) + "\n", encoding="utf-8")
+    try:
+        completed = subprocess.run(
+            [sys.executable, str(task.behavior_verifier_path), str(directory)],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=task.verifier_timeout_seconds or 20,
+            env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
+        )
+        if completed.returncode != 0:
+            raise ValueError(f"Behavior verifier exit {completed.returncode}: {completed.stderr}")
+        checks = json.loads(completed.stdout)["checks"]
+        for requirement in task.behavior_requirements:
+            check = checks[requirement]
+            if (
+                not isinstance(check, dict)
+                or "pass" not in check
+                or (check["pass"] is not None and type(check["pass"]) is not bool)
+            ):
+                raise ValueError(f"Invalid behavior check: {requirement}")
+            evaluation["behavior_verifier"][requirement] = check
+    except (OSError, ValueError, KeyError, TypeError, subprocess.TimeoutExpired) as error:
+        evaluation["behavior_verifier"] = {
+            key: {"pass": None, "reason": f"Behavior verifier unavailable: {error}"}
+            for key in task.behavior_requirements
+        }
+    checks = evaluation["behavior_verifier"].values()
+    evaluation["behavior_pass"] = (
+        False if any(c["pass"] is False for c in checks) else None if any(c["pass"] is None for c in checks) else True
+    )
+    repository, behavior = evaluation["repository_pass"], evaluation["behavior_pass"]
+    evaluation["task_pass"] = (
+        False if repository is False or behavior is False else None if repository is None or behavior is None else True
+    )
+    return _redact_benchmark_value(evaluation, secrets)
 
 
 def _estimated_standard_cost(model_name: str | None, tokens: Any) -> float | None:
@@ -1509,7 +1724,14 @@ def _host_identity() -> str:
 
 
 def _coerce_engine(value: BenchmarkEngine | str) -> BenchmarkEngine:
-    return value if isinstance(value, BenchmarkEngine) else BenchmarkEngine(value)
+    if isinstance(value, BenchmarkEngine):
+        return value
+    try:
+        return BenchmarkEngine(value)
+    except ValueError:
+        if not value or any(c not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_" for c in value):
+            raise ValueError("Engine variant must be a nonempty safe identifier") from None
+        return EngineVariant(value)
 
 
 def _text(value: str | bytes | None) -> str:
@@ -1522,6 +1744,13 @@ def _task_public_dict(task: BenchmarkTask) -> dict[str, Any]:
     return {
         "task_id": task.task_id,
         "task": task.task,
+        "category": task.category,
+        "capabilities": list(task.capabilities),
+        "behavior_requirements": list(task.behavior_requirements),
+        "behavior_spec": task.behavior_spec,
+        "behavior_verifier_path": str(task.behavior_verifier_path) if task.behavior_verifier_path else None,
+        "approval_policy": task.approval_policy,
+        "experimental": task.experimental,
         "snapshot": str(task.snapshot),
         "snapshot_revision": task.snapshot_revision,
         "snapshot_sha256": task.snapshot_sha256,
@@ -1530,10 +1759,19 @@ def _task_public_dict(task: BenchmarkTask) -> dict[str, Any]:
         "verifier_path": str(task.verifier_path) if task.verifier_path is not None else None,
         "verifier_timeout_seconds": task.verifier_timeout_seconds,
         "run_budget": asdict(task.run_budget) if task.run_budget is not None else None,
+        "run_budget_declared": sorted(task.run_budget_declared),
     }
 
 
 def _summary_markdown(benchmark_run: BenchmarkRun) -> str:
+    return (
+        markdown(aggregate([result.to_dict() for result in benchmark_run.results]))
+        + "\n"
+        + _legacy_summary_markdown(benchmark_run)
+    )
+
+
+def _legacy_summary_markdown(benchmark_run: BenchmarkRun) -> str:
     revisions = {task.task_id: task.snapshot_revision for task in benchmark_run.tasks}
     lines = [
         "# Agent Benchmark Summary",

@@ -1,0 +1,4 @@
+{
+  "src/money.py": "from decimal import Decimal\ndef amount(value):\n    return Decimal(str(value))\n",
+  "src/checkout.py": "from decimal import Decimal, ROUND_HALF_UP\nfrom money import amount\ndef quote(items, tax_rate):\n    subtotal = sum((amount(i[\"price\"]) * i[\"quantity\"] for i in items), Decimal(0))\n    return str((subtotal * (1 + amount(tax_rate))).quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP))\n"
+}

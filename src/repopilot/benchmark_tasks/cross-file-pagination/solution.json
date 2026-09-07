@@ -1,0 +1,4 @@
+{
+  "src/store.py": "def slice_items(items, offset, limit):\n    return items[offset:offset+limit]\n",
+  "src/api.py": "from store import slice_items\ndef page(items, number, page_size):\n    if number < 1 or page_size < 1:\n        raise ValueError(\"invalid pagination\")\n    return {\"items\": slice_items(items, (number-1)*page_size, page_size), \"total\": len(items)}\n"
+}

@@ -22,5 +22,16 @@
     "path": "verify_workflow_long_chain.py",
     "execution": "host",
     "timeout_seconds": 20
-  }
+  },
+  "category": "long-horizon",
+  "capabilities": [
+    "state",
+    "planning",
+    "budget",
+    "termination"
+  ],
+  "behavior_requirements": [
+    "budget",
+    "termination"
+  ]
 }

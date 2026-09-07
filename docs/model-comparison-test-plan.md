@@ -17,6 +17,15 @@ mini-SWE-agent baseline 与 RepoPilot 进行可复现的模型对照。测试会
 - `gpt-5.6-luna`
 - `gpt-5.5`
 
+（四模型清单对应 Stage 1–3 的历史记录。**2026-09-07 起后续 benchmark / campaign
+模型集收缩为以下两模型**，`gpt-5.6-terra` 与 `gpt-5.5` 不再进入新的对照测试；官网价格
+表和 Stage 1–3 证据仍保留为历史参考。）
+
+后续正式对照模型集：
+
+- `gpt-5.6-sol`
+- `gpt-5.6-luna`
+
 API Key 和 Base URL 从本地 `.env` 提供（`REPOPILOT_API_KEY`、
 `REPOPILOT_BASE_URL`）。密钥不得写入日志、结果或提交内容。
 
@@ -296,3 +305,81 @@ engine 排名；修复并固定包含 Git 的 benchmark image 后再执行 Stage
 Issue #18 的 [Git 镜像复测证据](evidence/luna-git-image-smoke-v1/summary.md) 已记录：同一固定
 digest 的 Python/Git 预检通过，但 Luna 的 baseline 和 RepoPilot 分别用时约 413 秒和 290 秒，
 均超预算且未通过 verifier。容器缺 Git 已修复；Stage 4 仍应等待后续官方 API 测试确认运行链路。
+
+### Stage 4 六种子任务首轮干净结果
+
+2026-09-06 使用固定 Git 镜像（`repopilot-benchmark:py312-git`，
+digest `sha256:29c73ce6d8fc...`）对六个种子任务（每类一个）、`gpt-5.6-luna` 与
+`gpt-5.6-sol`、三轮完成 72 个样本，无 batch error、无连接错误。脱敏汇总见
+[Stage 4 六种子任务证据](evidence/stage4-seed6-luna-sol-v1/summary.md)。仓库 verifier 共通过
+67/72；`task_pass` 明确判定中 Luna RepoPilot 11/13、Sol RepoPilot 8/13，优于各自 baseline
+（8/12 与 7/12）；两引擎对 `seed-single-file`、`seed-cross-file` 全部通过。HITL 与
+long-horizon 任务因完整 approval/budget 审计尚不支持而保持 `task null`。
+
+本轮暴露两点：中转站长尾延迟仍可使在途模型请求越过 180 秒预算（RepoPilot 多次
+`BUDGET_EXCEEDED` 但仓库仍正确），以及 manifest `run_budget`（24 步/240 秒等）尚未覆盖
+CLI 默认预算。
+
+### Stage 4 剩余 24 任务三轮结果
+
+2026-09-07 用同镜像完成剩余 24 个 Stage 4 任务的 `gpt-5.6-luna` 与 `gpt-5.6-sol` 三轮
+对比，共 288 样本、零 batch error。脱敏汇总见
+[Stage 4 24 任务证据](evidence/stage4-24tasks-luna-sol-v1/summary.md)。执行前的两处修复：
+① manifest `run_budget` 现在按字段覆盖共享 CLI 预算并以任务 timeout 封顶（原先仅记录不生效）；
+② 中转站账户限制仅流式请求，故给两引擎增加 `--stream`（`stream=true` + chunk 聚合，
+RepoPilot 走 `repopilot.model`、baseline 走 `StreamingLitellmModel`）。
+
+总体：仓库 verifier 通过 199/288；`task_pass` 明确判定中 Sol RepoPilot 40/60、Sol baseline
+33/60，显著优于 Luna（RepoPilot 21/66、baseline 27/63）。Sol 的 RepoPilot 在 recovery 与
+replan 两类上优势最明显（recovery 12 轮中 9 轮 RepoPilot-only/both-pass；`recovery-argument-contract`
+三轮全 RepoPilot-only），Luna 在多数 recovery/replan 轮次为 `neither_pass`。HITL/long-horizon
+仍多为 `task null`/unsupported（完整 approval/budget 审计不支持）。6 例 MODEL_ERROR 按决策保留不
+重跑；3 例环境错误（断网 InternalServerError ×2、上游 BadRequestError ×1）已在新输出根补跑替换并在
+`summary.json` 标记 `rerun_replacement`。运行日志显示一次 21.4 万字符的截断响应使单个 run 拖至约
+17.5 分钟（超出 240 秒预算），RepoPilot 的模型调用尚无运行期墙钟强制中断，属后续健壮性改进项。
+
+连同六种子任务证据，两份 evidence 已覆盖 30 个 Stage 4 任务、两模型、三轮
+（360 samples）。这批数据可以离线产出初始要求中的以下指标：repository/task
+pass、category/capability 分项成功率、termination 混淆矩阵与成功率、Recovery /
+Replan 触发与成功率、per-solved 效率指标（LLM calls / steps / tool calls /
+tokens / tool failures）、redundant calls、paired 与按 category 的 paired、
+三重复稳定性行。尚未覆盖且当前实现标记 unsupported 的指标包括：HITL 完整
+approval 审计、完整 execution-budget 审计、post-solution churn（first solved
+step）、逐阶段 latency / orchestration overhead、任意错误恢复与无意义 replan
+判定；这些缺的不是“少跑一轮能补上的数据”，而是缺对应的 instrumentation（详见
+repopilot-benchmark.md “Supported and deferred instrumentation”），因此
+**不能在补功能前靠这些样本生成近似指标**。
+
+**2026-09-07 决策**：benchmark 采用“两引擎可公平对比才实现”的原则。上述
+unsupported 项在基线侧缺少对等的机制或记录（baseline 无结构化 approval
+协议、无 failure/replan 预算执行、无 per-step 仓库快照，且无法提供逐阶段非重叠
+时间 span），因此**不会为这些指标新增 instrumentation**；post-solution churn
+与逐阶段 latency / orchestration overhead 明确放弃，approval / budget /
+任意错误恢复 / 无意义 replan 维持 unsupported 或 experimental（仅作
+RepoPilot 单侧观测，不进入引擎对比结论）。已有 360 样本的可对比指标即本阶段
+完整证据，**不再安排“补 instrumentation 后整轮重跑填满全指标”的运行**。
+
+后续若重跑，仅服务于更换数据源（官方 API 而非中转站）或提高 repeat 数
+（正式终测 `--repeats 5`），模型集固定为 `gpt-5.6-sol` 与 `gpt-5.6-luna`
+（不含 `gpt-5.6-terra` 与 `gpt-5.5`），不以填充上述 unsupported 指标为目标。
+
+### 360 样本的存放与复算
+
+Stage 4 全部 360 samples 分两层存放：
+
+- 仓库内脱敏归档：`docs/evidence/stage4-24tasks-luna-sol-v1/`（24 任务、
+  288 samples）与 `docs/evidence/stage4-seed6-luna-sol-v1/`（seed 6 任务、
+  72 samples），各含可读 `summary.md` 与精简行级 `summary.json`。
+- 仓库外原始运行（含完整 metrics/evaluation/trace/patch/workspace 与根级
+  `evaluation_summary`）：`~/.local/state/repopilot/campaigns/<run-id>/`。
+  24-task 主运行 + 两个 rerun 根（替换 3 个 baseline 环境错误 trial）对应
+  24-task 证据；`seed-cross-file` 等五个任务与 `seed-single-file` 各自一个
+  clean campaign 对应 seed 6 证据。
+
+用 `src/repopilot/recompute.py` 可从原始 summary 完整复算
+category/capability/numeric/paired 指标并落盘（后者覆盖前者，用于重跑替换
+环境错误 trial）。每个 evidence 目录下已提交 `recomputed.json`（完整
+`evaluation_summary` + 紧凑行清单；需要完整行级对象时加 `--include-rows`）
+与 `recomputed.md`。该合并已用 `--include-rows` 核对：与 `summary.json`
+的行级 key/status 零差异。用法详见 `repopilot-benchmark.md` “Reproduce
+evidence from raw state”。

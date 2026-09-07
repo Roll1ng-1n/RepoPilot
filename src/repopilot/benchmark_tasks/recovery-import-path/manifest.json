@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "recovery-import-path",
+  "category": "recovery",
+  "capabilities": [
+    "recovery"
+  ],
+  "behavior_requirements": [
+    "recovery"
+  ],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "4437af00de9bb20cd5d802d0da2da816147545e627cca1e6be11cb79714dc0fb"
+  },
+  "task_statement": "Before editing, run `python public_test.py`; its initial failure is required evidence. Diagnose that failure, repair the implementation and rerun the tests successfully. Fix src/loader.py to import parse from parsers.records, then parse comma-separated integers ignoring surrounding whitespace.",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  },
+  "behavior_spec": {
+    "recovery_command": "python public_test.py",
+    "recovery_files": [
+      "public_test.py"
+    ]
+  }
+}

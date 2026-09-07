@@ -86,9 +86,7 @@ and retains only a credential-free JSON/Markdown summary:
 ```bash
 repopilot probe \
   --model gpt-5.6-sol \
-  --model gpt-5.6-terra \
-  --model gpt-5.6-luna \
-  --model gpt-5.5
+  --model gpt-5.6-luna
 ```
 
 Run multiple models or repeated rounds through the same paired benchmark seam with `campaign`. Bare OpenAI model
@@ -97,10 +95,13 @@ IDs receive the LiteLLM provider prefix internally, while reports preserve the r
 ```bash
 repopilot campaign \
   --model gpt-5.6-luna \
-  --model gpt-5.5 \
+  --model gpt-5.6-sol \
   --task seed-single-file \
   --rounds 1
 ```
+
+Current and future comparison runs use `gpt-5.6-sol` and `gpt-5.6-luna`; `gpt-5.6-terra` and `gpt-5.5` do not
+enter new campaigns. The four-model API probe and Stage 3 evidence remain historical records.
 
 Provider/LiteLLM cost and the separately labelled OpenAI Standard price estimate are both retained when usage is
 available. See the [four-model test plan](docs/model-comparison-test-plan.md), the checked-in [API probe
@@ -110,17 +111,37 @@ evidence](docs/evidence/luna-paired-smoke-v1/summary.md).
 ```bash
 repopilot benchmark \
   --model provider/model-name \
-  --image python:3.12-slim \
+  --image repopilot-benchmark:py312-git \
   --task seed-cross-file \
   --task workflow-long-chain \
   --engine repopilot
 ```
 
-Repeat `--task` to run selected fixed tasks; omit it to run the six-task suite. Repeat `--engine` to choose the
+Repeat `--task` to run selected fixed tasks; omit it to run the 30-task Stage 4 suite. Repeat `--engine` to choose the
 baseline, RepoPilot, or both. Each task has a fixed snapshot revision/hash, task statement, host-only hidden
 verifier, success condition, timeout, and Run Budget. The runner creates independent Git workspaces and preserves
 raw results, patches, commits, and verification output. See [benchmark details](docs/repopilot-benchmark.md) for the
 task list and behavior coverage.
+
+Stage 4 separates `repository_pass`, `behavior_pass`, and `task_pass`, with category/capability summaries and
+paired repeated trials. CLI runs default to `--repeats 3`; explicit `--rounds 1` remains available for smoke runs.
+Main results emphasize task success, successful termination, recovery, calls/tokens/tool failures per solved task,
+and churn availability. Unsupported behavior is shown separately, never silently counted as a pass.
+
+The first clean Stage 4 seed evidence is the [six-seed-task Luna/Sol benchmark](docs/evidence/stage4-seed6-luna-sol-v1/summary.md):
+six fixed tasks (one per category), `gpt-5.6-luna` and `gpt-5.6-sol`, three rounds, 72 samples, zero batch or
+connection errors. Its HITL/long-horizon rows remain `task null` because the full approval/budget audit is
+unsupported; it is three-round calibration evidence, not a full 30-task Stage 4 result.
+
+The [remaining 24-task Stage 4 evidence](docs/evidence/stage4-24tasks-luna-sol-v1/summary.md) completes the
+suite for these two models: `gpt-5.6-luna` and `gpt-5.6-sol`, three rounds, 288 samples, zero batch errors.
+Both engine paths forced streaming requests (the intermediary account restricted non-streaming calls) and
+re-aggregated chunks; effective per-task budget came from each manifest (24 steps / 240 s). Together the two
+evidence directories cover all 30 Stage 4 tasks. `gpt-5.6-sol` clearly outperforms `gpt-5.6-luna` (Sol
+RepoPilot task-pass 40/60 evaluated vs Luna 21/66); RepoPilot's Replan capability shows its clearest signal on
+the recovery and replan categories with Sol. HITL and long-horizon full-audit rows stay `task null`/unsupported,
+MODEL_ERROR trials are retained without rerun, and three environmental-error trials were replaced by clean reruns
+(marked in the machine-readable summary).
 
 The checked-in [micro-benchmark summary](docs/evidence/micro-benchmark-v1/summary.md) is the retained historical
 12-sample Docker-unavailable run. All 12 task/engine attempts are `ENVIRONMENT_UNAVAILABLE`, with zero model calls
@@ -150,8 +171,9 @@ uv pip install -e ".[dev,swebench]"
 ```
 
 Missing provider usage, cost, or timing data is recorded as JSON `null`; RepoPilot never infers token counts or
-timing. For the four documented comparison models, a separate OpenAI Standard price estimate is calculated only
-from returned usage and is never presented as intermediary billing. The six-task benchmark is development-time
+timing. For the documented comparison models (current suite: `gpt-5.6-luna` and `gpt-5.6-sol`; the earlier
+four-model list remains historical), a separate OpenAI Standard price estimate is calculated only
+from returned usage and is never presented as intermediary billing. The 30-task benchmark is development-time
 regression evidence with a small fixed sample, not a statistically powered comparison or a generalization claim.
 
 ## Known limitations and Out of Scope
@@ -160,7 +182,10 @@ regression evidence with a small fixed sample, not a statistically powered compa
 - Docker isolation depends on the host and configured image; Docker is not presented as a complete security boundary.
 - Model/provider availability, credentials, native Tool Calling support, and returned usage data are external
   dependencies. A failed or unavailable environment is evidence about execution availability, not task correctness.
-- The benchmark has six tiny fixed tasks and does not establish success rates, cost rankings, or general performance.
+- The benchmark has 30 small fixed tasks; HITL behavior, complete budget audits and post-solution churn are not
+  implemented because baseline and RepoPilot cannot be measured on an equal footing (no structured approval
+  protocol, no per-step repository snapshots on the baseline side). They are reported as unsupported, not as passes.
+  The benchmark does not establish general performance.
 - V1 formally verifies Python Target Repositories; other languages are not claimed as supported by this evidence.
 - Human Approval is a lightweight best-effort risk policy. Git support is local commit only; push, pull, rebase,
   reset, and Pull Request creation are unsupported.

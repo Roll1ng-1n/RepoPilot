@@ -1,0 +1,3 @@
+{
+  "src/feature.py": "def order(versions):\n    width = max((len(v.split(\".\")) for v in versions), default=0)\n    return sorted(versions, key=lambda v: tuple(map(int, v.split(\".\"))) + (0,)*(width-len(v.split(\".\"))))\n"
+}

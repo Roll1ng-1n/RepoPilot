@@ -6,7 +6,7 @@
     "revision": "recovery-v1",
     "sha256": "dcf8a8bcabd8b765201bfb1bd9f469b8d091a16e8c6a01a8f552ea56af08fd47"
   },
-  "task_statement": "Repair src/line_tools.py so unique_clean_lines strips each line, skips empty lines, and removes duplicates using Unicode case-insensitive semantics while preserving the first cleaned spelling and input order. Run the public tests first; if a shallow fix causes a public test failure, use that evidence to debug and recover before finishing.",
+  "task_statement": "Before editing, run `python -m unittest discover -s tests`; after repairing the failure rerun that same command successfully. Repair src/line_tools.py so unique_clean_lines strips each line, skips empty lines, and removes duplicates using Unicode case-insensitive semantics while preserving the first cleaned spelling and input order.",
   "timeout_seconds": 180,
   "run_budget": {
     "max_steps": 15,
@@ -22,5 +22,18 @@
     "path": "verify_recovery_public_failure.py",
     "execution": "host",
     "timeout_seconds": 20
+  },
+  "category": "recovery",
+  "capabilities": [
+    "recovery"
+  ],
+  "behavior_requirements": [
+    "recovery"
+  ],
+  "behavior_spec": {
+    "recovery_command": "python -m unittest discover -s tests",
+    "recovery_files": [
+      "tests/test_line_tools.py"
+    ]
   }
 }

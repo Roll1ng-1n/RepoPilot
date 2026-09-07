@@ -1,0 +1,1 @@
+Before editing, run `python public_test.py`; its initial failure is required evidence. Diagnose that failure, repair the implementation and rerun the tests successfully. Fix summarize(values): empty input returns count=0, mean=None, maximum=None; nonempty input returns count, arithmetic mean and maximum, including all-negative values.

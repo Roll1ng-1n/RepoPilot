@@ -1,0 +1,3 @@
+{
+  "src/feature.py": "def endpoint(host, port):\n    return f\"https://{host.strip()}:{port}\"\n"
+}

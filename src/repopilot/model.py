@@ -45,11 +45,13 @@ class LiteLLMToolCallingModel:
         api_key: str | None = None,
         base_url: str | None = None,
         model_kwargs: dict[str, Any] | None = None,
+        force_stream: bool = False,
     ):
         self.model_name = model_name
         self._api_key = api_key
         self._base_url = base_url
         self._model_kwargs = dict(model_kwargs or {})
+        self.force_stream = force_stream
 
     def complete(self, messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> AssistantTurn:
         import litellm  # type: ignore[import-not-found]
@@ -64,7 +66,7 @@ class LiteLLMToolCallingModel:
             request_options["api_key"] = self._api_key
         if self._base_url:
             request_options["api_base"] = self._base_url
-        response = litellm.completion(**request_options)
+        response = stream_or_plain_completion(litellm, request_options, force_stream=self.force_stream)
         message = response.choices[0].message
         return AssistantTurn(
             content=getattr(message, "content", None),
@@ -166,3 +168,43 @@ class LiteLLMToolCallingModel:
         if not isinstance(parsed_arguments, dict):
             raise TypeError("Native Tool Call arguments must decode to an object.")
         return ToolCall(id=tool_call.id, name=function.name, arguments=parsed_arguments)
+
+
+def stream_or_plain_completion(
+    litellm: Any,
+    request_options: dict[str, Any],
+    *,
+    force_stream: bool = False,
+) -> Any:
+    """Issue a Chat Completions request and return a non-streamed model response.
+
+    Some OpenAI-compatible intermediaries restrict an account to streaming
+    requests only (``"restricted to streaming requests only"``).  Forcing
+    ``stream=true`` there and re-aggregating the chunks with
+    :func:`litellm.stream_chunk_builder` returns the same
+    ``response.choices[0].message``/``usage`` shape both engine paths expect, so
+    RepoPilot can interoperate with such accounts without changing the model
+    boundary.  ``force_stream`` always streams; otherwise a ``"stream"`` entry in
+    the request options opts in.
+    """
+
+    stream = bool(force_stream or request_options.get("stream"))
+    options = dict(request_options)
+    if stream:
+        options.pop("stream", None)
+        options.setdefault("stream_options", {"include_usage": True})
+        response = litellm.completion(stream=True, **options)
+        try:
+            chunks = list(response)
+        except TypeError:
+            # A provider may ignore stream=true and return a plain response.
+            chunks = []
+            plain = response
+        if chunks:
+            plain = litellm.stream_chunk_builder(chunks)
+            if plain is None:
+                # stream_chunk_builder can return None on an empty stream;
+                # fall back to the last chunk which still carries usage.
+                plain = chunks[-1]
+        return plain
+    return litellm.completion(**options)

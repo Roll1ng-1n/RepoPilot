@@ -265,6 +265,7 @@ def create_app(
 
     @app.command()
     def benchmark(
+        repeats: int = typer.Option(3, "--repeats", min=1),
         state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
         tasks_dir: Path = typer.Option(
             _BUILTIN_BENCHMARK_TASKS,
@@ -307,6 +308,11 @@ def create_app(
         max_consecutive_failures: int = typer.Option(2, "--max-consecutive-failures", min=1),
         command_timeout_seconds: float = typer.Option(30.0, "--command-timeout-seconds", min=0.001),
         max_run_seconds: float = typer.Option(180.0, "--max-run-seconds", min=0.001),
+        stream: bool = typer.Option(
+            False,
+            "--stream",
+            help="Force streaming requests (for accounts restricted to streaming).",
+        ),
     ) -> None:
         """Compare the mini-SWE-agent baseline and RepoPilot on fixed Docker tasks."""
 
@@ -317,12 +323,16 @@ def create_app(
         benchmark_root = state_dir or Path(user_state_dir("repopilot")) / "benchmarks"
         output_directory = benchmark_root.resolve() / uuid.uuid4().hex
         try:
+            model_kwargs: dict[str, Any] = {"temperature": temperature}
+            if stream:
+                model_kwargs["stream"] = True
             config = BenchmarkConfig(
                 tasks_directory=tasks_dir,
                 output_directory=output_directory,
+                repeats=repeats,
                 model=BenchmarkModel(
                     model_name=model,
-                    model_kwargs={"temperature": temperature},
+                    model_kwargs=model_kwargs,
                     api_key=api_key,
                     base_url=base_url,
                 ),
@@ -350,7 +360,11 @@ def create_app(
         typer.echo(f"Agent Benchmark: {benchmark_run.output_directory}")
         for item in benchmark_run.results:
             success = "passed" if item.success else "failed" if item.success is False else "unknown"
-            typer.echo(f"- {item.task_id} / {item.engine.value}: {success} (Agent Run: {item.status or 'unknown'})")
+            typer.echo(
+                f"- {item.task_id} / {item.engine.value}: repository {success}; "
+                f"behavior={item.evaluation.get('behavior_pass')}; task={item.evaluation.get('task_pass')} "
+                f"(Agent Run: {item.status or 'unknown'}, repeat={item.repeat})"
+            )
         typer.echo(f"Summary: {benchmark_run.output_directory / 'summary.json'}")
 
     @app.command("probe")
@@ -403,7 +417,7 @@ def create_app(
     @app.command("campaign")
     def benchmark_campaign(
         models: list[str] = typer.Option([], "--model", help="Model ID to run; repeat for multiple models."),
-        rounds: int = typer.Option(1, "--rounds", min=1),
+        rounds: int = typer.Option(3, "--rounds", "--repeats", min=1),
         state_dir: Path | None = typer.Option(None, "--state-dir", file_okay=False),
         tasks_dir: Path = typer.Option(
             _BUILTIN_BENCHMARK_TASKS,
@@ -443,6 +457,11 @@ def create_app(
         max_consecutive_failures: int = typer.Option(2, "--max-consecutive-failures", min=1),
         command_timeout_seconds: float = typer.Option(30.0, "--command-timeout-seconds", min=0.001),
         max_run_seconds: float = typer.Option(180.0, "--max-run-seconds", min=0.001),
+        stream: bool = typer.Option(
+            False,
+            "--stream",
+            help="Force streaming requests (for accounts restricted to streaming).",
+        ),
     ) -> None:
         """Run a sequential multi-model campaign using the paired Agent Benchmark."""
 
@@ -476,6 +495,7 @@ def create_app(
                 engines=tuple(dict.fromkeys(engines)),
                 task_ids=tuple(dict.fromkeys(tasks)),
                 temperature=temperature,
+                stream=stream,
                 api_key=api_key,
                 base_url=base_url,
                 proxy_mode=docker_proxy_mode,

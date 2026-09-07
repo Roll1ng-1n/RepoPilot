@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "long-horizon-release-notes",
+  "category": "long-horizon",
+  "capabilities": [
+    "state",
+    "planning",
+    "budget",
+    "termination"
+  ],
+  "behavior_requirements": [
+    "budget",
+    "termination"
+  ],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "0d0cd790104f36adb05fdfe22852325340e594a4244666e10bfa5512ab59d21b"
+  },
+  "task_statement": "Implement release-note generation: parse JSON records; validate kind/title strings; strip titles and lowercase kind; retain fix/feat only; remove duplicate (kind,title) pairs preserving first occurrence; render feat before fix, preserving order within each group, as kind: title lines. Track progress across the pipeline, validate the end-to-end result, respect the execution budget and stop once the task is complete.",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

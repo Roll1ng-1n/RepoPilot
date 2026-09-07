@@ -60,13 +60,14 @@ def test_cli_builds_one_shared_docker_benchmark_configuration(tmp_path: Path) ->
     )
 
     assert result.exit_code == 0, result.output
-    assert "seed-single-file / repopilot: passed" in result.output
+    assert "seed-single-file / repopilot: repository passed" in result.output
     assert len(received) == 1
     config = received[0]
     assert config.engines == (BenchmarkEngine.REPOPILOT,)
     assert config.task_ids == ("seed-single-file",)
     assert config.model.model_name == "provider/fixed-model"
     assert config.model.model_kwargs == {"temperature": 0.2}
+    assert config.repeats == 3
     assert config.image == "python:3.12-bookworm"
     assert config.proxy_mode is DockerProxyMode.EXPLICIT
     assert config.proxy_url == "http://proxy.example:8080"

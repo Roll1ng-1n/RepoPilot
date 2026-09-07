@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "id": "simple-boolean-config",
+  "category": "simple",
+  "capabilities": [],
+  "behavior_requirements": [],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "40d2304911965ffbf1f4d7c5a72f3c3dbadfd2d1f6c27f5773d4e13787525f04"
+  },
+  "task_statement": "Parse booleans in src/config.py: strip and casefold strings; true/1/yes/on map to True, false/0/no/off map to False; anything else raises ValueError.",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

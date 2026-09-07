@@ -1,0 +1,3 @@
+{
+  "src/feature.py": "from datetime import datetime, timezone\ndef day(timestamp):\n    return datetime.fromisoformat(timestamp.replace(\"Z\", \"+00:00\")).astimezone(timezone.utc).date().isoformat()\n"
+}

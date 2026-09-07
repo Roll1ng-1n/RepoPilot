@@ -1,0 +1,3 @@
+{
+  "src/command.py": "\"\"\"Command adapter for the report workflow.\"\"\"\n\nfrom __future__ import annotations\n\nfrom workflow import build_report\n\n\ndef execute(title: str, detail: str, *, compact: bool = False) -> str:\n    return build_report(title, detail, compact=compact)\n"
+}

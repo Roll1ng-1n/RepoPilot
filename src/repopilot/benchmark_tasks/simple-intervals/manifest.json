@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "id": "simple-intervals",
+  "category": "simple",
+  "capabilities": [],
+  "behavior_requirements": [],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "b936ff8e8254d3ef2982c94380055c527ee85bcfb268dbda4853c8821a33f47f"
+  },
+  "task_statement": "Merge sorted or unsorted closed intervals in src/intervals.py, coalescing touching endpoints and preserving the caller input. Empty input produces [].",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

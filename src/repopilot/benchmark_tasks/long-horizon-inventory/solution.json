@@ -1,0 +1,8 @@
+{
+  "src/decode.py": "import json\ndef decode(data):\n    return json.loads(data)\n",
+  "src/validate.py": "def validate(rows):\n    return [r for r in rows if isinstance(r.get(\"sku\"), str) and r[\"sku\"].strip() and type(r.get(\"delta\")) is int]\n",
+  "src/normalize.py": "def normalize(rows):\n    return [(r[\"sku\"].strip().casefold(), r[\"delta\"]) for r in rows]\n",
+  "src/aggregate.py": "def aggregate(rows):\n    result = {}\n    for key, value in rows:\n        result[key] = result.get(key, 0) + value\n    return result\n",
+  "src/render.py": "def render(totals):\n    return \"\\n\".join(f\"{k}={totals[k]}\" for k in sorted(totals))\n",
+  "src/selection.py": "def select(totals):\n    return {k:v for k,v in totals.items() if v != 0}\n"
+}

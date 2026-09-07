@@ -1,0 +1,3 @@
+{
+  "src/collect.py": "from transport import fetch\ndef collect(url, timeout=5):\n    return fetch(url, timeout=timeout)\n"
+}

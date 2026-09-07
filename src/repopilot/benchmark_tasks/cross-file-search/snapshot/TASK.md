@@ -1,0 +1,1 @@
+Wire index.py and search.py so build_index(records) casefolds and whitespace-tokenizes text, retaining each record ID once per word. search(records, query) returns sorted IDs containing every query word; an empty query returns [].

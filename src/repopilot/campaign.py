@@ -25,9 +25,11 @@ from repopilot.benchmark import (
     BenchmarkResult,
     BenchmarkRun,
     EngineExecutor,
+    _coerce_engine,
     run_benchmark,
 )
 from repopilot.environment import DockerProxyMode
+from repopilot.evaluation import aggregate, markdown
 from repopilot.pricing import OPENAI_STANDARD_PRICING_AS_OF, OPENAI_STANDARD_PRICING_SOURCE
 
 BenchmarkRunnerCallable = Callable[[BenchmarkConfig], BenchmarkRun]
@@ -52,6 +54,7 @@ class CampaignConfig:
     engines: tuple[BenchmarkEngine, ...]
     task_ids: tuple[str, ...]
     temperature: float
+    stream: bool
     api_key: str | None = field(repr=False)
     base_url: str | None = field(repr=False)
     proxy_mode: DockerProxyMode
@@ -66,6 +69,7 @@ class CampaignConfig:
         output_root: Path | None = None,
         tasks_dir: Path | None = None,
         rounds: int = 1,
+        repeats: int | None = None,
         image: str = DEFAULT_BENCHMARK_IMAGE,
         budget: BenchmarkBudget | None = None,
         engines: Sequence[BenchmarkEngine | str] = (
@@ -76,10 +80,15 @@ class CampaignConfig:
         temperature: float = 0.0,
         api_key: str | None = None,
         base_url: str | None = None,
+        stream: bool = False,
         proxy_mode: DockerProxyMode | str | None = None,
         proxy_url: str | None = None,
         proxy: DockerProxyMode | str | Mapping[str, Any] | None = None,
     ) -> None:
+        if repeats is not None:
+            if rounds != 1 and rounds != repeats:
+                raise ValueError("rounds and repeats disagree")
+            rounds = repeats
         resolved_output = output_directory if output_directory is not None else output_root
         resolved_tasks = tasks_directory if tasks_directory is not None else tasks_dir
         if resolved_output is None:
@@ -97,6 +106,8 @@ class CampaignConfig:
             raise ValueError("rounds must be a positive integer.")
         if isinstance(temperature, bool) or not isinstance(temperature, (int, float)):
             raise ValueError("temperature must be numeric.")
+        if not isinstance(stream, bool):
+            raise ValueError("stream must be a bool.")
 
         if isinstance(engines, (str, BenchmarkEngine)):
             engines = (engines,)
@@ -115,6 +126,7 @@ class CampaignConfig:
         object.__setattr__(self, "engines", normalized_engines)
         object.__setattr__(self, "task_ids", (task_ids,) if isinstance(task_ids, str) else tuple(task_ids))
         object.__setattr__(self, "temperature", float(temperature))
+        object.__setattr__(self, "stream", bool(stream))
         object.__setattr__(self, "api_key", api_key)
         object.__setattr__(self, "base_url", base_url)
         object.__setattr__(self, "proxy_mode", mode)
@@ -151,11 +163,13 @@ class CampaignConfig:
             "tasks_directory": str(self.tasks_directory),
             "models": list(self.models),
             "rounds": self.rounds,
+            "repeats": self.rounds,
             "image": self.image,
             "budget": asdict(self.budget),
             "engines": [engine.value for engine in self.engines],
             "task_ids": list(self.task_ids),
             "temperature": self.temperature,
+            "stream": self.stream,
             "proxy_mode": self.proxy_mode.value,
         }
 
@@ -180,6 +194,7 @@ class CampaignRun:
                 "note": "Estimate only; not intermediary invoice data.",
             },
             "results": [_without_credentials(result, self.config) for result in self.results],
+            "evaluation_summary": aggregate(list(self.results)),
             "errors": [_without_credentials(error, self.config) for error in self.errors],
         }
 
@@ -203,6 +218,8 @@ class CampaignRunner:
 
     def run(self) -> CampaignRun:
         root = self.config.output_directory.resolve()
+        if (root / "config.json").exists():
+            raise FileExistsError(f"Refusing to overwrite campaign configuration: {root}")
         root.mkdir(parents=True, exist_ok=True)
         _write_json(root / "config.json", self.config.public_dict())
 
@@ -247,12 +264,15 @@ class CampaignRunner:
         return run_benchmark(config, executors=self._executors)
 
     def _benchmark_config(self, model: str, output_directory: Path) -> BenchmarkConfig:
+        model_kwargs: dict[str, Any] = {"temperature": self.config.temperature}
+        if self.config.stream:
+            model_kwargs["stream"] = True
         return BenchmarkConfig(
             tasks_directory=self.config.tasks_directory,
             output_directory=output_directory,
             model=BenchmarkModel(
                 model_name=_internal_model_name(model),
-                model_kwargs={"temperature": self.config.temperature},
+                model_kwargs=model_kwargs,
                 api_key=self.config.api_key,
                 base_url=self.config.base_url,
             ),
@@ -280,12 +300,6 @@ def run_campaign(
         benchmark_runner=benchmark_runner,
         executors=executors,
     ).run()
-
-
-def _coerce_engine(value: BenchmarkEngine | str) -> BenchmarkEngine:
-    if isinstance(value, BenchmarkEngine):
-        return value
-    return BenchmarkEngine(str(value).lower())
 
 
 def _normalize_proxy(
@@ -403,6 +417,10 @@ def _write_json(path: Path, value: Any) -> None:
 
 
 def _summary_markdown(campaign: CampaignRun) -> str:
+    return markdown(aggregate(list(campaign.results))) + "\n" + _legacy_summary_markdown(campaign)
+
+
+def _legacy_summary_markdown(campaign: CampaignRun) -> str:
     lines = [
         "# Multi-model Paired Benchmark Campaign",
         "",

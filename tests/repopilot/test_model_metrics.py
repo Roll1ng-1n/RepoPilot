@@ -7,6 +7,7 @@ from typing import Any
 
 from repopilot.artifacts import RunArtifacts
 from repopilot.environment import LocalExecutionEnvironment
+from repopilot.litellm_streaming import StreamingLitellmModel
 from repopilot.model import AssistantTurn, LiteLLMToolCallingModel, ToolCall
 from repopilot.plan import PlanHistory
 from repopilot.runtime import AgentRuntime
@@ -95,6 +96,102 @@ def test_litellm_model_preserves_nested_cache_and_reasoning_usage(monkeypatch) -
         "cache_write_tokens": 3,
         "reasoning_tokens": 5,
     }
+
+
+def test_litellm_model_aggregates_streaming_chunks_when_force_stream(monkeypatch) -> None:
+    from repopilot.model import stream_or_plain_completion
+
+    calls: list[dict[str, Any]] = []
+
+    def fake_completion(**kwargs):
+        calls.append(kwargs)
+        # stream=true asks for an iterable of chunks; stream_chunk_builder
+        # re-aggregates them into the usual ModelResponse shape.
+        chunk = SimpleNamespace(usage=None)
+        return iter([chunk])
+
+    fake_litellm = SimpleNamespace(
+        completion=fake_completion,
+        stream_chunk_builder=lambda _chunks, **_kwargs: _fake_response(
+            usage=SimpleNamespace(prompt_tokens=5, completion_tokens=2, total_tokens=7), response_cost=0.01
+        ),
+        cost_calculator=SimpleNamespace(completion_cost=lambda *_args, **_kwargs: 99.0),
+    )
+    monkeypatch.setitem(sys.modules, "litellm", fake_litellm)
+
+    # Explicit opt-in through the request options: stream is consumed from the
+    # options and sent exactly once to litellm, with usage requested.
+    request_options = {"model": "test/model", "messages": [], "tools": [], "stream": True}
+    response = stream_or_plain_completion(fake_litellm, request_options)
+    assert calls[0]["stream"] is True
+    assert calls[0]["stream_options"] == {"include_usage": True}
+    assert response.choices[0].message.content == "done"
+
+    # force_stream drives streaming even when the options do not mention it.
+    calls.clear()
+    plain = stream_or_plain_completion(fake_litellm, {"model": "test/model", "messages": [], "tools": []}, force_stream=True)
+    assert calls[0]["stream"] is True
+    assert calls[0]["stream_options"] == {"include_usage": True}
+    assert plain.choices[0].message.content == "done"
+
+    # Without either flag, the plain non-streaming path is preserved.
+    calls.clear()
+    stream_or_plain_completion(fake_litellm, {"model": "test/model", "messages": [], "tools": []})
+    assert "stream" not in calls[0]
+
+
+def test_streaming_litellm_baseline_model_forces_stream(monkeypatch) -> None:
+    calls: list[dict[str, Any]] = []
+
+    def fake_completion(**kwargs):
+        calls.append(kwargs)
+        chunk = SimpleNamespace(usage=None)
+        return iter([chunk])
+
+    fake_litellm = SimpleNamespace(
+        completion=fake_completion,
+        stream_chunk_builder=lambda _chunks, **_kwargs: _fake_response(
+            usage=SimpleNamespace(prompt_tokens=6, completion_tokens=1, total_tokens=7), response_cost=0.0
+        ),
+        exceptions=SimpleNamespace(AuthenticationError=RuntimeError),
+        cost_calculator=SimpleNamespace(completion_cost=lambda *_args, **_kwargs: 0.0),
+    )
+    monkeypatch.setitem(sys.modules, "litellm", fake_litellm)
+
+    model = StreamingLitellmModel(model_name="test/model", model_kwargs={"stream": True})
+    response = model._query([])
+    assert response.choices[0].message.content == "done"
+    assert calls[0]["stream"] is True
+
+
+def test_litellm_model_force_stream_from_model_kwargs(monkeypatch) -> None:
+    calls: list[dict[str, Any]] = []
+
+    def fake_completion(**kwargs):
+        calls.append(kwargs)
+        chunk = SimpleNamespace(usage=None)
+        return iter([chunk])
+
+    fake_litellm = SimpleNamespace(
+        completion=fake_completion,
+        stream_chunk_builder=lambda _chunks, **_kwargs: _fake_response(
+            usage=SimpleNamespace(prompt_tokens=8, completion_tokens=3, total_tokens=11), response_cost=0.02
+        ),
+        cost_calculator=SimpleNamespace(completion_cost=lambda *_args, **_kwargs: 99.0),
+    )
+    monkeypatch.setitem(sys.modules, "litellm", fake_litellm)
+
+    turn = LiteLLMToolCallingModel(model_name="test/model", model_kwargs={"stream": True}).complete([], [])
+    assert calls[0]["stream"] is True
+    assert turn.usage == {
+        "prompt_tokens": 8,
+        "completion_tokens": 3,
+        "total_tokens": 11,
+        "cached_tokens": None,
+        "cache_write_tokens": None,
+        "reasoning_tokens": None,
+    }
+    assert turn.cost == 0.02
 
 
 def _make_repository(path) -> None:

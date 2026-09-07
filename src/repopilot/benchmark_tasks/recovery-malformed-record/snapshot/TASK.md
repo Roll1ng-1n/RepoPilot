@@ -1,0 +1,1 @@
+Before editing, run `python public_test.py`; its initial failure is required evidence. Diagnose that failure, repair the implementation and rerun the tests successfully. Fix parse_rows so blank/comment lines are skipped, valid key=value lines are stripped and accepted, and malformed non-comment lines are skipped without discarding later valid records. Last value wins.

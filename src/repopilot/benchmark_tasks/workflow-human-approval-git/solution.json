@@ -1,0 +1,3 @@
+{
+  "src/labels.py": "def status_label(done):\n    return \"done\" if done else \"todo\"\n"
+}

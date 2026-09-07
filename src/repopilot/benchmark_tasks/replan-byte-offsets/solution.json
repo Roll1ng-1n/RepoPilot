@@ -1,0 +1,3 @@
+{
+  "src/feature.py": "def locate(text, needle):\n    offset = text.find(needle)\n    return len(text[:offset].encode(\"utf-8\")) if offset >= 0 else -1\n"
+}

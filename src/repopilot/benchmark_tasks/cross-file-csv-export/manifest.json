@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "cross-file-csv-export",
+  "category": "cross-file",
+  "capabilities": [
+    "planning",
+    "exploration",
+    "state"
+  ],
+  "behavior_requirements": [],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "20dba3f77485aa41a6176eebe8c7aa533033e8b736afa8632f739f384bb0dd89"
+  },
+  "task_statement": "Fix the CSV export flow: schema.fields must be [name,note]; render(rows) must emit that header and correctly quote commas, quotes and embedded newlines using LF row endings, preserving Unicode.",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

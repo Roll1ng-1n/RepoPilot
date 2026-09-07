@@ -1,0 +1,3 @@
+{
+  "src/feature.py": "VERSION = \"2.1.0\"\ndef version_tuple():\n    return tuple(map(int, VERSION.split(\".\")))\n"
+}

@@ -123,8 +123,14 @@ def test_runner_runs_both_engines_in_order_on_independent_workspaces(tmp_path: P
     assert requests[0].config.model.public_dict() == requests[1].config.model.public_dict()
     assert requests[0].config.image == requests[1].config.image == "python:3.12-bookworm"
     assert requests[0].config.budget == requests[1].config.budget
-    assert requests[0].effective_budget.max_steps == requests[1].effective_budget.max_steps == 4
+    # The manifest declares run_budget {"max_steps": 99, "max_run_seconds": 99},
+    # which overrides the shared max_steps (4) per the documented manifest-budget
+    # override; max_run_seconds is still capped by the 5-second task timeout.
+    assert requests[0].effective_budget.max_steps == requests[1].effective_budget.max_steps == 99
     assert requests[0].effective_budget.max_run_seconds == requests[1].effective_budget.max_run_seconds == 5
+    # Fields the manifest does not declare keep the shared invocation values.
+    assert requests[0].effective_budget.max_replans == requests[1].effective_budget.max_replans == 1
+    assert requests[0].effective_budget.command_timeout_seconds == 12
     assert (output / "config.json").is_file()
     assert (output / "summary.json").is_file()
     assert (output / "summary.md").is_file()
@@ -583,12 +589,14 @@ def test_bundled_manifests_load_with_revisions_and_host_verifiers() -> None:
 
     tasks = load_tasks(tasks_root)
 
-    assert {task.task_id for task in tasks} == set(revisions)
+    assert len(tasks) == 30
+    assert set(revisions).issubset({task.task_id for task in tasks})
     for task in tasks:
-        assert task.snapshot_revision == revisions[task.task_id]
+        assert task.snapshot_revision == revisions.get(task.task_id, "stage4-v1")
         assert task.verifier_path is not None and task.verifier_path.is_absolute()
         assert task.manifest_path is not None
-        assert task.verifier_path.name == f"verify_{task.task_id.replace('-', '_')}.py"
+        if task.task_id in revisions:
+            assert task.verifier_path.name == f"verify_{task.task_id.replace('-', '_')}.py"
         assert task.verifier_timeout_seconds == 20
         assert task.run_budget is not None
         assert canonical_snapshot_sha256(task.snapshot) == task.snapshot_sha256
@@ -606,3 +614,64 @@ def test_path_verifier_runs_outside_the_workspace(tmp_path: Path) -> None:
     assert result["exit_code"] != 0
     assert not (workspace / "verifier.py").exists()
     assert not list(workspace.rglob("__pycache__"))
+
+
+def test_stage4_repeats_and_variant_preserve_independent_artifacts(tmp_path):
+    tasks_root = tmp_path / "tasks"
+    _write_task(tasks_root)
+    config = BenchmarkConfig(
+        tasks_root, tmp_path / "out", BenchmarkModel("model"), "unused", engines=("minimal-runtime",), repeats=3
+    )
+    seen = []
+
+    def execute(request):
+        assert (request.workspace / "value.txt").read_text() == "before\n"
+        seen.append(request.workspace)
+        (request.workspace / "value.txt").write_text("fixed\n")
+        return EngineRun(status="SUCCEEDED", model_stats={"steps": 2})
+
+    run = BenchmarkRunner(config, executors={"minimal-runtime": execute}).run()
+    assert len(set(seen)) == 3
+    assert len({r.run_id for r in run.results}) == 3
+    assert [r.repeat for r in run.results] == [1, 2, 3]
+    assert all(r.to_dict()["task_pass"] is True for r in run.results)
+    summary = run.to_dict()["evaluation_summary"]
+    overall = next(g for g in summary["groups"] if g["dimension"] == "overall")
+    assert overall["pass_count"] == 3
+    assert overall["numeric"]["llm_calls"]["per_solved"] == 2
+    with pytest.raises(FileExistsError):
+        BenchmarkRunner(config, executors={"minimal-runtime": execute}).run()
+
+
+def test_invalid_engine_adapter_fails_before_execution(tmp_path):
+    config = BenchmarkConfig(tmp_path, tmp_path / "out", BenchmarkModel("model"), "unused", engines=("unknown",))
+    with pytest.raises(ValueError, match="No registered executor"):
+        BenchmarkRunner(config)
+
+
+def test_external_behavior_verifier_unknown_and_failed_outcomes(tmp_path):
+    tasks_root = tmp_path / "tasks"
+    manifest = _write_task(tasks_root)
+    payload = json.loads(manifest.read_text())
+    payload.update(category="recovery", behavior_requirements=["recovery"], behavior_verifier="behavior.py")
+    manifest.write_text(json.dumps(payload))
+    script = manifest.parent / "behavior.py"
+    script.write_text('print(\'{"checks":{"recovery":{"pass":false,"reason":"failure not resolved"}}}\')\n')
+
+    def execute(request):
+        (request.workspace / "value.txt").write_text("fixed\n")
+        return EngineRun(status="SUCCEEDED")
+
+    def run(name):
+        config = BenchmarkConfig(tasks_root, tmp_path / name, BenchmarkModel("model"), "unused", engines=("baseline",))
+        return BenchmarkRunner(config, executors={"baseline": execute}).run().results[0].to_dict()
+
+    failed = run("failed")
+    assert failed["repository_pass"] is True
+    assert failed["behavior_pass"] is False
+    assert failed["task_pass"] is False
+    script.write_text('print("invalid JSON")\n')
+    unknown = run("unknown")
+    assert unknown["repository_pass"] is True
+    assert unknown["task_pass"] is None
+    assert "unavailable" in unknown["evaluation"]["behavior_verifier"]["recovery"]["reason"]

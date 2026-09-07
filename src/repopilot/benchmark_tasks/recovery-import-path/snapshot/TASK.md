@@ -1,0 +1,1 @@
+Before editing, run `python public_test.py`; its initial failure is required evidence. Diagnose that failure, repair the implementation and rerun the tests successfully. Fix src/loader.py to import parse from parsers.records, then parse comma-separated integers ignoring surrounding whitespace.

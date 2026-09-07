@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "cross-file-search",
+  "category": "cross-file",
+  "capabilities": [
+    "planning",
+    "exploration",
+    "state"
+  ],
+  "behavior_requirements": [],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "stage4-v1",
+    "sha256": "c0b4c248b66e718f36593f955bb2f9e931d3ce6a7cb53ae9647ad4d138e32531"
+  },
+  "task_statement": "Wire index.py and search.py so build_index(records) casefolds and whitespace-tokenizes text, retaining each record ID once per word. search(records, query) returns sorted IDs containing every query word; an empty query returns [].",
+  "timeout_seconds": 240,
+  "run_budget": {
+    "max_steps": 24,
+    "max_replans": 3,
+    "max_consecutive_failures": 3,
+    "command_timeout_seconds": 30,
+    "max_run_seconds": 240
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 20
+  }
+}

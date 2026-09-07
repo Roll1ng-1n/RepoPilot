@@ -22,5 +22,8 @@
     "path": "verify_seed_single_file.py",
     "execution": "host",
     "timeout_seconds": 20
-  }
+  },
+  "category": "simple",
+  "capabilities": [],
+  "behavior_requirements": []
 }

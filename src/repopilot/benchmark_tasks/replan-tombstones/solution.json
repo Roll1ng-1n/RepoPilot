@@ -1,0 +1,3 @@
+{
+  "src/feature.py": "def materialize(events):\n    state = {}\n    for event in events:\n        if event[\"op\"] == \"delete\":\n            state.pop(event[\"key\"], None)\n        else:\n            state[event[\"key\"]] = event[\"value\"]\n    return state\n"
+}

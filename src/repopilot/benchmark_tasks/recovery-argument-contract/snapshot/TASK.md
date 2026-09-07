@@ -1,0 +1,1 @@
+Before editing, run `python public_test.py`; its initial failure is required evidence. Diagnose that failure, repair the implementation and rerun the tests successfully. Fix collect in src/collect.py to call the existing keyword-only transport.fetch API and return its data; preserve the timeout parameter.

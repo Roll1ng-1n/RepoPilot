@@ -1,0 +1,2 @@
+def decode(data):
+    return []
