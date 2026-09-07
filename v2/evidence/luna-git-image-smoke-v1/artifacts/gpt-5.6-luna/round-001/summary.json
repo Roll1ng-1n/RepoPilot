@@ -1,0 +1,278 @@
+{
+  "config": {
+    "budget": {
+      "command_timeout_seconds": 30.0,
+      "max_consecutive_failures": 2,
+      "max_replans": 1,
+      "max_run_seconds": 180.0,
+      "max_steps": 15
+    },
+    "engines": [
+      "baseline",
+      "repopilot"
+    ],
+    "image": "repopilot-benchmark@sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+    "image_digest": "repopilot-benchmark@sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+    "image_id": "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+    "model": {
+      "model_kwargs": {
+        "temperature": 0.0
+      },
+      "model_name": "openai/gpt-5.6-luna"
+    },
+    "output_directory": "/tmp/repopilot-issue18-smoke/740b0dc52bc24a16b84f3e98ee43ad32/gpt-5.6-luna/round-001",
+    "proxy_mode": "none",
+    "resolved_image": "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+    "task_ids": [
+      "workflow-human-approval-git"
+    ],
+    "tasks_directory": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks"
+  },
+  "pricing_basis": {
+    "as_of": "2026-09-04",
+    "note": "Estimate only; not provider or intermediary invoice data.",
+    "source": "https://developers.openai.com/api/docs/pricing",
+    "tier": "standard"
+  },
+  "results": [
+    {
+      "artifact_directory": "/tmp/repopilot-issue18-smoke/740b0dc52bc24a16b84f3e98ee43ad32/gpt-5.6-luna/round-001/workflow-human-approval-git/baseline",
+      "engine": "baseline",
+      "error": null,
+      "metrics": {
+        "commits": [],
+        "cost": 0.018632179999999998,
+        "duration_seconds": 413.15296364700043,
+        "errors": [],
+        "image": "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+        "image_digest": "repopilot-benchmark@sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+        "image_id": "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+        "openai_standard_estimated_cost_usd": 0.0032751800000000004,
+        "patch": {
+          "changed": true,
+          "path": "/tmp/repopilot-issue18-smoke/740b0dc52bc24a16b84f3e98ee43ad32/gpt-5.6-luna/round-001/workflow-human-approval-git/baseline/patch.diff",
+          "sha256": "6ad053901841335f31359372252ff46dd9be3663ea060c1ab7c3993b6aa565c9"
+        },
+        "preflight": {
+          "checks": [
+            {
+              "command": [
+                "docker",
+                "image",
+                "inspect",
+                "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+                "repopilot-benchmark@sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc"
+              ],
+              "duration_seconds": 0.033237587005714886,
+              "exit_code": 0,
+              "name": "image_inspect",
+              "stderr": "",
+              "stdout": "{\"Id\":\"sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc\",\"RepoDigests\":[\"repopilot-benchmark@sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc\"]}\n"
+            },
+            {
+              "command": [
+                "docker",
+                "run",
+                "--rm",
+                "--pull=never",
+                "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+                "python",
+                "--version"
+              ],
+              "duration_seconds": 0.3763690970008611,
+              "exit_code": 0,
+              "name": "python",
+              "stderr": "",
+              "stdout": "Python 3.12.14\n"
+            },
+            {
+              "command": [
+                "docker",
+                "run",
+                "--rm",
+                "--pull=never",
+                "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+                "git",
+                "--version"
+              ],
+              "duration_seconds": 0.3841045630033477,
+              "exit_code": 0,
+              "name": "git",
+              "stderr": "",
+              "stdout": "git version 2.47.3\n"
+            }
+          ],
+          "error": null,
+          "image": "repopilot-benchmark@sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+          "image_digest": "repopilot-benchmark@sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+          "image_id": "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+          "resolved_image": "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+          "status": "READY"
+        },
+        "replans": null,
+        "retries": null,
+        "run_budget": {
+          "command_timeout_seconds": 30.0,
+          "max_consecutive_failures": 2,
+          "max_replans": 1,
+          "max_run_seconds": 180.0,
+          "max_steps": 15
+        },
+        "steps": 4,
+        "tokens": {
+          "cache_write": null,
+          "cached": 6509,
+          "completion": 2033,
+          "prompt": 10036,
+          "reasoning": 0,
+          "total": 12069
+        },
+        "tool_calls": 7,
+        "trajectory_status": "TimeExceeded"
+      },
+      "status": "TimeExceeded",
+      "success": false,
+      "task_id": "workflow-human-approval-git",
+      "verifier": {
+        "duration_seconds": 0.08617562300059944,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      }
+    },
+    {
+      "artifact_directory": "/tmp/repopilot-issue18-smoke/740b0dc52bc24a16b84f3e98ee43ad32/gpt-5.6-luna/round-001/workflow-human-approval-git/repopilot",
+      "engine": "repopilot",
+      "error": null,
+      "metrics": {
+        "commits": [],
+        "cost": 0.0002516,
+        "duration_seconds": 290.25413608199597,
+        "errors": [],
+        "image": "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+        "image_digest": "repopilot-benchmark@sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+        "image_id": "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+        "openai_standard_estimated_cost_usd": 0.0002516,
+        "patch": {
+          "changed": false,
+          "path": "/tmp/repopilot-issue18-smoke/740b0dc52bc24a16b84f3e98ee43ad32/gpt-5.6-luna/round-001/workflow-human-approval-git/repopilot/patch.diff",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "preflight": {
+          "checks": [
+            {
+              "command": [
+                "docker",
+                "image",
+                "inspect",
+                "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+                "repopilot-benchmark@sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc"
+              ],
+              "duration_seconds": 0.033237587005714886,
+              "exit_code": 0,
+              "name": "image_inspect",
+              "stderr": "",
+              "stdout": "{\"Id\":\"sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc\",\"RepoDigests\":[\"repopilot-benchmark@sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc\"]}\n"
+            },
+            {
+              "command": [
+                "docker",
+                "run",
+                "--rm",
+                "--pull=never",
+                "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+                "python",
+                "--version"
+              ],
+              "duration_seconds": 0.3763690970008611,
+              "exit_code": 0,
+              "name": "python",
+              "stderr": "",
+              "stdout": "Python 3.12.14\n"
+            },
+            {
+              "command": [
+                "docker",
+                "run",
+                "--rm",
+                "--pull=never",
+                "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+                "git",
+                "--version"
+              ],
+              "duration_seconds": 0.3841045630033477,
+              "exit_code": 0,
+              "name": "git",
+              "stderr": "",
+              "stdout": "git version 2.47.3\n"
+            }
+          ],
+          "error": null,
+          "image": "repopilot-benchmark@sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+          "image_digest": "repopilot-benchmark@sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+          "image_id": "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+          "resolved_image": "sha256:0e67c51e0bf6da98d57610cbcedf707dcef207aef304b5c2b5fc972e5ba11ecc",
+          "status": "READY"
+        },
+        "replans": 0,
+        "retries": 0,
+        "run_budget": {
+          "command_timeout_seconds": 30.0,
+          "max_consecutive_failures": 2,
+          "max_replans": 1,
+          "max_run_seconds": 180.0,
+          "max_steps": 15
+        },
+        "steps": 1,
+        "tokens": {
+          "cache_write": null,
+          "cached": 0,
+          "completion": 38,
+          "prompt": 1030,
+          "reasoning": 0,
+          "total": 1068
+        },
+        "tool_calls": 1,
+        "trajectory_status": "BUDGET_EXCEEDED",
+        "verifier_success": false
+      },
+      "status": "BUDGET_EXCEEDED",
+      "success": false,
+      "task_id": "workflow-human-approval-git",
+      "verifier": {
+        "duration_seconds": 0.10706389699771535,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "run_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "snapshot": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/workflow-human-approval-git/snapshot",
+      "snapshot_revision": "approval-git-v1",
+      "snapshot_sha256": "4dea8804affd3c0fbfc873177fcd4279e06b4e93c30beae7f2e2373bb766f01d",
+      "success_condition": {
+        "verifier_exit_code": 0
+      },
+      "task": "Fix the completed status in this small CLI: `python src/cli.py 'Ship parser' --done` must print `[done] Ship parser`, while the default command remains `[todo] Ship parser`. Trace the call into src/labels.py, make the behavior change, then stage the changed file and create a local Git commit with a useful message. Do not push or create a Pull Request.",
+      "task_id": "workflow-human-approval-git",
+      "timeout_seconds": 180.0,
+      "verifier_path": "/home/waaaaa/vibe coding/RepoPilot/src/repopilot/benchmark_tasks/workflow-human-approval-git/verify_workflow_human_approval_git.py",
+      "verifier_timeout_seconds": 20.0
+    }
+  ]
+}

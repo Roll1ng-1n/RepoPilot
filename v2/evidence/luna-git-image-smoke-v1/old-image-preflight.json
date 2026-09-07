@@ -1,0 +1,56 @@
+{
+  "checks": [
+    {
+      "command": [
+        "docker",
+        "image",
+        "inspect",
+        "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+        "python:3.12-slim"
+      ],
+      "duration_seconds": 0.043995020001602825,
+      "exit_code": 0,
+      "name": "image_inspect",
+      "stderr": "",
+      "stdout": "{\"Id\":\"sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea\",\"RepoDigests\":[\"python@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea\"]}\n"
+    },
+    {
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "--pull=never",
+        "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+        "python",
+        "--version"
+      ],
+      "duration_seconds": 0.3532877819961868,
+      "exit_code": 0,
+      "name": "python",
+      "stderr": "",
+      "stdout": "Python 3.12.14\n"
+    },
+    {
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "--pull=never",
+        "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+        "git",
+        "--version"
+      ],
+      "duration_seconds": 0.22665796500223223,
+      "exit_code": 127,
+      "name": "git",
+      "stderr": "docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: \"git\": executable file not found in $PATH\n\nRun 'docker run --help' for more information\n",
+      "stdout": ""
+    }
+  ],
+  "error": "docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: \"git\": executable file not found in $PATH\n\nRun 'docker run --help' for more information\n",
+  "image": "python:3.12-slim",
+  "image_digest": "python@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+  "image_id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+  "resolved_image": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+  "status": "ENVIRONMENT_UNAVAILABLE"
+}

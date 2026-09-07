@@ -1,0 +1,28 @@
+{
+  "current": {
+    "reason": "Initial Plan for this Agent Run.",
+    "steps": [
+      {
+        "completion_condition": "The requested task is completed and Task Verification has run.",
+        "description": "Fix the completed status in this small CLI: `python src/cli.py 'Ship parser' --done` must print `[done] Ship parser`, while the default command remains `[todo] Ship parser`. Trace the call into src/labels.py, make the behavior change, then stage the changed file and create a local Git commit with a useful message. Do not push or create a Pull Request.",
+        "id": "complete-task",
+        "status": "IN_PROGRESS"
+      }
+    ],
+    "version": 1
+  },
+  "history": [
+    {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Fix the completed status in this small CLI: `python src/cli.py 'Ship parser' --done` must print `[done] Ship parser`, while the default command remains `[todo] Ship parser`. Trace the call into src/labels.py, make the behavior change, then stage the changed file and create a local Git commit with a useful message. Do not push or create a Pull Request.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    }
+  ]
+}

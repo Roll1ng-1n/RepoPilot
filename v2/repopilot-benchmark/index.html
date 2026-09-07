@@ -18,7 +18,7 @@
     
     
       
-        <title>Agent Benchmark - mini-SWE-agent documentation</title>
+        <title>Stage 4 Agent Benchmark - mini-SWE-agent documentation</title>
       
     
     
@@ -111,7 +111,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#agent-benchmark" class="md-skip">
+        <a href="#stage-4-agent-benchmark" class="md-skip">
           Skip to content
         </a>
       
@@ -169,7 +169,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Agent Benchmark
+              Stage 4 Agent Benchmark
             
           </span>
         </div>
@@ -2511,10 +2511,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#fixed-task-suite" class="md-nav__link">
+  <a href="#run-and-repeat" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fixed task suite
+        Run and repeat
       
     </span>
   </a>
@@ -2522,10 +2522,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#results-and-unavailable-environments" class="md-nav__link">
+  <a href="#two-verification-dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Results and unavailable environments
+        Two verification dimensions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fixed-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed categories
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#objective-behavior-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objective behavior protocol
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metrics-and-denominators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics and denominators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reproduce-evidence-from-raw-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproduce evidence from raw state
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-and-deferred-instrumentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported and deferred instrumentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-tasks-and-ablations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add tasks and ablations
       
     </span>
   </a>
@@ -2558,153 +2624,315 @@
   
 
 
-<h1 id="agent-benchmark">Agent Benchmark</h1>
-<p><code>repopilot benchmark</code> runs the six bundled target-repository tasks in Docker and compares the pinned
-mini-SWE-agent baseline with RepoPilot under one shared configuration. Each task is a small, fixed workflow that
-is cheap to repeat while exercising a different Agent engineering behavior.</p>
-<div class="highlight"><pre><span></span><code>repopilot<span class="w"> </span>benchmark<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>provider/model-name<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--image<span class="w"> </span>python:3.12-slim
+<h1 id="stage-4-agent-benchmark">Stage 4 Agent Benchmark</h1>
+<p>Stage 4 evaluates repository outcomes <strong>and</strong> objective evidence of the requested
+Agent behavior. It reuses the Docker runner, hidden host verifiers, model adapters,
+Git artifacts and campaign from Stage 3; it does not change core Agent behavior.
+The fixed suite has 30 tasks, five in each category. It is a development suite of
+small synthetic repositories, not evidence of general software-engineering ability.</p>
+<p>The <a href="../evidence/four-model-stage3-v1/summary/">Stage 3 result</a> remains historical:
+one round, six tasks, three RepoPilot false failures, and a Git-image confound.
+Its repository pass counts must not be relabelled as Stage 4 capability scores.
+No new paid model results are prefilled by this implementation.</p>
+<h2 id="run-and-repeat">Run and repeat</h2>
+<p>Build the Git-enabled image; Stage 0 resolves its immutable image ID and checks
+Python and Git before any model call. Both engines receive the same snapshot,
+prompt, model parameters, image, and effective task budget.</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>repopilot-benchmark:py312-git<span class="w"> </span>docker/benchmark
+repopilot<span class="w"> </span>benchmark<span class="w"> </span>--model<span class="w"> </span>provider/model-name<span class="w"> </span>--repeats<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--image<span class="w"> </span>repopilot-benchmark:py312-git<span class="w"> </span>--task<span class="w"> </span>recovery-import-path
+repopilot<span class="w"> </span>campaign<span class="w"> </span>--model<span class="w"> </span>gpt-5.6-luna<span class="w"> </span>--model<span class="w"> </span>gpt-5.6-sol<span class="w"> </span>--repeats<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--image<span class="w"> </span>repopilot-benchmark:py312-git
 </code></pre></div>
-<p>Both engines run by default. Repeat <code>--engine baseline</code> or <code>--engine repopilot</code> to select a subset. Repeat <code>--task</code>
-to select one or more fixed tasks for an independent run, for example:</p>
-<div class="highlight"><pre><span></span><code>repopilot<span class="w"> </span>benchmark<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>provider/model-name<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--image<span class="w"> </span>python:3.12-slim<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--task<span class="w"> </span>seed-cross-file<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--task<span class="w"> </span>workflow-long-chain<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--task<span class="w"> </span>workflow-human-approval-git
-</code></pre></div>
-<p>The selected task IDs are kept in the requested order. Omitting <code>--task</code> runs all six tasks. The command also
-accepts one model temperature and one Run Budget (<code>--max-steps</code>, <code>--max-replans</code>, <code>--max-consecutive-failures</code>,
-<code>--command-timeout-seconds</code>, and <code>--max-run-seconds</code>). The same model name, temperature, Docker image, task
-statement, step limit, command timeout, and wall-time limit are passed to both engines. Baseline concepts with no
-equivalent, including Replan and structured Recovery counts, are recorded as <code>null</code> rather than inferred.</p>
-<p>Container proxying defaults to <code>none</code>. <code>--docker-proxy-mode inherit</code> uses the host's standard proxy environment;
-<code>--docker-proxy-mode explicit --docker-proxy-url URL</code> uses one deployment-specific endpoint. The selected policy is
-shared by both engines for a fair comparison. Public benchmark configuration records only the mode, while proxy URLs
-and credentials are redacted from retained results and trajectories. Docker daemon proxy configuration remains a
-machine-level concern used for image pulls and is not managed by RepoPilot.</p>
-<h2 id="fixed-task-suite">Fixed task suite</h2>
-<p>Every manifest records a fixed snapshot revision and canonical SHA-256, a task statement, a host-only hidden
-verifier, a success condition, and timeouts. All six bundled tasks currently use a 180-second Agent Run timeout,
-a 20-second verifier timeout, and the same 15-step/1-Replan/2-consecutive-failure Run Budget.</p>
-<table>
-<thead>
-<tr>
-<th>Task</th>
-<th>Focus</th>
-<th>Observable behavior</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>seed-single-file</code></td>
-<td>Simple single-file bug</td>
-<td>Repair whitespace normalization without changing punctuation.</td>
-</tr>
-<tr>
-<td><code>seed-cross-file</code></td>
-<td>Cross-file modification</td>
-<td>Thread <code>--excited</code> through a greeting library and CLI while preserving the default.</td>
-</tr>
-<tr>
-<td><code>recovery-public-failure</code></td>
-<td>Verification failure and Recovery</td>
-<td>Use public-test evidence to preserve spelling while applying case-insensitive deduplication.</td>
-</tr>
-<tr>
-<td><code>replan-new-evidence</code></td>
-<td>Replan from repository evidence</td>
-<td>Inspect the docs/tests and implement newline-delimited JSON rather than an array.</td>
-</tr>
-<tr>
-<td><code>workflow-long-chain</code></td>
-<td>Long-chain exploration</td>
-<td>Trace CLI → command → workflow → formatting across four small modules before fixing compact output.</td>
-</tr>
-<tr>
-<td><code>workflow-human-approval-git</code></td>
-<td>Human Approval and Git</td>
-<td>Change the completed-status behavior and create a local commit after the benchmark's initial revision.</td>
-</tr>
-</tbody>
-</table>
-<p>The coverage matrix is intentionally task-level rather than a claim of broad software-engineering coverage:</p>
-<table>
-<thead>
-<tr>
-<th>Agent behavior</th>
-<th>Task evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Basic edit and Task Verification</td>
-<td><code>seed-single-file</code>, <code>seed-cross-file</code></td>
-</tr>
-<tr>
-<td>Cross-file data/control-flow tracing</td>
-<td><code>seed-cross-file</code>, <code>workflow-long-chain</code></td>
-</tr>
-<tr>
-<td>Failed verification followed by correction</td>
-<td><code>recovery-public-failure</code></td>
-</tr>
-<tr>
-<td>New repository evidence changing the plan</td>
-<td><code>replan-new-evidence</code></td>
-</tr>
-<tr>
-<td>Human Approval-compatible Git write and commit accounting</td>
-<td><code>workflow-human-approval-git</code></td>
-</tr>
-</tbody>
-</table>
-<p>The hidden verifiers remain outside each Target Repository. They observe only the resulting external behavior (and,
-for the Git task, the resulting local Git history); they do not expose their assertions to the Agent. The runner
-rejects changed snapshot contents, copies each valid snapshot into separate engine workspaces, and initializes the
-same fixed Git baseline before each engine run. The verifier runs on the host only after the Agent Run has ended,
-and its exit code—not the agent's self-reported status—determines task success.</p>
-<p>For <code>workflow-human-approval-git</code>, the Docker benchmark uses the explicitly disposable benchmark context and thus
-automatically approves the RepoPilot Git Tool Call. The baseline can perform the equivalent local <code>git add</code>/<code>git
-commit</code> through its shell. The result records commits after the initial revision; push, rebase, reset, and Pull
-Request operations remain unsupported.</p>
-<h2 id="results-and-unavailable-environments">Results and unavailable environments</h2>
-<p>Every invocation creates a new directory below the platform RepoPilot state directory under <code>benchmarks/</code>, or below
-<code>--state-dir</code> when provided. It retains:</p>
+<p>Future comparison runs use <code>gpt-5.6-luna</code> and <code>gpt-5.6-sol</code> only;
+<code>gpt-5.6-terra</code> and <code>gpt-5.5</code> do not enter new campaigns. The four-model
+Stage 1-3 runs and pricing table remain historical records.</p>
+<p>Repeat <code>--task</code> or <code>--engine baseline --engine repopilot</code> to select a subset.
+Omitting tasks selects all 30. CLI defaults to three repeats; use <code>--repeats 5</code>
+for a final campaign when appropriate. <code>campaign --rounds</code> is an alias for
+<code>--repeats</code>. Programmatic <code>BenchmarkConfig(repeats=...)</code> and
+<code>CampaignConfig(repeats=...)</code> support the same repetitions; their default remains
+one for backwards compatibility. Do not nest repeats inside campaign rounds.</p>
+<p>Each model/task/engine/repeat has a fresh workspace, UUID run ID, result and raw
+artifacts. Paired keys are model + campaign round + benchmark repeat + task;
+missing/unevaluable counterparts are reported separately. Existing trial
+artifacts are never deleted to rerun an attempt: choose a fresh output root.
+Engine order is deterministic, baseline then RepoPilot, and is not randomized.
+Sequential order and provider drift remain experimental limitations.</p>
+<p>Proxy policy (<code>none</code>, <code>inherit</code>, <code>explicit</code>) is shared. Endpoint credentials and
+proxy URLs are redacted from retained traces/configuration. Unavailable Docker
+or missing Python/Git produces <code>ENVIRONMENT_UNAVAILABLE</code>, not a fabricated failure
+of the model's repository change. The manifest budget overrides benchmark defaults
+and is capped by its task timeout; both adapters receive that effective budget.
+Baseline does not implement native Replan or consecutive-failure budgets, so equal
+configuration must not be interpreted as equal enforcement of those concepts.</p>
+<h2 id="two-verification-dimensions">Two verification dimensions</h2>
+<p>Every result retains legacy <code>success</code> as repository-only success and additionally
+records:</p>
 <ul>
-<li><code>config.json</code>, <code>summary.json</code>, and a side-by-side <code>summary.md</code>;</li>
-<li>an independent workspace and <code>result.json</code> for each task/engine pair;</li>
-<li>the baseline's complete <code>trajectory.json</code> or RepoPilot's Run artifacts;</li>
-<li>hidden verification output, elapsed time, the final patch, and commits after the fixed initial revision;</li>
-<li>steps, prompt/completion/total/cache/reasoning tokens, provider/LiteLLM cost, a separately labelled OpenAI
-  Standard price estimate, Tool Calls, errors, Retry, and Replan metrics when the required source values exist.</li>
+<li><code>repository_pass</code>: hidden verifier exit code zero, or <code>null</code> if unavailable.</li>
+<li><code>behavior_pass</code>: conjunction of required objective checks; <code>null</code> when evidence
+  cannot establish a required check. No requirements means <code>true</code> (not applicable).</li>
+<li><code>task_pass</code>: three-valued AND of repository and behavior. Any definite failure
+  makes it false; otherwise unknown evidence remains null.</li>
 </ul>
-<p>If Docker cannot be started or the configured image is unavailable, the affected run is recorded as
-<code>ENVIRONMENT_UNAVAILABLE</code>. This is an execution-environment result, not evidence that the task's code change failed;
-the benchmark retains the result and does not fabricate a verifier success. If an engine or provider does not
-return a metric, the corresponding token, provider cost, or duration field is JSON <code>null</code>. The runner never infers
-missing token counts or timing. For the four documented comparison models only, it may calculate
-<code>openai_standard_estimated_cost_usd</code> from returned usage and the checked-in OpenAI Standard price table; missing
-cache details are charged as ordinary input, while missing prompt/completion usage leaves the estimate <code>null</code>.
-This estimate is not presented as an intermediary invoice.</p>
-<p>For a staged multi-model run, use <code>repopilot probe</code> first and then <code>repopilot campaign</code>; see the
-<a href="../model-comparison-test-plan/">four-model comparison plan</a>.</p>
-<p>The default run has six fixed tasks and two engine attempts per task (12 task/engine samples). This is a small,
-development-time regression suite for comparing the two local execution paths and catching changes in Planning,
-Recovery, Replan, Human Approval, Git, and verification behavior. It is not a statistically powered benchmark and
-does not support generalization or performance claims about models, repositories, or production workloads. Results
-are raw evidence, including failures and unavailable environments. The checked-in <a href="../evidence/micro-benchmark-v1/summary/">historical 12-sample summary</a>
-records all 12 attempts as <code>ENVIRONMENT_UNAVAILABLE</code>, with zero model calls
-and <code>success: null</code>; for that run, a model success rate is unavailable (0/0, not 0%).</p>
-<p>The separate <a href="../evidence/model-backed-smoke-v1/summary/">model-backed smoke evidence</a> records a real comparison on
-the single <code>seed-single-file</code> task under the same redacted low-cost authorized model, temperature, Run Budget, and
-Docker image. Baseline: <code>Submitted</code>, hidden verifier <code>true</code>, 7 steps, 19,660 total tokens, 7 Tool Calls, 20.475
-seconds, <code>cost: null</code>. RepoPilot: <code>SUCCEEDED</code>, verifier <code>true</code>, 7 steps, 28,212 total tokens, 9 Tool Calls, 0
-retries, 0 replans, 19.723 seconds, <code>cost: null</code>. The model name and endpoint are redacted; the API-key scan is
-clean. This is one task with two engine attempts and is smoke evidence only, not a statistically meaningful win rate
-or general performance claim. Running the command can make paid model calls and may pull the configured Docker image.</p>
+<p>A task whose required scenario was observable but never triggered fails behavior.
+An adapter without the necessary observation channel is unsupported, not a pass.
+Each check includes its reason. The summary shows pass/evaluated and unavailable
+counts; these counts must accompany rates, especially for experimental categories.
+Repository and behavior coverage counts are separately retained in JSON.</p>
+<p>The hidden verifier and <code>solution.json</code> fixtures stay outside the target workspace.
+Fixtures are used only for evaluator tests, never by engine executors. Verifiers
+check held-out values, incomplete repairs and Git state as applicable; their
+assertions are not injected into model prompts.</p>
+<h2 id="fixed-categories">Fixed categories</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th style="text-align: right;">Tasks</th>
+<th>Intended evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simple</td>
+<td style="text-align: right;">5</td>
+<td>Single-file regression/control: slugification, chunking, clamping, interval overlap, boolean parsing.</td>
+</tr>
+<tr>
+<td>Cross-file</td>
+<td style="text-align: right;">5</td>
+<td>Greeting CLI, CSV export, pagination, pricing and search across module interfaces.</td>
+</tr>
+<tr>
+<td>Recovery</td>
+<td style="text-align: right;">5</td>
+<td>Public command must fail before editing and pass after correction, with the public test files unchanged.</td>
+</tr>
+<tr>
+<td>Replan</td>
+<td style="text-align: right;">5</td>
+<td>Initial concrete strategy in PLAN.md, observed new evidence, changed protocol/algorithm strategy, final hidden correctness.</td>
+</tr>
+<tr>
+<td>Long-horizon</td>
+<td style="text-align: right;">5</td>
+<td>Existing workflow seed and four six-module pipelines: expenses, inventory, access logs, release notes.</td>
+</tr>
+<tr>
+<td>HITL / Safety</td>
+<td style="text-align: right;">5</td>
+<td>Local commit request; approved changes committed or rejected changes retained without committing. Experimental behavior audit.</td>
+</tr>
+</tbody>
+</table>
+<p>Each manifest declares <code>category</code>, <code>capabilities</code>, <code>behavior_requirements</code>, immutable
+snapshot revision/hash, statement, verifier and budget. Existing seed IDs are kept.
+The old long-chain seed is smaller than the new pipelines. Real step distributions
+and category difficulty still need model-backed calibration; a many-file task does
+not by itself prove a long execution horizon.</p>
+<h2 id="objective-behavior-protocol">Objective behavior protocol</h2>
+<p><code>evaluation.py</code> reads runtime trace facts and benchmark-only environment observations.
+It never asks another LLM to judge behavior and never treats assistant prose as
+structured instrumentation. The environment observer is shared by both engines;
+it observes commands and plan files without issuing extra commands or changing
+model observations. Environment events use <code>observation_index</code> (command boundaries),
+not an estimated Agent step number. Native trace steps retain their original meaning.</p>
+<p>Recovery manifests declare, for example:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"behavior_requirements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"recovery"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"behavior_spec"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"recovery_command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"python public_test.py"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"recovery_files"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"public_test.py"</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>An exact public command failure opens a scenario. Further executions of that
+command are recovery attempts; successful execution with original public test
+file hashes resolves it. A different successful read/search is not recovery.
+Triggers have distinct IDs, and failure types are retained. This is deliberately
+scoped to declared scenarios; recovery from arbitrary native errors is not inferred.
+Exact command matching does not parse compound shell commands or aliases. The task
+explicitly requests the canonical command; use it as a standalone invocation.</p>
+<p>Replan manifests declare <code>evidence_command</code>, <code>evidence_marker</code>, <code>plan_path</code>,
+<code>before_strategy</code> and <code>after_strategy</code>. The task tells both engines to write an
+initial plan, execute the evidence command, then revise the plan. The observer
+requires the old strategy before evidence, and its replacement with the concrete
+new strategy after evidence at a later command boundary. Examples include
+codepoint offsets → UTF-8 byte offsets and lexicographic → numeric version order.
+Version increments, completed-step status changes and <code>update_plan</code> calls alone
+do not qualify. Final hidden verification independently establishes the resulting
+implementation. This protocol measures an explicit strategy transition in the
+shared task, not whether RepoPilot's private native <code>replan</code> API was called; native
+plan events are retained separately. Keyword-based strategy contracts do not prove
+the quality of every free-form plan step.</p>
+<p>For additional task-specific behavior checks, add a host-only Python script and
+set <code>"behavior_verifier": "verify_behavior.py"</code>. It receives the trial artifact
+directory as its sole argument. Read <code>evaluation-events.json</code>,
+<code>evaluation-context.json</code>, <code>patch.diff</code>, and <code>workspace/</code>; output JSON on stdout:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"checks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"recovery"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"pass"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Linked failure resolved by the required repair"</span><span class="p">}}}</span>
+</code></pre></div>
+<p>Return every required check, with boolean/null <code>pass</code> and an explanatory reason.
+Nonzero exit, timeout, malformed JSON, or missing required checks makes behavior
+unsupported and preserves the reason. Custom checks should use objective facts;
+never accept a model's claimed success as proof. The built-in requirement names
+are <code>recovery</code>, <code>replan</code>, <code>approval</code>, <code>budget</code>, and <code>termination</code>; extend the
+registry when adding a new kind of required behavior.</p>
+<h2 id="metrics-and-denominators">Metrics and denominators</h2>
+<p><code>summary.json.evaluation_summary</code> groups by model/engine and independently by task,
+category and capability. A task may appear under several capabilities; those rows
+must not be summed into an overall trial count. <code>summary.md</code> leads with task pass,
+category/capability pass, successful termination, recovery, LLM calls/solved,
+tokens/solved, tool failures/solved and churn availability, followed by paired
+counts and legacy raw results. Latency remains secondary.</p>
+<ul>
+<li>Successful termination = correct-success cases / cases with known final status
+  and repository verdict. <code>Submitted</code>, <code>SUCCEEDED</code>, <code>SUCCESS</code> mean agent success.
+  False success and false failure use the same denominator. JSON also includes
+  the four counts, completion precision and recall. Unknown status is excluded.</li>
+<li>Recovery rate = resolved declared scenarios / triggered declared scenarios.
+  Trigger/attempt/resolved counts and post-recovery repository success are retained.</li>
+<li>Replan trigger rate = linked observed revisions / evidence scenarios; success
+  rate = verified substantive revisions / evidence scenarios. Post-replan
+  repository success is separate. Unnecessary replans are unsupported.</li>
+<li>Cost per solved = total measured consumption across <strong>all</strong> attempted tasks in
+  the group / number of <code>task_pass=true</code> trials. Thus failures consume cost.
+  JSON also reports consumption distributions restricted to solved trials, avoiding
+  confusion with “average cost of successful attempts only.” Zero solved gives null.</li>
+<li>Calls, steps, tool calls, retries, replans, redundant native calls,
+  input/output/total tokens and wall duration retain total, n, mean, median,
+  sample standard deviation, min and max. Missing observations reduce n; a
+  partially missing metric makes the total and cost-per-solved null. Baseline
+  rows report null retries/replans because that engine records no native
+  retry/replan accounting.</li>
+<li>Tool failures include failed tool envelopes and nonzero command exit codes nested
+  inside otherwise successful envelopes. Baseline command failures use recorded
+  trajectory return codes. Tool recovery is scoped to declared public commands.</li>
+<li>Redundancy counts only adjacent identical native read/search/list requests with
+  equal arguments and equal successful stdout. No shell parsing or semantic claim
+  is made; baseline shell redundancy stays unsupported.</li>
+</ul>
+<p>Pair tables contain both pass, left only, right only, neither and unavailable for
+each same-model engine pair, overall and per category. For baseline/RepoPilot these
+are the requested baseline-only and RepoPilot-only counts. Arbitrary engine pairs
+use their registered IDs. Do not pool token costs across models for a tokenizer-
+independent ranking; cross-model comparisons should emphasize pass rates and calls.
+No confidence or stability claim follows from a single round.</p>
+<h2 id="reproduce-evidence-from-raw-state">Reproduce evidence from raw state</h2>
+<p><code>docs/evidence/*/summary.json</code> is a curated redaction. Its rows keep the headline
+verdicts but not every per-row <code>metrics</code>/<code>evaluation</code> object, so it cannot rebuild
+the full <code>evaluation_summary</code>. The raw per-campaign <code>summary.json</code> files written by
+<code>repopilot campaign</code> under <code>~/.local/state/repopilot/campaigns/&lt;run-id&gt;/</code> can.
+<code>src/repopilot/recompute.py</code> merges several raw summaries with deterministic
+overlay semantics and reruns the same <code>evaluation.aggregate</code>/<code>markdown</code> used by
+the runner:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>repopilot.recompute<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--title<span class="w"> </span><span class="s2">"Stage 4 - 24 tasks (luna vs sol)"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--out-json<span class="w"> </span>docs/evidence/stage4-24tasks-luna-sol-v1/recomputed.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--out-markdown<span class="w"> </span>docs/evidence/stage4-24tasks-luna-sol-v1/recomputed.md<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>~/.local/state/repopilot/campaigns/&lt;main-run&gt;/summary.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>~/.local/state/repopilot/campaigns/&lt;rerun-root-a&gt;/summary.json
+</code></pre></div>
+<p>Files are consumed in argument order. A row is identified by
+<code>(model, round, task_id, engine)</code>; a later file replaces an earlier row with the
+same key, so an environmental-error rerun root overwrites the failed row without
+double counting. A row without a real status never replaces one that has a status.
+The 360-sample Stage 4 evidence combines two raw campaign groups:</p>
+<ul>
+<li>24 tasks (288 samples): main 24-task run plus the two rerun roots that replaced
+  three baseline environmental-error trials.</li>
+<li>Seed 6 tasks (72 samples): <code>seed-cross-file</code>, <code>recovery-public-failure</code>,
+  <code>replan-new-evidence</code>, <code>workflow-long-chain</code>, <code>workflow-human-approval-git</code>
+  plus <code>seed-single-file</code> from its separate clean run.</li>
+</ul>
+<p>The committed <code>recomputed.json</code>/<code>recomputed.md</code> files under <code>docs/evidence/</code>
+are the output of the commands above for those exact run IDs. <code>recomputed.json</code>
+holds the full recomputed <code>evaluation_summary</code> plus a compact merged-row
+inventory (<code>models</code>/<code>engines</code>/<code>rounds</code>/<code>statuses</code>) so the file stays small;
+full per-row objects remain in raw state and can be embedded with
+<code>--include-rows</code> for debugging. The merge overlay was verified to reproduce the
+curated <code>summary.json</code> row keys and statuses one-to-one (zero differences).
+Curated <code>summary.md</code> remains the primary readable narrative; <code>recomputed.md</code> is
+the machine-recomputable table.</p>
+<h2 id="supported-and-deferred-instrumentation">Supported and deferred instrumentation</h2>
+<table>
+<thead>
+<tr>
+<th>Measurement</th>
+<th>Current support / missing evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repository, declared Recovery and Replan</td>
+<td>Implemented; exact public command/strategy contracts above.</td>
+</tr>
+<tr>
+<td>Final termination confusion matrix</td>
+<td>Implemented. Timely stopping is not implied by correct final status.</td>
+</tr>
+<tr>
+<td>LLM calls, tokens, tool failures, repeated trials, paired/category/capability summaries</td>
+<td>Implemented where source records exist; null otherwise.</td>
+</tr>
+<tr>
+<td>HITL complete behavior</td>
+<td><strong>Unsupported / experimental</strong>. Native approval requests and decisions are retained. The harness resumes native requests using manifest <code>approval_policy=approve/reject</code>, within the remaining observed wall time. Baseline has no equivalent structured approval protocol. Neither trace supplies an exhaustive audit of shell effects/bypasses, so auto-approval or a commit alone never gives a safety pass. A future adapter must provide a complete <code>approval_audit</code> including requests, respected decisions and zero bypasses, or a task-specific host checker.</td>
+</tr>
+<tr>
+<td>Full execution-budget behavior</td>
+<td><strong>Unsupported</strong> without a complete <code>budget_audit</code>. Configured limits and used steps/replans are retained. Baseline lacks failure/replan enforcement; in-flight model calls may exceed wall time and runtime resume does not preserve a monotonic origin. Full deadline/cancellation and ordered failure accounting are required before passing this check. Long-horizon tasks require budget and therefore may have unknown task verdicts even when repositories pass.</td>
+</tr>
+<tr>
+<td>First solved step / post-solution steps, calls, tokens</td>
+<td><strong>Unsupported</strong>. Need immutable per-step repository states (including untracked/deleted files and Git history where relevant), isolated replay and hidden verification at every boundary, plus step-linked usage. Final patch and self-reported verification are insufficient.</td>
+</tr>
+<tr>
+<td>API duration</td>
+<td>RepoPilot sums recorded model-response durations only when all available response durations exist. Baseline unavailable.</td>
+</tr>
+<tr>
+<td>Full tool execution duration / orchestration overhead</td>
+<td><strong>Unsupported</strong>. Need complete non-overlapping monotonic spans for every command, tool, model wait and lifecycle work. Existing partial durations do not justify subtracting a precise overhead.</td>
+</tr>
+<tr>
+<td>Arbitrary error recovery / unnecessary replans</td>
+<td><strong>Deferred</strong>. Need causal error-resolution IDs and task-specific evidence of necessity; later success or raw Replan count is insufficient.</td>
+</tr>
+</tbody>
+</table>
+<p>Unsupported behavior does not imply either engine lacks that capability. It means
+the current evaluation cannot substantiate the claim. In particular, this release
+provides the pipeline and task fixtures for safety/budget experiments, not completed
+safety or full budget validation.</p>
+<h2 id="add-tasks-and-ablations">Add tasks and ablations</h2>
+<ol>
+<li>Add <code>benchmark_tasks/&lt;id&gt;/snapshot/</code>, manifest, a host-only verifier and a
+   host-only <code>solution.json</code> mapping relative paths to repaired contents.</li>
+<li>Declare category/capabilities, objective required behavior, public scenario
+   commands, budget and timeouts. Use different behavior contracts only where the
+   task actually requires them. Calculate <code>canonical_snapshot_sha256(snapshot)</code>
+   after all snapshot edits; never include hidden checks in that snapshot.</li>
+<li>Run <code>pytest tests/repopilot/test_stage4_tasks.py</code>: initial snapshots must fail,
+   complete solutions must pass, and each required changed file must matter.
+   Add public-test-passing wrong implementations as negative verifier cases.</li>
+<li>Run a small selected model/task campaign before full repetitions. Retain raw
+   artifacts, unsupported counts and environment failures. Keep task/version,
+   engine configuration and model parameters fixed across paired trials.</li>
+<li>Register a new engine executor using the existing Python seam, for example
+   <code>BenchmarkRunner(config, executors={"repopilot-no-planner": executor})</code> with
+   <code>config.engines=("baseline", "repopilot-no-planner")</code>. Use <code>run_campaign</code>'s
+   same <code>executors</code> seam for multi-model experiments. Unknown adapters fail before
+   execution. CLI engine selection still exposes the two built-ins.</li>
+</ol>
+<p>An executor receives <code>EngineRequest</code> (workspace, task, effective budget and model
+configuration) and returns <code>EngineRun</code> with source metrics/artifacts. Canonical
+<code>evaluation_events</code> must be generated by the harness from observations, not copied
+from model-generated JSON. Variant IDs are safe directory identifiers, and the
+aggregator handles every engine pair. No ablation behavior is implemented or
+silently substituted by this framework; disabling a mechanism belongs in its
+separate executor/configuration experiment.</p>
 
 
 

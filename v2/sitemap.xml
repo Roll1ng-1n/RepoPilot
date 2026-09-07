@@ -2,298 +2,334 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://mini-swe-agent.com/latest/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/SECURITY/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/_footer/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/contributing/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/faq/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/model-comparison-test-plan/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/quickstart/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/repopilot-approval/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/repopilot-benchmark/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/repopilot-capabilities/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/repopilot-context/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/repopilot-design-validation-record/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/repopilot-inspect/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/repopilot-swebench-smoke/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/adr/0001-develop-from-pinned-mini-swe-agent-source/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/adr/0002-separate-upstream-base-from-repopilot-engineering/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/adr/0003-use-replaceable-execution-environments/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/adr/0004-require-native-tool-calling/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/adr/0005-use-bounded-autonomy-for-repository-actions/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/advanced/control_flow/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/advanced/cookbook/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/advanced/environments/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/advanced/global_configuration/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/advanced/v2_migration/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/advanced/yaml_configuration/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/agents/domain/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/agents/issue-tracker/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/agents/triage-labels/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/evidence/four-model-api-probe-v1/summary/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/evidence/four-model-stage3-v1/summary/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/evidence/luna-git-image-smoke-v1/summary/</loc>
+         <lastmod>2026-09-07</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/evidence/luna-git-image-smoke-v1/artifacts/summary/</loc>
+         <lastmod>2026-09-07</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/evidence/luna-git-image-smoke-v1/artifacts/gpt-5.6-luna/round-001/summary/</loc>
+         <lastmod>2026-09-07</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/evidence/luna-git-image-smoke-v1/artifacts/gpt-5.6-luna/round-001/workflow-human-approval-git/repopilot/task_report/</loc>
+         <lastmod>2026-09-07</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/evidence/luna-git-image-smoke-v1/artifacts/gpt-5.6-luna/round-001/workflow-human-approval-git/repopilot/run-state/2a0266238abb4d9088218cbf9a630496/task_report/</loc>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/evidence/luna-paired-smoke-v1/summary/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/evidence/micro-benchmark-v1/summary/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/evidence/model-backed-smoke-v1/summary/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/evidence/model-backed-smoke-v1/seed-single-file/repopilot/task_report/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/evidence/stage4-24tasks-luna-sol-v1/recomputed/</loc>
+         <lastmod>2026-09-07</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/evidence/stage4-24tasks-luna-sol-v1/summary/</loc>
+         <lastmod>2026-09-07</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/evidence/stage4-seed6-luna-sol-v1/recomputed/</loc>
+         <lastmod>2026-09-07</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/evidence/stage4-seed6-luna-sol-v1/summary/</loc>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/evidence/swebench-lite-smoke-v1/sqlfluff__sqlfluff-1625/task_report/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/evidence/swebench-lite-smoke-v1/sqlfluff__sqlfluff-1625/run-state/7ccf7fd818b94d1290a199b2493cdbce/task_report/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/models/local_models/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/models/quickstart/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/models/troubleshooting/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/agents/default/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/agents/interactive/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/bubblewrap/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/contree/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/docker/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/local/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/singularity/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/swerex_docker/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/swerex_modal/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/extra/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/litellm/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/litellm_response_toolcall/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/openrouter/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/overview/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/portkey/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/portkey_response/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/requesty/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/test_models/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/utils/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/config/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/hello_world/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/inspector/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/mini/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/mini_extra/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/programbench/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/swebench/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/swebench_single/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/usage/config/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/usage/inspector/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/usage/mini/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/usage/output_files/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/usage/programbench/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/usage/python_bindings/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/usage/swebench/</loc>
-         <lastmod>2026-09-04</lastmod>
+         <lastmod>2026-09-07</lastmod>
     </url>
 </urlset>
