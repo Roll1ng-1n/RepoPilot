@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "33e8c525cb7c3453ae385e9e46753bef5cfe642d0a74b453aaadc6402e267c1e",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/seed-single-file/repopilot/workspace",
+      "head": "b966a4316740db7e1b3dbf47bd9789d0e6494f16",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/seed-single-file/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "ec77d7c90f44f39c804e25b9d802f9f9e82b337e"
+  },
+  "bytes": 1381,
+  "final": {
+    "state": {
+      "diff_fingerprint": "c9e5a4a3b332d14037ccfd364969cfe8d6be2d449e83b434d38596ac8fb94519",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/seed-single-file/repopilot/workspace",
+      "head": "b966a4316740db7e1b3dbf47bd9789d0e6494f16",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/seed-single-file/repopilot/workspace",
+      "status": " M src/slugify.py\n?? src/__pycache__/slugify.cpython-312.pyc\n"
+    },
+    "tree": "4730af2e4891fef630c565d2432e159500a28b28"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "5d0a722044bd61445ebdbd176acb204a55800491064801b66cd4e349777cd056"
+}

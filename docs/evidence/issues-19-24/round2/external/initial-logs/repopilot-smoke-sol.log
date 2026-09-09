@@ -1,0 +1,41 @@
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-b8632fd5 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/smoke-sol/3ad30c8b847c426b81f12a94f8c8d2e1/seed-single-file/baseli
+ne/workspace,target=/workspace --user=1000:1000                                 
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-b8632fd5 with ID 
+c40b8480a81ac8eee98fa5cf43b69c2d6934c1e73ab8405bdee66a6f6c02a88b                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-55088f12 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/smoke-sol/3ad30c8b847c426b81f12a94f8c8d2e1/seed-single-file/repopi
+lot/workspace,target=/workspace --user=1000:1000                                
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-55088f12 with ID 
+abf1276e4aa01a0ba3793d083b1068b1c125ed60a8335b90cd3867287ac00418                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-6d0e9969 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/smoke-sol/3ad30c8b847c426b81f12a94f8c8d2e1/recovery-public-failure
+/baseline/workspace,target=/workspace --user=1000:1000                          
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-6d0e9969 with ID 
+8255f75262033c85c336243c6b52bf82902f945a6d29043c28909e1ca669b3dd                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-7a140df7 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/smoke-sol/3ad30c8b847c426b81f12a94f8c8d2e1/recovery-public-failure
+/repopilot/workspace,target=/workspace --user=1000:1000                         
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-7a140df7 with ID 
+67eb10eaf55ac8e2f74b3ee3fe3b4f3a1d7154991d465d51d0dc5d13fea2a8fb                
+Agent Benchmark: /home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round2/external/smoke-sol/3ad30c8b847c426b81f12a94f8c8d2e1
+- seed-single-file / baseline: repository failed; behavior=True; task=False (Agent Run: UnsupportedParamsError, repeat=1)
+- seed-single-file / repopilot: repository failed; behavior=True; task=False (Agent Run: FAILED, repeat=1)
+- recovery-public-failure / baseline: repository failed; behavior=False; task=False (Agent Run: UnsupportedParamsError, repeat=1)
+- recovery-public-failure / repopilot: repository failed; behavior=False; task=False (Agent Run: FAILED, repeat=1)
+Summary: /home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round2/external/smoke-sol/3ad30c8b847c426b81f12a94f8c8d2e1/summary.json

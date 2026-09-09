@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "37b7d8ee8ffd1f3b6741de50232ab85e62838d4436b31cea356d3558d2a2c432",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/smoke/gpt-5.6-luna/recovery-public-failure/repopilot/workspace",
+      "head": "655f100db402e52aedb1df766fa68f2c9df71451",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/smoke/gpt-5.6-luna/recovery-public-failure/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "94a2eabd72077c41cc0bf356a609afdfe85f5f69"
+  },
+  "bytes": 796,
+  "final": {
+    "state": {
+      "diff_fingerprint": "c52d3ebc8e73c55f58761eab9836de17622b84b1d3a4375ebfbf4d74b6c9be9c",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/smoke/gpt-5.6-luna/recovery-public-failure/repopilot/workspace",
+      "head": "655f100db402e52aedb1df766fa68f2c9df71451",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/smoke/gpt-5.6-luna/recovery-public-failure/repopilot/workspace",
+      "status": " M src/line_tools.py\n"
+    },
+    "tree": "ada6ab203a2313b6f8a67d38fb47f7156f47a655"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "ea26c35fdb8fb87542845ed57e46f17292a078a79e1fadb4ad477c5f98c5767c"
+}

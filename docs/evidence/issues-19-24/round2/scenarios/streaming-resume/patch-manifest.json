@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "1320e9513c19f2b308bef4a30b4df71cd286ade3a6aeb1d1745e16b2f6903ca0",
+      "git_root": "/tmp/pytest-of-waaaaa/pytest-18/test_cli_run_resume_calls_stre0/target",
+      "head": "9dc3cdb958f32f7a0e32be6c8ddab117074ff4e8",
+      "resolved_target_repository": "/tmp/pytest-of-waaaaa/pytest-18/test_cli_run_resume_calls_stre0/target",
+      "status": ""
+    },
+    "tree": "cfa9ac055da9ffe521564e8699c1ad4ca1a73b6d"
+  },
+  "bytes": 0,
+  "final": {
+    "state": {
+      "diff_fingerprint": "1320e9513c19f2b308bef4a30b4df71cd286ade3a6aeb1d1745e16b2f6903ca0",
+      "git_root": "/tmp/pytest-of-waaaaa/pytest-18/test_cli_run_resume_calls_stre0/target",
+      "head": "9dc3cdb958f32f7a0e32be6c8ddab117074ff4e8",
+      "resolved_target_repository": "/tmp/pytest-of-waaaaa/pytest-18/test_cli_run_resume_calls_stre0/target",
+      "status": ""
+    },
+    "tree": "cfa9ac055da9ffe521564e8699c1ad4ca1a73b6d"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -103,7 +103,7 @@ def test_cli_approval_executes_the_snapshot_then_resumes_and_reports_the_commit(
         ["run", str(target_repository), "--task", "Update and commit the README.", "--state-dir", str(state_directory)],
     )
 
-    assert waiting.exit_code == 0, waiting.output
+    assert waiting.exit_code == 4, waiting.output
     assert "WAITING_FOR_APPROVAL" in waiting.output
     run_directory = next(state_directory.iterdir())
     checkpoint = json.loads((run_directory / "checkpoint.json").read_text())
@@ -133,7 +133,7 @@ def test_cli_approval_executes_the_snapshot_then_resumes_and_reports_the_commit(
         ["approve", run_directory.name, "--state-dir", str(state_directory)],
     )
 
-    assert approved.exit_code == 0, approved.output
+    assert approved.exit_code == 3, approved.output
     metadata = json.loads((run_directory / "metadata.json").read_text())
     commit_hash = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=target_repository, capture_output=True, check=True, text=True
@@ -174,7 +174,7 @@ def test_cli_rejection_returns_a_tool_observation_to_the_resumed_model(tmp_path:
         create_app(lambda _: waiting_model),
         ["run", str(target_repository), "--task", "Commit the README.", "--state-dir", str(state_directory)],
     )
-    assert waiting.exit_code == 0, waiting.output
+    assert waiting.exit_code == 4, waiting.output
     run_directory = next(state_directory.iterdir())
 
     resumed_model = ScriptedToolCallingModel([_finish_turn()])
@@ -183,7 +183,7 @@ def test_cli_rejection_returns_a_tool_observation_to_the_resumed_model(tmp_path:
         ["reject", run_directory.name, "--state-dir", str(state_directory)],
     )
 
-    assert rejected.exit_code == 0, rejected.output
+    assert rejected.exit_code == 3, rejected.output
     first_request_messages = resumed_model.requests[0][0]
     rejection = next(message for message in first_request_messages if message.get("tool_call_id") == "commit")
     assert json.loads(rejection["content"]) == {
@@ -222,7 +222,7 @@ def test_cli_resumes_remaining_tool_calls_from_the_same_assistant_turn_after_app
         create_app(lambda _: waiting_model),
         ["run", str(target_repository), "--task", "Update and commit the README.", "--state-dir", str(state_directory)],
     )
-    assert waiting.exit_code == 0, waiting.output
+    assert waiting.exit_code == 4, waiting.output
     run_directory = next(state_directory.iterdir())
     checkpoint = json.loads((run_directory / "checkpoint.json").read_text())
     assert checkpoint["pending_tool_calls"] == [{"id": "diff", "name": "view_diff", "arguments": {}}]
@@ -233,7 +233,7 @@ def test_cli_resumes_remaining_tool_calls_from_the_same_assistant_turn_after_app
         ["approve", run_directory.name, "--state-dir", str(state_directory)],
     )
 
-    assert approved.exit_code == 0, approved.output
+    assert approved.exit_code == 3, approved.output
     metadata = json.loads((run_directory / "metadata.json").read_text())
     assert [item["tool_call_id"] for item in metadata["tool_results"]] == ["patch", "commit", "diff", "finish"]
     resumed_messages = resumed_model.requests[0][0]
@@ -281,7 +281,7 @@ def test_cli_auto_approves_only_an_explicit_disposable_docker_benchmark(tmp_path
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 3, result.output
     assert "WAITING_FOR_APPROVAL" not in result.output
     run_directory = next(state_directory.iterdir())
     events = [json.loads(line) for line in (run_directory / "trace.jsonl").read_text().splitlines()]

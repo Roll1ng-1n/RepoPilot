@@ -1,0 +1,32 @@
+{
+  "baseline": "933195fff117818a793834540def34896bee2738",
+  "evidence_sha256": {
+    "baseline-runtime-tests.txt": "d0a888ef3e7ece72d8c651c8233938278cff06f2b308c39e2c10a60a48968327",
+    "baseline.txt": "45132ea134999b62e3d96747e0a7fa25ae2b958efd9ff4c9ce0cf3c757574c1b",
+    "docker-retry.txt": "ec3c61992e3bb1a5aac88c5f3c5619a6eccaa445b8e776896e3c8c676f9f6278",
+    "docker-runtime-tests.txt": "02dc7ab4817cbf264e516090a996254d518c18996cf9ef387877978d5c23dc67",
+    "doctor.json": "6ee4d87c41e87f8374fe13189c0f237b287d368271c97b8004dcca73e13eccf3",
+    "issues.json": "10accf0c29a572d6ded5c2a0b8110005459d07e0f530f889d067b9a332cbd60d",
+    "lint.txt": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "runtime-tests.txt": "82bbc90ff62aae82963994585354875c7ca8134170f5543fb19016dda8206c85",
+    "summary.md": "1b413cd432b62f7444be1ee97081d8cb82508ccae23f06553fb73f572b6ff640"
+  },
+  "paid_model_requests": 0,
+  "source_sha256": {
+    "README-zh.md": "97768597e6345d9b24ee049f23c9922692718b5bbc191a2ea1ee83bb54d955e9",
+    "README.md": "873f433b04060737a5f09fc9bb44dbdb54bd5027cf14bfab0130f6d6f68e3cf5",
+    "src/minisweagent/__init__.py": "2018adb18e70fc1c69ff2c7ae24b772d15b5924c6525290ce56b7382da2c06df",
+    "src/repopilot/approval.py": "4a9363c891c0c7ec4125038e9891709bd17323f1fa790f3dcc2359a106f726f9",
+    "src/repopilot/budget.py": "e91da69e00534a03f66d28032236b280764408408f8d013447c7a3245a003231",
+    "src/repopilot/cli.py": "0374d060f6c63d0a9f77be9d401930aea03576810a01cce2d0787ddf00c5f04e",
+    "src/repopilot/doctor.py": "acfaf4fbf79a1b8149e7b2132c182b178cbaa33922151cd3ca3cbe8eab0e92e9",
+    "src/repopilot/environment.py": "ae73853503fe3580efbf34be4466decf66ee543676bf47e45e5d573d70cb0c13",
+    "src/repopilot/model.py": "1aa275f833063099fe2eb4c668abf27c7e3a8f51ddf3d6bf9dbc63465bf97f18",
+    "src/repopilot/recovery.py": "bf48271b4ea7d593a82ed88819921e935190014bcb6686768372bc11f1aac504",
+    "src/repopilot/runtime.py": "37aa6d91b1b15d042b9040c6955ab0f6cd3352c0470b801bd5d27fe24568cdb2",
+    "src/repopilot/tools.py": "4d7045024f8e4ac787f0346525a4949e5c80c5404d6a9738ef8e5ffce9e9b8d6",
+    "tests/repopilot/test_budget.py": "3d0007cf4d4f8f70f378bf8037c568fdfc037fe42c5b6688f986c510532929df",
+    "tests/repopilot/test_cli_run.py": "33066eff7dda56b2cc0ce7fbc93321a2e89a4bb12b35225e62d2509d17f9dca7",
+    "tests/repopilot/test_issue_regressions.py": "488361d4d4bb242225111d19c45045b43dada68f6e6c433a8fa4390b00ddbb11"
+  }
+}

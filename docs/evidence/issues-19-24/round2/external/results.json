@@ -1,0 +1,1875 @@
+{
+  "status": "COMPLETED",
+  "expected": {
+    "smoke": 8,
+    "new_ablation": 16
+  },
+  "completed": {
+    "smoke": 8,
+    "new_ablation": 16
+  },
+  "initial_configuration_failures": 8,
+  "interrupted_attempts": [
+    {
+      "checkpoint": "ablation/gpt-5.6-luna/no-planning/seed-single-file/repopilot/run-state/2a4d56613d2b4730902bf580730c594f/checkpoint.json",
+      "trace": "ablation/gpt-5.6-luna/no-planning/seed-single-file/repopilot/run-state/2a4d56613d2b4730902bf580730c594f/trace.jsonl",
+      "persisted_status": "RUNNING",
+      "observed_process_status": "not running",
+      "classification": "externally interrupted; final verifier/task_pass unavailable",
+      "last_update": "2026-09-08T13:35:51.596137+08:00",
+      "last_trace_type": "model_request",
+      "pending_tool_calls": 0,
+      "in_flight_tool_call": null,
+      "known_tokens": 5135,
+      "known_cost_usd": 0.0015089999999999997,
+      "billing_complete": false
+    },
+    {
+      "checkpoint": "ablation/gpt-5.6-sol/no-profile/recovery-public-failure/repopilot/run-state/5cf935f8de724c8596a85d78abef04cc/checkpoint.json",
+      "trace": "ablation/gpt-5.6-sol/no-profile/recovery-public-failure/repopilot/run-state/5cf935f8de724c8596a85d78abef04cc/trace.jsonl",
+      "persisted_status": "RUNNING",
+      "observed_process_status": "not running",
+      "classification": "externally interrupted; final verifier/task_pass unavailable",
+      "last_update": "2026-09-08T13:37:08.821351+08:00",
+      "last_trace_type": "model_request",
+      "pending_tool_calls": 0,
+      "in_flight_tool_call": null,
+      "known_tokens": 6864,
+      "known_cost_usd": 0.033648,
+      "billing_complete": false
+    }
+  ],
+  "full_control_reused_from_smoke": 4,
+  "total_distinct_corrected_trials": 24,
+  "scores": [
+    {
+      "stage": "smoke",
+      "model": "gpt-5.6-luna",
+      "variant": "full",
+      "engine": "baseline",
+      "task_pass": {
+        "true": 1,
+        "false": 1,
+        "null": 0,
+        "samples": 2
+      },
+      "repository_pass": {
+        "true": 2,
+        "false": 0,
+        "null": 0,
+        "samples": 2
+      }
+    },
+    {
+      "stage": "smoke",
+      "model": "gpt-5.6-luna",
+      "variant": "full",
+      "engine": "repopilot",
+      "task_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      },
+      "repository_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      }
+    },
+    {
+      "stage": "smoke",
+      "model": "gpt-5.6-sol",
+      "variant": "full",
+      "engine": "baseline",
+      "task_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      },
+      "repository_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      }
+    },
+    {
+      "stage": "smoke",
+      "model": "gpt-5.6-sol",
+      "variant": "full",
+      "engine": "repopilot",
+      "task_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      },
+      "repository_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      }
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-luna",
+      "variant": "no-recovery",
+      "engine": "repopilot",
+      "task_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      },
+      "repository_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      }
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-sol",
+      "variant": "no-profile",
+      "engine": "repopilot",
+      "task_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      },
+      "repository_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      }
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-luna",
+      "variant": "no-context-selection",
+      "engine": "repopilot",
+      "task_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      },
+      "repository_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      }
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-luna",
+      "variant": "no-planning",
+      "engine": "repopilot",
+      "task_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      },
+      "repository_pass": {
+        "true": 1,
+        "false": 1,
+        "null": 0,
+        "samples": 2
+      }
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-luna",
+      "variant": "no-profile",
+      "engine": "repopilot",
+      "task_pass": {
+        "true": 1,
+        "false": 1,
+        "null": 0,
+        "samples": 2
+      },
+      "repository_pass": {
+        "true": 1,
+        "false": 1,
+        "null": 0,
+        "samples": 2
+      }
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-sol",
+      "variant": "no-context-selection",
+      "engine": "repopilot",
+      "task_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      },
+      "repository_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      }
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-sol",
+      "variant": "no-planning",
+      "engine": "repopilot",
+      "task_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      },
+      "repository_pass": {
+        "true": 1,
+        "false": 1,
+        "null": 0,
+        "samples": 2
+      }
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-sol",
+      "variant": "no-recovery",
+      "engine": "repopilot",
+      "task_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      },
+      "repository_pass": {
+        "true": 0,
+        "false": 2,
+        "null": 0,
+        "samples": 2
+      }
+    }
+  ],
+  "rows": [
+    {
+      "stage": "smoke",
+      "model": "gpt-5.6-luna",
+      "variant": "full",
+      "task": "recovery-public-failure",
+      "engine": "baseline",
+      "status": "Submitted",
+      "task_pass": false,
+      "repository_pass": true,
+      "behavior_pass": false,
+      "successful_termination": true,
+      "duration_seconds": 131.4473569460024,
+      "tokens": {
+        "cache_write": null,
+        "cached": 5632,
+        "completion": 1305,
+        "prompt": 16036,
+        "reasoning": 0,
+        "total": 17341
+      },
+      "known_trace_tokens": null,
+      "trace_usage_complete": null,
+      "runtime_reported_cost_usd": 0.00375944,
+      "cost_coverage": "baseline_internal_retries_not_audited",
+      "standard_price_estimate_usd": 0.00375944,
+      "request_count": 7,
+      "request_errors": [],
+      "failures": [],
+      "recovery_actions": {},
+      "budget_exhausted": [],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.03321948699885979,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "smoke/gpt-5.6-luna/full/recovery-public-failure/baseline/result.json"
+    },
+    {
+      "stage": "smoke",
+      "model": "gpt-5.6-luna",
+      "variant": "full",
+      "task": "recovery-public-failure",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": false,
+      "successful_termination": false,
+      "duration_seconds": 116.96828193900001,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 748,
+        "prompt": 13955,
+        "reasoning": 0,
+        "total": 14703
+      },
+      "known_trace_tokens": 14703,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.0036885999999999993,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.0036885999999999998,
+      "request_count": 7,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "update_plan",
+          "type": "failure"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 2,
+        "DEBUG_OBSERVATION": 1,
+        "REPLAN": 1
+      },
+      "budget_exhausted": [
+        "replans"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.020095829997444525,
+        "exit_code": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/tmp/repopilot-evaluation-source-prv50dy5/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 23, in <module>\n    raise SystemExit(main(sys.argv[1]))\n                     ^^^^^^^^^^^^^^^^^\n  File \"/tmp/repopilot-evaluation-source-prv50dy5/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 17, in main\n    assert unique_clean_lines(values) == [\"Straße\", \"beta\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "smoke/gpt-5.6-luna/full/recovery-public-failure/repopilot/result.json"
+    },
+    {
+      "stage": "smoke",
+      "model": "gpt-5.6-luna",
+      "variant": "full",
+      "task": "seed-single-file",
+      "engine": "baseline",
+      "status": "Submitted",
+      "task_pass": true,
+      "repository_pass": true,
+      "behavior_pass": true,
+      "successful_termination": true,
+      "duration_seconds": 61.484942614999454,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 1473,
+        "prompt": 8980,
+        "reasoning": 0,
+        "total": 10453
+      },
+      "known_trace_tokens": null,
+      "trace_usage_complete": null,
+      "runtime_reported_cost_usd": 0.0035636,
+      "cost_coverage": "baseline_internal_retries_not_audited",
+      "standard_price_estimate_usd": 0.0035636,
+      "request_count": 6,
+      "request_errors": [],
+      "failures": [],
+      "recovery_actions": {},
+      "budget_exhausted": [],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.021720789998653345,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "smoke/gpt-5.6-luna/full/seed-single-file/baseline/result.json"
+    },
+    {
+      "stage": "smoke",
+      "model": "gpt-5.6-luna",
+      "variant": "full",
+      "task": "seed-single-file",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "successful_termination": false,
+      "duration_seconds": 180.33969103600248,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 238,
+        "prompt": 11302,
+        "reasoning": 0,
+        "total": 11540
+      },
+      "known_trace_tokens": 11540,
+      "trace_usage_complete": false,
+      "runtime_reported_cost_usd": 0.0025459999999999997,
+      "cost_coverage": "partial",
+      "standard_price_estimate_usd": 0.002546,
+      "request_count": 7,
+      "request_errors": [
+        "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+        "Agent Run budget exhausted: run_time."
+      ],
+      "failures": [
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETRY_MODEL": 1,
+        "RETURN_OBSERVATION": 1,
+        "REPLAN": 1
+      },
+      "budget_exhausted": [
+        "run_time"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.020938216002832633,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "smoke/gpt-5.6-luna/full/seed-single-file/repopilot/result.json"
+    },
+    {
+      "stage": "smoke",
+      "model": "gpt-5.6-sol",
+      "variant": "full",
+      "task": "recovery-public-failure",
+      "engine": "baseline",
+      "status": "TimeExceeded",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": false,
+      "successful_termination": false,
+      "duration_seconds": 203.72789651499988,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 459,
+        "prompt": 2970,
+        "reasoning": 0,
+        "total": 3429
+      },
+      "known_trace_tokens": null,
+      "trace_usage_complete": null,
+      "runtime_reported_cost_usd": 0.021060000000000002,
+      "cost_coverage": "baseline_internal_retries_not_audited",
+      "standard_price_estimate_usd": 0.02106,
+      "request_count": 3,
+      "request_errors": [],
+      "failures": [],
+      "recovery_actions": {},
+      "budget_exhausted": [],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.05800915700092446,
+        "exit_code": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/tmp/repopilot-evaluation-source-mq_hd8la/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 23, in <module>\n    raise SystemExit(main(sys.argv[1]))\n                     ^^^^^^^^^^^^^^^^^\n  File \"/tmp/repopilot-evaluation-source-mq_hd8la/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 17, in main\n    assert unique_clean_lines(values) == [\"Straße\", \"beta\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "smoke/gpt-5.6-sol/full/recovery-public-failure/baseline/result.json"
+    },
+    {
+      "stage": "smoke",
+      "model": "gpt-5.6-sol",
+      "variant": "full",
+      "task": "recovery-public-failure",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": false,
+      "successful_termination": false,
+      "duration_seconds": 180.35301400900062,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 179,
+        "prompt": 4320,
+        "reasoning": 0,
+        "total": 4499
+      },
+      "known_trace_tokens": 4499,
+      "trace_usage_complete": false,
+      "runtime_reported_cost_usd": 0.020859999999999997,
+      "cost_coverage": "partial",
+      "standard_price_estimate_usd": 0.02086,
+      "request_count": 6,
+      "request_errors": [
+        "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+        "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+        "Agent Run budget exhausted: run_time."
+      ],
+      "failures": [
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+          "type": "failure"
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETRY_MODEL": 1,
+        "REPLAN": 1
+      },
+      "budget_exhausted": [
+        "run_time"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.020338615999207832,
+        "exit_code": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/tmp/repopilot-evaluation-source-mq_hd8la/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 23, in <module>\n    raise SystemExit(main(sys.argv[1]))\n                     ^^^^^^^^^^^^^^^^^\n  File \"/tmp/repopilot-evaluation-source-mq_hd8la/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 17, in main\n    assert unique_clean_lines(values) == [\"Straße\", \"beta\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "smoke/gpt-5.6-sol/full/recovery-public-failure/repopilot/result.json"
+    },
+    {
+      "stage": "smoke",
+      "model": "gpt-5.6-sol",
+      "variant": "full",
+      "task": "seed-single-file",
+      "engine": "baseline",
+      "status": "TimeExceeded",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "successful_termination": false,
+      "duration_seconds": 223.00229647000015,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 933,
+        "prompt": 3657,
+        "reasoning": 0,
+        "total": 4590
+      },
+      "known_trace_tokens": null,
+      "trace_usage_complete": null,
+      "runtime_reported_cost_usd": 0.033288,
+      "cost_coverage": "baseline_internal_retries_not_audited",
+      "standard_price_estimate_usd": 0.033288,
+      "request_count": 3,
+      "request_errors": [],
+      "failures": [],
+      "recovery_actions": {},
+      "budget_exhausted": [],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.019172178002918372,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "smoke/gpt-5.6-sol/full/seed-single-file/baseline/result.json"
+    },
+    {
+      "stage": "smoke",
+      "model": "gpt-5.6-sol",
+      "variant": "full",
+      "task": "seed-single-file",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "successful_termination": false,
+      "duration_seconds": 90.25540299500062,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 577,
+        "prompt": 10529,
+        "reasoning": 0,
+        "total": 11106
+      },
+      "known_trace_tokens": 11106,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.053655999999999995,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.053656,
+      "request_count": 6,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 1,
+        "REPLAN": 1
+      },
+      "budget_exhausted": [
+        "replans"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.018859148000046844,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "smoke/gpt-5.6-sol/full/seed-single-file/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-luna",
+      "variant": "no-recovery",
+      "task": "recovery-public-failure",
+      "engine": "repopilot",
+      "status": "FAILED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": false,
+      "successful_termination": false,
+      "duration_seconds": 11.021471963002114,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 79,
+        "prompt": 2542,
+        "reasoning": 0,
+        "total": 2621
+      },
+      "known_trace_tokens": 2621,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.0006031999999999999,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.0006032,
+      "request_count": 2,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "STOP": 1
+      },
+      "budget_exhausted": [],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.019429489999311045,
+        "exit_code": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/tmp/repopilot-evaluation-source-55fgi4fq/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 23, in <module>\n    raise SystemExit(main(sys.argv[1]))\n                     ^^^^^^^^^^^^^^^^^\n  File \"/tmp/repopilot-evaluation-source-55fgi4fq/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 17, in main\n    assert unique_clean_lines(values) == [\"Straße\", \"beta\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "ablation/gpt-5.6-luna/no-recovery/recovery-public-failure/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-luna",
+      "variant": "no-recovery",
+      "task": "seed-single-file",
+      "engine": "repopilot",
+      "status": "FAILED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "successful_termination": false,
+      "duration_seconds": 108.48828105099892,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 25,
+        "prompt": 1133,
+        "reasoning": 0,
+        "total": 1158
+      },
+      "known_trace_tokens": 1158,
+      "trace_usage_complete": false,
+      "runtime_reported_cost_usd": 0.00025659999999999995,
+      "cost_coverage": "partial",
+      "standard_price_estimate_usd": 0.0002566,
+      "request_count": 2,
+      "request_errors": [
+        "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out"
+      ],
+      "failures": [
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "STOP": 1
+      },
+      "budget_exhausted": [],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.03243397900223499,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "ablation/gpt-5.6-luna/no-recovery/seed-single-file/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-sol",
+      "variant": "no-profile",
+      "task": "seed-single-file",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "successful_termination": false,
+      "duration_seconds": 179.85269087399865,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 587,
+        "prompt": 7472,
+        "reasoning": 0,
+        "total": 8059
+      },
+      "known_trace_tokens": 8059,
+      "trace_usage_complete": false,
+      "runtime_reported_cost_usd": 0.041628,
+      "cost_coverage": "partial",
+      "standard_price_estimate_usd": 0.041628,
+      "request_count": 5,
+      "request_errors": [
+        "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out"
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 1,
+        "REPLAN": 1,
+        "RETRY_MODEL": 1
+      },
+      "budget_exhausted": [
+        "replans"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.033939257002202794,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "ablation/gpt-5.6-sol/no-profile/seed-single-file/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-luna",
+      "variant": "no-context-selection",
+      "task": "recovery-public-failure",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": false,
+      "successful_termination": false,
+      "duration_seconds": 66.10723875500116,
+      "tokens": {
+        "cache_write": null,
+        "cached": 1536,
+        "completion": 1029,
+        "prompt": 18489,
+        "reasoning": 0,
+        "total": 19518
+      },
+      "known_trace_tokens": 19518,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.00465612,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.00465612,
+      "request_count": 8,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 2,
+        "REPLAN": 2
+      },
+      "budget_exhausted": [
+        "replans"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.03406342000380391,
+        "exit_code": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/tmp/repopilot-evaluation-source-u0x40eew/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 23, in <module>\n    raise SystemExit(main(sys.argv[1]))\n                     ^^^^^^^^^^^^^^^^^\n  File \"/tmp/repopilot-evaluation-source-u0x40eew/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 17, in main\n    assert unique_clean_lines(values) == [\"Straße\", \"beta\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-luna/no-context-selection/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-luna",
+      "variant": "no-context-selection",
+      "task": "seed-single-file",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "successful_termination": false,
+      "duration_seconds": 51.76634848299727,
+      "tokens": {
+        "cache_write": null,
+        "cached": 1536,
+        "completion": 667,
+        "prompt": 11551,
+        "reasoning": 0,
+        "total": 12218
+      },
+      "known_trace_tokens": 12218,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.00283412,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.00283412,
+      "request_count": 7,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 1,
+        "REPLAN": 1
+      },
+      "budget_exhausted": [
+        "replans"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.03392470700055128,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-luna/no-context-selection/seed-single-file/attempt-001/seed-single-file/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-luna",
+      "variant": "no-planning",
+      "task": "recovery-public-failure",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": true,
+      "behavior_pass": false,
+      "successful_termination": false,
+      "duration_seconds": 56.4035200579965,
+      "tokens": {
+        "cache_write": null,
+        "cached": 3072,
+        "completion": 1036,
+        "prompt": 17546,
+        "reasoning": 0,
+        "total": 18582
+      },
+      "known_trace_tokens": 18582,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.00419944,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.0041994400000000005,
+      "request_count": 8,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "verify_task",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Verification references an unknown Plan Step.",
+          "tool_name": "verify_task",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 2,
+        "REPLAN": 2
+      },
+      "budget_exhausted": [
+        "replans"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.02143439600331476,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-luna/no-planning/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-luna",
+      "variant": "no-planning",
+      "task": "seed-single-file",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "successful_termination": false,
+      "duration_seconds": 50.262702617001196,
+      "tokens": {
+        "cache_write": null,
+        "cached": 1536,
+        "completion": 793,
+        "prompt": 8570,
+        "reasoning": 0,
+        "total": 9363
+      },
+      "known_trace_tokens": 9363,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.00238912,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.00238912,
+      "request_count": 6,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "run_command",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 2,
+        "REPLAN": 2
+      },
+      "budget_exhausted": [
+        "replans"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.019107102998532355,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-luna/no-planning/seed-single-file/attempt-001/seed-single-file/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-luna",
+      "variant": "no-profile",
+      "task": "recovery-public-failure",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": true,
+      "repository_pass": true,
+      "behavior_pass": true,
+      "successful_termination": false,
+      "duration_seconds": 112.20348504700087,
+      "tokens": {
+        "cache_write": null,
+        "cached": 26624,
+        "completion": 1421,
+        "prompt": 57356,
+        "reasoning": 0,
+        "total": 58777
+      },
+      "known_trace_tokens": 58777,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.008384079999999999,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.008384080000000002,
+      "request_count": 15,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "run_command",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "read_file",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "run_command",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 4,
+        "REPLAN": 1
+      },
+      "budget_exhausted": [
+        "steps"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.019981687000836246,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-luna/no-profile/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-luna",
+      "variant": "no-profile",
+      "task": "seed-single-file",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "successful_termination": false,
+      "duration_seconds": 52.57918650799547,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 623,
+        "prompt": 10999,
+        "reasoning": 0,
+        "total": 11622
+      },
+      "known_trace_tokens": 11622,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.0029474,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.0029474,
+      "request_count": 6,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 1,
+        "REPLAN": 1
+      },
+      "budget_exhausted": [
+        "replans"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.020374676001665648,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-luna/no-profile/seed-single-file/attempt-001/seed-single-file/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-sol",
+      "variant": "no-context-selection",
+      "task": "recovery-public-failure",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": false,
+      "successful_termination": false,
+      "duration_seconds": 180.36177085599775,
+      "tokens": {
+        "cache_write": null,
+        "cached": 5632,
+        "completion": 130,
+        "prompt": 6964,
+        "reasoning": 0,
+        "total": 7094
+      },
+      "known_trace_tokens": 7094,
+      "trace_usage_complete": false,
+      "runtime_reported_cost_usd": 0.0101808,
+      "cost_coverage": "partial",
+      "standard_price_estimate_usd": 0.010180799999999999,
+      "request_count": 4,
+      "request_errors": [
+        "litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out.",
+        "Agent Run budget exhausted: run_time."
+      ],
+      "failures": [
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out.",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "run_command",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETRY_MODEL": 1,
+        "REPLAN": 1
+      },
+      "budget_exhausted": [
+        "run_time"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.024667567005963065,
+        "exit_code": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/tmp/repopilot-evaluation-source-7vz37esl/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 23, in <module>\n    raise SystemExit(main(sys.argv[1]))\n                     ^^^^^^^^^^^^^^^^^\n  File \"/tmp/repopilot-evaluation-source-7vz37esl/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 17, in main\n    assert unique_clean_lines(values) == [\"Straße\", \"beta\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-sol/no-context-selection/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-sol",
+      "variant": "no-context-selection",
+      "task": "seed-single-file",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "successful_termination": false,
+      "duration_seconds": 180.3545529230032,
+      "tokens": {
+        "cache_write": null,
+        "cached": 8320,
+        "completion": 826,
+        "prompt": 27968,
+        "reasoning": 0,
+        "total": 28794
+      },
+      "known_trace_tokens": 28794,
+      "trace_usage_complete": false,
+      "runtime_reported_cost_usd": 0.09843999999999999,
+      "cost_coverage": "partial",
+      "standard_price_estimate_usd": 0.09844,
+      "request_count": 9,
+      "request_errors": [
+        "Agent Run budget exhausted: run_time."
+      ],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "run_command",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 3,
+        "REPLAN": 1
+      },
+      "budget_exhausted": [
+        "run_time"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.01969180000014603,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-sol/no-context-selection/seed-single-file/attempt-001/seed-single-file/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-sol",
+      "variant": "no-planning",
+      "task": "recovery-public-failure",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": true,
+      "behavior_pass": false,
+      "successful_termination": false,
+      "duration_seconds": 93.69084989999828,
+      "tokens": {
+        "cache_write": null,
+        "cached": 23552,
+        "completion": 1390,
+        "prompt": 31956,
+        "reasoning": 0,
+        "total": 33346
+      },
+      "known_trace_tokens": 33346,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.0708368,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.0708368,
+      "request_count": 10,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "run_command",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "verify_task",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Verification references an unknown Plan Step.",
+          "tool_name": "verify_task",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 3,
+        "REPLAN": 2
+      },
+      "budget_exhausted": [
+        "replans"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.01933656099572545,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-sol/no-planning/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-sol",
+      "variant": "no-planning",
+      "task": "seed-single-file",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "successful_termination": false,
+      "duration_seconds": 82.11958161999792,
+      "tokens": {
+        "cache_write": null,
+        "cached": 10860,
+        "completion": 1113,
+        "prompt": 36441,
+        "reasoning": 0,
+        "total": 37554
+      },
+      "known_trace_tokens": 37554,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.128928,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.128928,
+      "request_count": 6,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "run_command",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 2,
+        "REPLAN": 2
+      },
+      "budget_exhausted": [
+        "replans"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.019791432001511566,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-sol/no-planning/seed-single-file/attempt-001/seed-single-file/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-sol",
+      "variant": "no-profile",
+      "task": "recovery-public-failure",
+      "engine": "repopilot",
+      "status": "BUDGET_EXCEEDED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": false,
+      "successful_termination": false,
+      "duration_seconds": 80.3726870640021,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 906,
+        "prompt": 27267,
+        "reasoning": 0,
+        "total": 28173
+      },
+      "known_trace_tokens": 28173,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.127188,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.127188,
+      "request_count": 5,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "RETURN_OBSERVATION": 1,
+        "REPLAN": 1
+      },
+      "budget_exhausted": [
+        "replans"
+      ],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.01920657799928449,
+        "exit_code": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/tmp/repopilot-evaluation-source-9bdz0hhx/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 23, in <module>\n    raise SystemExit(main(sys.argv[1]))\n                     ^^^^^^^^^^^^^^^^^\n  File \"/tmp/repopilot-evaluation-source-9bdz0hhx/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 17, in main\n    assert unique_clean_lines(values) == [\"Straße\", \"beta\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-sol/no-profile/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-sol",
+      "variant": "no-recovery",
+      "task": "recovery-public-failure",
+      "engine": "repopilot",
+      "status": "FAILED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": false,
+      "successful_termination": false,
+      "duration_seconds": 50.910801856000035,
+      "tokens": {
+        "cache_write": null,
+        "cached": 10891,
+        "completion": 446,
+        "prompt": 13636,
+        "reasoning": 0,
+        "total": 14082
+      },
+      "known_trace_tokens": 14082,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.024256399999999997,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.0242564,
+      "request_count": 3,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "error: No valid patches in input (allow with \"--allow-empty\")\n",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "STOP": 1
+      },
+      "budget_exhausted": [],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.019862465996993706,
+        "exit_code": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/tmp/repopilot-evaluation-source-6t1hfleh/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 23, in <module>\n    raise SystemExit(main(sys.argv[1]))\n                     ^^^^^^^^^^^^^^^^^\n  File \"/tmp/repopilot-evaluation-source-6t1hfleh/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py\", line 17, in main\n    assert unique_clean_lines(values) == [\"Straße\", \"beta\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-sol/no-recovery/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/result.json"
+    },
+    {
+      "stage": "ablation",
+      "model": "gpt-5.6-sol",
+      "variant": "no-recovery",
+      "task": "seed-single-file",
+      "engine": "repopilot",
+      "status": "FAILED",
+      "task_pass": false,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "successful_termination": false,
+      "duration_seconds": 72.41910918900248,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 303,
+        "prompt": 8509,
+        "reasoning": 0,
+        "total": 8812
+      },
+      "known_trace_tokens": 8812,
+      "trace_usage_complete": true,
+      "runtime_reported_cost_usd": 0.040096,
+      "cost_coverage": "trace_complete",
+      "standard_price_estimate_usd": 0.040096,
+      "request_count": 3,
+      "request_errors": [],
+      "failures": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Invalid native Tool Call JSON object; supply complete valid arguments.",
+          "tool_name": "apply_patch",
+          "type": "failure"
+        }
+      ],
+      "recovery_actions": {
+        "STOP": 1
+      },
+      "budget_exhausted": [],
+      "effective_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "verifier": {
+        "duration_seconds": 0.03558124499977566,
+        "exit_code": 1,
+        "stderr": "hidden verification failed: \n",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      },
+      "result": "continuation/gpt-5.6-sol/no-recovery/seed-single-file/attempt-001/seed-single-file/repopilot/result.json"
+    }
+  ],
+  "billing_total_usd": null,
+  "billing_note": "No relay invoice is available. Reported costs may cover only completed responses; standard prices are separate estimates."
+}

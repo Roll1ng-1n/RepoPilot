@@ -128,13 +128,26 @@ def test_docker_adapter_reuses_upstream_lifecycle_and_preserves_streams(monkeypa
     ]
     assert subprocess_calls == [
         (
-            ["docker", "exec", "-i", "-w", "/workspace", "container-id", "sh", "-c", "printf ignored"],
+            [
+                "docker",
+                "exec",
+                "-i",
+                "-w",
+                "/workspace",
+                "container-id",
+                "timeout",
+                "--signal=KILL",
+                "30.0s",
+                "sh",
+                "-c",
+                "printf ignored",
+            ],
             {
                 "capture_output": True,
                 "check": False,
                 "input": "input",
                 "text": True,
-                "timeout": 30.0,
+                "timeout": 32.0,
             },
         ),
         (["docker", "rm", "-f", "container-id"], {"capture_output": True, "check": False, "timeout": 60}),

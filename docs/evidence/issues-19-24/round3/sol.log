@@ -1,0 +1,69 @@
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+START smoke/gpt-5.6-sol
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-70cf7890 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und3/smoke/gpt-5.6-sol/seed-single-file/baseline/workspace,target=/workspace    
+--user=1000:1000                                                                
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-70cf7890 with ID 
+1bdd0d64ac829df914d66a4ad5fa5b50e30aad6a4fa79ce84809f1104906a2da                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-beb179db -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und3/smoke/gpt-5.6-sol/seed-single-file/repopilot/workspace,target=/workspace   
+--user=1000:1000                                                                
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-beb179db with ID 
+c66cfaf65d6787f254b1ce4c424914b0eb666f44955c351dd10b2f9972904bf8                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-06d5da8f -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und3/smoke/gpt-5.6-sol/recovery-public-failure/baseline/workspace,target=/worksp
+ace --user=1000:1000                                                            
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-06d5da8f with ID 
+42fc89c97080ced0066bf8a5932d25a0867823444fcb03e3b90f922bebfdd876                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-680a1876 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und3/smoke/gpt-5.6-sol/recovery-public-failure/repopilot/workspace,target=/works
+pace --user=1000:1000                                                           
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-680a1876 with ID 
+c7cb396d8c4c02086bfb1dd34eb56853ded8125211451e0d8901c0431ffc1ea6                
+{"stage": "smoke", "model": "gpt-5.6-sol", "task": "seed-single-file", "engine": "baseline", "status": "Submitted", "repository_pass": true, "task_pass": true}
+{"stage": "smoke", "model": "gpt-5.6-sol", "task": "seed-single-file", "engine": "repopilot", "status": "SUCCEEDED", "repository_pass": true, "task_pass": true}
+{"stage": "smoke", "model": "gpt-5.6-sol", "task": "recovery-public-failure", "engine": "baseline", "status": "Submitted", "repository_pass": true, "task_pass": false}
+{"stage": "smoke", "model": "gpt-5.6-sol", "task": "recovery-public-failure", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "repository_pass": true, "task_pass": true}
+DONE smoke/gpt-5.6-sol
+START no-planning/gpt-5.6-sol
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-bdc61354 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und3/no-planning/gpt-5.6-sol/seed-single-file/repopilot/workspace,target=/worksp
+ace --user=1000:1000                                                            
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-bdc61354 with ID 
+75364a9ecd15a97e88806c726578ccf134bf802fba385c67a04342444ea2fea6                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-347e7086 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und3/no-planning/gpt-5.6-sol/recovery-public-failure/repopilot/workspace,target=
+/workspace --user=1000:1000                                                     
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-347e7086 with ID 
+373454cb4d864c575d18646acc2d7668ae607dd0439806e214749213eb1e1334                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+{"stage": "no-planning", "model": "gpt-5.6-sol", "task": "seed-single-file", "engine": "repopilot", "status": "SUCCEEDED", "repository_pass": true, "task_pass": true}
+{"stage": "no-planning", "model": "gpt-5.6-sol", "task": "recovery-public-failure", "engine": "repopilot", "status": "SUCCEEDED", "repository_pass": true, "task_pass": true}
+DONE no-planning/gpt-5.6-sol

@@ -1,0 +1,52 @@
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-8277cb12 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/smoke/gpt-5.6-sol/full/seed-single-file/baseline/workspace,target=
+/workspace --user=1000:1000                                                     
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-8277cb12 with ID 
+8292c4a805e6f61f230cdfa2e47700ccf9ba538e64e4bc26648b4eec2e17f22b                
+Retrying <unknown> in 4 seconds as it raised Timeout: litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out..
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-93c58f6e -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/smoke/gpt-5.6-sol/full/seed-single-file/repopilot/workspace,target
+=/workspace --user=1000:1000                                                    
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-93c58f6e with ID 
+d27f8d427a7aa18ad8abe167d8869f46d528a714425913034806a0d8b9d0010c                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-f0be8e04 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/smoke/gpt-5.6-sol/full/recovery-public-failure/baseline/workspace,
+target=/workspace --user=1000:1000                                              
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-f0be8e04 with ID 
+61ccc459a3b23616ce5f4d000a555038c2658c8079b5d1f89b7fd98e5a2d992b                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-fe0cf9f4 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/smoke/gpt-5.6-sol/full/recovery-public-failure/repopilot/workspace
+,target=/workspace --user=1000:1000                                             
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-fe0cf9f4 with ID 
+c8635ea53e5b59ddf0be8a6ad67f405ddb4413de3686016faa2145648ddce2da                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+{"model": "gpt-5.6-sol", "variant": "full", "task": "seed-single-file", "engine": "baseline", "status": "TimeExceeded", "task_pass": false}
+{"model": "gpt-5.6-sol", "variant": "full", "task": "seed-single-file", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false}
+{"model": "gpt-5.6-sol", "variant": "full", "task": "recovery-public-failure", "engine": "baseline", "status": "TimeExceeded", "task_pass": false}
+{"model": "gpt-5.6-sol", "variant": "full", "task": "recovery-public-failure", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false}

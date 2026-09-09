@@ -1,0 +1,22 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "1320e9513c19f2b308bef4a30b4df71cd286ade3a6aeb1d1745e16b2f6903ca0",
+      "before_fingerprint": "1320e9513c19f2b308bef4a30b4df71cd286ade3a6aeb1d1745e16b2f6903ca0",
+      "command": "true",
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "test",
+      "result": {
+        "duration_seconds": 0.004574653001327533,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "all",
+      "sequence": 1
+    }
+  ]
+}

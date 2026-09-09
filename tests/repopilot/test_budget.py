@@ -16,7 +16,7 @@ def test_run_budget_stops_before_an_extra_agent_step() -> None:
 
 
 def test_run_budget_stops_when_the_agent_run_time_is_exhausted() -> None:
-    times = iter([0.0, 1.0])
+    times = iter([0.0, 1.0, 1.0])
     budget = RunBudget(max_run_seconds=0.5)
     tracker = budget.start(clock=lambda: next(times))
 

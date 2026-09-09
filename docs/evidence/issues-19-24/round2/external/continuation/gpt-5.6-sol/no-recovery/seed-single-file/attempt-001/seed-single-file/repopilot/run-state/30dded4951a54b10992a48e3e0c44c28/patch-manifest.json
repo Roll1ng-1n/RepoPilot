@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "33e8c525cb7c3453ae385e9e46753bef5cfe642d0a74b453aaadc6402e267c1e",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-recovery/seed-single-file/attempt-001/seed-single-file/repopilot/workspace",
+      "head": "b966a4316740db7e1b3dbf47bd9789d0e6494f16",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-recovery/seed-single-file/attempt-001/seed-single-file/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "ec77d7c90f44f39c804e25b9d802f9f9e82b337e"
+  },
+  "bytes": 0,
+  "final": {
+    "state": {
+      "diff_fingerprint": "33e8c525cb7c3453ae385e9e46753bef5cfe642d0a74b453aaadc6402e267c1e",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-recovery/seed-single-file/attempt-001/seed-single-file/repopilot/workspace",
+      "head": "b966a4316740db7e1b3dbf47bd9789d0e6494f16",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-recovery/seed-single-file/attempt-001/seed-single-file/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "ec77d7c90f44f39c804e25b9d802f9f9e82b337e"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

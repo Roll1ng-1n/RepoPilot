@@ -5,6 +5,7 @@ from __future__ import annotations
 import ipaddress
 import os
 import platform
+import signal
 import subprocess
 import time
 from collections.abc import Callable, Mapping
@@ -155,6 +156,7 @@ class Command:
     argv: tuple[str, ...]
     timeout_seconds: float = 30.0
     stdin: str | None = None
+    full_output: bool = False
 
 
 @dataclass(frozen=True)
@@ -222,17 +224,32 @@ class LocalExecutionEnvironment:
     def execute(self, command: Command) -> CommandResult:
         started_at = time.monotonic()
         try:
-            completed = subprocess.run(
+            process = subprocess.Popen(
                 command.argv,
                 cwd=self._target_repository,
-                capture_output=True,
-                check=False,
-                input=command.stdin,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
                 text=True,
-                timeout=command.timeout_seconds,
+                start_new_session=True,
             )
-            stdout, stdout_truncated = self._truncate(completed.stdout)
-            stderr, stderr_truncated = self._truncate(completed.stderr)
+            try:
+                output, errors = process.communicate(command.stdin, timeout=command.timeout_seconds)
+            except BaseException:
+                # Killing the shell alone leaves its children able to mutate the repository.
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                process.communicate()
+                raise
+            completed = subprocess.CompletedProcess(command.argv, process.returncode, output, errors)
+            stdout, stdout_truncated = (
+                (completed.stdout, False) if command.full_output else self._truncate(completed.stdout)
+            )
+            stderr, stderr_truncated = (
+                (completed.stderr, False) if command.full_output else self._truncate(completed.stderr)
+            )
             return CommandResult(
                 exit_code=completed.returncode,
                 stdout=stdout,
@@ -334,6 +351,9 @@ class DockerExecutionEnvironment:
             "-w",
             self._docker.config.cwd,
             self._docker.container_id,
+            "timeout",
+            "--signal=KILL",
+            f"{command.timeout_seconds}s",
             *command.argv,
         ]
         try:
@@ -343,10 +363,22 @@ class DockerExecutionEnvironment:
                 check=False,
                 input=command.stdin,
                 text=True,
-                timeout=command.timeout_seconds,
+                timeout=command.timeout_seconds + 2,
             )
-            stdout, stdout_truncated = self._truncate(completed.stdout)
-            stderr, stderr_truncated = self._truncate(completed.stderr)
+            if completed.returncode in {124, 137}:
+                return CommandResult(
+                    -1,
+                    completed.stdout,
+                    f"Command timed out after {command.timeout_seconds} seconds.",
+                    time.monotonic() - started_at,
+                    True,
+                )
+            stdout, stdout_truncated = (
+                (completed.stdout, False) if command.full_output else self._truncate(completed.stdout)
+            )
+            stderr, stderr_truncated = (
+                (completed.stderr, False) if command.full_output else self._truncate(completed.stderr)
+            )
             return CommandResult(
                 exit_code=completed.returncode,
                 stdout=stdout,
@@ -355,6 +387,7 @@ class DockerExecutionEnvironment:
                 truncated=stdout_truncated or stderr_truncated,
             )
         except subprocess.TimeoutExpired as error:
+            self.close()
             stdout, _ = self._truncate(self._as_text(error.stdout))
             stderr, _ = self._truncate(self._as_text(error.stderr))
             return CommandResult(
@@ -364,6 +397,9 @@ class DockerExecutionEnvironment:
                 duration_seconds=time.monotonic() - started_at,
                 truncated=True,
             )
+        except KeyboardInterrupt:
+            self.close()
+            raise
         except OSError as error:
             return CommandResult(
                 exit_code=-1,

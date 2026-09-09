@@ -1,0 +1,40 @@
+Starting gpt-5.6-luna: no-recovery
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-2c9dd3cf -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/ablation/gpt-5.6-luna/no-recovery/seed-single-file/repopilot/works
+pace,target=/workspace --user=1000:1000                                         
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-2c9dd3cf with ID 
+5bf3fb4642e7e2ec251d7e1dfa691c32505f1e3e5b71cd927fa68e6fc68c8e44                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-84ffeccd -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/ablation/gpt-5.6-luna/no-recovery/recovery-public-failure/repopilo
+t/workspace,target=/workspace --user=1000:1000                                  
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-84ffeccd with ID 
+c654bf635d1360db0db8fcf97c55e9eb15cc89d2081ce67adb35a479f640f926                
+{"model": "gpt-5.6-luna", "variant": "no-recovery", "task": "seed-single-file", "engine": "repopilot", "status": "FAILED", "task_pass": false}
+{"model": "gpt-5.6-luna", "variant": "no-recovery", "task": "recovery-public-failure", "engine": "repopilot", "status": "FAILED", "task_pass": false}
+Finished gpt-5.6-luna: no-recovery
+Starting gpt-5.6-luna: no-planning
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-27c08e5d -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/ablation/gpt-5.6-luna/no-planning/seed-single-file/repopilot/works
+pace,target=/workspace --user=1000:1000                                         
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-27c08e5d with ID 
+8bcabc9cbf5c6a7706a489f8f1cb797676ef90b8437aae7fd32f364a5b979784                
+13:34:46 - LiteLLM:WARNING: get_model_cost_map.py:454 - LiteLLM: Failed to fetch remote model cost map from https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json: The read operation timed out. Falling back to local backup.

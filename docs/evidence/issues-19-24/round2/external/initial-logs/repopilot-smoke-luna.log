@@ -1,0 +1,42 @@
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+13:18:30 - LiteLLM:WARNING: get_model_cost_map.py:454 - LiteLLM: Failed to fetch remote model cost map from https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json: _ssl.c:983: The handshake operation timed out. Falling back to local backup.
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-58a0a227 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/smoke-luna/b370227e7dcb4fbcbca82152a7bda193/seed-single-file/basel
+ine/workspace,target=/workspace --user=1000:1000                                
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-58a0a227 with ID 
+7f94a991b9e1a6a6adbde5a8efb747aad2ed7dd449c11ab508b636e5ae8ee488                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-2d3bbb9f -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/smoke-luna/b370227e7dcb4fbcbca82152a7bda193/seed-single-file/repop
+ilot/workspace,target=/workspace --user=1000:1000                               
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-2d3bbb9f with ID 
+f2d2ba492ecc1924c45fbea1ede897023fd6ecbfee27e05cfa2261e1e6dfd7da                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-5de5c37f -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/smoke-luna/b370227e7dcb4fbcbca82152a7bda193/recovery-public-failur
+e/baseline/workspace,target=/workspace --user=1000:1000                         
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-5de5c37f with ID 
+e00cdc0b6f530c963f92339a24dcd4830244ed572063952a6e30413049f51d9e                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-555edc56 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/smoke-luna/b370227e7dcb4fbcbca82152a7bda193/recovery-public-failur
+e/repopilot/workspace,target=/workspace --user=1000:1000                        
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-555edc56 with ID 
+3604a4c8b080b52755afabc8367bef5126682e7e91f8bbeb8b68b25922bb80fd                
+Agent Benchmark: /home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round2/external/smoke-luna/b370227e7dcb4fbcbca82152a7bda193
+- seed-single-file / baseline: repository failed; behavior=True; task=False (Agent Run: UnsupportedParamsError, repeat=1)
+- seed-single-file / repopilot: repository failed; behavior=True; task=False (Agent Run: FAILED, repeat=1)
+- recovery-public-failure / baseline: repository failed; behavior=False; task=False (Agent Run: UnsupportedParamsError, repeat=1)
+- recovery-public-failure / repopilot: repository failed; behavior=False; task=False (Agent Run: FAILED, repeat=1)
+Summary: /home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round2/external/smoke-luna/b370227e7dcb4fbcbca82152a7bda193/summary.json

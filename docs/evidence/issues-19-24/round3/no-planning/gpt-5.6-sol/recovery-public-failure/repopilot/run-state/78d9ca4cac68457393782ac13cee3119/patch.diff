@@ -1,0 +1,68 @@
+diff --git a/src/__pycache__/line_tools.cpython-312.pyc b/src/__pycache__/line_tools.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..89f4eb7584f50e99ee6a89ea2a9d60613b4879f1
+GIT binary patch
+literal 858
+zcmZuv&r2IY6rRb>uD_y<v6Wg%nL{gt*4RHlN)I9mjR%8JgtBaQN3+T9Y&tU=Sy>^6
+z9ux#^J!o(C*5bwf2fg=L3hDG%dgv{nr}omBs8LEk*f-zfef##!_xAJf@E}llKl85k
+z2LkXzCzmiU$mwH64uA(%fCs%y0K?2m1_I9@8DdPRnuiEFXRF9FU!fH<u?l?~Ps^bb
+z1UT?1nQ{Z-P@k^hSonc25*%~l;Yxx<mEa}fMoq#JTp`r0h7PM^;qZF#mmZ)1W&eU8
+z%&7!Knz|X679%2N)KwGrfD|*-bNWez10Z^}W0h-c!Zom&Nx>|5@l0h#YSgs;AN15H
+zMYT%@u4#I8GesQkOr~ZEn^3WbDXjHf6JF5NJieF&f;3Yb_>TfzDRvf-QkB)EHx`z<
+zcf>TJQzUGN<PjFk4?|^J*95%oiz;5Gz8iT2yACH)KIMdRU-(UeW9q+*i86~93#K$U
+z5z^$UK|}Uy?P?Tw(r`RaT27-us8_I<c2FWt2-ODjI1m!)Pf4@s1Tm3Dog~~+BHYFA
+zyVL6ttMi8Al4;J|X|1(I6a~E4NM!ze0=v6;yE`(=tCw{H{#=C?IJ3a`#Qt(?wtf3f
+zYwmmQ))s2#ZXOK29^B7vneCCWUAj%bjNIEY<WO#}e1zWE?QCv$etUkeyi;mt^Sh<(
+z(&2-zS=<={qvM?{$mUz6Q`H+R7A)Ck+g{|_w!Gm+K|oyLN0b+xip%ugl_!Gf3#voU
+z^#QOkb+A!g>z@fDFAm5PrvGofKt8EL$AA!i19LyY{f;#R^M}<V{x<9YMNiO4`QyNu
+Irrkb&0gAxeM*si-
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/line_tools.py b/src/line_tools.py
+index 36430672add5baeae827e1ce903bcd7f60ed8fcd..b2ae6fc25aa25e3a0898f751e8733c221538cb69 100644
+--- a/src/line_tools.py
++++ b/src/line_tools.py
+@@ -4,13 +4,14 @@ from collections.abc import Iterable
+ 
+ 
+ def unique_clean_lines(lines: Iterable[str]) -> list[str]:
+-    """Return non-empty, trimmed lines without exact duplicates."""
++    """Return non-empty, trimmed lines with Unicode case-insensitive uniqueness."""
+ 
+     seen: set[str] = set()
+     result: list[str] = []
+     for line in lines:
+         value = line.strip()
+-        if value and value not in seen:
+-            seen.add(value)
++        key = value.casefold()
++        if value and key not in seen:
++            seen.add(key)
+             result.append(value)
+     return result
+diff --git a/tests/__pycache__/test_line_tools.cpython-312.pyc b/tests/__pycache__/test_line_tools.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..29f0ce13e2aaaef7b836b0aaddca76123ec25188
+GIT binary patch
+literal 1324
+zcmcIjy=xRf6o0cjcWy2hqakV%qMm5sp-I3_5J5$g!bFtV9OAIv&Lx}d?QUlFlsi&H
+zh-hi2m4#inKf*u2CLc<|U?&!Kfs2im@9kbNf(Qyu@jm9g{k=E8eeZo=UjgvEQ*Ram
+z3*a+3`zMzfth0>9EAYT$0n}NAF|w_|s#vJ)z^?NOXJEl3czhMSoU|5F)P0~#x9v<<
+z^74?EUpx<>1}wnbBfsX6*X~|1Xj)CHeCR9rWoCNaFpLs6@uN`Bpg+(E{iTK!)j+zT
+z2>ej$YWLGr;gjgF&M3-PAfduMz_z)^R(ZunZK38(yPPw}?x$Ec2<kQ=%}Sl<DoYVE
+zkw=BEV4dqJ+%ha2jCK=~?mGeIkg>O{-OceV&z`f|`z=8e%6z8GTTZETEr{pclF7NG
+z4ZnVK_F5}ndL$FNOoOTi(bp^_Kx?Uzn@bHhP@L|V;aUbYO;t+Y&rUpv)S`~vs+>ru
+z|5T>Th$M;vJsvmBC5niutEG7CD&GwgEf%GWMKUi%%~up87NjS1ECZx<t~K>rcE<l6
+zsTcdyXHcxbj#J!rhBlm`PsLN4r*CZ)CwKY=U)I)(C%@(Fo<awc;D7U<GYmOSA8o+o
+zwX8;=rv|ZdCXSOuJ*z$x8Oy34O>;SYyR64aGn+i&Dk=1$AIC_X8+yVI<3=JP<w+%c
+zEn+3{-#wOI>&_p@{1?EZ)LIF}0Zu;*U)a2OcWe0G`uzv%4{PhQb03{~MVT{Y%jA_z
+z8Y(n=CJH4EzavEG)};`pAVfX#8UfiwA!yLDh@w4JCs3?Gij&fyXeUxZE3b*9Rp?ke
+zSJ*4EoX@gMN}?Kd*AIm#_fVBu13SPfiuT1gxXB4IY7T2v9j8^!1~#2?<IG~{22N~N
+zZ-hSKgr-iS`LiA4T*<n>s?K46mO@`ev1>ENzU6_P{S5tIU~Dh%FrU4i+8!O-7#-UK
+f@^+5{FTQAP+QU2i=*rad>8I1r?(EvYM^gMBVvJMt
+
+literal 0
+HcmV?d00001
+

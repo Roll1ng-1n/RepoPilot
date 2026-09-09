@@ -1,0 +1,6 @@
+{
+  "archive_sha256": "ad2ffa8c9608d94a460f4de40267066d705900dca5d70af4433ea4050891e61b",
+  "runner_sha256": "085f6f7ce64a69fad7bf625f5fd547a1e2cb68236de00850bbedb13508a3ef38",
+  "planning_enabled": false,
+  "provider_group": "user changed the group in .env; group identity not reported by the API"
+}

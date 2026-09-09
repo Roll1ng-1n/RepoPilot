@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "8e641708546f12232c0281961776c688fd389dc3153833fa21cc51ac702a5fa8",
+      "git_root": "/tmp/pytest-of-waaaaa/pytest-18/test_real_process_crash_recove0/target",
+      "head": "45a2c0ebab35eeee8d2fea1f5598a877f5216aef",
+      "resolved_target_repository": "/tmp/pytest-of-waaaaa/pytest-18/test_real_process_crash_recove0/target",
+      "status": ""
+    },
+    "tree": "cfa9ac055da9ffe521564e8699c1ad4ca1a73b6d"
+  },
+  "bytes": 184,
+  "final": {
+    "state": {
+      "diff_fingerprint": "089512208f617ceca5cc03f4bc84bd23a746b4ea81829d11f6ad97209baabce7",
+      "git_root": "/tmp/pytest-of-waaaaa/pytest-18/test_real_process_crash_recove0/target",
+      "head": "45a2c0ebab35eeee8d2fea1f5598a877f5216aef",
+      "resolved_target_repository": "/tmp/pytest-of-waaaaa/pytest-18/test_real_process_crash_recove0/target",
+      "status": " M file.txt\n"
+    },
+    "tree": "83ccbd760a489ccb69d8fa63637c1cf619a4ccb7"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "c0533e350b190b6546b4042746f50d4e151f63dc1bbd331ef142329ff0e282a6"
+}

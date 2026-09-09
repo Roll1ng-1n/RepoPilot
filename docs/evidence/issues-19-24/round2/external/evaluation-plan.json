@@ -1,0 +1,223 @@
+{
+  "ablations": [
+    {
+      "feature": "repository_profile",
+      "fixed": [
+        "task_snapshot",
+        "model",
+        "sampling",
+        "budget",
+        "image"
+      ],
+      "status": "EXECUTED"
+    },
+    {
+      "feature": "context_selection",
+      "fixed": [
+        "task_snapshot",
+        "model",
+        "sampling",
+        "budget",
+        "image"
+      ],
+      "status": "EXECUTED"
+    },
+    {
+      "feature": "planning",
+      "fixed": [
+        "task_snapshot",
+        "model",
+        "sampling",
+        "budget",
+        "image"
+      ],
+      "status": "EXECUTED"
+    },
+    {
+      "feature": "recovery",
+      "fixed": [
+        "task_snapshot",
+        "model",
+        "sampling",
+        "budget",
+        "image"
+      ],
+      "status": "EXECUTED"
+    }
+  ],
+  "budget": {
+    "command_timeout_seconds": 30,
+    "max_consecutive_failures": 3,
+    "max_replans": 2,
+    "max_run_seconds": 120,
+    "max_steps": 24
+  },
+  "engines": [
+    "baseline",
+    "repopilot"
+  ],
+  "historical_samples_are_not_new_evaluation": true,
+  "image": "repopilot-benchmark:issues-19-24",
+  "metrics": [
+    "task_pass_true_false_null",
+    "repository_verifier",
+    "successful_termination",
+    "usage",
+    "duration_seconds",
+    "cost_usd",
+    "recovery_events"
+  ],
+  "missing": [],
+  "model": null,
+  "repeats": 1,
+  "samples": 24,
+  "status": "COMPLETED",
+  "stream": true,
+  "tasks": [
+    {
+      "id": "seed-single-file",
+      "manifest": {
+        "behavior_requirements": [],
+        "capabilities": [],
+        "category": "simple",
+        "id": "seed-single-file",
+        "run_budget": {
+          "command_timeout_seconds": 30,
+          "max_consecutive_failures": 2,
+          "max_replans": 1,
+          "max_run_seconds": 180,
+          "max_steps": 15
+        },
+        "schema_version": 1,
+        "snapshot": {
+          "path": "snapshot",
+          "revision": "seed-v1",
+          "sha256": "703811f56ac8d521fc1f0bcbcc240087f0dac49ad0509d78692428cdd9f6057a"
+        },
+        "success_condition": {
+          "verifier_exit_code": 0
+        },
+        "task_statement": "Fix src/slugify.py so leading and trailing whitespace is ignored, every run of whitespace becomes one hyphen, whitespace-only input returns an empty string, and punctuation is preserved.",
+        "timeout_seconds": 180,
+        "verifier": {
+          "execution": "host",
+          "path": "verify_seed_single_file.py",
+          "timeout_seconds": 20
+        }
+      },
+      "manifest_sha256": "6288710ba0f7b0d6406942436dd36b7d4cb850d0286c6b838f1be20469b969b6"
+    },
+    {
+      "id": "recovery-public-failure",
+      "manifest": {
+        "behavior_requirements": [
+          "recovery"
+        ],
+        "behavior_spec": {
+          "recovery_command": "python -m unittest discover -s tests",
+          "recovery_files": [
+            "tests/test_line_tools.py"
+          ]
+        },
+        "capabilities": [
+          "recovery"
+        ],
+        "category": "recovery",
+        "id": "recovery-public-failure",
+        "run_budget": {
+          "command_timeout_seconds": 30,
+          "max_consecutive_failures": 2,
+          "max_replans": 1,
+          "max_run_seconds": 180,
+          "max_steps": 15
+        },
+        "schema_version": 1,
+        "snapshot": {
+          "path": "snapshot",
+          "revision": "recovery-v1",
+          "sha256": "dcf8a8bcabd8b765201bfb1bd9f469b8d091a16e8c6a01a8f552ea56af08fd47"
+        },
+        "success_condition": {
+          "verifier_exit_code": 0
+        },
+        "task_statement": "Before editing, run `python -m unittest discover -s tests`; after repairing the failure rerun that same command successfully. Repair src/line_tools.py so unique_clean_lines strips each line, skips empty lines, and removes duplicates using Unicode case-insensitive semantics while preserving the first cleaned spelling and input order.",
+        "timeout_seconds": 180,
+        "verifier": {
+          "execution": "host",
+          "path": "verify_recovery_public_failure.py",
+          "timeout_seconds": 20
+        }
+      },
+      "manifest_sha256": "3fb84e896c313c4b575ead7d2506c01e5130877442e5eaa30cecfe0b22bf5ad7"
+    }
+  ],
+  "temperature": 1,
+  "models": [
+    "openai/gpt-5.6-sol",
+    "openai/gpt-5.6-luna"
+  ],
+  "provider_base_url": "https://jojocode.com/v1",
+  "financial_limit_usd": null,
+  "smoke_samples": 8,
+  "new_ablation_samples": 16,
+  "ablation_control": "Four RepoPilot samples from corrected smoke; reused, not counted twice.",
+  "effective_task_budget": {
+    "max_steps": 15,
+    "max_replans": 1,
+    "max_consecutive_failures": 2,
+    "max_run_seconds": 180,
+    "command_timeout_seconds": 30
+  },
+  "model_kwargs": {
+    "stream": true,
+    "timeout": 30,
+    "max_tokens": 2048
+  },
+  "source_manifest": "source-manifest.json",
+  "initial_attempt": "Retained smoke-sol/ and smoke-luna/: temperature=0 rejected by LiteLLM; benchmark wrapper rejected timeout_seconds before requests.",
+  "limitations": [
+    "One trial per model/task/variant, no statistical superiority claim.",
+    "The fixed tasks may not activate repository profile or history eviction; distinguish inactive interventions.",
+    "SDK request timeout is not a full response wall-clock deadline; baseline checks its run limit between turns.",
+    "API/LiteLLM costs and standard price estimates are not the relay invoice."
+  ],
+  "runner_sha256": {
+    "run_evaluation.py": "7a49a38a79cb4b15fe45f0e2731828cf72a8f2aa2fa2a68a89ccd21a20e12dc2",
+    "run_ablation_suite.py": "6a75e570364d958856730876ba9b8c4a3a9963d4b01106332fd298cc69bb9a7b",
+    "check_variants.py": "9b4a824bb2d53ca97cdf271058f16aab08c501a7de99ec767967b8c10ba6cf06",
+    "prepare_variants.py": "7bfdf2e8797893ef07df36cc9aeaffce3f8d5a7e4ab318e2c721bc0f16c1bd27"
+  },
+  "continuation": {
+    "started_at": "2026-09-08T15:32:42.432551+00:00",
+    "retained_completed_ablation_samples": 3,
+    "remaining_trial_slots": 13,
+    "interrupted_replacements": 2,
+    "not_previously_started": 11,
+    "runner_sha256": {
+      "run_remaining.py": "574840c6eb3bc3e4eb2fdac5b3517dc1cceeca82319517d4819e52f6394333f9",
+      "run_replacement.py": "db8317b699905b30262c6865d4b39653d09320c54993bcf0152916f8c99477cd"
+    },
+    "policy": "Keep every old artifact; only fill missing slots with fresh runs of the pinned implementation and identical budget.",
+    "status": "COMPLETED",
+    "completed_new_samples": 13
+  },
+  "completed_at": "2026-09-08T15:48:04.253116+00:00",
+  "samples_per_model_smoke": 4,
+  "initial_configuration_failures": 8,
+  "interrupted_attempts": 2,
+  "engines_by_stage": {
+    "smoke": [
+      "baseline",
+      "repopilot"
+    ],
+    "ablation": [
+      "repopilot"
+    ]
+  },
+  "completion_audit": "result-audit.json",
+  "results": "results.json",
+  "report_runner_sha256": {
+    "summarize.py": "0fd83caafd40f891e5f14c0c00d5feb878169bd254c4e95890a5fa4f03d0897e",
+    "audit_results.py": "46d30c709346ee4cc404525970d78c26c398487a903032f0e00006f07319856b"
+  }
+}

@@ -123,7 +123,7 @@ def test_cli_stops_at_the_replan_budget_after_consecutive_invalid_tool_calls(tmp
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 1, result.output
     assert "BUDGET_EXCEEDED" in result.output
     assert len(model.requests) == 2
 
@@ -141,7 +141,7 @@ def test_cli_stops_at_the_replan_budget_after_consecutive_invalid_tool_calls(tmp
     assert any(event["type"] == "budget_exhausted" and event["limit"] == "replans" for event in events)
 
 
-def test_cli_resets_consecutive_failures_after_a_recovery_replan(tmp_path: Path) -> None:
+def test_cli_resets_consecutive_failures_after_a_replan_request(tmp_path: Path) -> None:
     target_repository = tmp_path / "target"
     _make_target_repository(target_repository)
     state_directory = tmp_path / "agent-runs"
@@ -181,7 +181,7 @@ def test_cli_resets_consecutive_failures_after_a_recovery_replan(tmp_path: Path)
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 3, result.output
     assert "UNVERIFIED" in result.output
     assert len(model.requests) == 4
     run_directory = next(state_directory.iterdir())
@@ -192,7 +192,7 @@ def test_cli_resets_consecutive_failures_after_a_recovery_replan(tmp_path: Path)
         "REPLAN",
         "RETURN_OBSERVATION",
     ]
-    assert metadata["budget"]["replans_used"] == 1
+    assert metadata["budget"]["replans_used"] == 0
 
 
 def test_cli_persists_every_configured_run_budget_limit(tmp_path: Path) -> None:
@@ -235,10 +235,14 @@ def test_cli_persists_every_configured_run_budget_limit(tmp_path: Path) -> None:
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 3, result.output
     run_directory = next(state_directory.iterdir())
     metadata = json.loads((run_directory / "metadata.json").read_text())
 
+    assert metadata["budget"].pop("active_seconds_used") >= 0
+    assert metadata["budget"].pop("requests_used") == 1
+    for key in ("tokens_used", "cost_used", "unknown_tokens", "unknown_cost", "max_tokens", "max_cost_usd"):
+        metadata["budget"].pop(key)
     assert metadata["budget"] == {
         "max_steps": 7,
         "steps_used": 1,
@@ -286,11 +290,20 @@ def test_cli_returns_a_failed_task_verification_as_a_debug_observation_without_r
 
     result = CliRunner().invoke(
         create_app(lambda _: model),
-        ["run", str(target_repository), "--task", "Debug the failed check.", "--state-dir", str(state_directory)],
+        [
+            "run",
+            str(target_repository),
+            "--task",
+            "Debug the failed check.",
+            "--state-dir",
+            str(state_directory),
+            "--max-steps",
+            "2",
+        ],
     )
 
-    assert result.exit_code == 0, result.output
-    assert "UNVERIFIED" in result.output
+    assert result.exit_code == 1, result.output
+    assert "BUDGET_EXCEEDED" in result.output
     assert len(model.requests) == 2
     assert any(message["role"] == "tool" and '"exit_code": 7' in message["content"] for message in model.requests[1][0])
     assert any(
@@ -332,7 +345,7 @@ def test_cli_uses_exponential_retry_recovery_for_a_transient_model_error(tmp_pat
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 3, result.output
     assert len(model.requests) == 2
     assert retry_delays == [0.25]
     run_directory = next(state_directory.iterdir())
@@ -366,7 +379,7 @@ def test_cli_stops_as_failed_after_a_non_transient_model_error(tmp_path: Path) -
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 1, result.output
     assert "FAILED" in result.output
     assert len(model.requests) == 1
     run_directory = next(state_directory.iterdir())
@@ -401,7 +414,7 @@ def test_cli_keeps_an_ordinary_nonzero_command_as_a_tool_observation(tmp_path: P
         ["run", str(target_repository), "--task", "Inspect a failing command.", "--state-dir", str(state_directory)],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 3, result.output
     assert len(model.requests) == 2
     run_directory = next(state_directory.iterdir())
     metadata = json.loads((run_directory / "metadata.json").read_text())
@@ -410,7 +423,7 @@ def test_cli_keeps_an_ordinary_nonzero_command_as_a_tool_observation(tmp_path: P
     assert metadata["recoveries"] == []
 
 
-def test_cli_replans_after_a_repeated_tool_call_and_observation(tmp_path: Path) -> None:
+def test_cli_requests_replan_after_a_repeated_tool_call_and_observation(tmp_path: Path) -> None:
     target_repository = tmp_path / "target"
     _make_target_repository(target_repository)
     state_directory = tmp_path / "agent-runs"
@@ -444,15 +457,16 @@ def test_cli_replans_after_a_repeated_tool_call_and_observation(tmp_path: Path) 
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 3, result.output
     assert len(model.requests) == 3
     run_directory = next(state_directory.iterdir())
     metadata = json.loads((run_directory / "metadata.json").read_text())
 
     assert metadata["failures"][0]["category"] == "NO_PROGRESS"
     assert metadata["recoveries"][0]["action"] == "REPLAN"
-    assert metadata["budget"]["replans_used"] == 1
-    assert metadata["plan"]["version"] == 2
+    assert metadata["budget"]["replans_used"] == 0
+    assert metadata["plan"]["version"] == 1
+    assert "Submit one valid replan" in str(model.requests[-1][0])
 
 
 def _docker_available() -> bool:
@@ -716,7 +730,7 @@ diff --git a/README.md b/README.md
         ],
     )
 
-    assert stopped.exit_code == 0, stopped.output
+    assert stopped.exit_code == 5, stopped.output
     assert "STOPPED" in stopped.output
     assert first_environments[0].closed is True
     run_directory = next(state_directory.iterdir())
@@ -822,7 +836,7 @@ def test_cli_resume_rejects_a_target_repository_changed_after_its_checkpoint(tmp
             str(state_directory),
         ],
     )
-    assert stopped.exit_code == 0, stopped.output
+    assert stopped.exit_code == 5, stopped.output
     run_directory = next(state_directory.iterdir())
     (target_repository / "README.md").write_text("Changed after checkpoint\n")
 
@@ -845,7 +859,7 @@ def test_cli_resume_rejects_a_target_repository_changed_after_its_checkpoint(tmp
     assert environments[0].closed is True
 
 
-@pytest.mark.parametrize("status", ["RUNNING", "SUCCEEDED", "UNVERIFIED", "FAILED", "BUDGET_EXCEEDED"])
+@pytest.mark.parametrize("status", ["SUCCEEDED", "UNVERIFIED", "FAILED"])
 def test_cli_resume_rejects_runs_that_are_not_stopped_or_waiting_for_approval(tmp_path: Path, status: str) -> None:
     artifacts = RunArtifacts(tmp_path / "agent-runs", secrets=[])
     artifacts.write_checkpoint({"run_id": artifacts.run_id, "status": status})
@@ -868,7 +882,7 @@ def test_cli_resume_keeps_a_waiting_run_waiting_for_human_approval(tmp_path: Pat
         ["resume", artifacts.run_id, "--state-dir", str(tmp_path / "agent-runs")],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 4, result.output
     assert "still waiting for Human Approval" in result.output
 
 
@@ -929,7 +943,7 @@ def test_cli_selects_an_environment_through_the_factory(tmp_path: Path) -> None:
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 3, result.output
     assert requests == [
         EnvironmentRequest(
             target_repository=target_repository.resolve(),
@@ -1030,7 +1044,7 @@ def test_cli_runs_a_read_only_native_tool_calling_agent_and_writes_safe_artifact
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 3, result.output
     assert "Local Environment executes commands directly in the Target Repository." in result.output
     assert "UNVERIFIED" in result.output
     assert (
@@ -1066,6 +1080,7 @@ def test_cli_runs_a_read_only_native_tool_calling_agent_and_writes_safe_artifact
         "list_files",
         "search_code",
         "read_file",
+        "read_artifact",
         "run_command",
         "apply_patch",
         "git_commit",
@@ -1105,7 +1120,7 @@ def test_cli_prompts_for_a_task_when_the_task_option_is_omitted(tmp_path: Path) 
         input="Inspect the repository.\n",
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 3, result.output
     assert model.requests[0][0][1]["content"] == "Inspect the repository."
 
 
@@ -1193,7 +1208,7 @@ def test_cli_records_a_versioned_plan_and_replan_from_agent_control_tools(tmp_pa
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 3, result.output
     assert "Plan v3" in result.output
     assert "[COMPLETED] Inspect the repository structure." in result.output
     assert "[COMPLETED] Implement the direct change." in result.output
@@ -1246,7 +1261,7 @@ def test_cli_writes_all_terminal_artifacts_for_a_failed_run(tmp_path: Path) -> N
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 1, result.output
     assert "FAILED" in result.output
     run_directory = next(state_directory.iterdir())
     assert {
@@ -1299,7 +1314,7 @@ def test_cli_writes_all_terminal_artifacts_while_waiting_for_approval(tmp_path: 
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 4, result.output
     assert "WAITING_FOR_APPROVAL" in result.output
     run_directory = next(state_directory.iterdir())
     assert {

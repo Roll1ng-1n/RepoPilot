@@ -1,0 +1,40 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "51da71d51c432c2ed4ffb7184209ed67d9306a6f05ac5ecab6c54729e1e95efc",
+      "before_fingerprint": "532feb82e76bc2949b3e939f13d92f9bdbf8069457513702e100d76beacd735e",
+      "command": "python - <<'PY'\nfrom src.slugify import slugify\ncases = {\n    '  Hello   world  ': 'hello-world',\n    'Hello\\t\\nworld': 'hello-world',\n    ' \\t\\n ': '',\n    '  Hello,   world!  ': 'hello,-world!',\n}\nfor value, expected in cases.items():\n    actual = slugify(value)\n    assert actual == expected, (value, actual, expected)\nprint('slugify checks passed')\nPY",
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Verify trimming, whitespace collapsing, whitespace-only handling, and punctuation preservation.",
+      "result": {
+        "duration_seconds": 0.07799588199998198,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "slugify checks passed\n",
+        "truncated": false
+      },
+      "scope": "src/slugify.py behavior",
+      "sequence": 1
+    },
+    {
+      "after_fingerprint": "51da71d51c432c2ed4ffb7184209ed67d9306a6f05ac5ecab6c54729e1e95efc",
+      "before_fingerprint": "51da71d51c432c2ed4ffb7184209ed67d9306a6f05ac5ecab6c54729e1e95efc",
+      "command": "python - <<'PY'\nfrom src.slugify import slugify\ncases = {\n    '  Hello   world  ': 'hello-world',\n    'Hello\\t\\nworld': 'hello-world',\n    ' \\t\\n ': '',\n    '  Hello,   world!  ': 'hello,-world!',\n}\nfor value, expected in cases.items():\n    actual = slugify(value)\n    assert actual == expected, (value, actual, expected)\nprint('slugify checks passed')\nPY",
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Re-run final behavioral verification after resetting the plan step so the completion evidence is current.",
+      "result": {
+        "duration_seconds": 0.0762803630000235,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "slugify checks passed\n",
+        "truncated": false
+      },
+      "scope": "src/slugify.py behavior",
+      "sequence": 2
+    }
+  ]
+}

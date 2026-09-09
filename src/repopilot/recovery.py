@@ -15,6 +15,7 @@ class FailureCategory(str, Enum):
     ENVIRONMENT_ERROR = "ENVIRONMENT_ERROR"
     VERIFICATION_FAILURE = "VERIFICATION_FAILURE"
     NO_PROGRESS = "NO_PROGRESS"
+    PROTOCOL_ERROR = "PROTOCOL_ERROR"
 
 
 class RecoveryAction(str, Enum):
@@ -74,17 +75,27 @@ class RecoveryController:
 
     def recover(self, failure: Failure, *, transient_model_error: bool = False) -> RecoveryDecision:
         self.consecutive_failures += 1
-        if self.consecutive_failures >= self._max_consecutive_failures:
+        if failure.category is FailureCategory.MODEL_ERROR and not transient_model_error:
+            return RecoveryDecision(RecoveryAction.STOP, f"The model error is not transient: {failure.reason}")
+        if failure.category is FailureCategory.PROTOCOL_ERROR:
+            if self.consecutive_failures >= self._max_consecutive_failures:
+                return RecoveryDecision(RecoveryAction.STOP, f"Repeated invalid Tool Calls: {failure.reason}")
             return RecoveryDecision(
-                RecoveryAction.REPLAN,
-                f"{self.consecutive_failures} consecutive failures require a Replan: {failure.reason}",
+                RecoveryAction.RETURN_OBSERVATION, f"Correct the Tool Call arguments: {failure.reason}"
             )
         if failure.category is FailureCategory.MODEL_ERROR and transient_model_error:
+            if self.consecutive_failures >= self._max_consecutive_failures:
+                return RecoveryDecision(RecoveryAction.STOP, f"Model request retries exhausted: {failure.reason}")
             delay = self._initial_retry_delay_seconds * (2 ** (self.consecutive_failures - 1))
             return RecoveryDecision(
                 RecoveryAction.RETRY_MODEL,
                 f"Retrying a transient model error after {delay:g} seconds: {failure.reason}",
                 delay,
+            )
+        if self.consecutive_failures >= self._max_consecutive_failures:
+            return RecoveryDecision(
+                RecoveryAction.REPLAN,
+                f"{self.consecutive_failures} consecutive failures require a Replan: {failure.reason}",
             )
         if failure.category is FailureCategory.VERIFICATION_FAILURE:
             return RecoveryDecision(
@@ -101,6 +112,8 @@ class RecoveryController:
 def classify_tool_failure(tool_name: str, observation: dict[str, Any]) -> Failure | None:
     """Classify structured Tool observations without depending on an Environment type."""
     if not observation.get("ok"):
+        if observation.get("error") in {"invalid_tool_arguments", "invalid_patch", "invalid_plan"}:
+            return Failure(FailureCategory.PROTOCOL_ERROR, str(observation.get("details")), tool_name)
         category = (
             FailureCategory.ENVIRONMENT_ERROR
             if observation.get("error") == "environment_error"
@@ -126,6 +139,9 @@ def classify_tool_failure(tool_name: str, observation: dict[str, Any]) -> Failur
             return Failure(FailureCategory.TOOL_ERROR, f"Git Commit failed: {details}", tool_name)
 
     command_result = _command_result(observation)
+    if tool_name == "apply_patch" and observation.get("result", {}).get("applied") is False:
+        details = (command_result or {}).get("stderr") or "Patch was not applied."
+        return Failure(FailureCategory.TOOL_ERROR, str(details), tool_name)
     if tool_name == "verify_task" and command_result and command_result.get("exit_code") != 0:
         return Failure(
             FailureCategory.VERIFICATION_FAILURE,
@@ -141,7 +157,9 @@ def classify_tool_failure(tool_name: str, observation: dict[str, Any]) -> Failur
 
 def is_transient_model_error(error: Exception) -> bool:
     """Recognize provider failures for which a bounded backoff is useful."""
-    if isinstance(error, (TimeoutError, ConnectionError)):
+    from repopilot.model import ModelProtocolError
+
+    if isinstance(error, (TimeoutError, ConnectionError, ModelProtocolError)):
         return True
     status_code = getattr(error, "status_code", None)
     if isinstance(status_code, int) and (status_code in {408, 409, 425, 429} or status_code >= 500):

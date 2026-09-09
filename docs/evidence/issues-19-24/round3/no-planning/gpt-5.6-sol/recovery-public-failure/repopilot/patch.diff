@@ -1,0 +1,22 @@
+diff --git a/src/line_tools.py b/src/line_tools.py
+index 3643067..b2ae6fc 100644
+--- a/src/line_tools.py
++++ b/src/line_tools.py
+@@ -4,13 +4,14 @@ from collections.abc import Iterable
+ 
+ 
+ def unique_clean_lines(lines: Iterable[str]) -> list[str]:
+-    """Return non-empty, trimmed lines without exact duplicates."""
++    """Return non-empty, trimmed lines with Unicode case-insensitive uniqueness."""
+ 
+     seen: set[str] = set()
+     result: list[str] = []
+     for line in lines:
+         value = line.strip()
+-        if value and value not in seen:
+-            seen.add(value)
++        key = value.casefold()
++        if value and key not in seen:
++            seen.add(key)
+             result.append(value)
+     return result

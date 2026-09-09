@@ -65,6 +65,16 @@ from the Docker bridge. Checkpoints retain only the mode, so an explicit URL mus
 
 ## Architecture at a glance
 
+Ordinary `run` has no total time deadline by default. Slow first-token delivery is recorded without ending the task; SDK timeouts and transient connection failures use bounded backoff retries. `--request-timeout` configures the SDK, not a hard deadline for an entire stream. Explicit `--max-run-seconds` and benchmark time budgets remain enforced, as do command, step, token and cost limits.
+
+After budget exhaustion, use `repopilot resume RUN_ID --max-steps 60`, `--max-run-seconds 3600`, or `--no-time-limit` to explicitly adjust the saved limit. Resume also accepts `--max-replans`, `--max-total-tokens` and `--max-cost-usd`. Limits are totals including prior consumption; counters are preserved and changes are traced.
+
+Run/resume exit codes: `0` succeeded, `1` failed or budget exhausted, `3` unverified, `4` awaiting approval, `5` stopped; argument errors remain `2`.
+
+`verify_task.check_id` identifies a check across changes to its command or scope; `supersedes` lists prior verification sequence numbers explicitly replaced. Without an ID, the same command retains its identity across scope changes, with legacy same-scope retries supported. Use distinct IDs for independent checks. Required commands cannot be waived by replacement. Untracked Python bytecode and `__pycache__`, `.pytest_cache`, `.ruff_cache` are excluded from verification inputs; tracked files and source changes still invalidate evidence. Legacy checkpoints may require fresh verification.
+
+Benchmarks retain normalized `patch.diff` / `patch-manifest.json` separately from `runtime-patch.diff` / `runtime-patch-manifest.json`. Historical round3 artifacts remain unchanged; see the audit correction in its report.
+
 The composition layer in `repopilot.cli` creates a model, Execution Environment, Tool Registry, Plan, Context
 Strategy, Run Budget, and artifact store. `AgentRuntime` drives the bounded Agent Run. The Tool Registry validates
 native Tool Calls and dispatches repository, command, verification, Git, and Agent Control operations. Local and
@@ -137,11 +147,18 @@ The [remaining 24-task Stage 4 evidence](docs/evidence/stage4-24tasks-luna-sol-v
 suite for these two models: `gpt-5.6-luna` and `gpt-5.6-sol`, three rounds, 288 samples, zero batch errors.
 Both engine paths forced streaming requests (the intermediary account restricted non-streaming calls) and
 re-aggregated chunks; effective per-task budget came from each manifest (24 steps / 240 s). Together the two
-evidence directories cover all 30 Stage 4 tasks. `gpt-5.6-sol` clearly outperforms `gpt-5.6-luna` (Sol
-RepoPilot task-pass 40/60 evaluated vs Luna 21/66); RepoPilot's Replan capability shows its clearest signal on
-the recovery and replan categories with Sol. HITL and long-horizon full-audit rows stay `task null`/unsupported,
+evidence directories cover all 30 Stage 4 tasks across 360 historical development samples. On the 24-task
+subset, RepoPilot recorded 40 task-pass true / 20 false / 12 null for Sol and 21 true / 45 false / 6 null
+for Luna. These observations do not establish a general model ranking or generalization win rate. HITL and long-horizon full-audit rows stay `task null`/unsupported,
 MODEL_ERROR trials are retained without rerun, and three environmental-error trials were replaced by clean reruns
 (marked in the machine-readable summary).
+
+The [issues #19–#24 repair record](docs/evidence/issues-19-24/round2/summary.md) tracks the current fixes,
+regression evidence, and remaining acceptance criteria. `repopilot doctor` checks local prerequisites without
+calling a model. Repeat `--required-verification 'command'` to freeze required checks for a run. Ordinary
+`run/resume/approve/reject` accept `--stream`, `--request-timeout`, `--max-output-tokens`, and `--env-file`.
+Runtime Tests check RepoPilot itself; the repository verifier checks target code; `task_pass` additionally
+requires the benchmark behavior checks, preserving `null` when required behavior is unsupported.
 
 The checked-in [micro-benchmark summary](docs/evidence/micro-benchmark-v1/summary.md) is the retained historical
 12-sample Docker-unavailable run. All 12 task/engine attempts are `ENVIRONMENT_UNAVAILABLE`, with zero model calls

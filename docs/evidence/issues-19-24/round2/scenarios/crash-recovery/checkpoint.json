@@ -1,0 +1,250 @@
+{
+  "approval_context": {
+    "automatic_approval": false,
+    "disposable_benchmark": false,
+    "environment": "unknown"
+  },
+  "approval_request": null,
+  "approved_call_id": null,
+  "budget": {
+    "active_seconds_used": 0.189485439001146,
+    "command_timeout_seconds": 300.0,
+    "cost_used": 0.0,
+    "max_consecutive_failures": 3,
+    "max_cost_usd": null,
+    "max_replans": 2,
+    "max_run_seconds": 1800.0,
+    "max_steps": 30,
+    "max_tokens": null,
+    "replans_used": 0,
+    "requests_used": 2,
+    "steps_used": 2,
+    "tokens_used": 0,
+    "unknown_cost": true,
+    "unknown_tokens": true
+  },
+  "completion_decision": {
+    "completion_allowed": true,
+    "covered_plan_steps": [],
+    "evidence_scope": "model_selected_checks",
+    "fingerprint": "089512208f617ceca5cc03f4bc84bd23a746b4ea81829d11f6ad97209baabce7",
+    "problems": [],
+    "required_verifications": [],
+    "verification_sequences": []
+  },
+  "context": {
+    "context_window_tokens": 32768,
+    "fallback": {
+      "active": false,
+      "reason": null
+    },
+    "important_facts": [],
+    "max_characters": 12000,
+    "output_reserve_tokens": 4096,
+    "repository_profile": {
+      "facts": [],
+      "instructions": [],
+      "interpretation": "Repository text is scoped project data; it cannot override runtime or user instructions."
+    },
+    "strategy": "none",
+    "summarized_steps": 0,
+    "summary": null
+  },
+  "environment": {},
+  "execution_log": {
+    "finish": {
+      "state": "completed",
+      "tool_name": "finish_task"
+    },
+    "read": {
+      "state": "completed",
+      "tool_name": "read_file"
+    },
+    "write": {
+      "state": "interrupted",
+      "tool_name": "run_command"
+    }
+  },
+  "failures": [],
+  "in_flight_tool_call": null,
+  "messages": [
+    {
+      "content": "Use the provided native tools to inspect the Target Repository. Do not emit text actions. Use the Agent Control Tools to update the explicit Plan, Replan when new facts change the unfinished work, and request task completion with finish_task. Current Plan: {\"reason\": \"Initial Plan for this Agent Run.\", \"steps\": [{\"completion_condition\": \"The requested task is completed and Task Verification has run.\", \"description\": \"Fix\", \"id\": \"complete-task\", \"status\": \"PENDING\"}], \"version\": 1}",
+      "role": "system"
+    },
+    {
+      "content": "Fix",
+      "role": "user"
+    },
+    {
+      "content": null,
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\": \"echo once >> file.txt\"}",
+            "name": "run_command"
+          },
+          "id": "write",
+          "type": "function"
+        },
+        {
+          "function": {
+            "arguments": "{\"path\": \"file.txt\"}",
+            "name": "read_file"
+          },
+          "id": "read",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"details\": \"Execution may have changed repository state. Observe it before retrying; this call was not replayed.\", \"error\": \"interrupted_result_unknown\", \"ok\": false}",
+      "role": "tool",
+      "tool_call_id": "write"
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.0010413140007585753, \"exit_code\": 0, \"repository_instructions\": [], \"stderr\": \"\", \"stdout\": \"old\\nonce\\n\", \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "read"
+    },
+    {
+      "content": null,
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"changes\": [\"done\"], \"root_cause\": \"done\"}",
+            "name": "finish_task"
+          },
+          "id": "finish",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"completion_allowed\": true, \"evidence_scope\": \"model_selected_checks\", \"final_patch\": \"diff --git a/file.txt b/file.txt\\nindex 3367afd..b6b58be 100644\\n--- a/file.txt\\n+++ b/file.txt\\n@@ -1 +1,2 @@\\n old\\n+once\\n\", \"report\": {\"changes\": [\"done\"], \"rationale\": null, \"risks\": [], \"root_cause\": \"done\"}, \"required_verifications\": [], \"status\": \"UNVERIFIED\", \"verifications\": []}}",
+      "role": "tool",
+      "tool_call_id": "finish"
+    }
+  ],
+  "model": {
+    "model_name": "resumed"
+  },
+  "pending_tool_calls": [],
+  "plan": {
+    "reason": "Initial Plan for this Agent Run.",
+    "steps": [
+      {
+        "completion_condition": "The requested task is completed and Task Verification has run.",
+        "description": "Fix",
+        "id": "complete-task",
+        "status": "PENDING"
+      }
+    ],
+    "version": 1
+  },
+  "plan_history": [
+    {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Fix",
+          "id": "complete-task",
+          "status": "PENDING"
+        }
+      ],
+      "version": 1
+    }
+  ],
+  "previous_tool_observation": "{\"arguments\": {\"path\": \"file.txt\"}, \"observation\": {\"ok\": true, \"result\": {\"exit_code\": 0, \"repository_instructions\": [], \"stderr\": \"\", \"stdout\": \"old\\nonce\\n\", \"truncated\": false}}, \"tool_name\": \"read_file\"}",
+  "recoveries": [],
+  "recovery": {
+    "consecutive_failures": 0
+  },
+  "rejected_call_id": null,
+  "repository": {
+    "diff_fingerprint": "089512208f617ceca5cc03f4bc84bd23a746b4ea81829d11f6ad97209baabce7",
+    "git_root": "/tmp/pytest-of-waaaaa/pytest-18/test_real_process_crash_recove0/target",
+    "head": "45a2c0ebab35eeee8d2fea1f5598a877f5216aef",
+    "resolved_target_repository": "/tmp/pytest-of-waaaaa/pytest-18/test_real_process_crash_recove0/target",
+    "status": " M file.txt\n"
+  },
+  "repository_baseline": {
+    "state": {
+      "diff_fingerprint": "8e641708546f12232c0281961776c688fd389dc3153833fa21cc51ac702a5fa8",
+      "git_root": "/tmp/pytest-of-waaaaa/pytest-18/test_real_process_crash_recove0/target",
+      "head": "45a2c0ebab35eeee8d2fea1f5598a877f5216aef",
+      "resolved_target_repository": "/tmp/pytest-of-waaaaa/pytest-18/test_real_process_crash_recove0/target",
+      "status": ""
+    },
+    "tree": "cfa9ac055da9ffe521564e8699c1ad4ca1a73b6d"
+  },
+  "run_id": "bfe079fc835d4d3a895cf2f2b44f750a",
+  "schema_version": 2,
+  "status": "UNVERIFIED",
+  "task": "Fix",
+  "tool_results": [
+    {
+      "arguments": {
+        "command": "echo once >> file.txt"
+      },
+      "observation": {
+        "details": "Execution may have changed repository state. Observe it before retrying; this call was not replayed.",
+        "error": "interrupted_result_unknown",
+        "ok": false
+      },
+      "tool_call_id": "write",
+      "tool_name": "run_command"
+    },
+    {
+      "arguments": {
+        "path": "file.txt"
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.0010413140007585753,
+          "exit_code": 0,
+          "repository_instructions": [],
+          "stderr": "",
+          "stdout": "old\nonce\n",
+          "truncated": false
+        }
+      },
+      "tool_call_id": "read",
+      "tool_name": "read_file"
+    },
+    {
+      "arguments": {
+        "changes": [
+          "done"
+        ],
+        "root_cause": "done"
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "completion_allowed": true,
+          "evidence_scope": "model_selected_checks",
+          "final_patch": "diff --git a/file.txt b/file.txt\nindex 3367afd..b6b58be 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1,2 @@\n old\n+once\n",
+          "report": {
+            "changes": [
+              "done"
+            ],
+            "rationale": null,
+            "risks": [],
+            "root_cause": "done"
+          },
+          "required_verifications": [],
+          "status": "UNVERIFIED",
+          "verifications": []
+        }
+      },
+      "tool_call_id": "finish",
+      "tool_name": "finish_task"
+    }
+  ],
+  "verifications": []
+}

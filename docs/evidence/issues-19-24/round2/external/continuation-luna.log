@@ -1,0 +1,91 @@
+SKIP completed gpt-5.6-luna/no-recovery/seed-single-file
+SKIP completed gpt-5.6-luna/no-recovery/recovery-public-failure
+RUN missing gpt-5.6-luna/no-planning/seed-single-file
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-5e98680c -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/continuation/gpt-5.6-luna/no-planning/seed-single-file/attempt-001
+/seed-single-file/repopilot/workspace,target=/workspace --user=1000:1000        
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-5e98680c with ID 
+a6bbf7ce9d4cc158479191d215ef67f5d660d6f15c32bf380d3acaeaa6e0586f                
+{"model": "gpt-5.6-luna", "variant": "no-planning", "task": "seed-single-file", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false}
+DONE gpt-5.6-luna/no-planning/seed-single-file
+RUN missing gpt-5.6-luna/no-planning/recovery-public-failure
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-2ec9e94e -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/continuation/gpt-5.6-luna/no-planning/recovery-public-failure/atte
+mpt-001/recovery-public-failure/repopilot/workspace,target=/workspace           
+--user=1000:1000                                                                
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-2ec9e94e with ID 
+c46bb3f8d7beba3ab6eed2a164aba689988ea12ab891b41bb73d5fe4011583b0                
+{"model": "gpt-5.6-luna", "variant": "no-planning", "task": "recovery-public-failure", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false}
+DONE gpt-5.6-luna/no-planning/recovery-public-failure
+RUN missing gpt-5.6-luna/no-context-selection/seed-single-file
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-81dc30e0 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/continuation/gpt-5.6-luna/no-context-selection/seed-single-file/at
+tempt-001/seed-single-file/repopilot/workspace,target=/workspace                
+--user=1000:1000                                                                
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-81dc30e0 with ID 
+8063f829f09e80a5c8ff05af4426386d7bbe2598c7e47653b041bf765fbf2cf1                
+{"model": "gpt-5.6-luna", "variant": "no-context-selection", "task": "seed-single-file", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false}
+DONE gpt-5.6-luna/no-context-selection/seed-single-file
+RUN missing gpt-5.6-luna/no-context-selection/recovery-public-failure
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-84ce36b7 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/continuation/gpt-5.6-luna/no-context-selection/recovery-public-fai
+lure/attempt-001/recovery-public-failure/repopilot/workspace,target=/workspace  
+--user=1000:1000                                                                
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-84ce36b7 with ID 
+84f3cc283c7bf867b3005067c263ef6958f903eceb23c9037634da7e5d538c98                
+23:35:31 - LiteLLM:WARNING: get_model_cost_map.py:454 - LiteLLM: Failed to fetch remote model cost map from https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json: The read operation timed out. Falling back to local backup.
+{"model": "gpt-5.6-luna", "variant": "no-context-selection", "task": "recovery-public-failure", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false}
+DONE gpt-5.6-luna/no-context-selection/recovery-public-failure
+RUN missing gpt-5.6-luna/no-profile/seed-single-file
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-d40504f5 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/continuation/gpt-5.6-luna/no-profile/seed-single-file/attempt-001/
+seed-single-file/repopilot/workspace,target=/workspace --user=1000:1000         
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-d40504f5 with ID 
+d13033f1840b8a7d14cde58d91d50e99406e79470da0bd987c95ce2b4153e0da                
+{"model": "gpt-5.6-luna", "variant": "no-profile", "task": "seed-single-file", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false}
+DONE gpt-5.6-luna/no-profile/seed-single-file
+RUN missing gpt-5.6-luna/no-profile/recovery-public-failure
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-4314a8e4 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/continuation/gpt-5.6-luna/no-profile/recovery-public-failure/attem
+pt-001/recovery-public-failure/repopilot/workspace,target=/workspace            
+--user=1000:1000                                                                
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-4314a8e4 with ID 
+bbee03e2ad2f47382443bc016a06ed2f444eb4d4c76a51032269a7f1eabcc5d9                
+{"model": "gpt-5.6-luna", "variant": "no-profile", "task": "recovery-public-failure", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": true}
+DONE gpt-5.6-luna/no-profile/recovery-public-failure

@@ -1,0 +1,15 @@
+--- a/src/repopilot/context.py
++++ b/src/repopilot/context.py
+@@ -178,10 +178,10 @@
+         first_assistant = next((i for i, m in enumerate(selected) if m.get("role") == "assistant"), len(selected))
+         anchors = selected[:first_assistant]
+         steps = self._agent_steps(selected[first_assistant:])
+-        while size() > available and len(steps) > 1:
++        while False:  # Ablation: retain complete history.
+             steps.pop(0)
+             selected = anchors + [m for step in steps for m in step]
+-        if size() > available:
++        if False:  # Ablation: no request preview compression.
+             for message in selected:
+                 if message.get("role") == "tool" and len(message.get("content", "")) > 1000:
+                     try:

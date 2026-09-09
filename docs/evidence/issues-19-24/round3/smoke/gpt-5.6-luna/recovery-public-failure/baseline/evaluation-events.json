@@ -1,0 +1,28 @@
+[
+  {
+    "type": "scenario_triggered",
+    "observation_index": 1,
+    "source": "environment",
+    "scenario_id": "public-command-1",
+    "capability": "recovery",
+    "failure_type": "test_failure"
+  },
+  {
+    "type": "recovery_attempt",
+    "observation_index": 6,
+    "source": "environment",
+    "scenario_id": "public-command-1"
+  },
+  {
+    "type": "scenario_resolved",
+    "observation_index": 6,
+    "source": "environment",
+    "scenario_id": "public-command-1",
+    "verified": true
+  },
+  {
+    "type": "scenario_audit",
+    "recovery": true,
+    "replan": false
+  }
+]

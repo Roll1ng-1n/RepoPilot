@@ -107,7 +107,7 @@ def test_cli_summary_strategy_uses_the_model_and_keeps_raw_history_in_the_checkp
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 3, result.output
     assert len(model.summary_requests) == 1
     run_directory = next(state_directory.iterdir())
     checkpoint = json.loads((run_directory / "checkpoint.json").read_text())
@@ -184,7 +184,7 @@ def test_cli_summary_failure_falls_back_without_stopping_and_resume_keeps_the_fa
         ],
     )
 
-    assert stopped.exit_code == 0, stopped.output
+    assert stopped.exit_code == 5, stopped.output
     assert "STOPPED" in stopped.output
     assert stopped_model.summary_calls == 1
     run_directory = next(state_directory.iterdir())
@@ -197,7 +197,7 @@ def test_cli_summary_failure_falls_back_without_stopping_and_resume_keeps_the_fa
         ["resume", run_directory.name, "--state-dir", str(state_directory)],
     )
 
-    assert resumed.exit_code == 0, resumed.output
+    assert resumed.exit_code == 3, resumed.output
     assert "UNVERIFIED" in resumed.output
     assert resumed_model.summary_calls == 0
     resumed_checkpoint = json.loads((run_directory / "checkpoint.json").read_text())
@@ -274,7 +274,7 @@ def test_cli_resume_reuses_a_persisted_summary_and_important_fact_without_resumm
         ],
     )
 
-    assert stopped.exit_code == 0, stopped.output
+    assert stopped.exit_code == 5, stopped.output
     assert stopped_model.summary_calls == 1
     run_directory = next(state_directory.iterdir())
     stopped_checkpoint = json.loads((run_directory / "checkpoint.json").read_text())
@@ -286,7 +286,7 @@ def test_cli_resume_reuses_a_persisted_summary_and_important_fact_without_resumm
         ["resume", run_directory.name, "--state-dir", str(state_directory)],
     )
 
-    assert resumed.exit_code == 0, resumed.output
+    assert resumed.exit_code == 3, resumed.output
     assert resumed_model.summary_calls == 0
 
 
@@ -322,7 +322,7 @@ def test_cli_trace_keeps_text_from_a_model_response_that_also_calls_tools(tmp_pa
         ],
     )
 
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 3, result.output
     run_directory = next(state_directory.iterdir())
     events = [json.loads(line) for line in (run_directory / "trace.jsonl").read_text().splitlines()]
     assert any(

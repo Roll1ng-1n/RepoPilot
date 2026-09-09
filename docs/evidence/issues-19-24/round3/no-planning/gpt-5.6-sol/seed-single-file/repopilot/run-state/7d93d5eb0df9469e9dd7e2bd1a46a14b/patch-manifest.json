@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "33e8c525cb7c3453ae385e9e46753bef5cfe642d0a74b453aaadc6402e267c1e",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-sol/seed-single-file/repopilot/workspace",
+      "head": "b966a4316740db7e1b3dbf47bd9789d0e6494f16",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-sol/seed-single-file/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "ec77d7c90f44f39c804e25b9d802f9f9e82b337e"
+  },
+  "bytes": 563,
+  "final": {
+    "state": {
+      "diff_fingerprint": "7bb6886419dace424fae6cb179e427271607e25aee5dfb433f5c307a59312376",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-sol/seed-single-file/repopilot/workspace",
+      "head": "b966a4316740db7e1b3dbf47bd9789d0e6494f16",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-sol/seed-single-file/repopilot/workspace",
+      "status": " M src/slugify.py\n"
+    },
+    "tree": "b7a308a28f0cee2575ab1bbbb56a71cf52d8ccfd"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "d297168ef3f935c00d059c49bfac81b8814d74c11ab6d47c52175d254dbec258"
+}

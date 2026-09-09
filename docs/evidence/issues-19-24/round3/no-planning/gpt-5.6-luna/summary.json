@@ -1,0 +1,1878 @@
+{
+  "config": {
+    "budget": {
+      "command_timeout_seconds": 30,
+      "max_consecutive_failures": 3,
+      "max_replans": 2,
+      "max_run_seconds": 120,
+      "max_steps": 24
+    },
+    "engines": [
+      "repopilot"
+    ],
+    "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "model": {
+      "model_kwargs": {
+        "max_tokens": 2048,
+        "stream": true,
+        "temperature": 1,
+        "timeout": 30
+      },
+      "model_name": "openai/gpt-5.6-luna"
+    },
+    "output_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna",
+    "proxy_mode": "none",
+    "repeats": 1,
+    "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "task_ids": [
+      "seed-single-file",
+      "recovery-public-failure"
+    ],
+    "tasks_directory": "/tmp/repopilot-round3-source-zj5jyp2z/src/repopilot/benchmark_tasks"
+  },
+  "evaluation_summary": {
+    "groups": [
+      {
+        "behavior_evaluated": 1,
+        "behavior_pass_count": 1,
+        "churn_available": false,
+        "completion_precision": null,
+        "completion_recall": 0.0,
+        "dimension": "capability",
+        "engine": "repopilot",
+        "evaluated": 1,
+        "false_failure_rate": 1.0,
+        "false_success_rate": 0.0,
+        "model": "openai/gpt-5.6-luna",
+        "numeric": {
+          "duration_seconds": {
+            "max": 180.58649211800014,
+            "mean": 180.58649211800014,
+            "median": 180.58649211800014,
+            "min": 180.58649211800014,
+            "n": 1,
+            "per_solved": 180.58649211800014,
+            "solved_distribution": {
+              "max": 180.58649211800014,
+              "mean": 180.58649211800014,
+              "median": 180.58649211800014,
+              "min": 180.58649211800014,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 180.58649211800014
+          },
+          "input_tokens": {
+            "max": 6090,
+            "mean": 6090,
+            "median": 6090,
+            "min": 6090,
+            "n": 1,
+            "per_solved": 6090.0,
+            "solved_distribution": {
+              "max": 6090,
+              "mean": 6090,
+              "median": 6090,
+              "min": 6090,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 6090
+          },
+          "llm_calls": {
+            "max": 7,
+            "mean": 7,
+            "median": 7,
+            "min": 7,
+            "n": 1,
+            "per_solved": 7.0,
+            "solved_distribution": {
+              "max": 7,
+              "mean": 7,
+              "median": 7,
+              "min": 7,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 7
+          },
+          "output_tokens": {
+            "max": 472,
+            "mean": 472,
+            "median": 472,
+            "min": 472,
+            "n": 1,
+            "per_solved": 472.0,
+            "solved_distribution": {
+              "max": 472,
+              "mean": 472,
+              "median": 472,
+              "min": 472,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 472
+          },
+          "redundant_calls": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "replans": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "retries": {
+            "max": 2,
+            "mean": 2,
+            "median": 2,
+            "min": 2,
+            "n": 1,
+            "per_solved": 2.0,
+            "solved_distribution": {
+              "max": 2,
+              "mean": 2,
+              "median": 2,
+              "min": 2,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 2
+          },
+          "steps": {
+            "max": 7,
+            "mean": 7,
+            "median": 7,
+            "min": 7,
+            "n": 1,
+            "per_solved": 7.0,
+            "solved_distribution": {
+              "max": 7,
+              "mean": 7,
+              "median": 7,
+              "min": 7,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 7
+          },
+          "tool_calls": {
+            "max": 6,
+            "mean": 6,
+            "median": 6,
+            "min": 6,
+            "n": 1,
+            "per_solved": 6.0,
+            "solved_distribution": {
+              "max": 6,
+              "mean": 6,
+              "median": 6,
+              "min": 6,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 6
+          },
+          "tool_failures": {
+            "max": 1,
+            "mean": 1,
+            "median": 1,
+            "min": 1,
+            "n": 1,
+            "per_solved": 1.0,
+            "solved_distribution": {
+              "max": 1,
+              "mean": 1,
+              "median": 1,
+              "min": 1,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 1
+          },
+          "total_tokens": {
+            "max": 6562,
+            "mean": 6562,
+            "median": 6562,
+            "min": 6562,
+            "n": 1,
+            "per_solved": 6562.0,
+            "solved_distribution": {
+              "max": 6562,
+              "mean": 6562,
+              "median": 6562,
+              "min": 6562,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 6562
+          }
+        },
+        "pass_count": 1,
+        "pass_rate": 1.0,
+        "post_recovery_task_success_rate": 1.0,
+        "post_replan_task_success_rate": null,
+        "recovery_rate": 1.0,
+        "replan_success_rate": null,
+        "replan_trigger_rate": null,
+        "repository_evaluated": 1,
+        "repository_pass_count": 1,
+        "successful_termination_rate": 0.0,
+        "termination_counts": {
+          "false_failure": 1
+        },
+        "trials": 1,
+        "unsupported": 0,
+        "value": "recovery"
+      },
+      {
+        "behavior_evaluated": 1,
+        "behavior_pass_count": 1,
+        "churn_available": false,
+        "completion_precision": null,
+        "completion_recall": 0.0,
+        "dimension": "category",
+        "engine": "repopilot",
+        "evaluated": 1,
+        "false_failure_rate": 1.0,
+        "false_success_rate": 0.0,
+        "model": "openai/gpt-5.6-luna",
+        "numeric": {
+          "duration_seconds": {
+            "max": 180.58649211800014,
+            "mean": 180.58649211800014,
+            "median": 180.58649211800014,
+            "min": 180.58649211800014,
+            "n": 1,
+            "per_solved": 180.58649211800014,
+            "solved_distribution": {
+              "max": 180.58649211800014,
+              "mean": 180.58649211800014,
+              "median": 180.58649211800014,
+              "min": 180.58649211800014,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 180.58649211800014
+          },
+          "input_tokens": {
+            "max": 6090,
+            "mean": 6090,
+            "median": 6090,
+            "min": 6090,
+            "n": 1,
+            "per_solved": 6090.0,
+            "solved_distribution": {
+              "max": 6090,
+              "mean": 6090,
+              "median": 6090,
+              "min": 6090,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 6090
+          },
+          "llm_calls": {
+            "max": 7,
+            "mean": 7,
+            "median": 7,
+            "min": 7,
+            "n": 1,
+            "per_solved": 7.0,
+            "solved_distribution": {
+              "max": 7,
+              "mean": 7,
+              "median": 7,
+              "min": 7,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 7
+          },
+          "output_tokens": {
+            "max": 472,
+            "mean": 472,
+            "median": 472,
+            "min": 472,
+            "n": 1,
+            "per_solved": 472.0,
+            "solved_distribution": {
+              "max": 472,
+              "mean": 472,
+              "median": 472,
+              "min": 472,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 472
+          },
+          "redundant_calls": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "replans": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "retries": {
+            "max": 2,
+            "mean": 2,
+            "median": 2,
+            "min": 2,
+            "n": 1,
+            "per_solved": 2.0,
+            "solved_distribution": {
+              "max": 2,
+              "mean": 2,
+              "median": 2,
+              "min": 2,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 2
+          },
+          "steps": {
+            "max": 7,
+            "mean": 7,
+            "median": 7,
+            "min": 7,
+            "n": 1,
+            "per_solved": 7.0,
+            "solved_distribution": {
+              "max": 7,
+              "mean": 7,
+              "median": 7,
+              "min": 7,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 7
+          },
+          "tool_calls": {
+            "max": 6,
+            "mean": 6,
+            "median": 6,
+            "min": 6,
+            "n": 1,
+            "per_solved": 6.0,
+            "solved_distribution": {
+              "max": 6,
+              "mean": 6,
+              "median": 6,
+              "min": 6,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 6
+          },
+          "tool_failures": {
+            "max": 1,
+            "mean": 1,
+            "median": 1,
+            "min": 1,
+            "n": 1,
+            "per_solved": 1.0,
+            "solved_distribution": {
+              "max": 1,
+              "mean": 1,
+              "median": 1,
+              "min": 1,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 1
+          },
+          "total_tokens": {
+            "max": 6562,
+            "mean": 6562,
+            "median": 6562,
+            "min": 6562,
+            "n": 1,
+            "per_solved": 6562.0,
+            "solved_distribution": {
+              "max": 6562,
+              "mean": 6562,
+              "median": 6562,
+              "min": 6562,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 6562
+          }
+        },
+        "pass_count": 1,
+        "pass_rate": 1.0,
+        "post_recovery_task_success_rate": 1.0,
+        "post_replan_task_success_rate": null,
+        "recovery_rate": 1.0,
+        "replan_success_rate": null,
+        "replan_trigger_rate": null,
+        "repository_evaluated": 1,
+        "repository_pass_count": 1,
+        "successful_termination_rate": 0.0,
+        "termination_counts": {
+          "false_failure": 1
+        },
+        "trials": 1,
+        "unsupported": 0,
+        "value": "recovery"
+      },
+      {
+        "behavior_evaluated": 1,
+        "behavior_pass_count": 1,
+        "churn_available": false,
+        "completion_precision": null,
+        "completion_recall": 0.0,
+        "dimension": "category",
+        "engine": "repopilot",
+        "evaluated": 1,
+        "false_failure_rate": 1.0,
+        "false_success_rate": 0.0,
+        "model": "openai/gpt-5.6-luna",
+        "numeric": {
+          "duration_seconds": {
+            "max": 180.3694841800001,
+            "mean": 180.3694841800001,
+            "median": 180.3694841800001,
+            "min": 180.3694841800001,
+            "n": 1,
+            "per_solved": 180.3694841800001,
+            "solved_distribution": {
+              "max": 180.3694841800001,
+              "mean": 180.3694841800001,
+              "median": 180.3694841800001,
+              "min": 180.3694841800001,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 180.3694841800001
+          },
+          "input_tokens": {
+            "max": 15053,
+            "mean": 15053,
+            "median": 15053,
+            "min": 15053,
+            "n": 1,
+            "per_solved": 15053.0,
+            "solved_distribution": {
+              "max": 15053,
+              "mean": 15053,
+              "median": 15053,
+              "min": 15053,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 15053
+          },
+          "llm_calls": {
+            "max": 8,
+            "mean": 8,
+            "median": 8,
+            "min": 8,
+            "n": 1,
+            "per_solved": 8.0,
+            "solved_distribution": {
+              "max": 8,
+              "mean": 8,
+              "median": 8,
+              "min": 8,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 8
+          },
+          "output_tokens": {
+            "max": 1230,
+            "mean": 1230,
+            "median": 1230,
+            "min": 1230,
+            "n": 1,
+            "per_solved": 1230.0,
+            "solved_distribution": {
+              "max": 1230,
+              "mean": 1230,
+              "median": 1230,
+              "min": 1230,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 1230
+          },
+          "redundant_calls": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "replans": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "retries": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "steps": {
+            "max": 8,
+            "mean": 8,
+            "median": 8,
+            "min": 8,
+            "n": 1,
+            "per_solved": 8.0,
+            "solved_distribution": {
+              "max": 8,
+              "mean": 8,
+              "median": 8,
+              "min": 8,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 8
+          },
+          "tool_calls": {
+            "max": 10,
+            "mean": 10,
+            "median": 10,
+            "min": 10,
+            "n": 1,
+            "per_solved": 10.0,
+            "solved_distribution": {
+              "max": 10,
+              "mean": 10,
+              "median": 10,
+              "min": 10,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 10
+          },
+          "tool_failures": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "total_tokens": {
+            "max": 16283,
+            "mean": 16283,
+            "median": 16283,
+            "min": 16283,
+            "n": 1,
+            "per_solved": 16283.0,
+            "solved_distribution": {
+              "max": 16283,
+              "mean": 16283,
+              "median": 16283,
+              "min": 16283,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 16283
+          }
+        },
+        "pass_count": 1,
+        "pass_rate": 1.0,
+        "post_recovery_task_success_rate": null,
+        "post_replan_task_success_rate": null,
+        "recovery_rate": null,
+        "replan_success_rate": null,
+        "replan_trigger_rate": null,
+        "repository_evaluated": 1,
+        "repository_pass_count": 1,
+        "successful_termination_rate": 0.0,
+        "termination_counts": {
+          "false_failure": 1
+        },
+        "trials": 1,
+        "unsupported": 0,
+        "value": "simple"
+      },
+      {
+        "behavior_evaluated": 2,
+        "behavior_pass_count": 2,
+        "churn_available": false,
+        "completion_precision": null,
+        "completion_recall": 0.0,
+        "dimension": "overall",
+        "engine": "repopilot",
+        "evaluated": 2,
+        "false_failure_rate": 1.0,
+        "false_success_rate": 0.0,
+        "model": "openai/gpt-5.6-luna",
+        "numeric": {
+          "duration_seconds": {
+            "max": 180.58649211800014,
+            "mean": 180.4779881490001,
+            "median": 180.4779881490001,
+            "min": 180.3694841800001,
+            "n": 2,
+            "per_solved": 180.4779881490001,
+            "solved_distribution": {
+              "max": 180.58649211800014,
+              "mean": 180.4779881490001,
+              "median": 180.4779881490001,
+              "min": 180.3694841800001,
+              "n": 2,
+              "stddev": 0.15344778453114635
+            },
+            "stddev": 0.15344778453114635,
+            "total": 360.9559762980002
+          },
+          "input_tokens": {
+            "max": 15053,
+            "mean": 10571.5,
+            "median": 10571.5,
+            "min": 6090,
+            "n": 2,
+            "per_solved": 10571.5,
+            "solved_distribution": {
+              "max": 15053,
+              "mean": 10571.5,
+              "median": 10571.5,
+              "min": 6090,
+              "n": 2,
+              "stddev": 6337.798079775025
+            },
+            "stddev": 6337.798079775025,
+            "total": 21143
+          },
+          "llm_calls": {
+            "max": 8,
+            "mean": 7.5,
+            "median": 7.5,
+            "min": 7,
+            "n": 2,
+            "per_solved": 7.5,
+            "solved_distribution": {
+              "max": 8,
+              "mean": 7.5,
+              "median": 7.5,
+              "min": 7,
+              "n": 2,
+              "stddev": 0.7071067811865476
+            },
+            "stddev": 0.7071067811865476,
+            "total": 15
+          },
+          "output_tokens": {
+            "max": 1230,
+            "mean": 851,
+            "median": 851.0,
+            "min": 472,
+            "n": 2,
+            "per_solved": 851.0,
+            "solved_distribution": {
+              "max": 1230,
+              "mean": 851,
+              "median": 851.0,
+              "min": 472,
+              "n": 2,
+              "stddev": 535.986940139403
+            },
+            "stddev": 535.986940139403,
+            "total": 1702
+          },
+          "redundant_calls": {
+            "max": 0,
+            "mean": 0,
+            "median": 0.0,
+            "min": 0,
+            "n": 2,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0.0,
+              "min": 0,
+              "n": 2,
+              "stddev": 0.0
+            },
+            "stddev": 0.0,
+            "total": 0
+          },
+          "replans": {
+            "max": 0,
+            "mean": 0,
+            "median": 0.0,
+            "min": 0,
+            "n": 2,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0.0,
+              "min": 0,
+              "n": 2,
+              "stddev": 0.0
+            },
+            "stddev": 0.0,
+            "total": 0
+          },
+          "retries": {
+            "max": 2,
+            "mean": 1,
+            "median": 1.0,
+            "min": 0,
+            "n": 2,
+            "per_solved": 1.0,
+            "solved_distribution": {
+              "max": 2,
+              "mean": 1,
+              "median": 1.0,
+              "min": 0,
+              "n": 2,
+              "stddev": 1.4142135623730951
+            },
+            "stddev": 1.4142135623730951,
+            "total": 2
+          },
+          "steps": {
+            "max": 8,
+            "mean": 7.5,
+            "median": 7.5,
+            "min": 7,
+            "n": 2,
+            "per_solved": 7.5,
+            "solved_distribution": {
+              "max": 8,
+              "mean": 7.5,
+              "median": 7.5,
+              "min": 7,
+              "n": 2,
+              "stddev": 0.7071067811865476
+            },
+            "stddev": 0.7071067811865476,
+            "total": 15
+          },
+          "tool_calls": {
+            "max": 10,
+            "mean": 8,
+            "median": 8.0,
+            "min": 6,
+            "n": 2,
+            "per_solved": 8.0,
+            "solved_distribution": {
+              "max": 10,
+              "mean": 8,
+              "median": 8.0,
+              "min": 6,
+              "n": 2,
+              "stddev": 2.8284271247461903
+            },
+            "stddev": 2.8284271247461903,
+            "total": 16
+          },
+          "tool_failures": {
+            "max": 1,
+            "mean": 0.5,
+            "median": 0.5,
+            "min": 0,
+            "n": 2,
+            "per_solved": 0.5,
+            "solved_distribution": {
+              "max": 1,
+              "mean": 0.5,
+              "median": 0.5,
+              "min": 0,
+              "n": 2,
+              "stddev": 0.7071067811865476
+            },
+            "stddev": 0.7071067811865476,
+            "total": 1
+          },
+          "total_tokens": {
+            "max": 16283,
+            "mean": 11422.5,
+            "median": 11422.5,
+            "min": 6562,
+            "n": 2,
+            "per_solved": 11422.5,
+            "solved_distribution": {
+              "max": 16283,
+              "mean": 11422.5,
+              "median": 11422.5,
+              "min": 6562,
+              "n": 2,
+              "stddev": 6873.785019914429
+            },
+            "stddev": 6873.785019914429,
+            "total": 22845
+          }
+        },
+        "pass_count": 2,
+        "pass_rate": 1.0,
+        "post_recovery_task_success_rate": 1.0,
+        "post_replan_task_success_rate": null,
+        "recovery_rate": 1.0,
+        "replan_success_rate": null,
+        "replan_trigger_rate": null,
+        "repository_evaluated": 2,
+        "repository_pass_count": 2,
+        "successful_termination_rate": 0.0,
+        "termination_counts": {
+          "false_failure": 2
+        },
+        "trials": 2,
+        "unsupported": 0,
+        "value": "all"
+      },
+      {
+        "behavior_evaluated": 1,
+        "behavior_pass_count": 1,
+        "churn_available": false,
+        "completion_precision": null,
+        "completion_recall": 0.0,
+        "dimension": "task",
+        "engine": "repopilot",
+        "evaluated": 1,
+        "false_failure_rate": 1.0,
+        "false_success_rate": 0.0,
+        "model": "openai/gpt-5.6-luna",
+        "numeric": {
+          "duration_seconds": {
+            "max": 180.58649211800014,
+            "mean": 180.58649211800014,
+            "median": 180.58649211800014,
+            "min": 180.58649211800014,
+            "n": 1,
+            "per_solved": 180.58649211800014,
+            "solved_distribution": {
+              "max": 180.58649211800014,
+              "mean": 180.58649211800014,
+              "median": 180.58649211800014,
+              "min": 180.58649211800014,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 180.58649211800014
+          },
+          "input_tokens": {
+            "max": 6090,
+            "mean": 6090,
+            "median": 6090,
+            "min": 6090,
+            "n": 1,
+            "per_solved": 6090.0,
+            "solved_distribution": {
+              "max": 6090,
+              "mean": 6090,
+              "median": 6090,
+              "min": 6090,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 6090
+          },
+          "llm_calls": {
+            "max": 7,
+            "mean": 7,
+            "median": 7,
+            "min": 7,
+            "n": 1,
+            "per_solved": 7.0,
+            "solved_distribution": {
+              "max": 7,
+              "mean": 7,
+              "median": 7,
+              "min": 7,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 7
+          },
+          "output_tokens": {
+            "max": 472,
+            "mean": 472,
+            "median": 472,
+            "min": 472,
+            "n": 1,
+            "per_solved": 472.0,
+            "solved_distribution": {
+              "max": 472,
+              "mean": 472,
+              "median": 472,
+              "min": 472,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 472
+          },
+          "redundant_calls": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "replans": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "retries": {
+            "max": 2,
+            "mean": 2,
+            "median": 2,
+            "min": 2,
+            "n": 1,
+            "per_solved": 2.0,
+            "solved_distribution": {
+              "max": 2,
+              "mean": 2,
+              "median": 2,
+              "min": 2,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 2
+          },
+          "steps": {
+            "max": 7,
+            "mean": 7,
+            "median": 7,
+            "min": 7,
+            "n": 1,
+            "per_solved": 7.0,
+            "solved_distribution": {
+              "max": 7,
+              "mean": 7,
+              "median": 7,
+              "min": 7,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 7
+          },
+          "tool_calls": {
+            "max": 6,
+            "mean": 6,
+            "median": 6,
+            "min": 6,
+            "n": 1,
+            "per_solved": 6.0,
+            "solved_distribution": {
+              "max": 6,
+              "mean": 6,
+              "median": 6,
+              "min": 6,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 6
+          },
+          "tool_failures": {
+            "max": 1,
+            "mean": 1,
+            "median": 1,
+            "min": 1,
+            "n": 1,
+            "per_solved": 1.0,
+            "solved_distribution": {
+              "max": 1,
+              "mean": 1,
+              "median": 1,
+              "min": 1,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 1
+          },
+          "total_tokens": {
+            "max": 6562,
+            "mean": 6562,
+            "median": 6562,
+            "min": 6562,
+            "n": 1,
+            "per_solved": 6562.0,
+            "solved_distribution": {
+              "max": 6562,
+              "mean": 6562,
+              "median": 6562,
+              "min": 6562,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 6562
+          }
+        },
+        "pass_count": 1,
+        "pass_rate": 1.0,
+        "post_recovery_task_success_rate": 1.0,
+        "post_replan_task_success_rate": null,
+        "recovery_rate": 1.0,
+        "replan_success_rate": null,
+        "replan_trigger_rate": null,
+        "repository_evaluated": 1,
+        "repository_pass_count": 1,
+        "successful_termination_rate": 0.0,
+        "termination_counts": {
+          "false_failure": 1
+        },
+        "trials": 1,
+        "unsupported": 0,
+        "value": "recovery-public-failure"
+      },
+      {
+        "behavior_evaluated": 1,
+        "behavior_pass_count": 1,
+        "churn_available": false,
+        "completion_precision": null,
+        "completion_recall": 0.0,
+        "dimension": "task",
+        "engine": "repopilot",
+        "evaluated": 1,
+        "false_failure_rate": 1.0,
+        "false_success_rate": 0.0,
+        "model": "openai/gpt-5.6-luna",
+        "numeric": {
+          "duration_seconds": {
+            "max": 180.3694841800001,
+            "mean": 180.3694841800001,
+            "median": 180.3694841800001,
+            "min": 180.3694841800001,
+            "n": 1,
+            "per_solved": 180.3694841800001,
+            "solved_distribution": {
+              "max": 180.3694841800001,
+              "mean": 180.3694841800001,
+              "median": 180.3694841800001,
+              "min": 180.3694841800001,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 180.3694841800001
+          },
+          "input_tokens": {
+            "max": 15053,
+            "mean": 15053,
+            "median": 15053,
+            "min": 15053,
+            "n": 1,
+            "per_solved": 15053.0,
+            "solved_distribution": {
+              "max": 15053,
+              "mean": 15053,
+              "median": 15053,
+              "min": 15053,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 15053
+          },
+          "llm_calls": {
+            "max": 8,
+            "mean": 8,
+            "median": 8,
+            "min": 8,
+            "n": 1,
+            "per_solved": 8.0,
+            "solved_distribution": {
+              "max": 8,
+              "mean": 8,
+              "median": 8,
+              "min": 8,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 8
+          },
+          "output_tokens": {
+            "max": 1230,
+            "mean": 1230,
+            "median": 1230,
+            "min": 1230,
+            "n": 1,
+            "per_solved": 1230.0,
+            "solved_distribution": {
+              "max": 1230,
+              "mean": 1230,
+              "median": 1230,
+              "min": 1230,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 1230
+          },
+          "redundant_calls": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "replans": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "retries": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "steps": {
+            "max": 8,
+            "mean": 8,
+            "median": 8,
+            "min": 8,
+            "n": 1,
+            "per_solved": 8.0,
+            "solved_distribution": {
+              "max": 8,
+              "mean": 8,
+              "median": 8,
+              "min": 8,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 8
+          },
+          "tool_calls": {
+            "max": 10,
+            "mean": 10,
+            "median": 10,
+            "min": 10,
+            "n": 1,
+            "per_solved": 10.0,
+            "solved_distribution": {
+              "max": 10,
+              "mean": 10,
+              "median": 10,
+              "min": 10,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 10
+          },
+          "tool_failures": {
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "n": 1,
+            "per_solved": 0.0,
+            "solved_distribution": {
+              "max": 0,
+              "mean": 0,
+              "median": 0,
+              "min": 0,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 0
+          },
+          "total_tokens": {
+            "max": 16283,
+            "mean": 16283,
+            "median": 16283,
+            "min": 16283,
+            "n": 1,
+            "per_solved": 16283.0,
+            "solved_distribution": {
+              "max": 16283,
+              "mean": 16283,
+              "median": 16283,
+              "min": 16283,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 16283
+          }
+        },
+        "pass_count": 1,
+        "pass_rate": 1.0,
+        "post_recovery_task_success_rate": null,
+        "post_replan_task_success_rate": null,
+        "recovery_rate": null,
+        "replan_success_rate": null,
+        "replan_trigger_rate": null,
+        "repository_evaluated": 1,
+        "repository_pass_count": 1,
+        "successful_termination_rate": 0.0,
+        "termination_counts": {
+          "false_failure": 1
+        },
+        "trials": 1,
+        "unsupported": 0,
+        "value": "seed-single-file"
+      }
+    ],
+    "paired": [],
+    "schema_version": 4
+  },
+  "pricing_basis": {
+    "as_of": "2026-09-04",
+    "note": "Estimate only; not provider or intermediary invoice data.",
+    "source": "https://developers.openai.com/api/docs/pricing",
+    "tier": "standard"
+  },
+  "results": [
+    {
+      "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/seed-single-file/repopilot",
+      "behavior_pass": true,
+      "capabilities": [],
+      "category": "simple",
+      "engine": "repopilot",
+      "error": null,
+      "evaluation": {
+        "approval_events": [],
+        "behavior_pass": true,
+        "behavior_verifier": {},
+        "budget_usage": {
+          "complete_audit": false,
+          "limits": {
+            "command_timeout_seconds": 30,
+            "max_consecutive_failures": 2,
+            "max_replans": 1,
+            "max_run_seconds": 180,
+            "max_steps": 15
+          },
+          "replans_used": 0,
+          "steps_used": 8
+        },
+        "churn": {
+          "final_step": 8,
+          "first_solved_step": null,
+          "post_solution_steps": null,
+          "reason": "Missing immutable repository states at every step boundary.",
+          "status": "unsupported"
+        },
+        "duration": {
+          "llm_seconds": 178.32728756499978,
+          "orchestration_seconds": null,
+          "tool_seconds": null,
+          "wall_clock_seconds": 180.3694841800001
+        },
+        "recovery": {
+          "attempt_count": null,
+          "failure_types": [],
+          "post_recovery_repository_pass": null,
+          "resolved_count": null,
+          "success_rate": null,
+          "trigger_count": null
+        },
+        "replan": {
+          "evidence_count": null,
+          "missed_scenarios": null,
+          "post_replan_repository_pass": null,
+          "success_rate": null,
+          "trigger_rate": null,
+          "triggered_count": 0,
+          "triggered_scenarios": null,
+          "unnecessary_replans": null,
+          "valid_count": null
+        },
+        "repository_pass": true,
+        "schema_version": 4,
+        "task_pass": true,
+        "termination": "false_failure",
+        "tool_quality": {
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "recovery_rate": null,
+          "recovery_scope": "manifest-declared public-command failures only",
+          "redundant_calls": 0
+        }
+      },
+      "metrics": {
+        "commits": [],
+        "cost": 0.0037493200000000004,
+        "duration_seconds": 180.3694841800001,
+        "errors": [],
+        "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "llm_calls": 8,
+        "openai_standard_estimated_cost_usd": 0.00374932,
+        "patch": {
+          "changed": true,
+          "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/seed-single-file/repopilot/patch.diff",
+          "sha256": "74a383bc9e5994fd104cfc8c7ab44627ef05e5a71f3eadc0b7408752ab69c753"
+        },
+        "preflight": {
+          "checks": [
+            {
+              "command": [
+                "docker",
+                "image",
+                "inspect",
+                "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+                "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+              ],
+              "duration_seconds": 0.03697624699998414,
+              "exit_code": 0,
+              "name": "image_inspect",
+              "stderr": "",
+              "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n"
+            },
+            {
+              "command": [
+                "docker",
+                "run",
+                "--rm",
+                "--pull=never",
+                "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+                "python",
+                "--version"
+              ],
+              "duration_seconds": 0.40669634700009283,
+              "exit_code": 0,
+              "name": "python",
+              "stderr": "",
+              "stdout": "Python 3.12.14\n"
+            },
+            {
+              "command": [
+                "docker",
+                "run",
+                "--rm",
+                "--pull=never",
+                "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+                "git",
+                "--version"
+              ],
+              "duration_seconds": 0.39927623799997036,
+              "exit_code": 0,
+              "name": "git",
+              "stderr": "",
+              "stdout": "git version 2.47.3\n"
+            }
+          ],
+          "error": null,
+          "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+          "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+          "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+          "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+          "status": "READY"
+        },
+        "replans": 0,
+        "retries": 0,
+        "run_budget": {
+          "command_timeout_seconds": 30,
+          "max_consecutive_failures": 2,
+          "max_replans": 1,
+          "max_run_seconds": 180,
+          "max_steps": 15
+        },
+        "steps": 8,
+        "tokens": {
+          "cache_write": null,
+          "cached": 4096,
+          "completion": 1230,
+          "prompt": 15053,
+          "reasoning": 0,
+          "total": 16283
+        },
+        "tool_calls": 10,
+        "tool_failures": 0,
+        "trajectory_status": "BUDGET_EXCEEDED",
+        "verifier_success": true
+      },
+      "model": "openai/gpt-5.6-luna",
+      "repeat": 1,
+      "repository_pass": true,
+      "run_id": "af1d646992ec4c9eb5eced159049eef2",
+      "status": "BUDGET_EXCEEDED",
+      "success": true,
+      "task_id": "seed-single-file",
+      "task_pass": true,
+      "verifier": {
+        "duration_seconds": 0.019724550999967505,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      }
+    },
+    {
+      "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/recovery-public-failure/repopilot",
+      "behavior_pass": true,
+      "capabilities": [
+        "recovery"
+      ],
+      "category": "recovery",
+      "engine": "repopilot",
+      "error": null,
+      "evaluation": {
+        "approval_events": [],
+        "behavior_pass": true,
+        "behavior_verifier": {
+          "recovery": {
+            "pass": true,
+            "reason": "Every triggered recoverable scenario must have an objective resolution."
+          }
+        },
+        "budget_usage": {
+          "complete_audit": false,
+          "limits": {
+            "command_timeout_seconds": 30,
+            "max_consecutive_failures": 2,
+            "max_replans": 1,
+            "max_run_seconds": 180,
+            "max_steps": 15
+          },
+          "replans_used": 0,
+          "steps_used": 7
+        },
+        "churn": {
+          "final_step": 7,
+          "first_solved_step": null,
+          "post_solution_steps": null,
+          "reason": "Missing immutable repository states at every step boundary.",
+          "status": "unsupported"
+        },
+        "duration": {
+          "llm_seconds": 178.06045884900016,
+          "orchestration_seconds": null,
+          "tool_seconds": null,
+          "wall_clock_seconds": 180.58649211800014
+        },
+        "recovery": {
+          "attempt_count": 1,
+          "failure_types": [
+            "test_failure"
+          ],
+          "post_recovery_repository_pass": true,
+          "resolved_count": 1,
+          "success_rate": 1.0,
+          "trigger_count": 1
+        },
+        "replan": {
+          "evidence_count": null,
+          "missed_scenarios": null,
+          "post_replan_repository_pass": null,
+          "success_rate": null,
+          "trigger_rate": null,
+          "triggered_count": 0,
+          "triggered_scenarios": null,
+          "unnecessary_replans": null,
+          "valid_count": null
+        },
+        "repository_pass": true,
+        "schema_version": 4,
+        "task_pass": true,
+        "termination": "false_failure",
+        "tool_quality": {
+          "failure_count": 1,
+          "failure_rate": 0.16666666666666666,
+          "recovery_rate": 1.0,
+          "recovery_scope": "manifest-declared public-command failures only",
+          "redundant_calls": 0
+        }
+      },
+      "metrics": {
+        "commits": [],
+        "cost": 0.0012314399999999999,
+        "duration_seconds": 180.58649211800014,
+        "errors": [
+          {
+            "category": "MODEL_ERROR",
+            "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out"
+          },
+          {
+            "category": "MODEL_ERROR",
+            "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out"
+          }
+        ],
+        "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "llm_calls": 7,
+        "openai_standard_estimated_cost_usd": 0.00123144,
+        "patch": {
+          "changed": true,
+          "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/recovery-public-failure/repopilot/patch.diff",
+          "sha256": "f46efcaca5522873c7fae318c5f300988d7f8a9dcb599026c9bed8486941b84b"
+        },
+        "preflight": {
+          "checks": [
+            {
+              "command": [
+                "docker",
+                "image",
+                "inspect",
+                "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+                "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+              ],
+              "duration_seconds": 0.03697624699998414,
+              "exit_code": 0,
+              "name": "image_inspect",
+              "stderr": "",
+              "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n"
+            },
+            {
+              "command": [
+                "docker",
+                "run",
+                "--rm",
+                "--pull=never",
+                "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+                "python",
+                "--version"
+              ],
+              "duration_seconds": 0.40669634700009283,
+              "exit_code": 0,
+              "name": "python",
+              "stderr": "",
+              "stdout": "Python 3.12.14\n"
+            },
+            {
+              "command": [
+                "docker",
+                "run",
+                "--rm",
+                "--pull=never",
+                "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+                "git",
+                "--version"
+              ],
+              "duration_seconds": 0.39927623799997036,
+              "exit_code": 0,
+              "name": "git",
+              "stderr": "",
+              "stdout": "git version 2.47.3\n"
+            }
+          ],
+          "error": null,
+          "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+          "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+          "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+          "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+          "status": "READY"
+        },
+        "replans": 0,
+        "retries": 2,
+        "run_budget": {
+          "command_timeout_seconds": 30,
+          "max_consecutive_failures": 2,
+          "max_replans": 1,
+          "max_run_seconds": 180,
+          "max_steps": 15
+        },
+        "steps": 7,
+        "tokens": {
+          "cache_write": null,
+          "cached": 3072,
+          "completion": 472,
+          "prompt": 6090,
+          "reasoning": 0,
+          "total": 6562
+        },
+        "tool_calls": 6,
+        "tool_failures": 1,
+        "trajectory_status": "BUDGET_EXCEEDED",
+        "verifier_success": true
+      },
+      "model": "openai/gpt-5.6-luna",
+      "repeat": 1,
+      "repository_pass": true,
+      "run_id": "201f16136d5245c3b97085d039e9a447",
+      "status": "BUDGET_EXCEEDED",
+      "success": true,
+      "task_id": "recovery-public-failure",
+      "task_pass": true,
+      "verifier": {
+        "duration_seconds": 0.06332855699997708,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "",
+        "success_condition": {
+          "verifier_exit_code": 0
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "approval_policy": "approve",
+      "behavior_requirements": [],
+      "behavior_spec": {},
+      "behavior_verifier_path": null,
+      "capabilities": [],
+      "category": "simple",
+      "experimental": false,
+      "run_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "run_budget_declared": [
+        "command_timeout_seconds",
+        "max_consecutive_failures",
+        "max_replans",
+        "max_run_seconds",
+        "max_steps"
+      ],
+      "snapshot": "/tmp/repopilot-round3-source-zj5jyp2z/src/repopilot/benchmark_tasks/seed-single-file/snapshot",
+      "snapshot_revision": "seed-v1",
+      "snapshot_sha256": "703811f56ac8d521fc1f0bcbcc240087f0dac49ad0509d78692428cdd9f6057a",
+      "success_condition": {
+        "verifier_exit_code": 0
+      },
+      "task": "Fix src/slugify.py so leading and trailing whitespace is ignored, every run of whitespace becomes one hyphen, whitespace-only input returns an empty string, and punctuation is preserved.",
+      "task_id": "seed-single-file",
+      "timeout_seconds": 180.0,
+      "verifier_path": "/tmp/repopilot-round3-source-zj5jyp2z/src/repopilot/benchmark_tasks/seed-single-file/verify_seed_single_file.py",
+      "verifier_timeout_seconds": 20.0
+    },
+    {
+      "approval_policy": "approve",
+      "behavior_requirements": [
+        "recovery"
+      ],
+      "behavior_spec": {
+        "recovery_command": "python -m unittest discover -s tests",
+        "recovery_files": [
+          "tests/test_line_tools.py"
+        ]
+      },
+      "behavior_verifier_path": null,
+      "capabilities": [
+        "recovery"
+      ],
+      "category": "recovery",
+      "experimental": false,
+      "run_budget": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "run_budget_declared": [
+        "command_timeout_seconds",
+        "max_consecutive_failures",
+        "max_replans",
+        "max_run_seconds",
+        "max_steps"
+      ],
+      "snapshot": "/tmp/repopilot-round3-source-zj5jyp2z/src/repopilot/benchmark_tasks/recovery-public-failure/snapshot",
+      "snapshot_revision": "recovery-v1",
+      "snapshot_sha256": "dcf8a8bcabd8b765201bfb1bd9f469b8d091a16e8c6a01a8f552ea56af08fd47",
+      "success_condition": {
+        "verifier_exit_code": 0
+      },
+      "task": "Before editing, run `python -m unittest discover -s tests`; after repairing the failure rerun that same command successfully. Repair src/line_tools.py so unique_clean_lines strips each line, skips empty lines, and removes duplicates using Unicode case-insensitive semantics while preserving the first cleaned spelling and input order.",
+      "task_id": "recovery-public-failure",
+      "timeout_seconds": 180.0,
+      "verifier_path": "/tmp/repopilot-round3-source-zj5jyp2z/src/repopilot/benchmark_tasks/recovery-public-failure/verify_recovery_public_failure.py",
+      "verifier_timeout_seconds": 20.0
+    }
+  ]
+}

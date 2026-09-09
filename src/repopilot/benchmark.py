@@ -41,7 +41,7 @@ from repopilot.evaluation import (
     normalize_trace,
     scenario_audit,
 )
-from repopilot.model import AssistantTurn, LiteLLMToolCallingModel
+from repopilot.model import AssistantTurn, LiteLLMToolCallingModel, stream_chunk_record
 from repopilot.plan import PlanHistory
 from repopilot.pricing import (
     OPENAI_STANDARD_PRICING_AS_OF,
@@ -84,7 +84,9 @@ BUDGET_FIELD_ALIASES: dict[str, tuple[str, ...]] = {
 def declared_budget_fields(value: Mapping[str, Any]) -> frozenset[str]:
     """Return the canonical budget fields an explicit mapping declares."""
 
-    return frozenset(destination for destination, candidates in BUDGET_FIELD_ALIASES.items() if any(c in value for c in candidates))
+    return frozenset(
+        destination for destination, candidates in BUDGET_FIELD_ALIASES.items() if any(c in value for c in candidates)
+    )
 
 
 @dataclass(frozen=True)
@@ -291,9 +293,7 @@ class BenchmarkTask:
             verifier_timeout_seconds=verifier_timeout_seconds,
             run_budget=run_budget,
             run_budget_declared=(
-                declared_budget_fields(run_budget_value)
-                if isinstance(run_budget_value, Mapping)
-                else frozenset()
+                declared_budget_fields(run_budget_value) if isinstance(run_budget_value, Mapping) else frozenset()
             ),
         )
 
@@ -802,9 +802,23 @@ class BenchmarkRunner:
         if run.error is not None:
             error = run.error
 
-        patch = capture_patch(workspace, initial_head)
+        patch = _redact_benchmark_value(capture_patch(workspace, initial_head), secrets)
         patch_path = task_directory / "patch.diff"
         patch_path.write_text(patch or "", encoding="utf-8")
+        patch_bytes = patch_path.read_bytes()
+        (task_directory / "patch-manifest.json").write_text(
+            json.dumps(
+                {
+                    "scope": "benchmark_normalized_delta",
+                    "patch": "patch.diff",
+                    "bytes": len(patch_bytes),
+                    "sha256": hashlib.sha256(patch_bytes).hexdigest(),
+                    "initial_head": initial_head,
+                },
+                indent=2,
+            )
+            + "\n"
+        )
         commits = capture_commits(workspace, initial_head)
         verifier = None if run.status == "ENVIRONMENT_UNAVAILABLE" else run_hidden_verifier(task, workspace)
         verifier = _redact_benchmark_value(verifier, secrets)
@@ -1011,6 +1025,19 @@ def _run_baseline(request: EngineRequest) -> EngineRun:
         # subclass instead of the vendored non-streaming LitellmModel.
         model_config["model_class"] = "repopilot.litellm_streaming.StreamingLitellmModel"
     model = get_model(config=model_config)
+    if model_kwargs.get("stream") and hasattr(model, "_query"):
+        stream_number = 0
+
+        def observe_stream(sequence, chunk):
+            nonlocal stream_number
+            if sequence == 0:
+                stream_number += 1
+            record = _redact_benchmark_value(stream_chunk_record(sequence, chunk), _benchmark_secret_values(config))
+            path = request.artifact_directory / f"model-stream-{stream_number:04d}.jsonl"
+            with path.open("a") as stream:
+                stream.write(json.dumps(record) + "\n")
+
+        model.stream_observer = observe_stream
     run_args = [
         "--rm",
         "--mount",
@@ -1094,8 +1121,10 @@ class _BenchmarkToolCallingModel(LiteLLMToolCallingModel):
         }
         self._saw_cost = False
 
-    def complete(self, messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> AssistantTurn:
-        turn = super().complete(messages, tools)
+    def complete(
+        self, messages: list[dict[str, Any]], tools: list[dict[str, Any]], *, timeout_seconds=None
+    ) -> AssistantTurn:
+        turn = super().complete(messages, tools, timeout_seconds=timeout_seconds)
         self.calls += 1
         usage = turn.usage
         self._saw_usage = True
@@ -1218,9 +1247,17 @@ def _copy_runtime_artifacts(source: Path, destination: Path) -> None:
     for path in source.iterdir():
         if path.name == "result.json":
             continue
-        target = destination / path.name
+        name = {"patch.diff": "runtime-patch.diff", "patch-manifest.json": "runtime-patch-manifest.json"}.get(
+            path.name, path.name
+        )
+        target = destination / name
         if path.is_file():
             shutil.copy2(path, target)
+            if path.name == "patch-manifest.json":
+                manifest = json.loads(target.read_text())
+                manifest["patch"] = "runtime-patch.diff"
+                manifest["replay"] = "Apply initial-worktree.diff to baseline HEAD, then runtime-patch.diff."
+                target.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
 
 
 def _benchmark_secret_values(config: BenchmarkConfig) -> list[str]:

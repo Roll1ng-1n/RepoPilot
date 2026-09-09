@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 
+from repopilot.budget import BudgetExceeded
 from repopilot.model import ToolCallingModel
 
 
@@ -87,6 +88,7 @@ def model_summary_generator(model: ToolCallingModel) -> SummaryGenerator:
             raise ValueError("Context summary model returned a non-object JSON value.")
         return ContextSummary.from_dict(parsed)
 
+    summarize.model_backed = True
     return summarize
 
 
@@ -110,6 +112,10 @@ class ContextManager:
     ):
         if max_characters < 1:
             raise ValueError("Context character limit must be positive.")
+        self.repository_profile = None
+        self.include_plan = True
+        self.context_window_tokens = 32768
+        self.output_reserve_tokens = 4096
         self._strategy = ContextStrategy(strategy)
         self._max_characters = max_characters
         self._important_facts: list[str] = []
@@ -117,6 +123,20 @@ class ContextManager:
         self._summarized_steps = 0
         self._fallback_reason: str | None = None
         self._summarizer = summarizer or self._default_summarizer
+
+    def observe_repository_instruction(self, instruction):
+        if self.repository_profile is None:
+            self.repository_profile = {"instructions": []}
+        known = self.repository_profile.setdefault("instructions", [])
+        if instruction in known:
+            return False
+        known[:] = [i for i in known if i["source"] != instruction["source"]]
+        known.append(instruction)
+        return True
+
+    def bind_request_executor(self, executor):
+        if getattr(self._summarizer, "model_backed", False):
+            self._summarizer = model_summary_generator(executor.for_summary())
 
     def record_fact(self, fact: str) -> None:
         """Retain one explicit fact for every later model request in this Agent Run."""
@@ -145,10 +165,45 @@ class ContextManager:
             return self._sliding_window(anchors + facts_message, self._agent_steps(messages[2:]))
         return self._summary_context(anchors, facts_message, self._agent_steps(messages[2:]))
 
+    def bound_request(self, messages, schemas):
+        """Use UTF-8 bytes as a conservative token upper bound, preserving whole call/result groups."""
+        import copy
+
+        selected = copy.deepcopy(messages)
+        reserved = self.output_reserve_tokens + len(json.dumps(schemas).encode()) + 1024
+        available = self.context_window_tokens - reserved
+
+        def size():
+            return len(json.dumps(selected, ensure_ascii=False).encode())
+
+        first_assistant = next((i for i, m in enumerate(selected) if m.get("role") == "assistant"), len(selected))
+        anchors = selected[:first_assistant]
+        steps = self._agent_steps(selected[first_assistant:])
+        while size() > available and len(steps) > 1:
+            steps.pop(0)
+            selected = anchors + [m for step in steps for m in step]
+        if size() > available:
+            for message in selected:
+                if message.get("role") == "tool" and len(message.get("content", "")) > 1000:
+                    try:
+                        artifact = json.loads(message["content"]).get("artifact")
+                    except (ValueError, AttributeError):
+                        artifact = None
+                    message["content"] = json.dumps(
+                        {"truncated": True, "artifact": artifact, "preview": message["content"][:700]}
+                    )
+        if size() > available:
+            raise BudgetExceeded("context_window")
+        return selected
+
     def to_checkpoint(self) -> dict[str, Any]:
         """Serialize all state needed to retain the same Context Strategy after Resume."""
 
         return {
+            "include_plan": self.include_plan,
+            "context_window_tokens": self.context_window_tokens,
+            "output_reserve_tokens": self.output_reserve_tokens,
+            "repository_profile": self.repository_profile,
             "strategy": self._strategy.value,
             "max_characters": self._max_characters,
             "important_facts": self._important_facts,
@@ -187,6 +242,10 @@ class ContextManager:
             raise ValueError("Checkpoint has invalid Context state.")
         if fallback["active"] != (fallback.get("reason") is not None):
             raise ValueError("Checkpoint has invalid Context fallback state.")
+        self.context_window_tokens = value.get("context_window_tokens", 32768)
+        self.include_plan = value.get("include_plan", True)
+        self.output_reserve_tokens = value.get("output_reserve_tokens", 4096)
+        self.repository_profile = value.get("repository_profile", self.repository_profile)
         self._strategy = strategy
         self._max_characters = max_characters
         self._important_facts = list(dict.fromkeys(facts))
@@ -238,6 +297,8 @@ class ContextManager:
                         "summary": self._summary.to_dict(),
                     }
                 )
+            except BudgetExceeded:
+                raise
             except Exception as error:
                 self._fallback_reason = str(error) or type(error).__name__
                 events.append({"type": "context_summary_fallback", "reason": self._fallback_reason})
@@ -283,9 +344,29 @@ class ContextManager:
         if not isinstance(content, str):
             raise ValueError("Agent Run system message must contain text.")
         prefix = content.split(" Current Plan: ", maxsplit=1)[0]
+        if not self.include_plan:
+            prefix = (
+                "Use the provided native tools to inspect and repair the Target Repository. "
+                "Verify your work with verify_task and request completion with finish_task."
+            )
         return [
-            {**system, "content": f"{prefix} Current Plan: {json.dumps(current_plan, sort_keys=True)}"},
+            {
+                **system,
+                "content": f"{prefix} Current Plan: {json.dumps(current_plan, sort_keys=True)}"
+                if self.include_plan
+                else prefix,
+            },
             task.copy(),
+            *(
+                [
+                    {
+                        "role": "user",
+                        "content": "Repository Profile (scoped data):\n" + json.dumps(self.repository_profile),
+                    }
+                ]
+                if self.repository_profile
+                else []
+            ),
         ]
 
     def _facts_message(self) -> list[dict[str, Any]]:

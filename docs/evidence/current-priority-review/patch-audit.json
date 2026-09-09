@@ -1,0 +1,66 @@
+[
+  {
+    "sample": "no-planning/gpt-5.6-luna/recovery-public-failure/repopilot",
+    "copied_patch_manifest_matches": false,
+    "declared_bytes": 3135,
+    "actual_bytes": 730,
+    "runtime_original_matches": true,
+    "runtime_original_count": 1
+  },
+  {
+    "sample": "no-planning/gpt-5.6-luna/seed-single-file/repopilot",
+    "copied_patch_manifest_matches": false,
+    "declared_bytes": 1381,
+    "actual_bytes": 536,
+    "runtime_original_matches": true,
+    "runtime_original_count": 1
+  },
+  {
+    "sample": "no-planning/gpt-5.6-sol/recovery-public-failure/repopilot",
+    "copied_patch_manifest_matches": false,
+    "declared_bytes": 3145,
+    "actual_bytes": 735,
+    "runtime_original_matches": true,
+    "runtime_original_count": 1
+  },
+  {
+    "sample": "no-planning/gpt-5.6-sol/seed-single-file/repopilot",
+    "copied_patch_manifest_matches": false,
+    "declared_bytes": 563,
+    "actual_bytes": 497,
+    "runtime_original_matches": true,
+    "runtime_original_count": 1
+  },
+  {
+    "sample": "smoke/gpt-5.6-luna/recovery-public-failure/repopilot",
+    "copied_patch_manifest_matches": false,
+    "declared_bytes": 796,
+    "actual_bytes": 730,
+    "runtime_original_matches": true,
+    "runtime_original_count": 1
+  },
+  {
+    "sample": "smoke/gpt-5.6-luna/seed-single-file/repopilot",
+    "copied_patch_manifest_matches": false,
+    "declared_bytes": 1197,
+    "actual_bytes": 342,
+    "runtime_original_matches": true,
+    "runtime_original_count": 1
+  },
+  {
+    "sample": "smoke/gpt-5.6-sol/recovery-public-failure/repopilot",
+    "copied_patch_manifest_matches": false,
+    "declared_bytes": 3143,
+    "actual_bytes": 733,
+    "runtime_original_matches": true,
+    "runtime_original_count": 1
+  },
+  {
+    "sample": "smoke/gpt-5.6-sol/seed-single-file/repopilot",
+    "copied_patch_manifest_matches": false,
+    "declared_bytes": 1227,
+    "actual_bytes": 350,
+    "runtime_original_matches": true,
+    "runtime_original_count": 1
+  }
+]

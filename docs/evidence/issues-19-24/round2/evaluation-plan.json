@@ -1,0 +1,159 @@
+{
+  "ablations": [
+    {
+      "feature": "repository_profile",
+      "fixed": [
+        "task_snapshot",
+        "model",
+        "sampling",
+        "budget",
+        "image"
+      ],
+      "status": "requires_pinned_variant_and_model"
+    },
+    {
+      "feature": "context_selection",
+      "fixed": [
+        "task_snapshot",
+        "model",
+        "sampling",
+        "budget",
+        "image"
+      ],
+      "status": "requires_pinned_variant_and_model"
+    },
+    {
+      "feature": "planning",
+      "fixed": [
+        "task_snapshot",
+        "model",
+        "sampling",
+        "budget",
+        "image"
+      ],
+      "status": "requires_pinned_variant_and_model"
+    },
+    {
+      "feature": "recovery",
+      "fixed": [
+        "task_snapshot",
+        "model",
+        "sampling",
+        "budget",
+        "image"
+      ],
+      "status": "requires_pinned_variant_and_model"
+    }
+  ],
+  "budget": {
+    "command_timeout_seconds": 30,
+    "max_consecutive_failures": 3,
+    "max_replans": 2,
+    "max_run_seconds": 120,
+    "max_steps": 24
+  },
+  "engines": [
+    "baseline",
+    "repopilot"
+  ],
+  "historical_samples_are_not_new_evaluation": true,
+  "image": "repopilot-benchmark:issues-19-24",
+  "metrics": [
+    "task_pass_true_false_null",
+    "repository_verifier",
+    "successful_termination",
+    "usage",
+    "duration_seconds",
+    "cost_usd",
+    "recovery_events"
+  ],
+  "missing": [
+    "explicit model and credentials",
+    "authorized paid evaluation budget",
+    "pinned source variant references for each ablation"
+  ],
+  "model": null,
+  "repeats": 1,
+  "samples": 4,
+  "status": "NOT_RUN_MISSING_MODEL_CONFIGURATION",
+  "stream": true,
+  "tasks": [
+    {
+      "id": "seed-single-file",
+      "manifest": {
+        "behavior_requirements": [],
+        "capabilities": [],
+        "category": "simple",
+        "id": "seed-single-file",
+        "run_budget": {
+          "command_timeout_seconds": 30,
+          "max_consecutive_failures": 2,
+          "max_replans": 1,
+          "max_run_seconds": 180,
+          "max_steps": 15
+        },
+        "schema_version": 1,
+        "snapshot": {
+          "path": "snapshot",
+          "revision": "seed-v1",
+          "sha256": "703811f56ac8d521fc1f0bcbcc240087f0dac49ad0509d78692428cdd9f6057a"
+        },
+        "success_condition": {
+          "verifier_exit_code": 0
+        },
+        "task_statement": "Fix src/slugify.py so leading and trailing whitespace is ignored, every run of whitespace becomes one hyphen, whitespace-only input returns an empty string, and punctuation is preserved.",
+        "timeout_seconds": 180,
+        "verifier": {
+          "execution": "host",
+          "path": "verify_seed_single_file.py",
+          "timeout_seconds": 20
+        }
+      },
+      "manifest_sha256": "6288710ba0f7b0d6406942436dd36b7d4cb850d0286c6b838f1be20469b969b6"
+    },
+    {
+      "id": "recovery-public-failure",
+      "manifest": {
+        "behavior_requirements": [
+          "recovery"
+        ],
+        "behavior_spec": {
+          "recovery_command": "python -m unittest discover -s tests",
+          "recovery_files": [
+            "tests/test_line_tools.py"
+          ]
+        },
+        "capabilities": [
+          "recovery"
+        ],
+        "category": "recovery",
+        "id": "recovery-public-failure",
+        "run_budget": {
+          "command_timeout_seconds": 30,
+          "max_consecutive_failures": 2,
+          "max_replans": 1,
+          "max_run_seconds": 180,
+          "max_steps": 15
+        },
+        "schema_version": 1,
+        "snapshot": {
+          "path": "snapshot",
+          "revision": "recovery-v1",
+          "sha256": "dcf8a8bcabd8b765201bfb1bd9f469b8d091a16e8c6a01a8f552ea56af08fd47"
+        },
+        "success_condition": {
+          "verifier_exit_code": 0
+        },
+        "task_statement": "Before editing, run `python -m unittest discover -s tests`; after repairing the failure rerun that same command successfully. Repair src/line_tools.py so unique_clean_lines strips each line, skips empty lines, and removes duplicates using Unicode case-insensitive semantics while preserving the first cleaned spelling and input order.",
+        "timeout_seconds": 180,
+        "verifier": {
+          "execution": "host",
+          "path": "verify_recovery_public_failure.py",
+          "timeout_seconds": 20
+        }
+      },
+      "manifest_sha256": "3fb84e896c313c4b575ead7d2506c01e5130877442e5eaa30cecfe0b22bf5ad7"
+    }
+  ],
+  "temperature": 0
+}

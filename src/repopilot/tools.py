@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
+import re
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -10,9 +13,13 @@ from typing import Annotated, Any
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from repopilot.approval import ToolCallSnapshot
+from repopilot.budget import RunBudgetTracker
+from repopilot.checkpoint import capture_repository_state
 from repopilot.environment import Command, ExecutionEnvironment
 from repopilot.model import ToolCall
+from repopilot.patches import PatchFormatError, normalize_patch
 from repopilot.plan import PlanHistory, PlanInvariantError, PlanStep, PlanStepStatus
+from repopilot.profile import applicable_instructions
 
 
 class _ToolArguments(BaseModel):
@@ -21,12 +28,21 @@ class _ToolArguments(BaseModel):
 
 class ListFilesArguments(_ToolArguments):
     path: str = "."
+    offset: int = Field(default=0, ge=0)
+    max_results: int = Field(default=200, ge=1, le=500)
 
 
 class SearchCodeArguments(_ToolArguments):
     query: str = Field(min_length=1)
     path: str = "."
     max_results: int = Field(default=50, ge=1, le=500)
+    offset: int = Field(default=0, ge=0)
+
+
+class ReadArtifactArguments(_ToolArguments):
+    artifact: str
+    offset: int = Field(default=0, ge=0)
+    max_characters: int = Field(default=8000, ge=1, le=16000)
 
 
 class ReadFileArguments(_ToolArguments):
@@ -40,7 +56,10 @@ class RunCommandArguments(_ToolArguments):
 
 
 class ApplyPatchArguments(_ToolArguments):
-    patch: str = Field(min_length=1)
+    patch: str = Field(
+        min_length=1,
+        description="Git unified diff, or *** Begin Patch with Add/Update/Delete File blocks and @@ hunks.",
+    )
 
 
 class GitCommitArguments(_ToolArguments):
@@ -53,10 +72,21 @@ class ViewDiffArguments(_ToolArguments):
     pass
 
 
-class VerifyTaskArguments(_ToolArguments):
+class TaskVerificationArguments(_ToolArguments):
     command: str = Field(min_length=1)
     scope: str = Field(min_length=1)
     reason: str = Field(min_length=1)
+    check_id: str | None = Field(
+        default=None, min_length=1, description="Stable check identity; reuse when command or scope changes."
+    )
+    supersedes: list[int] = Field(
+        default_factory=list,
+        description="Prior verification sequence numbers replaced by this check. Required commands remain mandatory.",
+    )
+
+
+class VerifyTaskArguments(TaskVerificationArguments):
+    step_ids: list[str] = Field(default_factory=list)
 
 
 class FinishTaskArguments(_ToolArguments):
@@ -119,6 +149,34 @@ class ToolRegistry:
 
     def __init__(self, definitions: list[_ToolDefinition]):
         self._definitions = {definition.name: definition for definition in definitions}
+        self.budget: RunBudgetTracker | None = None
+        self.completion_decision: dict[str, Any] = {}
+        self.artifacts = None
+        self.instruction_observer = None
+        self.root = None
+        self.planning_enabled = True
+        self.plan_history = None
+
+    def store_output(self, value):
+        if self.artifacts is None:
+            return None
+        serialized = json.dumps(value, sort_keys=True, ensure_ascii=True)
+        name = "tool-output-" + hashlib.sha256(serialized.encode()).hexdigest() + ".json"
+        self.artifacts.write_text(name, serialized)
+        return name
+
+    def model_observation(self, value):
+        serialized = json.dumps(value, sort_keys=True)
+        if len(serialized) <= 12000:
+            return value
+        artifact = self.store_output(value)
+        return {
+            "ok": value.get("ok"),
+            "truncated": True,
+            "artifact": artifact,
+            "preview": serialized[:10000],
+            "characters": len(serialized),
+        }
 
     @property
     def schemas(self) -> list[dict[str, Any]]:
@@ -127,6 +185,8 @@ class ToolRegistry:
     def prepare(self, tool_call: ToolCall) -> PreparedToolCall | dict[str, Any]:
         """Validate a Tool Call without causing repository side effects."""
 
+        if tool_call.protocol_error:
+            return {"ok": False, "error": "invalid_tool_arguments", "details": tool_call.protocol_error}
         definition = self._definitions.get(tool_call.name)
         if definition is None:
             return {"ok": False, "error": "unknown_tool", "tool_name": tool_call.name}
@@ -134,6 +194,43 @@ class ToolRegistry:
             arguments = definition.arguments_type.model_validate(tool_call.arguments)
         except ValidationError as error:
             return {"ok": False, "error": "invalid_tool_arguments", "details": error.errors()}
+        if tool_call.name == "apply_patch" and self.root is not None:
+            try:
+                arguments.patch = normalize_patch(arguments.patch, self.root)
+            except (PatchFormatError, UnicodeError) as error:
+                return {"ok": False, "error": "invalid_patch", "details": str(error)}
+        if tool_call.name == "replan" and self.plan_history is not None:
+            try:
+                self.plan_history.current.replan(
+                    [PlanStep(step.id, step.description, step.completion_condition) for step in arguments.steps],
+                    arguments.reason,
+                )
+            except PlanInvariantError as error:
+                return {"ok": False, "error": "invalid_plan", "details": str(error)}
+        if self.instruction_observer is not None and self.root is not None:
+            paths = [getattr(arguments, "path", ".")]
+            if tool_call.name == "apply_patch":
+                paths = [
+                    line[4:].split("\t")[0]
+                    for line in arguments.patch.splitlines()
+                    if line.startswith(("--- ", "+++ ")) and line[4:] != "/dev/null"
+                ]
+                paths = [p[2:] if p.startswith(("a/", "b/")) else p for p in paths]
+            discovered = []
+            try:
+                for path in paths:
+                    for instruction in applicable_instructions(self.root, path):
+                        if self.instruction_observer(instruction):
+                            discovered.append(instruction)
+            except ValueError as error:
+                return {"ok": False, "error": "invalid_repository_path", "details": str(error)}
+            if discovered and tool_call.name == "apply_patch":
+                return {
+                    "ok": False,
+                    "error": "repository_instructions_discovered",
+                    "instructions": discovered,
+                    "details": "Review scoped instructions before resubmitting this write.",
+                }
         normalized_call = ToolCall(tool_call.id, tool_call.name, arguments.model_dump(mode="json"))
         return PreparedToolCall(
             tool_call=normalized_call,
@@ -178,6 +275,8 @@ def create_tool_registry(
     *,
     command_timeout_seconds: float = 300.0,
     verifications: list[dict[str, Any]] | None = None,
+    required_verifications: tuple[str, ...] = (),
+    planning_enabled: bool = True,
 ) -> ToolRegistry:
     """Create repository and Agent Control Tools without exposing the Environment to the Runtime."""
 
@@ -193,7 +292,15 @@ def create_tool_registry(
         return str(relative) or "."
 
     def execute(command: Command) -> dict[str, Any]:
-        return environment.execute(replace(command, timeout_seconds=command_timeout_seconds)).to_dict()
+        timeout = command_timeout_seconds
+        if registry.budget is not None:
+            timeout = min(timeout, registry.budget.remaining_seconds())
+        result = environment.execute(
+            replace(command, timeout_seconds=timeout, full_output=command.full_output or registry.artifacts is not None)
+        ).to_dict()
+        if registry.budget is not None:
+            registry.budget.remaining_seconds()
+        return result
 
     def current_diff() -> dict[str, Any]:
         return execute(
@@ -201,38 +308,65 @@ def create_tool_registry(
                 (
                     "bash",
                     "-lc",
-                    "git diff --no-ext-diff --binary --; "
+                    "git diff --no-ext-diff --binary HEAD --; "
                     "git ls-files --others --exclude-standard -z | "
                     "xargs -0 -r -n1 sh -c 'git diff --no-index --binary /dev/null \"$0\" || true'",
-                )
+                ),
+                full_output=True,
             )
         )
 
     def list_files(arguments: _ToolArguments) -> dict[str, Any]:
         path = safe_path(arguments.path)  # type: ignore[attr-defined]
-        return execute(Command(("find", path, "-type", "f", "-not", "-path", "*/.git/*")))
+        result = execute(
+            Command(("git", "ls-files", "--cached", "--others", "--exclude-standard", "--", path), full_output=True)
+        )
+        lines = sorted(set(result["stdout"].splitlines()))
+        offset = arguments.offset  # type: ignore[attr-defined]
+        limit = arguments.max_results  # type: ignore[attr-defined]
+        result["stdout"] = "\n".join(lines[offset : offset + limit])
+        result["next_offset"] = offset + limit if offset + limit < len(lines) else None
+        result["total_results"] = len(lines)
+        return result
 
     def search_code(arguments: _ToolArguments) -> dict[str, Any]:
         path = safe_path(arguments.path)  # type: ignore[attr-defined]
-        return execute(
+        result = execute(
             Command(
                 (
                     "rg",
                     "--line-number",
                     "--no-heading",
                     "--fixed-strings",
-                    "--max-count",
-                    str(arguments.max_results),  # type: ignore[attr-defined]
+                    "--",
                     arguments.query,  # type: ignore[attr-defined]
                     path,
-                )
+                ),
+                full_output=True,
             )
         )
+        lines = result["stdout"].splitlines()
+        limit = arguments.max_results  # type: ignore[attr-defined]
+        offset = arguments.offset
+        result["artifact"] = registry.store_output(result)
+        result["stdout"] = "\n".join(lines[offset : offset + limit])
+        result["next_offset"] = offset + limit if offset + limit < len(lines) else None
+        result["truncated"] = result["truncated"] or len(lines) > limit
+        return result
+
+    def read_artifact(arguments):
+        if registry.artifacts is None or not re.fullmatch(r"tool-output-[0-9a-f]{64}\.json", arguments.artifact):
+            raise ValueError("Unknown artifact reference.")
+        text = (registry.artifacts.path / arguments.artifact).read_text()
+        end = arguments.offset + arguments.max_characters
+        return {"content": text[arguments.offset : end], "next_offset": end if end < len(text) else None}
 
     def read_file(arguments: _ToolArguments) -> dict[str, Any]:
         path = safe_path(arguments.path)  # type: ignore[attr-defined]
         last_line = arguments.start_line + arguments.max_lines - 1  # type: ignore[attr-defined]
-        return execute(Command(("sed", "-n", f"{arguments.start_line},{last_line}p", path)))  # type: ignore[attr-defined]
+        result = execute(Command(("sed", "-n", f"{arguments.start_line},{last_line}p", path)))
+        result["repository_instructions"] = applicable_instructions(root, path)
+        return result  # type: ignore[attr-defined]
 
     def run_command(arguments: _ToolArguments) -> dict[str, Any]:
         return execute(Command(("bash", "-lc", arguments.command)))  # type: ignore[attr-defined]
@@ -288,8 +422,40 @@ def create_tool_registry(
         return {"patch": result["stdout"], "result": result}
 
     def verify_task(arguments: _ToolArguments) -> dict[str, Any]:
+        plan_ids = {step.id for step in plan_history.current.steps}
+        step_ids = getattr(arguments, "step_ids", []) or sorted(plan_ids)
+        if not set(step_ids) <= plan_ids:
+            raise PlanInvariantError(
+                f"Verification references an unknown Plan Step. Omit step_ids for task-level verification, or use {sorted(plan_ids)}."
+            )
+        if not set(arguments.supersedes) <= {v["sequence"] for v in verifications}:
+            raise ValueError("supersedes references an unknown verification sequence.")
+        check_id = arguments.check_id
+        previous = None
+        if check_id is None:
+            previous = next((v for v in reversed(verifications) if v["command"] == arguments.command), None)
+            if previous is None:
+                previous = next(
+                    (
+                        v
+                        for v in reversed(verifications)
+                        if v["scope"] == arguments.scope and not v.get("explicit_check_id")
+                    ),
+                    None,
+                )
+            check_id = (
+                previous.get("check_id", previous["scope"]) if previous else f"verification-{len(verifications) + 1}"
+            )
+        before = capture_repository_state(root, verification=True)["diff_fingerprint"]
         result = execute(Command(("bash", "-lc", arguments.command)))  # type: ignore[attr-defined]
         verification = {
+            "sequence": len(verifications) + 1,
+            "check_id": check_id,
+            "explicit_check_id": arguments.check_id is not None or bool(previous and previous.get("explicit_check_id")),
+            "supersedes": arguments.supersedes,
+            "plan_step_ids": step_ids,
+            "before_fingerprint": before,
+            "after_fingerprint": capture_repository_state(root, verification=True)["diff_fingerprint"],
             "command": arguments.command,  # type: ignore[attr-defined]
             "scope": arguments.scope,  # type: ignore[attr-defined]
             "reason": arguments.reason,  # type: ignore[attr-defined]
@@ -300,9 +466,60 @@ def create_tool_registry(
 
     def finish_task(arguments: _ToolArguments) -> dict[str, Any]:
         diff = current_diff()
-        status = "SUCCEEDED" if any(item["result"]["exit_code"] == 0 for item in verifications) else "UNVERIFIED"
+        fingerprint = capture_repository_state(root, verification=True)["diff_fingerprint"]
+        replaced = {sequence for item in verifications for sequence in item.get("supersedes", [])}
+        latest = {
+            item.get("check_id", item["scope"]): item for item in verifications if item.get("sequence") not in replaced
+        }
+        problems = []
+        for check_id, item in latest.items():
+            identity = {"scope": item["scope"], "check_id": check_id, "sequence": item.get("sequence")}
+            if item["result"]["exit_code"] != 0:
+                problems.append({**identity, "reason": "failed"})
+            elif item.get("before_fingerprint") != fingerprint or item.get("after_fingerprint") != fingerprint:
+                problems.append({**identity, "reason": "stale_or_mutating_verification"})
+        by_command = {item["command"]: item for item in verifications}
+        for command in required_verifications:
+            item = by_command.get(command)
+            if (
+                item is None
+                or item["result"]["exit_code"] != 0
+                or any(item.get(key) != fingerprint for key in ("before_fingerprint", "after_fingerprint"))
+            ):
+                problems.append({"command": command, "reason": "required_check_not_satisfied"})
+        covered = {
+            step_id
+            for item in latest.values()
+            if item["result"]["exit_code"] == 0
+            and item.get("before_fingerprint") == fingerprint
+            and item.get("after_fingerprint") == fingerprint
+            for step_id in item.get("plan_step_ids", [])
+        }
+        if verifications:
+            for step in plan_history.current.steps:
+                if step.status is not PlanStepStatus.SKIPPED and step.id not in covered:
+                    problems.append({"step_id": step.id, "reason": "plan_step_has_no_current_verification"})
+        registry.completion_decision = {
+            "fingerprint": fingerprint,
+            "required_verifications": list(required_verifications),
+            "evidence_scope": "required_commands" if required_verifications else "model_selected_checks",
+            "covered_plan_steps": sorted(covered),
+            "problems": problems,
+            "completion_allowed": not problems,
+            "verification_sequences": [v.get("sequence") for v in latest.values()],
+        }
+        if problems:
+            return {
+                "status": "INCOMPLETE",
+                **registry.completion_decision,
+                "retry_hint": "Rerun each listed check with its check_id. To replace an obsolete check, pass its sequence in supersedes. Required commands must still pass on the final source state.",
+            }
+        status = "SUCCEEDED" if verifications else "UNVERIFIED"
         return {
             "status": status,
+            "completion_allowed": True,
+            "evidence_scope": "required_commands" if required_verifications else "model_selected_checks",
+            "required_verifications": list(required_verifications),
             "final_patch": diff["stdout"],
             "verifications": verifications,
             "report": {
@@ -328,8 +545,14 @@ def create_tool_registry(
     def record_fact(arguments: _ToolArguments) -> dict[str, Any]:
         return {"fact": arguments.fact.strip()}  # type: ignore[attr-defined]
 
-    return ToolRegistry(
+    registry = ToolRegistry(
         [
+            _ToolDefinition(
+                "read_artifact",
+                "Read the next character range of a complete tool output artifact.",
+                ReadArtifactArguments,
+                read_artifact,
+            ),
             _ToolDefinition("list_files", "List files below a repository path.", ListFilesArguments, list_files),
             _ToolDefinition(
                 "search_code", "Search repository code for literal text.", SearchCodeArguments, search_code
@@ -337,7 +560,10 @@ def create_tool_registry(
             _ToolDefinition("read_file", "Read a bounded range of a repository file.", ReadFileArguments, read_file),
             _ToolDefinition("run_command", "Run a command in the Target Repository.", RunCommandArguments, run_command),
             _ToolDefinition(
-                "apply_patch", "Apply a unified diff patch to the Target Repository.", ApplyPatchArguments, apply_patch
+                "apply_patch",
+                "Apply a Git unified diff or *** Begin Patch Add/Update/Delete blocks. Include exact, unique context in @@ hunks.",
+                ApplyPatchArguments,
+                apply_patch,
             ),
             _ToolDefinition(
                 "git_commit",
@@ -351,7 +577,7 @@ def create_tool_registry(
             _ToolDefinition(
                 "verify_task",
                 "Run an executable Task Verification with its scope and reason.",
-                VerifyTaskArguments,
+                VerifyTaskArguments if planning_enabled else TaskVerificationArguments,
                 verify_task,
             ),
             _ToolDefinition(
@@ -372,3 +598,10 @@ def create_tool_registry(
             ),
         ]
     )
+    registry.root = root
+    registry.plan_history = plan_history
+    registry.planning_enabled = planning_enabled
+    if not planning_enabled:
+        for name in ("update_plan", "replan"):
+            registry._definitions.pop(name)
+    return registry

@@ -1,0 +1,30 @@
+diff --git a/src/__pycache__/slugify.cpython-312.pyc b/src/__pycache__/slugify.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..0f967d52a26c03ee3e899e813f4940230a995c11
+GIT binary patch
+literal 540
+zcmZ8eJxc^J5KV4(&u?t5P;7#Yta5jS2!f)O)uDxgg$PI7o%42$yGxQ)S1c@StUR&M
+z)>8Z_Hj0Iq)<1A?R#wg)tB3=cc`q}WH%Xqx#)b*n_VRsrLkaoF$&c9u=uIHFB|h09
+zJ_YKRfVOPky0CXjne95K3tNX=2&Umgvs4En&>2e=_-rp@x(!SP(Y}CcD-ehQ_cd1s
+zHRBv{k%B2p(5Z|(RR6VH*}~P^MTg2X{F^Px&PbTo{Ikb`ht9tQ(x2R8(QS*krPI~T
+zzCPnj#K$139#_EHS<;56svzN#YaCfZB0)i<xenrp#VxGYffi6RwCY;M4&xv)PQQh5
+zRDzG-QdvS#m5Z^j$@+0D4^+ZEs4MB!l}Pu4R#r<gGf-fee?@+EHI43^bVteP_|@X&
+zVrT8PaoxCCf2+*ARAyc)?(4|xvpw6xDzbs%1I?x%d(Eb?l$QN24@8b&QVyXrgUg4p
+lp9)x!<4E&y)D*g|MJatJOWksr&UNOy1jF6@XCC^8zX3fpfU5ui
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/slugify.py b/src/slugify.py
+index 04a35492f85d60f8ec3b9d9f8b8c40ede9f4ae36..8e50d24cb0cfec5a4b8884d045ce34a321d556c6 100644
+--- a/src/slugify.py
++++ b/src/slugify.py
+@@ -4,4 +4,7 @@
+ def slugify(value: str) -> str:
+     """Return a lower-case hyphen-separated representation of a title."""
+ 
+-    return "-".join(value.strip().lower().split(" "))
++    # Split without an explicit separator so all whitespace characters are
++    # treated alike, and runs (including leading/trailing whitespace) are
++    # collapsed before joining the words.
++    return "-".join(value.lower().split())

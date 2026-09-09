@@ -1,0 +1,221 @@
+{
+  "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/smoke/gpt-5.6-luna/recovery-public-failure/repopilot",
+  "behavior_pass": true,
+  "capabilities": [
+    "recovery"
+  ],
+  "category": "recovery",
+  "engine": "repopilot",
+  "error": null,
+  "evaluation": {
+    "approval_events": [
+      {
+        "reason": "Automatically approved in the explicit disposable Docker benchmark context: The command may delete Target Repository files.",
+        "source_index": 42,
+        "step": 6,
+        "tool_call": {
+          "arguments": {
+            "command": "rm -rf src/__pycache__ tests/__pycache__ && git status --short"
+          },
+          "id": "call_UMmAtegOd6a6HkBSuNZmr0DW",
+          "name": "run_command"
+        },
+        "type": "approval_auto_approved"
+      },
+      {
+        "reason": "Automatically approved in the explicit disposable Docker benchmark context: The command may delete Target Repository files.",
+        "source_index": 78,
+        "step": 12,
+        "tool_call": {
+          "arguments": {
+            "command": "rm -rf src/__pycache__ tests/__pycache__"
+          },
+          "id": "call_vI7B4qCpAATwd5u16x5Enl0g",
+          "name": "run_command"
+        },
+        "type": "approval_auto_approved"
+      }
+    ],
+    "behavior_pass": true,
+    "behavior_verifier": {
+      "recovery": {
+        "pass": true,
+        "reason": "Every triggered recoverable scenario must have an objective resolution."
+      }
+    },
+    "budget_usage": {
+      "complete_audit": false,
+      "limits": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "replans_used": 0,
+      "steps_used": 14
+    },
+    "churn": {
+      "final_step": 14,
+      "first_solved_step": null,
+      "post_solution_steps": null,
+      "reason": "Missing immutable repository states at every step boundary.",
+      "status": "unsupported"
+    },
+    "duration": {
+      "llm_seconds": 176.59880845900022,
+      "orchestration_seconds": null,
+      "tool_seconds": null,
+      "wall_clock_seconds": 180.40481660399996
+    },
+    "recovery": {
+      "attempt_count": 1,
+      "failure_types": [
+        "test_failure"
+      ],
+      "post_recovery_repository_pass": true,
+      "resolved_count": 1,
+      "success_rate": 1.0,
+      "trigger_count": 1
+    },
+    "replan": {
+      "evidence_count": null,
+      "missed_scenarios": null,
+      "post_replan_repository_pass": null,
+      "success_rate": null,
+      "trigger_rate": null,
+      "triggered_count": 0,
+      "triggered_scenarios": null,
+      "unnecessary_replans": null,
+      "valid_count": null
+    },
+    "repository_pass": true,
+    "schema_version": 4,
+    "task_pass": true,
+    "termination": "false_failure",
+    "tool_quality": {
+      "failure_count": 2,
+      "failure_rate": 0.11764705882352941,
+      "recovery_rate": 1.0,
+      "recovery_scope": "manifest-declared public-command failures only",
+      "redundant_calls": 0
+    }
+  },
+  "metrics": {
+    "commits": [],
+    "cost": 0.01021772,
+    "duration_seconds": 180.40481660399996,
+    "errors": [
+      {
+        "category": "VERIFICATION_FAILURE",
+        "reason": "Task Verification exited with 1.",
+        "tool_name": "verify_task"
+      }
+    ],
+    "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "llm_calls": 14,
+    "openai_standard_estimated_cost_usd": 0.01021772,
+    "patch": {
+      "changed": true,
+      "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/smoke/gpt-5.6-luna/recovery-public-failure/repopilot/patch.diff",
+      "sha256": "5476f13bae5d84bacd0c5171ac47ccdaa1bb7b71177f48d7c94b5ba55f11bbc6"
+    },
+    "preflight": {
+      "checks": [
+        {
+          "command": [
+            "docker",
+            "image",
+            "inspect",
+            "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+          ],
+          "duration_seconds": 0.03721608699999024,
+          "exit_code": 0,
+          "name": "image_inspect",
+          "stderr": "",
+          "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "python",
+            "--version"
+          ],
+          "duration_seconds": 0.4816395920000218,
+          "exit_code": 0,
+          "name": "python",
+          "stderr": "",
+          "stdout": "Python 3.12.14\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "git",
+            "--version"
+          ],
+          "duration_seconds": 0.42767668199996933,
+          "exit_code": 0,
+          "name": "git",
+          "stderr": "",
+          "stdout": "git version 2.47.3\n"
+        }
+      ],
+      "error": null,
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "status": "READY"
+    },
+    "replans": 0,
+    "retries": 0,
+    "run_budget": {
+      "command_timeout_seconds": 30,
+      "max_consecutive_failures": 2,
+      "max_replans": 1,
+      "max_run_seconds": 180,
+      "max_steps": 15
+    },
+    "steps": 14,
+    "tokens": {
+      "cache_write": null,
+      "cached": 27136,
+      "completion": 1332,
+      "prompt": 67519,
+      "reasoning": 0,
+      "total": 68851
+    },
+    "tool_calls": 17,
+    "tool_failures": 2,
+    "trajectory_status": "BUDGET_EXCEEDED",
+    "verifier_success": true
+  },
+  "model": "openai/gpt-5.6-luna",
+  "repeat": 1,
+  "repository_pass": true,
+  "run_id": "84c4dd80ca52446090cec9f8e478449a",
+  "status": "BUDGET_EXCEEDED",
+  "success": true,
+  "task_id": "recovery-public-failure",
+  "task_pass": true,
+  "verifier": {
+    "duration_seconds": 0.02114879500004463,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "",
+    "success_condition": {
+      "verifier_exit_code": 0
+    }
+  }
+}

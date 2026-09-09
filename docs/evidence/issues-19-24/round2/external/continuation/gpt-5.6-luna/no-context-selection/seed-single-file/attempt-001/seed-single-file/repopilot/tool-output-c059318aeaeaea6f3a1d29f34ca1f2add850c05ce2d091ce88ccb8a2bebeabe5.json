@@ -1,0 +1,1 @@
+{"duration_seconds": 0.06688880499859806, "exit_code": 0, "stderr": "", "stdout": "./src/slugify.py:4:def slugify(value: str) -> str:\n", "truncated": false}

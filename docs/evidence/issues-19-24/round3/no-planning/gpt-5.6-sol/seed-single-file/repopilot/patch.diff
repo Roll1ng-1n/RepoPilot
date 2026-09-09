@@ -1,0 +1,12 @@
+diff --git a/src/slugify.py b/src/slugify.py
+index 04a3549..8d86a49 100644
+--- a/src/slugify.py
++++ b/src/slugify.py
+@@ -4,4 +4,6 @@
+ def slugify(value: str) -> str:
+     """Return a lower-case hyphen-separated representation of a title."""
+ 
+-    return "-".join(value.strip().lower().split(" "))
++    # ``split()`` without an argument handles all whitespace characters and
++    # collapses consecutive runs while also ignoring surrounding whitespace.
++    return "-".join(value.lower().split())

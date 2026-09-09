@@ -1,0 +1,69 @@
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+START smoke/gpt-5.6-luna
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-47afc0e0 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und3/smoke/gpt-5.6-luna/seed-single-file/baseline/workspace,target=/workspace   
+--user=1000:1000                                                                
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-47afc0e0 with ID 
+6f36af418086d928386101ab0fa334051a2947d3a184b33b811d43f5d38552ad                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-a11d77ad -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und3/smoke/gpt-5.6-luna/seed-single-file/repopilot/workspace,target=/workspace  
+--user=1000:1000                                                                
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-a11d77ad with ID 
+280814b753ef5136fe4ef4781bcbaa2827b3edee0eee078a21006cd7fa86504b                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-886b8cb9 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und3/smoke/gpt-5.6-luna/recovery-public-failure/baseline/workspace,target=/works
+pace --user=1000:1000                                                           
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-886b8cb9 with ID 
+fa6693bbf9c4ed8d191461330a276aa87e493ffcecec2e8efd918704f249085a                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-7741c27c -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und3/smoke/gpt-5.6-luna/recovery-public-failure/repopilot/workspace,target=/work
+space --user=1000:1000                                                          
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-7741c27c with ID 
+a7e28af31f39c695e1263fcb21442eb7dc0d38b36f7a40cad25227a47f89527c                
+{"stage": "smoke", "model": "gpt-5.6-luna", "task": "seed-single-file", "engine": "baseline", "status": "Submitted", "repository_pass": true, "task_pass": true}
+{"stage": "smoke", "model": "gpt-5.6-luna", "task": "seed-single-file", "engine": "repopilot", "status": "SUCCEEDED", "repository_pass": true, "task_pass": true}
+{"stage": "smoke", "model": "gpt-5.6-luna", "task": "recovery-public-failure", "engine": "baseline", "status": "Submitted", "repository_pass": true, "task_pass": true}
+{"stage": "smoke", "model": "gpt-5.6-luna", "task": "recovery-public-failure", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "repository_pass": true, "task_pass": true}
+DONE smoke/gpt-5.6-luna
+START no-planning/gpt-5.6-luna
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-17f2510f -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und3/no-planning/gpt-5.6-luna/seed-single-file/repopilot/workspace,target=/works
+pace --user=1000:1000                                                           
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-17f2510f with ID 
+66f9efb9cd7f07f560935a6a90951fa5b23b3b2bb141574d44bdcc4177f0a872                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-d82f096d -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und3/no-planning/gpt-5.6-luna/recovery-public-failure/repopilot/workspace,target
+=/workspace --user=1000:1000                                                    
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-d82f096d with ID 
+571383d7f0b6804fab20069e65c20b3c92f51375be23d247ee4a895a1944b8a8                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+{"stage": "no-planning", "model": "gpt-5.6-luna", "task": "seed-single-file", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "repository_pass": true, "task_pass": true}
+{"stage": "no-planning", "model": "gpt-5.6-luna", "task": "recovery-public-failure", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "repository_pass": true, "task_pass": true}
+DONE no-planning/gpt-5.6-luna

@@ -43,14 +43,16 @@ dependencies = [
     "platformdirs",
     "textual",
     "prompt_toolkit",
-    "datasets",
     "openai != 1.100.0,!=1.100.1",  # https://github.com/SWE-agent/mini-swe-agent/issues/446
 ]
 
 [project.optional-dependencies]
+test = ["pytest", "pytest-cov", "pytest-asyncio", "pytest-xdist", "ruff"]
+docs = ["mkdocs-include-markdown-plugin", "mkdocstrings[python]>=0.18", "mike", "mkdocs-material", "mkdocs-glightbox", "mkdocs-redirects"]
+evaluation = ["datasets", "mini-swe-agent[swebench]"]
 full = [
     "mini-swe-agent[dev]",
-    "mini-swe-agent[swebench]",
+    "mini-swe-agent[evaluation]",
     "swe-rex>=1.4.0",
     "mini-swe-agent[modal]",
     "mini-swe-agent[contree]",

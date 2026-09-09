@@ -1,0 +1,30 @@
+[
+  {
+    "checkpoint": "ablation/gpt-5.6-luna/no-planning/seed-single-file/repopilot/run-state/2a4d56613d2b4730902bf580730c594f/checkpoint.json",
+    "trace": "ablation/gpt-5.6-luna/no-planning/seed-single-file/repopilot/run-state/2a4d56613d2b4730902bf580730c594f/trace.jsonl",
+    "persisted_status": "RUNNING",
+    "observed_process_status": "not running",
+    "classification": "externally interrupted; final verifier/task_pass unavailable",
+    "last_update": "2026-09-08T13:35:51.596137+08:00",
+    "last_trace_type": "model_request",
+    "pending_tool_calls": 0,
+    "in_flight_tool_call": null,
+    "known_tokens": 5135,
+    "known_cost_usd": 0.0015089999999999997,
+    "billing_complete": false
+  },
+  {
+    "checkpoint": "ablation/gpt-5.6-sol/no-profile/recovery-public-failure/repopilot/run-state/5cf935f8de724c8596a85d78abef04cc/checkpoint.json",
+    "trace": "ablation/gpt-5.6-sol/no-profile/recovery-public-failure/repopilot/run-state/5cf935f8de724c8596a85d78abef04cc/trace.jsonl",
+    "persisted_status": "RUNNING",
+    "observed_process_status": "not running",
+    "classification": "externally interrupted; final verifier/task_pass unavailable",
+    "last_update": "2026-09-08T13:37:08.821351+08:00",
+    "last_trace_type": "model_request",
+    "pending_tool_calls": 0,
+    "in_flight_tool_call": null,
+    "known_tokens": 6864,
+    "known_cost_usd": 0.033648,
+    "billing_complete": false
+  }
+]

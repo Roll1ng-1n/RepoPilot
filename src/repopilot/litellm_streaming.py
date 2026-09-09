@@ -17,7 +17,6 @@ from typing import Any
 
 from minisweagent.models.litellm_model import LitellmModel
 from minisweagent.models.utils.actions_toolcall import BASH_TOOL
-
 from repopilot.model import stream_or_plain_completion
 
 
@@ -45,6 +44,7 @@ class StreamingLitellmModel(LitellmModel):
                     **options,
                 },
                 force_stream=force_stream,
+                observer=getattr(self, "stream_observer", None),
             )
         except litellm.exceptions.AuthenticationError as error:  # type: ignore[attr-defined]
             # Match the upstream `_query` UX for a missing or bad key.

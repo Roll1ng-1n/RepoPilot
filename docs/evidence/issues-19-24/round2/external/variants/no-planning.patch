@@ -1,0 +1,33 @@
+--- a/src/repopilot/tools.py
++++ b/src/repopilot/tools.py
+@@ -164,7 +164,7 @@
+ 
+     @property
+     def schemas(self) -> list[dict[str, Any]]:
+-        return [definition.schema() for definition in self._definitions.values()]
++        return [definition.schema() for definition in self._definitions.values() if definition.name not in {"update_plan", "replan"}]
+ 
+     def prepare(self, tool_call: ToolCall) -> PreparedToolCall | dict[str, Any]:
+         """Validate a Tool Call without causing repository side effects."""
+--- a/src/repopilot/context.py
++++ b/src/repopilot/context.py
+@@ -342,7 +342,7 @@
+             raise ValueError("Agent Run system message must contain text.")
+         prefix = content.split(" Current Plan: ", maxsplit=1)[0]
+         return [
+-            {**system, "content": f"{prefix} Current Plan: {json.dumps(current_plan, sort_keys=True)}"},
++            {**system, "content": "Use native tools to inspect and repair the Target Repository. Verify your work with verify_task and request completion with finish_task."},
+             task.copy(),
+             *(
+                 [
+--- a/src/repopilot/runtime.py
++++ b/src/repopilot/runtime.py
+@@ -851,6 +851,8 @@
+             self._artifacts.append_trace("budget_updated", reason="recovery_replan_consumed", budget=budget.snapshot())
+         except BudgetExceeded as error:
+             return self._record_budget_exhausted(error, budget)
++        messages.append({"role": "user", "content": f"Recovery Observation: {decision.reason}"})
++        return None
+         step_id = self._next_recovery_step_id(budget)
+         replanned = self._plan_history.replan(
+             [

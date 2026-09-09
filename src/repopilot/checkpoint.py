@@ -12,16 +12,18 @@ class RepositoryStateError(ValueError):
     """A Target Repository cannot safely be matched to a Checkpoint."""
 
 
-def capture_repository_state(target_repository: Path) -> dict[str, str]:
+def capture_repository_state(target_repository: Path, *, verification: bool = False) -> dict[str, str]:
     """Describe the exact Git working state required before a Run can resume."""
 
     target = target_repository.resolve()
     try:
         git_root = _git(target, "rev-parse", "--show-toplevel").decode().strip()
     except RepositoryStateError:
-        return _non_git_repository_state(target)
+        return _non_git_repository_state(target, verification=verification)
     head = _git(target, "rev-parse", "HEAD").decode().strip()
-    status = _git(target, "status", "--porcelain=v1", "--untracked-files=all").decode()
+    status = _git(
+        target, "status", "--porcelain=v1", "--untracked-files=no" if verification else "--untracked-files=all"
+    ).decode()
     tracked_diff = _git(target, "diff", "--no-ext-diff", "--binary", "HEAD", "--")
     untracked = _git(target, "ls-files", "--others", "--exclude-standard", "-z")
     fingerprint_source = bytearray()
@@ -34,6 +36,8 @@ def capture_repository_state(target_repository: Path) -> dict[str, str]:
         if not relative_path:
             continue
         path = Path(git_root) / relative_path.decode(errors="surrogateescape")
+        if verification and is_generated_verification_file(Path(relative_path.decode(errors="surrogateescape"))):
+            continue
         try:
             contents = path.read_bytes()
         except OSError as error:
@@ -51,7 +55,15 @@ def capture_repository_state(target_repository: Path) -> dict[str, str]:
     }
 
 
-def _non_git_repository_state(target_repository: Path) -> dict[str, str]:
+def is_generated_verification_file(path: Path) -> bool:
+    """Only untracked, known test caches are excluded from verification inputs."""
+    return bool({"__pycache__", ".pytest_cache", ".ruff_cache"}.intersection(path.parts)) or path.suffix in {
+        ".pyc",
+        ".pyo",
+    }
+
+
+def _non_git_repository_state(target_repository: Path, *, verification: bool = False) -> dict[str, str]:
     """Keep runtime-only callers working while making a non-Git state auditable."""
 
     fingerprint_source = bytearray()
@@ -59,6 +71,8 @@ def _non_git_repository_state(target_repository: Path) -> dict[str, str]:
         if not path.is_file():
             continue
         relative_path = path.relative_to(target_repository)
+        if verification and is_generated_verification_file(relative_path):
+            continue
         fingerprint_source.extend(str(relative_path).encode())
         fingerprint_source.extend(b"\0")
         fingerprint_source.extend(path.read_bytes())

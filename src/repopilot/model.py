@@ -2,10 +2,15 @@
 
 from __future__ import annotations
 
+import copy
 import json
 from dataclasses import dataclass, field
 from numbers import Real
 from typing import Any, Protocol
+
+
+class ModelProtocolError(ValueError):
+    """A response cannot be consumed safely as native Tool Calling."""
 
 
 @dataclass(frozen=True)
@@ -15,6 +20,8 @@ class ToolCall:
     id: str
     name: str
     arguments: dict[str, Any]
+    protocol_error: str | None = None
+    raw_arguments: str | None = None
 
 
 @dataclass(frozen=True)
@@ -25,6 +32,7 @@ class AssistantTurn:
     tool_calls: list[ToolCall] = field(default_factory=list)
     usage: dict[str, int | None] | None = None
     cost: float | None = None
+    finish_reason: str | None = None
 
 
 class ToolCallingModel(Protocol):
@@ -52,8 +60,11 @@ class LiteLLMToolCallingModel:
         self._base_url = base_url
         self._model_kwargs = dict(model_kwargs or {})
         self.force_stream = force_stream
+        self.stream_observer = None
 
-    def complete(self, messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> AssistantTurn:
+    def complete(
+        self, messages: list[dict[str, Any]], tools: list[dict[str, Any]], *, timeout_seconds=None
+    ) -> AssistantTurn:
         import litellm  # type: ignore[import-not-found]
 
         request_options: dict[str, Any] = {
@@ -62,15 +73,31 @@ class LiteLLMToolCallingModel:
             "messages": messages,
             "tools": tools,
         }
+        request_options.setdefault("max_tokens", 4096)
+        if timeout_seconds is not None:
+            request_options["timeout"] = min(float(request_options.get("timeout", timeout_seconds)), timeout_seconds)
         if self._api_key:
             request_options["api_key"] = self._api_key
         if self._base_url:
             request_options["api_base"] = self._base_url
-        response = stream_or_plain_completion(litellm, request_options, force_stream=self.force_stream)
-        message = response.choices[0].message
+        response = stream_or_plain_completion(
+            litellm, request_options, force_stream=self.force_stream, observer=self.stream_observer
+        )
+        choices = self._value(response, "choices")
+        if not isinstance(choices, list) or not choices or self._value(choices[0], "message") is None:
+            raise ModelProtocolError("Model response has no choices/message.")
+        message = self._value(choices[0], "message")
+        finish_reason = self._value(choices[0], "finish_reason")
+        calls = [self._to_tool_call(call) for call in (self._value(message, "tool_calls") or [])]
+        if finish_reason in {"length", "content_filter"}:
+            calls = [
+                ToolCall(c.id, c.name, c.arguments, "Response was truncated or filtered; resend complete arguments.")
+                for c in calls
+            ]
         return AssistantTurn(
-            content=getattr(message, "content", None),
-            tool_calls=[self._to_tool_call(tool_call) for tool_call in (getattr(message, "tool_calls", None) or [])],
+            content=self._value(message, "content"),
+            tool_calls=calls,
+            finish_reason=finish_reason,
             usage=self._usage(response),
             cost=self._cost(response, litellm),
         )
@@ -160,14 +187,45 @@ class LiteLLMToolCallingModel:
 
     @staticmethod
     def _to_tool_call(tool_call: Any) -> ToolCall:
-        function = tool_call.function
-        arguments = function.arguments
-        if not isinstance(arguments, str):
-            raise TypeError("Native Tool Call arguments must be a JSON object string.")
-        parsed_arguments = json.loads(arguments)
-        if not isinstance(parsed_arguments, dict):
-            raise TypeError("Native Tool Call arguments must decode to an object.")
-        return ToolCall(id=tool_call.id, name=function.name, arguments=parsed_arguments)
+        value = LiteLLMToolCallingModel._value
+        function = value(tool_call, "function")
+        identifier = value(tool_call, "id")
+        name = value(function, "name")
+        if not isinstance(identifier, str) or not identifier or not isinstance(name, str) or not name:
+            raise ModelProtocolError("Native Tool Call requires a stable ID and function name.")
+        arguments = value(function, "arguments")
+        try:
+            if not isinstance(arguments, str):
+                raise TypeError("Native Tool Call arguments must be a JSON object string.")
+            parsed_arguments = json.loads(arguments)
+            if not isinstance(parsed_arguments, dict):
+                raise TypeError("Native Tool Call arguments must decode to an object.")
+        except (TypeError, ValueError):
+            return ToolCall(
+                id=identifier,
+                name=name,
+                arguments={},
+                protocol_error="Invalid native Tool Call JSON object; supply complete valid arguments.",
+                raw_arguments=arguments if isinstance(arguments, str) else repr(arguments),
+            )
+        return ToolCall(id=identifier, name=name, arguments=parsed_arguments)
+
+
+def stream_chunk_record(sequence: int, chunk: Any) -> dict[str, Any]:
+    """Capture public SDK fields before aggregation, without transport headers."""
+    value = LiteLLMToolCallingModel._value
+    payload = {key: value(chunk, key) for key in ("id", "model", "created", "choices", "usage")}
+
+    def serialize(item):
+        if hasattr(item, "model_dump"):
+            return item.model_dump(mode="json")
+        return vars(item)
+
+    return {
+        "sequence": sequence,
+        "sdk_created_at": (value(chunk, "_hidden_params") or {}).get("created_at"),
+        "chunk": json.loads(json.dumps(payload, default=serialize)),
+    }
 
 
 def stream_or_plain_completion(
@@ -175,6 +233,7 @@ def stream_or_plain_completion(
     request_options: dict[str, Any],
     *,
     force_stream: bool = False,
+    observer=None,
 ) -> Any:
     """Issue a Chat Completions request and return a non-streamed model response.
 
@@ -194,17 +253,41 @@ def stream_or_plain_completion(
         options.pop("stream", None)
         options.setdefault("stream_options", {"include_usage": True})
         response = litellm.completion(stream=True, **options)
+        # SDK response objects can themselves be iterable (key/value pairs).
+        value = LiteLLMToolCallingModel._value
+        choices = value(response, "choices")
+        if choices and value(choices[0], "message") is not None:
+            return response
+        chunks = []
+        size = 0
         try:
-            chunks = list(response)
-        except TypeError:
-            # A provider may ignore stream=true and return a plain response.
-            chunks = []
-            plain = response
-        if chunks:
-            plain = litellm.stream_chunk_builder(chunks)
-            if plain is None:
-                # stream_chunk_builder can return None on an empty stream;
-                # fall back to the last chunk which still carries usage.
-                plain = chunks[-1]
+            for chunk in response:
+                size += len(str(chunk))
+                if len(chunks) >= 100_000 or size > 16_000_000:
+                    raise ModelProtocolError("Stream exceeded the aggregation limit.")
+                if observer is not None:
+                    observer(len(chunks), chunk)
+                # Stream order is authoritative. Some LiteLLM versions sort by
+                # hidden timestamps, which can move delayed/buffered fragments.
+                # Normalize only the builder's copies, preserving diagnostics.
+                ordered = copy.deepcopy(chunk)
+                hidden = dict(value(ordered, "_hidden_params") or {})
+                hidden["created_at"] = len(chunks) + 1
+                if isinstance(ordered, dict):
+                    ordered["_hidden_params"] = hidden
+                elif hasattr(ordered, "_hidden_params"):
+                    ordered._hidden_params = hidden
+                chunks.append(ordered)
+        except (TypeError, ValueError) as error:
+            raise ModelProtocolError("Invalid streaming response shape.") from error
+        finally:
+            close = getattr(response, "close", None)
+            if callable(close):
+                close()
+        if not chunks:
+            raise ModelProtocolError("Model returned an empty stream.")
+        plain = litellm.stream_chunk_builder(chunks)
+        if plain is None:
+            raise ModelProtocolError("Stream aggregation returned no response.")
         return plain
     return litellm.completion(**options)

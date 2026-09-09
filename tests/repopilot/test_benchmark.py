@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -138,6 +139,12 @@ def test_runner_runs_both_engines_in_order_on_independent_workspaces(tmp_path: P
     assert "Snapshot Revision" in (output / "summary.md").read_text()
     assert all((item.artifact_directory / "result.json").is_file() for item in result.results)
     assert all((item.artifact_directory / "patch.diff").is_file() for item in result.results)
+    for item in result.results:
+        manifest = json.loads((item.artifact_directory / "patch-manifest.json").read_text())
+        patch = (item.artifact_directory / "patch.diff").read_bytes()
+        assert manifest["scope"] == "benchmark_normalized_delta"
+        assert manifest["sha256"] == hashlib.sha256(patch).hexdigest()
+        assert manifest["bytes"] == len(patch)
     assert result.results[0].metrics["retries"] is None
     assert result.results[0].metrics["replans"] is None
     assert result.results[1].metrics["retries"] == 0
@@ -297,6 +304,36 @@ def test_benchmark_redacts_api_key_from_baseline_trajectory_and_results(tmp_path
     assert api_key not in (output / "seed-task" / "baseline" / "result.json").read_text()
     assert "proxy-password" not in json.dumps(result.to_dict())
     assert "proxy-password" not in (output / "summary.json").read_text()
+
+
+def test_benchmark_model_accepts_executor_deadline_and_tracks_usage(tmp_path: Path, monkeypatch) -> None:
+    import litellm
+
+    from repopilot.artifacts import RunArtifacts
+    from repopilot.budget import RunBudget
+    from repopilot.requests import RequestExecutor
+
+    requests = []
+
+    def completion(**kwargs):
+        requests.append(kwargs)
+        return {
+            "choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}],
+            "usage": {"prompt_tokens": 3, "completion_tokens": 2, "total_tokens": 5},
+        }
+
+    monkeypatch.setattr(litellm, "completion", completion)
+    model = benchmark_module._BenchmarkToolCallingModel(
+        model=BenchmarkModel("openai/test-model", model_kwargs={"timeout": 30})
+    )
+    budget = RunBudget(max_run_seconds=5).start()
+    executor = RequestExecutor(model, budget, RunArtifacts(tmp_path / "artifacts", secrets=[]))
+
+    assert executor.complete([{"role": "user", "content": "test"}], []).content == "ok"
+    assert 0 < requests[0]["timeout"] <= 5
+    assert model.stats()["steps"] == 1
+    assert model.stats()["tokens"]["total"] == 5
+    assert budget.snapshot()["tokens_used"] == 5
 
 
 def test_baseline_ignores_unknown_model_costs(tmp_path: Path, monkeypatch) -> None:

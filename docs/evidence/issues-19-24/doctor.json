@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "python": {
+      "version": "3.12.3",
+      "ok": true
+    },
+    "git": {
+      "available": true
+    },
+    "rg": {
+      "available": true
+    },
+    "model": {
+      "configured": false
+    },
+    "credentials": {
+      "configured": false
+    },
+    "docker": {
+      "status": "server_unreachable",
+      "wsl": true,
+      "hint": "Check Docker Desktop WSL integration for this distribution."
+    },
+    "image": {
+      "status": "not_configured"
+    }
+  },
+  "paid_requests": 0
+}

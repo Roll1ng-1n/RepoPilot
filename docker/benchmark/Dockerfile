@@ -6,7 +6,8 @@ RUN sed -i \
       -e 's|http://deb.debian.org/debian|https://snapshot.debian.org/archive/debian/20260901T000000Z|' \
       /etc/apt/sources.list.d/debian.sources \
     && apt-get -o Acquire::Check-Valid-Until=false update \
-    && apt-get install -y --no-install-recommends git \
+    && apt-get install -y --no-install-recommends git ripgrep \
     && rm -rf /var/lib/apt/lists/* \
     && python --version \
-    && git --version
+    && git --version \
+    && rg --version

@@ -45,6 +45,16 @@ repopilot reject RUN_ID --state-dir /path/to/state
 
 ## 架构概览
 
+普通 `run` 默认不设总时间截止，模型首字延迟不会单独触发终止；请求耗时会记录，SDK 超时和暂时连接失败按连续失败上限退避重试。`--request-timeout` 控制 SDK 请求超时，不是整段流式响应的硬截止。需要固定开发/评测预算时显式传 `--max-run-seconds`；工具命令仍有独立超时，步骤、token 和费用限制也继续生效。
+
+预算耗尽后，可用 `repopilot resume RUN_ID --max-steps 60` 增加总步骤上限，或用 `--max-run-seconds 3600` 增加总活动时间上限；`--no-time-limit` 明确取消保存的时间上限。也支持 `--max-replans`、`--max-total-tokens`、`--max-cost-usd`。这些是包含已消耗量的总上限，续跑不清零计量，预算变更写入 Trace。
+
+运行及续跑的退出码为：`0` 成功，`1` 失败或预算耗尽，`3` 未验证，`4` 等待审批，`5` 已停止（参数解析错误仍为 `2`）。自动化应同时读取终态。
+
+`verify_task` 可通过 `check_id` 保持检查身份，通过 `supersedes` 指定被替代的验证序号。未指定 ID 时，同命令重验可更改 scope；兼容旧的同 scope 重验。独立检查应使用不同 ID；必要验证命令不能被替代操作取消。未跟踪的 `__pycache__`、`.pytest_cache`、`.ruff_cache` 和 `.pyc/.pyo` 不参与验证输入指纹，已跟踪文件和真实源码修改仍会使证据失效。旧检查点中的证据可能需要重验。
+
+benchmark 的 `patch.diff` / `patch-manifest.json` 保存规范化补丁；`runtime-patch.diff` / `runtime-patch-manifest.json` 保存 Runtime 原始补丁，避免覆盖。历史 round3 证据保持原样，审计勘误见其报告。
+
 `repopilot.cli` 中的组合层负责创建模型、执行环境、工具注册表、计划、上下文策略、运行预算和产物存储。`AgentRuntime` 驱动有界的 Agent Run。工具注册表负责验证原生工具调用，并分发仓库、命令、验证、Git 和 Agent 控制操作。本地与 Docker 后端实现相同的执行环境协议。检查点使 `STOPPED` 和 `WAITING_FOR_APPROVAL` 状态的运行可以恢复；即使提示上下文被压缩，JSONL 追踪事件仍会保留完整的审计历史。
 
 如需查看精简的证据地图，请参阅[能力来源矩阵](docs/repopilot-capabilities.md)。其中将每项声明的能力关联到对应的 CLI 路径、运行时测试、追踪记录/产物或实现源码。[设计验证记录](docs/repopilot-design-validation-record.md)保存了选定的失败案例、根因、修复、验证结果及相关提交。
@@ -60,7 +70,11 @@ repopilot benchmark \
   --engine repopilot
 ```
 
-重复使用 `--task` 可运行指定的固定任务；省略该参数则运行包含六项任务的套件。重复使用 `--engine` 可选择基线、RepoPilot 或两者。每项任务都有固定的快照版本/哈希、任务描述、仅在主机上运行的隐藏验证器、成功条件、超时限制和运行预算。运行器会创建相互独立的 Git 工作区，并保留原始结果、补丁、提交和验证输出。任务列表和行为覆盖范围见[基准测试详情](docs/repopilot-benchmark.md)。
+重复使用 `--task` 可运行指定的固定任务；省略该参数则运行包含 30 项固定任务的 Stage 4 套件。重复使用 `--engine` 可选择基线、RepoPilot 或两者。每项任务都有固定的快照版本/哈希、任务描述、仅在主机上运行的隐藏验证器、成功条件、超时限制和运行预算。运行器会创建相互独立的 Git 工作区，并保留原始结果、补丁、提交和验证输出。任务列表和行为覆盖范围见[基准测试详情](docs/repopilot-benchmark.md)。
+
+当前证据由[六种子任务](docs/evidence/stage4-seed6-luna-sol-v1/summary.md)的 72 个样本和[其余 24 项任务](docs/evidence/stage4-24tasks-luna-sol-v1/summary.md)的 288 个样本组成，共覆盖 30 项任务。它们是多轮开发记录，不能用作泛化胜率。Runtime Test 验证 RepoPilot 自身；仓库 verifier 检查目标代码；联合行为指标 `task_pass` 同时要求仓库和行为检查满足条件，无法审计时保留 `null`。
+
+[新增 issue #19–#24 修复记录](docs/evidence/issues-19-24/round2/summary.md)保存本次代码修复、回归输出和剩余验收条件。可用 `repopilot doctor` 检查本地前置条件；用重复的 `--required-verification '命令'` 固定必要检查。普通 `run/resume/approve/reject` 支持 `--stream`、`--request-timeout`、`--max-output-tokens` 和 `--env-file`。
 
 仓库中提交的[微基准测试摘要](docs/evidence/micro-benchmark-v1/summary.md)是一次保留的历史记录：该次运行包含 12 个样本，但 Docker 不可用。全部 12 个任务/引擎尝试均为 `ENVIRONMENT_UNAVAILABLE`，模型调用次数为 0，且 `success: null`；因此这次运行没有基于模型的结果（应理解为 0/0，而不是 0%）。
 
@@ -74,14 +88,14 @@ repopilot benchmark \
 uv pip install swebench
 ```
 
-缺失的服务商用量、费用或耗时数据会以 JSON `null` 记录；RepoPilot 不会估算这些数据。六项任务的基准测试是开发阶段的回归证据，样本规模较小，并非具有统计效力的比较，也不代表具备泛化能力。
+缺失的服务商用量、费用或耗时数据会以 JSON `null` 记录；RepoPilot 不会估算这些数据。30 项固定任务的基准测试是开发阶段的回归证据，样本规模较小，并非具有统计效力的比较，也不代表具备泛化能力。
 
 ## 已知限制与范围之外
 
 - 本地执行会直接影响目标仓库，应将其视为由开发者控制的环境。
 - Docker 隔离能力取决于主机和配置的镜像；本项目不将 Docker 描述为完整的安全边界。
 - 模型/服务商可用性、凭据、原生工具调用支持以及返回的用量数据都属于外部依赖。环境失败或不可用只能说明执行可用性，不能说明任务正确性。
-- 基准测试包含六项很小的固定任务，无法据此确定成功率、费用排名或一般性能。
+- 基准测试包含 30 项很小的固定任务，无法据此确定成功率、费用排名或一般性能。
 - V1 只对 Python 目标仓库进行正式验证；现有证据不宣称支持其他语言。
 - 人工审批是轻量级、尽力而为的风险策略。Git 仅支持本地提交；不支持 push、pull、rebase、reset 和创建 Pull Request。
 - RAG 记忆、多 Agent 编排、Web UI、远程执行后端和完整 SWE-bench 运行均在范围之外。

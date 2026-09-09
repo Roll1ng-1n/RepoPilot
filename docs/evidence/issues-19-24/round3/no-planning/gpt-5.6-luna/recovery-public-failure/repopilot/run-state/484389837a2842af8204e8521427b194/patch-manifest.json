@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "37b7d8ee8ffd1f3b6741de50232ab85e62838d4436b31cea356d3558d2a2c432",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/recovery-public-failure/repopilot/workspace",
+      "head": "655f100db402e52aedb1df766fa68f2c9df71451",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/recovery-public-failure/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "94a2eabd72077c41cc0bf356a609afdfe85f5f69"
+  },
+  "bytes": 3135,
+  "final": {
+    "state": {
+      "diff_fingerprint": "54b88f3fb284d714838b9af937e2b8e06f2f0531826b9942bae7fe4d9b767dda",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/recovery-public-failure/repopilot/workspace",
+      "head": "655f100db402e52aedb1df766fa68f2c9df71451",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/recovery-public-failure/repopilot/workspace",
+      "status": " M src/line_tools.py\n?? src/__pycache__/line_tools.cpython-312.pyc\n?? tests/__pycache__/test_line_tools.cpython-312.pyc\n"
+    },
+    "tree": "f3e91bd84d588a22b8ac9ce8ee86d0fd1348bef4"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "e6e3493d6a921d06909600e1b50eb880cd1d815cb8aca7c3b13ce79a3df5e64c"
+}

@@ -1,0 +1,8 @@
+{
+  "verified_samples": 24,
+  "expected_samples": 24,
+  "missing": [],
+  "duplicate_slots": 0,
+  "source_and_configuration_checks": "passed",
+  "terminal_and_verifier_checks": "passed"
+}

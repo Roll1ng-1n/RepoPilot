@@ -55,6 +55,7 @@ class CampaignConfig:
     task_ids: tuple[str, ...]
     temperature: float
     stream: bool
+    model_kwargs: dict[str, Any]
     api_key: str | None = field(repr=False)
     base_url: str | None = field(repr=False)
     proxy_mode: DockerProxyMode
@@ -81,6 +82,7 @@ class CampaignConfig:
         api_key: str | None = None,
         base_url: str | None = None,
         stream: bool = False,
+        model_kwargs: dict[str, Any] | None = None,
         proxy_mode: DockerProxyMode | str | None = None,
         proxy_url: str | None = None,
         proxy: DockerProxyMode | str | Mapping[str, Any] | None = None,
@@ -127,6 +129,11 @@ class CampaignConfig:
         object.__setattr__(self, "task_ids", (task_ids,) if isinstance(task_ids, str) else tuple(task_ids))
         object.__setattr__(self, "temperature", float(temperature))
         object.__setattr__(self, "stream", bool(stream))
+        object.__setattr__(
+            self,
+            "model_kwargs",
+            {k: v for k, v in (model_kwargs or {}).items() if k in {"stream", "timeout", "max_tokens"}},
+        )
         object.__setattr__(self, "api_key", api_key)
         object.__setattr__(self, "base_url", base_url)
         object.__setattr__(self, "proxy_mode", mode)
@@ -170,6 +177,7 @@ class CampaignConfig:
             "task_ids": list(self.task_ids),
             "temperature": self.temperature,
             "stream": self.stream,
+            **({"model_kwargs": self.model_kwargs} if self.model_kwargs else {}),
             "proxy_mode": self.proxy_mode.value,
         }
 
@@ -264,7 +272,7 @@ class CampaignRunner:
         return run_benchmark(config, executors=self._executors)
 
     def _benchmark_config(self, model: str, output_directory: Path) -> BenchmarkConfig:
-        model_kwargs: dict[str, Any] = {"temperature": self.config.temperature}
+        model_kwargs: dict[str, Any] = {"temperature": self.config.temperature, **self.config.model_kwargs}
         if self.config.stream:
             model_kwargs["stream"] = True
         return BenchmarkConfig(

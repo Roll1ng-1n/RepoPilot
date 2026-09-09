@@ -1,0 +1,194 @@
+{
+  "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/smoke/gpt-5.6-sol/recovery-public-failure/baseline",
+  "behavior_pass": false,
+  "capabilities": [
+    "recovery"
+  ],
+  "category": "recovery",
+  "engine": "baseline",
+  "error": null,
+  "evaluation": {
+    "approval_events": [],
+    "behavior_pass": false,
+    "behavior_verifier": {
+      "recovery": {
+        "pass": false,
+        "reason": "Required scenario was not observed by the complete command observer."
+      }
+    },
+    "budget_usage": {
+      "complete_audit": false,
+      "limits": {
+        "command_timeout_seconds": 30,
+        "max_consecutive_failures": 2,
+        "max_replans": 1,
+        "max_run_seconds": 180,
+        "max_steps": 15
+      },
+      "replans_used": null,
+      "steps_used": 6
+    },
+    "churn": {
+      "final_step": 6,
+      "first_solved_step": null,
+      "post_solution_steps": null,
+      "reason": "Missing immutable repository states at every step boundary.",
+      "status": "unsupported"
+    },
+    "duration": {
+      "llm_seconds": null,
+      "orchestration_seconds": null,
+      "tool_seconds": null,
+      "wall_clock_seconds": 114.04197266799997
+    },
+    "recovery": {
+      "attempt_count": null,
+      "failure_types": [],
+      "post_recovery_repository_pass": null,
+      "resolved_count": null,
+      "success_rate": null,
+      "trigger_count": 0
+    },
+    "replan": {
+      "evidence_count": null,
+      "missed_scenarios": null,
+      "post_replan_repository_pass": null,
+      "success_rate": null,
+      "trigger_rate": null,
+      "triggered_count": 0,
+      "triggered_scenarios": null,
+      "unnecessary_replans": null,
+      "valid_count": null
+    },
+    "repository_pass": true,
+    "schema_version": 4,
+    "task_pass": false,
+    "termination": "correct_success",
+    "tool_quality": {
+      "failure_count": 2,
+      "failure_rate": 0.2222222222222222,
+      "recovery_rate": null,
+      "recovery_scope": "manifest-declared public-command failures only",
+      "redundant_calls": null
+    }
+  },
+  "metrics": {
+    "commits": [],
+    "cost": 0.151268,
+    "duration_seconds": 114.04197266799997,
+    "errors": [
+      {
+        "returncode": 1,
+        "type": "command"
+      },
+      {
+        "returncode": 1,
+        "type": "command"
+      }
+    ],
+    "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "llm_calls": 6,
+    "openai_standard_estimated_cost_usd": 0.151268,
+    "patch": {
+      "changed": true,
+      "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round3/smoke/gpt-5.6-sol/recovery-public-failure/baseline/patch.diff",
+      "sha256": "23ebaef2d562051e46d813aa9328bffaae8254796dbe5470441303a1710fd376"
+    },
+    "preflight": {
+      "checks": [
+        {
+          "command": [
+            "docker",
+            "image",
+            "inspect",
+            "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+          ],
+          "duration_seconds": 0.04077065600000651,
+          "exit_code": 0,
+          "name": "image_inspect",
+          "stderr": "",
+          "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "python",
+            "--version"
+          ],
+          "duration_seconds": 0.5042562209999915,
+          "exit_code": 0,
+          "name": "python",
+          "stderr": "",
+          "stdout": "Python 3.12.14\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "git",
+            "--version"
+          ],
+          "duration_seconds": 0.4533771640000168,
+          "exit_code": 0,
+          "name": "git",
+          "stderr": "",
+          "stdout": "git version 2.47.3\n"
+        }
+      ],
+      "error": null,
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "status": "READY"
+    },
+    "replans": null,
+    "retries": null,
+    "run_budget": {
+      "command_timeout_seconds": 30,
+      "max_consecutive_failures": 2,
+      "max_replans": 1,
+      "max_run_seconds": 180,
+      "max_steps": 15
+    },
+    "steps": 6,
+    "tokens": {
+      "cache_write": null,
+      "cached": 10240,
+      "completion": 1590,
+      "prompt": 39083,
+      "reasoning": 0,
+      "total": 40673
+    },
+    "tool_calls": 9,
+    "tool_failures": 2,
+    "trajectory_status": "Submitted"
+  },
+  "model": "openai/gpt-5.6-sol",
+  "repeat": 1,
+  "repository_pass": true,
+  "run_id": "b2990a1f6437408e857a27e7ce62ec1c",
+  "status": "Submitted",
+  "success": true,
+  "task_id": "recovery-public-failure",
+  "task_pass": false,
+  "verifier": {
+    "duration_seconds": 0.026104916000008416,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "",
+    "success_condition": {
+      "verifier_exit_code": 0
+    }
+  }
+}

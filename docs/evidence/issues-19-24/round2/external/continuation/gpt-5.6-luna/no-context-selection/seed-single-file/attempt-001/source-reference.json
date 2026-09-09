@@ -1,0 +1,9 @@
+{
+  "archive_sha256": "0f54ca8f9749e316ec8f80b346b9c05456c6d468d3148d913a0cb8865ba511ed",
+  "variant": "no-context-selection",
+  "patch_sha256": "9994c38aa87be0c0eb2173c88b3393d8df1bd2e9ad4a2c514cb68856acab7be3",
+  "definition": "Retain full history without bounded eviction or preview compression; preserve the identical context ceiling and fail when it does not fit. Default strategy is NONE, so this does not test model summarization.",
+  "provider_base_url": "https://jojocode.com/v1",
+  "financial_limit_usd": null,
+  "repeats": 1
+}

@@ -1,0 +1,12 @@
+smoke openai/gpt-5.6-sol seed-single-file baseline Submitted True
+smoke openai/gpt-5.6-sol seed-single-file repopilot SUCCEEDED True
+smoke openai/gpt-5.6-sol recovery-public-failure baseline Submitted False
+smoke openai/gpt-5.6-sol recovery-public-failure repopilot BUDGET_EXCEEDED True
+smoke openai/gpt-5.6-luna seed-single-file baseline Submitted True
+smoke openai/gpt-5.6-luna seed-single-file repopilot SUCCEEDED True
+smoke openai/gpt-5.6-luna recovery-public-failure baseline Submitted True
+smoke openai/gpt-5.6-luna recovery-public-failure repopilot BUDGET_EXCEEDED True
+no-planning openai/gpt-5.6-sol seed-single-file repopilot SUCCEEDED True
+no-planning openai/gpt-5.6-sol recovery-public-failure repopilot SUCCEEDED True
+no-planning openai/gpt-5.6-luna seed-single-file repopilot BUDGET_EXCEEDED True
+no-planning openai/gpt-5.6-luna recovery-public-failure repopilot BUDGET_EXCEEDED True

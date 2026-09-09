@@ -1,0 +1,40 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "b91c50b49ef1a4c2367d3d5d07431dd7dd879b53803a15dab9ecb15d68c9a7e1",
+      "before_fingerprint": "9629281719d48ce1c7879b63e66c6af1ce44d1eb624db548eaed036b3cbd55cb",
+      "command": "python -m unittest discover -s tests",
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Confirm the repaired line cleaning behavior passes the repository test suite.",
+      "result": {
+        "duration_seconds": 0.22881106800002726,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "All discovered tests under tests",
+      "sequence": 1
+    },
+    {
+      "after_fingerprint": "b91c50b49ef1a4c2367d3d5d07431dd7dd879b53803a15dab9ecb15d68c9a7e1",
+      "before_fingerprint": "b91c50b49ef1a4c2367d3d5d07431dd7dd879b53803a15dab9ecb15d68c9a7e1",
+      "command": "python -m unittest discover -s tests",
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Reconfirm the final repository state after the completion check reported stale verification metadata.",
+      "result": {
+        "duration_seconds": 0.2621646840000267,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "All discovered tests under tests",
+      "sequence": 2
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "python": {
+      "version": "3.12.3",
+      "ok": true
+    },
+    "git": {
+      "available": true
+    },
+    "rg": {
+      "available": true
+    },
+    "model": {
+      "configured": false
+    },
+    "credentials": {
+      "configured": false
+    },
+    "docker": {
+      "status": "available",
+      "wsl": true
+    },
+    "image": {
+      "status": "available"
+    }
+  },
+  "paid_requests": 0
+}

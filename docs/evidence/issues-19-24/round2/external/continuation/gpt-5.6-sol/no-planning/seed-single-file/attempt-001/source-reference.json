@@ -1,0 +1,9 @@
+{
+  "archive_sha256": "0f54ca8f9749e316ec8f80b346b9c05456c6d468d3148d913a0cb8865ba511ed",
+  "variant": "no-planning",
+  "patch_sha256": "a2250e093c89f0dc0fc711e9dacc982b7859d50fda215897458850d4e64826d7",
+  "definition": "Remove model-visible plan and planning tool schemas; suppress automatic recovery replans while keeping recovery observations and replan budget charges. Retain one internal task identifier solely for unchanged verification attribution.",
+  "provider_base_url": "https://jojocode.com/v1",
+  "financial_limit_usd": null,
+  "repeats": 1
+}

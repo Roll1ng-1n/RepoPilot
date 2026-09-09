@@ -1,0 +1,69 @@
+.E...................................                                    [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_execution_environments_share_command_contract[docker] _
+
+request = <SubRequest 'execution_environment' for <Function test_execution_environments_share_command_contract[docker]>>
+tmp_path = PosixPath('/tmp/pytest-of-waaaaa/pytest-7/test_execution_environments_sh1')
+
+    @pytest.fixture(
+        params=[
+            "local",
+            pytest.param("docker", marks=pytest.mark.skipif(not _docker_available(), reason="Docker is unavailable")),
+        ]
+    )
+    def execution_environment(request: pytest.FixtureRequest, tmp_path: Path):
+        target_repository = tmp_path / "target"
+        target_repository.mkdir()
+        if request.param == "local":
+            environment = LocalExecutionEnvironment(target_repository, maximum_output_characters=5)
+        else:
+>           environment = DockerExecutionEnvironment(
+                target_repository,
+                image=DOCKER_TEST_IMAGE,
+                maximum_output_characters=5,
+            )
+
+tests/repopilot/test_environment.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/repopilot/environment.py:331: in __init__
+    self._docker = DockerEnvironment(
+src/minisweagent/environments/docker.py:59: in __init__
+    self._start_container()
+src/minisweagent/environments/docker.py:91: in _start_container
+    result = subprocess.run(
+/usr/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: -9 args: ['docker', 'run', '-d', '--name', 'minisweagent...>
+endtime = 4846.254467745, orig_timeout = 120, stdout_seq = []
+stderr_seq = [b"Unable to find image 'python:3.12-bookworm' locally\n", b'3.12-bookworm: Pulling from library/python\n', b'80cbbb12...er\n08457856946d: Pulling fs layer\n', b'02a27392fe49: Download complete\n', b'203fbabda5b2: Download complete\n', ...]
+skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() > endtime:
+>           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['docker', 'run', '-d', '--name', 'minisweagent-95b7daf1', '-w', '/workspace', '--rm', '--mount', 'type=bind,source=/tmp/pytest-of-waaaaa/pytest-7/test_execution_environments_sh1/target,target=/workspace', '--user=1000:1000', 'python:3.12-bookworm', 'sleep', '2h']' timed out after 120 seconds
+
+/usr/lib/python3.12/subprocess.py:1253: TimeoutExpired
+---------------------------- Captured stdout setup -----------------------------
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-95b7daf1 -w /workspace --rm --mount                         
+type=bind,source=/tmp/pytest-of-waaaaa/pytest-7/test_execution_environments_sh1/
+target,target=/workspace --user=1000:1000 python:3.12-bookworm sleep 2h         
+------------------------------ Captured log setup ------------------------------
+DEBUG    minisweagent.environment:docker.py:90 Starting container with command: docker run -d --name minisweagent-95b7daf1 -w /workspace --rm --mount type=bind,source=/tmp/pytest-of-waaaaa/pytest-7/test_execution_environments_sh1/target,target=/workspace --user=1000:1000 python:3.12-bookworm sleep 2h
+36 passed, 1 error in 184.27s (0:03:04)

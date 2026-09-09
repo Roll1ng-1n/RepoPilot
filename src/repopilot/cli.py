@@ -27,7 +27,7 @@ from repopilot.benchmark import (
 )
 from repopilot.budget import RunBudget
 from repopilot.campaign import CampaignConfig, CampaignRun, run_campaign
-from repopilot.checkpoint import RepositoryStateError, verify_repository_state
+from repopilot.checkpoint import RepositoryStateError
 from repopilot.context import ContextManager, ContextStrategy, model_summary_generator
 from repopilot.environment import (
     DockerProxyMode,
@@ -97,6 +97,8 @@ def create_app(
         for step in result.plan.steps:
             typer.echo(f"- [{step.status.value}] {step.description}")
         typer.echo(f"Artifacts: {result.artifact_directory}")
+        if result.status != "SUCCEEDED":
+            raise typer.Exit(code={"UNVERIFIED": 3, "WAITING_FOR_APPROVAL": 4, "STOPPED": 5}.get(result.status, 1))
 
     @app.callback()
     def main() -> None:
@@ -129,18 +131,35 @@ def create_app(
             show_default=False,
             help="Container proxy URL required by --docker-proxy-mode explicit.",
         ),
+        max_total_tokens: int | None = typer.Option(None, "--max-total-tokens", min=1),
+        max_cost_usd: float | None = typer.Option(None, "--max-cost-usd", min=0.000001),
+        required_verification: list[str] = typer.Option([], "--required-verification"),
         max_steps: int = typer.Option(30, "--max-steps", min=1),
         max_replans: int = typer.Option(2, "--max-replans", min=0),
         max_consecutive_failures: int = typer.Option(3, "--max-consecutive-failures", min=1),
         command_timeout_seconds: float = typer.Option(300.0, "--command-timeout-seconds", min=0.001),
-        max_run_seconds: float = typer.Option(30.0 * 60.0, "--max-run-seconds", min=0.001),
+        max_run_seconds: float | None = typer.Option(
+            None,
+            "--max-run-seconds",
+            min=0.001,
+            help="Optional total active time limit; omitted by default for slow model services.",
+        ),
         context_strategy: ContextStrategy = typer.Option(ContextStrategy.NONE, "--context-strategy"),
         context_max_characters: int = typer.Option(12_000, "--context-max-characters", min=1),
+        context_window_tokens: int = typer.Option(32768, "--context-window-tokens", min=4096),
         auto_approve_disposable_docker_benchmark: bool = typer.Option(
             False,
             "--auto-approve-disposable-docker-benchmark",
             help="Auto-approve high-risk calls only for an explicitly disposable Docker benchmark.",
         ),
+        stream: bool | None = typer.Option(None, "--stream/--no-stream", envvar="REPOPILOT_STREAM"),
+        request_timeout: float | None = typer.Option(
+            None, "--request-timeout", min=0.001, envvar="REPOPILOT_REQUEST_TIMEOUT"
+        ),
+        max_output_tokens: int | None = typer.Option(
+            None, "--max-output-tokens", min=1, envvar="REPOPILOT_MAX_OUTPUT_TOKENS"
+        ),
+        env_file: Path | None = typer.Option(None, "--env-file", exists=True, dir_okay=False),
     ) -> None:
         if task is None:
             task = typer.prompt("Task")
@@ -166,7 +185,8 @@ def create_app(
                 "Automatic approval is available only for an explicitly disposable Docker benchmark.",
                 param_hint="--auto-approve-disposable-docker-benchmark",
             )
-        options = ModelOptions(model_name=model, api_key=api_key, base_url=base_url)
+        options = _connection_options(model, api_key, base_url, stream, request_timeout, max_output_tokens, env_file)
+        api_key, base_url = options.api_key, options.base_url
         try:
             tool_calling_model = selected_model_factory(options)
         except ValueError as error:
@@ -190,6 +210,8 @@ def create_app(
         artifacts = RunArtifacts(state_dir or Path(user_state_dir("repopilot")) / "runs", secrets=secret_values)
         plan_history = PlanHistory.for_task(task)
         budget = RunBudget(
+            max_tokens=max_total_tokens,
+            max_cost_usd=max_cost_usd,
             max_steps=max_steps,
             max_replans=max_replans,
             max_consecutive_failures=max_consecutive_failures,
@@ -204,6 +226,8 @@ def create_app(
             if context_strategy is ContextStrategy.SUMMARY
             else None,
         )
+        context.context_window_tokens = context_window_tokens
+        context.output_reserve_tokens = int(options.model_kwargs.get("max_tokens", 4096))
         try:
             result = AgentRuntime(
                 tool_calling_model,
@@ -213,6 +237,7 @@ def create_app(
                     plan_history,
                     command_timeout_seconds=budget.command_timeout_seconds,
                     verifications=verifications,
+                    required_verifications=tuple(required_verification),
                 ),
                 artifacts,
                 plan_history,
@@ -222,8 +247,10 @@ def create_app(
                     "backend": "litellm",
                     "model_name": tool_calling_model.model_name,
                     "base_url": base_url,
+                    "model_kwargs": options.model_kwargs,
                 },
                 checkpoint_environment={
+                    **({"required_verifications": required_verification} if required_verification else {}),
                     "backend": request.environment,
                     "image": request.image,
                     **(
@@ -243,6 +270,19 @@ def create_app(
         finally:
             execution_environment.close()
         print_result(result)
+
+    @app.command()
+    def doctor(
+        model: str | None = typer.Option(None, "--model", envvar="REPOPILOT_MODEL"),
+        api_key: str | None = typer.Option(None, "--api-key", envvar="REPOPILOT_API_KEY", show_default=False),
+        image: str | None = typer.Option(None, "--image"),
+        env_file: Path | None = typer.Option(None, "--env-file", exists=True, dir_okay=False),
+    ) -> None:
+        """Check local prerequisites without making paid model requests."""
+        from repopilot.doctor import diagnose
+
+        options = _connection_options(model, api_key, None, None, None, None, env_file)
+        typer.echo(json.dumps(diagnose(model=options.model_name, api_key=options.api_key, image=image), indent=2))
 
     @app.command()
     def inspect(
@@ -308,14 +348,19 @@ def create_app(
         max_consecutive_failures: int = typer.Option(2, "--max-consecutive-failures", min=1),
         command_timeout_seconds: float = typer.Option(30.0, "--command-timeout-seconds", min=0.001),
         max_run_seconds: float = typer.Option(180.0, "--max-run-seconds", min=0.001),
-        stream: bool = typer.Option(
-            False,
-            "--stream",
-            help="Force streaming requests (for accounts restricted to streaming).",
+        stream: bool | None = typer.Option(None, "--stream/--no-stream", envvar="REPOPILOT_STREAM"),
+        request_timeout: float | None = typer.Option(
+            None, "--request-timeout", min=0.001, envvar="REPOPILOT_REQUEST_TIMEOUT"
         ),
+        max_output_tokens: int | None = typer.Option(
+            None, "--max-output-tokens", min=1, envvar="REPOPILOT_MAX_OUTPUT_TOKENS"
+        ),
+        env_file: Path | None = typer.Option(None, "--env-file", exists=True, dir_okay=False),
     ) -> None:
         """Compare the mini-SWE-agent baseline and RepoPilot on fixed Docker tasks."""
 
+        options = _connection_options(model, api_key, base_url, stream, request_timeout, max_output_tokens, env_file)
+        model, api_key, base_url = options.model_name, options.api_key, options.base_url
         if not model:
             raise typer.BadParameter("Provide --model or set REPOPILOT_MODEL.", param_hint="--model")
         if not engines:
@@ -323,9 +368,7 @@ def create_app(
         benchmark_root = state_dir or Path(user_state_dir("repopilot")) / "benchmarks"
         output_directory = benchmark_root.resolve() / uuid.uuid4().hex
         try:
-            model_kwargs: dict[str, Any] = {"temperature": temperature}
-            if stream:
-                model_kwargs["stream"] = True
+            model_kwargs: dict[str, Any] = {"temperature": temperature, **options.model_kwargs}
             config = BenchmarkConfig(
                 tasks_directory=tasks_dir,
                 output_directory=output_directory,
@@ -457,10 +500,12 @@ def create_app(
         max_consecutive_failures: int = typer.Option(2, "--max-consecutive-failures", min=1),
         command_timeout_seconds: float = typer.Option(30.0, "--command-timeout-seconds", min=0.001),
         max_run_seconds: float = typer.Option(180.0, "--max-run-seconds", min=0.001),
-        stream: bool = typer.Option(
-            False,
-            "--stream",
-            help="Force streaming requests (for accounts restricted to streaming).",
+        stream: bool | None = typer.Option(None, "--stream/--no-stream", envvar="REPOPILOT_STREAM"),
+        request_timeout: float | None = typer.Option(
+            None, "--request-timeout", min=0.001, envvar="REPOPILOT_REQUEST_TIMEOUT"
+        ),
+        max_output_tokens: int | None = typer.Option(
+            None, "--max-output-tokens", min=1, envvar="REPOPILOT_MAX_OUTPUT_TOKENS"
         ),
     ) -> None:
         """Run a sequential multi-model campaign using the paired Agent Benchmark."""
@@ -470,7 +515,8 @@ def create_app(
             raise typer.BadParameter("Provide at least one --model.", param_hint="--model")
         if not engines:
             raise typer.BadParameter("Select at least one benchmark engine.", param_hint="--engine")
-        api_key, base_url = _credentials_from_env_file(api_key, base_url, env_file)
+        options = _connection_options(None, api_key, base_url, stream, request_timeout, max_output_tokens, env_file)
+        api_key, base_url = options.api_key, options.base_url
         if not api_key:
             raise typer.BadParameter(
                 "Provide --api-key, set REPOPILOT_API_KEY, or configure it in --env-file.",
@@ -495,7 +541,8 @@ def create_app(
                 engines=tuple(dict.fromkeys(engines)),
                 task_ids=tuple(dict.fromkeys(tasks)),
                 temperature=temperature,
-                stream=stream,
+                stream=bool(options.model_kwargs.get("stream", False)),
+                model_kwargs=options.model_kwargs,
                 api_key=api_key,
                 base_url=base_url,
                 proxy_mode=docker_proxy_mode,
@@ -592,9 +639,20 @@ def create_app(
         base_url: str | None = typer.Option(None, "--base-url", envvar="REPOPILOT_BASE_URL"),
         docker_proxy_url: str | None = None,
         approval_granted: bool | None = None,
+        stream: bool | None = None,
+        request_timeout: float | None = None,
+        max_output_tokens: int | None = None,
+        env_file: Path | None = None,
+        max_total_tokens: int | None = None,
+        max_cost_usd: float | None = None,
+        max_steps: int | None = None,
+        max_replans: int | None = None,
+        max_run_seconds: float | None = None,
+        no_time_limit: bool = False,
     ) -> None:
         """Resume a STOPPED Agent Run or resolve one pending Human Approval."""
 
+        api_key, base_url = _credentials_from_env_file(api_key, base_url, env_file)
         run_state_directory = state_dir or Path(user_state_dir("repopilot")) / "runs"
         try:
             artifacts = RunArtifacts.reopen(run_state_directory, run_id, secrets=_credential_values(api_key))
@@ -610,8 +668,8 @@ def create_app(
         if approval_granted is None:
             if status == "WAITING_FOR_APPROVAL":
                 typer.echo(f"Agent Run {run_id} is still waiting for Human Approval.")
-                return
-            if status != "STOPPED":
+                raise typer.Exit(code=4)
+            if status not in {"STOPPED", "RUNNING", "BUDGET_EXCEEDED"}:
                 typer.echo(f"Error: Agent Run {run_id} cannot resume from {status!r}.", err=True)
                 raise typer.Exit(code=1)
         elif status != "WAITING_FOR_APPROVAL":
@@ -635,7 +693,27 @@ def create_app(
             if not isinstance(plan_history_value, list):
                 raise ValueError("Checkpoint has invalid Plan History.")
             plan_history = PlanHistory.from_dict(plan_history_value)
-            budget = _budget_from_checkpoint(_checkpoint_mapping(checkpoint, "budget"))
+            budget_options = dict(_checkpoint_mapping(checkpoint, "budget"))
+            if max_total_tokens is not None:
+                budget_options["max_tokens"] = max_total_tokens
+            if max_cost_usd is not None:
+                budget_options["max_cost_usd"] = max_cost_usd
+            if no_time_limit and max_run_seconds is not None:
+                raise ValueError("Use either --no-time-limit or --max-run-seconds, not both.")
+            for key, value in (
+                ("max_steps", max_steps),
+                ("max_replans", max_replans),
+                ("max_run_seconds", max_run_seconds),
+            ):
+                if value is not None:
+                    budget_options[key] = value
+            if no_time_limit:
+                budget_options["max_run_seconds"] = None
+            if status == "BUDGET_EXCEEDED" and budget_options == checkpoint["budget"]:
+                raise ValueError(
+                    "Budget exhausted; explicitly increase the exhausted limit or use --no-time-limit before resuming."
+                )
+            budget = _budget_from_checkpoint(budget_options)
             verifications = checkpoint.get("verifications")
             if not isinstance(verifications, list):
                 raise ValueError("Checkpoint has invalid Task Verifications.")
@@ -663,13 +741,16 @@ def create_app(
             typer.echo(f"Error: {error}", err=True)
             raise typer.Exit(code=1) from error
         try:
-            verify_repository_state(repository_state, target_repository)
             model_state = _checkpoint_mapping(checkpoint, "model")
-            options = ModelOptions(
-                model_name=model or _checkpoint_string(model_state, "model_name"),
-                api_key=api_key,
-                base_url=base_url if base_url is not None else model_state.get("base_url"),
+            options = _connection_options(
+                model, api_key, base_url, stream, request_timeout, max_output_tokens, env_file, model_state
             )
+            model_state = {
+                "backend": "litellm",
+                "model_name": options.model_name,
+                "base_url": options.base_url,
+                "model_kwargs": options.model_kwargs,
+            }
             tool_calling_model = selected_model_factory(options)
             context = ContextManager(summarizer=model_summary_generator(tool_calling_model))
             result = AgentRuntime(
@@ -680,6 +761,7 @@ def create_app(
                     plan_history,
                     command_timeout_seconds=budget.command_timeout_seconds,
                     verifications=verifications,
+                    required_verifications=tuple(environment_state.get("required_verifications", [])),
                 ),
                 artifacts,
                 plan_history,
@@ -712,10 +794,47 @@ def create_app(
             show_default=False,
             help="Re-supply an explicit container proxy URL; URLs are not stored in Checkpoints.",
         ),
+        stream: bool | None = typer.Option(None, "--stream/--no-stream", envvar="REPOPILOT_STREAM"),
+        request_timeout: float | None = typer.Option(
+            None, "--request-timeout", min=0.001, envvar="REPOPILOT_REQUEST_TIMEOUT"
+        ),
+        max_output_tokens: int | None = typer.Option(
+            None, "--max-output-tokens", min=1, envvar="REPOPILOT_MAX_OUTPUT_TOKENS"
+        ),
+        env_file: Path | None = typer.Option(None, "--env-file", exists=True, dir_okay=False),
+        max_total_tokens: int | None = typer.Option(None, "--max-total-tokens", min=1),
+        max_cost_usd: float | None = typer.Option(None, "--max-cost-usd", min=0.000001),
+        max_steps: int | None = typer.Option(
+            None, "--max-steps", min=1, help="New total step limit, including consumed steps."
+        ),
+        max_replans: int | None = typer.Option(None, "--max-replans", min=0),
+        max_run_seconds: float | None = typer.Option(
+            None, "--max-run-seconds", min=0.001, help="New total active time limit, including consumed time."
+        ),
+        no_time_limit: bool = typer.Option(
+            False, "--no-time-limit", help="Explicitly remove the saved total time limit."
+        ),
     ) -> None:
         """Resume a STOPPED Agent Run after recreating its Execution Environment."""
 
-        _resume(run_id, state_dir, model, api_key, base_url, docker_proxy_url)
+        _resume(
+            run_id,
+            state_dir,
+            model,
+            api_key,
+            base_url,
+            docker_proxy_url,
+            stream=stream,
+            request_timeout=request_timeout,
+            max_output_tokens=max_output_tokens,
+            env_file=env_file,
+            max_total_tokens=max_total_tokens,
+            max_cost_usd=max_cost_usd,
+            max_steps=max_steps,
+            max_replans=max_replans,
+            max_run_seconds=max_run_seconds,
+            no_time_limit=no_time_limit,
+        )
 
     @app.command()
     def approve(
@@ -730,10 +849,34 @@ def create_app(
             envvar="REPOPILOT_DOCKER_PROXY_URL",
             show_default=False,
         ),
+        stream: bool | None = typer.Option(None, "--stream/--no-stream", envvar="REPOPILOT_STREAM"),
+        request_timeout: float | None = typer.Option(
+            None, "--request-timeout", min=0.001, envvar="REPOPILOT_REQUEST_TIMEOUT"
+        ),
+        max_output_tokens: int | None = typer.Option(
+            None, "--max-output-tokens", min=1, envvar="REPOPILOT_MAX_OUTPUT_TOKENS"
+        ),
+        env_file: Path | None = typer.Option(None, "--env-file", exists=True, dir_okay=False),
+        max_total_tokens: int | None = typer.Option(None, "--max-total-tokens", min=1),
+        max_cost_usd: float | None = typer.Option(None, "--max-cost-usd", min=0.000001),
     ) -> None:
         """Approve the persisted high-risk Tool Call, then resume the Agent Run."""
 
-        _resume(run_id, state_dir, model, api_key, base_url, docker_proxy_url, approval_granted=True)
+        _resume(
+            run_id,
+            state_dir,
+            model,
+            api_key,
+            base_url,
+            docker_proxy_url,
+            approval_granted=True,
+            stream=stream,
+            request_timeout=request_timeout,
+            max_output_tokens=max_output_tokens,
+            env_file=env_file,
+            max_total_tokens=max_total_tokens,
+            max_cost_usd=max_cost_usd,
+        )
 
     @app.command()
     def reject(
@@ -748,10 +891,34 @@ def create_app(
             envvar="REPOPILOT_DOCKER_PROXY_URL",
             show_default=False,
         ),
+        stream: bool | None = typer.Option(None, "--stream/--no-stream", envvar="REPOPILOT_STREAM"),
+        request_timeout: float | None = typer.Option(
+            None, "--request-timeout", min=0.001, envvar="REPOPILOT_REQUEST_TIMEOUT"
+        ),
+        max_output_tokens: int | None = typer.Option(
+            None, "--max-output-tokens", min=1, envvar="REPOPILOT_MAX_OUTPUT_TOKENS"
+        ),
+        env_file: Path | None = typer.Option(None, "--env-file", exists=True, dir_okay=False),
+        max_total_tokens: int | None = typer.Option(None, "--max-total-tokens", min=1),
+        max_cost_usd: float | None = typer.Option(None, "--max-cost-usd", min=0.000001),
     ) -> None:
         """Reject the persisted high-risk Tool Call and let the model revise its plan."""
 
-        _resume(run_id, state_dir, model, api_key, base_url, docker_proxy_url, approval_granted=False)
+        _resume(
+            run_id,
+            state_dir,
+            model,
+            api_key,
+            base_url,
+            docker_proxy_url,
+            approval_granted=False,
+            stream=stream,
+            request_timeout=request_timeout,
+            max_output_tokens=max_output_tokens,
+            env_file=env_file,
+            max_total_tokens=max_total_tokens,
+            max_cost_usd=max_cost_usd,
+        )
 
     return app
 
@@ -816,10 +983,45 @@ def _budget_from_checkpoint(value: dict[str, Any]) -> RunBudget:
             max_replans=int(value["max_replans"]),
             max_consecutive_failures=int(value["max_consecutive_failures"]),
             command_timeout_seconds=float(value["command_timeout_seconds"]),
-            max_run_seconds=float(value["max_run_seconds"]),
+            max_run_seconds=float(value["max_run_seconds"]) if value["max_run_seconds"] is not None else None,
+            max_tokens=value.get("max_tokens"),
+            max_cost_usd=value.get("max_cost_usd"),
         )
     except (KeyError, TypeError, ValueError) as error:
         raise ValueError("Checkpoint has invalid Run Budget.") from error
 
 
 app = create_app()
+
+
+def _connection_options(
+    model, api_key, base_url, stream, request_timeout, max_output_tokens, env_file, checkpoint=None
+):
+    """Resolve CLI/environment values before dotenv and persisted non-secret options."""
+    from dotenv import dotenv_values
+
+    values = dotenv_values(env_file) if env_file is not None else {}
+    saved = checkpoint or {}
+    kwargs = dict(saved.get("model_kwargs", {}))
+    for key, value, env_name, cast in (
+        ("stream", stream, "REPOPILOT_STREAM", lambda x: str(x).lower() in {"true", "1", "yes"}),
+        ("timeout", request_timeout, "REPOPILOT_REQUEST_TIMEOUT", float),
+        ("max_tokens", max_output_tokens, "REPOPILOT_MAX_OUTPUT_TOKENS", int),
+    ):
+        fallback = os.environ.get(env_name) or values.get(env_name)
+        if value is not None:
+            kwargs[key] = value
+        elif fallback is not None:
+            kwargs[key] = cast(fallback)
+    return ModelOptions(
+        model_name=model
+        or os.environ.get("REPOPILOT_MODEL")
+        or values.get("REPOPILOT_MODEL")
+        or saved.get("model_name"),
+        api_key=api_key or os.environ.get("REPOPILOT_API_KEY") or values.get("REPOPILOT_API_KEY"),
+        base_url=base_url
+        or os.environ.get("REPOPILOT_BASE_URL")
+        or values.get("REPOPILOT_BASE_URL")
+        or saved.get("base_url"),
+        model_kwargs=kwargs,
+    )

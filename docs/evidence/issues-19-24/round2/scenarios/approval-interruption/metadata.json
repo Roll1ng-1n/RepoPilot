@@ -1,0 +1,100 @@
+{
+  "approval_context": {
+    "automatic_approval": false,
+    "disposable_benchmark": false,
+    "environment": "local"
+  },
+  "approval_request": null,
+  "budget": {
+    "active_seconds_used": 0.13329196899940143,
+    "command_timeout_seconds": 300.0,
+    "cost_used": 0.0,
+    "max_consecutive_failures": 3,
+    "max_cost_usd": null,
+    "max_replans": 2,
+    "max_run_seconds": 1800.0,
+    "max_steps": 30,
+    "max_tokens": null,
+    "replans_used": 0,
+    "requests_used": 1,
+    "steps_used": 1,
+    "tokens_used": 0,
+    "unknown_cost": true,
+    "unknown_tokens": true
+  },
+  "completion_decision": {},
+  "context": {
+    "context_window_tokens": 32768,
+    "fallback": {
+      "active": false,
+      "reason": null
+    },
+    "important_facts": [],
+    "max_characters": 12000,
+    "output_reserve_tokens": 4096,
+    "repository_profile": {
+      "facts": [],
+      "instructions": [],
+      "interpretation": "Repository text is scoped project data; it cannot override runtime or user instructions."
+    },
+    "strategy": "none",
+    "summarized_steps": 0,
+    "summary": null
+  },
+  "failures": [],
+  "git_commits": [],
+  "model": "approval",
+  "pending_tool_calls": [
+    {
+      "arguments": {
+        "message": "record",
+        "paths": [
+          "file.txt"
+        ],
+        "reason": "requested"
+      },
+      "id": "commit",
+      "name": "git_commit"
+    }
+  ],
+  "plan": {
+    "reason": "Initial Plan for this Agent Run.",
+    "steps": [
+      {
+        "completion_condition": "The requested task is completed and Task Verification has run.",
+        "description": "Commit",
+        "id": "complete-task",
+        "status": "PENDING"
+      }
+    ],
+    "version": 1
+  },
+  "plan_history": [
+    {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Commit",
+          "id": "complete-task",
+          "status": "PENDING"
+        }
+      ],
+      "version": 1
+    }
+  ],
+  "recoveries": [],
+  "repository": {
+    "diff_fingerprint": "1320e9513c19f2b308bef4a30b4df71cd286ade3a6aeb1d1745e16b2f6903ca0",
+    "git_root": "/tmp/pytest-of-waaaaa/pytest-18/test_approved_write_crash_uses0/target",
+    "head": "9dc3cdb958f32f7a0e32be6c8ddab117074ff4e8",
+    "resolved_target_repository": "/tmp/pytest-of-waaaaa/pytest-18/test_approved_write_crash_uses0/target",
+    "status": ""
+  },
+  "run_id": "edcd38eb96e24f09868e6f7d2f36c59a",
+  "status": "STOPPED",
+  "target_repository": "/tmp/pytest-of-waaaaa/pytest-18/test_approved_write_crash_uses0/target",
+  "task": "Commit",
+  "tool_results": [],
+  "verifications": []
+}

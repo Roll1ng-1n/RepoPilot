@@ -1,0 +1,10 @@
+--- a/src/repopilot/recovery.py
++++ b/src/repopilot/recovery.py
+@@ -74,6 +74,7 @@
+ 
+     def recover(self, failure: Failure, *, transient_model_error: bool = False) -> RecoveryDecision:
+         self.consecutive_failures += 1
++        return RecoveryDecision(RecoveryAction.STOP, f"Ablation: stop at first classified failure: {failure.reason}")
+         if failure.category is FailureCategory.MODEL_ERROR and not transient_model_error:
+             return RecoveryDecision(RecoveryAction.STOP, f"The model error is not transient: {failure.reason}")
+         if self.consecutive_failures >= self._max_consecutive_failures:

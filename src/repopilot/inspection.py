@@ -17,6 +17,9 @@ _ARTIFACT_NAMES = (
     "trace.jsonl",
     "plan.json",
     "patch.diff",
+    "patch-manifest.json",
+    "initial-worktree.diff",
+    "worktree.diff",
     "verification.json",
     "task_report.md",
 )
@@ -46,6 +49,7 @@ class RunInspection:
     git_commits: Any
     trace: list[dict[str, Any]]
     artifacts: dict[str, dict[str, Any]]
+    completion_decision: Any
     task_report: str | None
 
     def to_dict(self) -> dict[str, Any]:
@@ -66,6 +70,7 @@ class RunInspection:
             "approval_context": self.approval_context,
             "approval_request": self.approval_request,
             "verifications": self.verifications,
+            "completion_decision": self.completion_decision,
             "git_commits": self.git_commits,
             "trace": self.trace,
             "task_report": self.task_report,
@@ -107,10 +112,13 @@ def load_run_inspection(state_directory: Path, run_id: str) -> RunInspection:
 def render_human(inspection: RunInspection) -> str:
     """Render an inspection in a compact human-readable format."""
 
-    return _INSPECTION_TEMPLATE.render(
-        inspection=inspection.to_dict(),
-        json_value=lambda value: json.dumps(value, indent=2, sort_keys=True, default=str),
-    ).strip() + "\n"
+    return (
+        _INSPECTION_TEMPLATE.render(
+            inspection=inspection.to_dict(),
+            json_value=lambda value: json.dumps(value, indent=2, sort_keys=True, default=str),
+        ).strip()
+        + "\n"
+    )
 
 
 def _build_inspection(
@@ -142,6 +150,7 @@ def _build_inspection(
         context=state.get("context", {}),
         approval_context=state.get("approval_context", {}),
         approval_request=state.get("approval_request"),
+        completion_decision=state.get("completion_decision"),
         verifications=state.get("verifications", []),
         git_commits=state.get("git_commits", []),
         trace=trace,

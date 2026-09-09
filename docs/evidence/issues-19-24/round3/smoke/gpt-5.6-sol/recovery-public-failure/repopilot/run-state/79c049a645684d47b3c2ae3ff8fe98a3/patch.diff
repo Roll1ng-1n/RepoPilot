@@ -1,0 +1,68 @@
+diff --git a/src/__pycache__/line_tools.cpython-312.pyc b/src/__pycache__/line_tools.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..74be64f7e89fcc103c0f1c355e0b399aad9827f6
+GIT binary patch
+literal 856
+zcmZuv&ubGw6rRn_ZhxgUO|@7NnS&OBHubKEhf*t;9vTW#kY%$oZ8w>njWe?;DO<?F
+zLkopgduYAYqx4e$1MeP1jN?%}cnh=_JvkHGSi}eW=6k$v-oE#}`7k^@2(*2^_on*O
+z0^pko&doUkCwDd22N)~?Y~c*GqRdjp0@x-QVo&HCh6MgW%Md#+;F8mH3w`Sk%aKnh
+zq9G$w0VO^Q*$PTzNJH5~i69tNnn<n^v_OKmL3k5Y2n$vtpVyG|MXmV5G*GZq|6@tG
+zU!g=frkGGJCo<tI&>i;-YGmv0<h^$LK=yJ+IySapt$>Y83TD8wCpxlIyK4CVSdR@;
+zSUp$Z0;iXEQYftL$<#@$hNaQ%)T;JfAfCb0IXdga0%@i?@E->J%h;ZWnpM_AuRmJo
+z&WKpdrbtwm%{xf)Fp9KnT@lb)C|Bb|qD2-4F(y+X6NHISh7E#nQm0|yOCpK|N7;f%
+z<p_PfuKELCkmZ<SW&0Q_*RR(J!v&Wc{S*|0Fe9%>s8rDWNI4CkCPdja(iE;Hp|1V9
+zKD`$6nyC8$nHD^lHe64}F%`vnQ{@vDK2M0(-MiOqnCJCnQ$Re`t_4nAFg~%j*qUiy
+zz1Eujn!B<I+quj8gD(g7vYSqOWNe3Rv5zA+Hf=SO+bti$S6(}t+nL*%+bwUG+S&Y0
+zX{&T_>r)nWhQR1}CkwLqR_R372J;11^?4qS1J6^Jf|ybg$S`K2=vM-6wyrgi+zhA>
+z)7M+T$MnHRO|Jib6yt=F2i&}FvpzAYUB|X8>kF9u4sLebAuE5ddMI8;9iZVcJTAW*
+JI5n_a=Qo($+Uo!S
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/line_tools.py b/src/line_tools.py
+index 36430672add5baeae827e1ce903bcd7f60ed8fcd..e2bec66e7c3db43af493db54007988d3c1b3ab38 100644
+--- a/src/line_tools.py
++++ b/src/line_tools.py
+@@ -4,13 +4,14 @@ from collections.abc import Iterable
+ 
+ 
+ def unique_clean_lines(lines: Iterable[str]) -> list[str]:
+-    """Return non-empty, trimmed lines without exact duplicates."""
++    """Return non-empty, trimmed lines without Unicode-insensitive duplicates."""
+ 
+     seen: set[str] = set()
+     result: list[str] = []
+     for line in lines:
+         value = line.strip()
+-        if value and value not in seen:
+-            seen.add(value)
++        key = value.casefold()
++        if value and key not in seen:
++            seen.add(key)
+             result.append(value)
+     return result
+diff --git a/tests/__pycache__/test_line_tools.cpython-312.pyc b/tests/__pycache__/test_line_tools.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..29f0ce13e2aaaef7b836b0aaddca76123ec25188
+GIT binary patch
+literal 1324
+zcmcIjy=xRf6o0cjcWy2hqakV%qMm5sp-I3_5J5$g!bFtV9OAIv&Lx}d?QUlFlsi&H
+zh-hi2m4#inKf*u2CLc<|U?&!Kfs2im@9kbNf(Qyu@jm9g{k=E8eeZo=UjgvEQ*Ram
+z3*a+3`zMzfth0>9EAYT$0n}NAF|w_|s#vJ)z^?NOXJEl3czhMSoU|5F)P0~#x9v<<
+z^74?EUpx<>1}wnbBfsX6*X~|1Xj)CHeCR9rWoCNaFpLs6@uN`Bpg+(E{iTK!)j+zT
+z2>ej$YWLGr;gjgF&M3-PAfduMz_z)^R(ZunZK38(yPPw}?x$Ec2<kQ=%}Sl<DoYVE
+zkw=BEV4dqJ+%ha2jCK=~?mGeIkg>O{-OceV&z`f|`z=8e%6z8GTTZETEr{pclF7NG
+z4ZnVK_F5}ndL$FNOoOTi(bp^_Kx?Uzn@bHhP@L|V;aUbYO;t+Y&rUpv)S`~vs+>ru
+z|5T>Th$M;vJsvmBC5niutEG7CD&GwgEf%GWMKUi%%~up87NjS1ECZx<t~K>rcE<l6
+zsTcdyXHcxbj#J!rhBlm`PsLN4r*CZ)CwKY=U)I)(C%@(Fo<awc;D7U<GYmOSA8o+o
+zwX8;=rv|ZdCXSOuJ*z$x8Oy34O>;SYyR64aGn+i&Dk=1$AIC_X8+yVI<3=JP<w+%c
+zEn+3{-#wOI>&_p@{1?EZ)LIF}0Zu;*U)a2OcWe0G`uzv%4{PhQb03{~MVT{Y%jA_z
+z8Y(n=CJH4EzavEG)};`pAVfX#8UfiwA!yLDh@w4JCs3?Gij&fyXeUxZE3b*9Rp?ke
+zSJ*4EoX@gMN}?Kd*AIm#_fVBu13SPfiuT1gxXB4IY7T2v9j8^!1~#2?<IG~{22N~N
+zZ-hSKgr-iS`LiA4T*<n>s?K46mO@`ev1>ENzU6_P{S5tIU~Dh%FrU4i+8!O-7#-UK
+f@^+5{FTQAP+QU2i=*rad>8I1r?(EvYM^gMBVvJMt
+
+literal 0
+HcmV?d00001
+

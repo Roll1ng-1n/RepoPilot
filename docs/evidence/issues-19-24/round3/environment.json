@@ -1,0 +1,9 @@
+{
+  "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+  "packages": {
+    "litellm": "1.100.0",
+    "openai": "2.54.0",
+    "pydantic": "2.13.5"
+  },
+  "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+}

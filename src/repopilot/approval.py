@@ -34,11 +34,12 @@ class ToolCallSnapshot:
     id: str
     name: str
     _arguments_json: str
+    protocol_error: str | None = None
 
     @classmethod
     def from_tool_call(cls, tool_call: ToolCall) -> ToolCallSnapshot:
         arguments_json = json.dumps(tool_call.arguments, sort_keys=True, separators=(",", ":"))
-        return cls(tool_call.id, tool_call.name, arguments_json)
+        return cls(tool_call.id, tool_call.name, arguments_json, tool_call.protocol_error)
 
     @classmethod
     def from_dict(cls, value: dict[str, Any]) -> ToolCallSnapshot:
@@ -51,7 +52,10 @@ class ToolCallSnapshot:
             raise ValueError("Approval Request has an invalid Tool Call name.")
         if not isinstance(arguments, dict):
             raise ValueError("Approval Request has invalid Tool Call arguments.")
-        return cls.from_tool_call(ToolCall(identifier, name, arguments))
+        protocol_error = value.get("protocol_error")
+        if protocol_error is not None and not isinstance(protocol_error, str):
+            raise ValueError("Invalid Tool Call protocol error.")
+        return cls.from_tool_call(ToolCall(identifier, name, arguments, protocol_error))
 
     @property
     def arguments(self) -> dict[str, Any]:
@@ -60,10 +64,15 @@ class ToolCallSnapshot:
         return value
 
     def to_dict(self) -> dict[str, Any]:
-        return {"id": self.id, "name": self.name, "arguments": self.arguments}
+        return {
+            "id": self.id,
+            "name": self.name,
+            "arguments": self.arguments,
+            **({"protocol_error": self.protocol_error} if self.protocol_error else {}),
+        }
 
     def to_tool_call(self) -> ToolCall:
-        return ToolCall(self.id, self.name, self.arguments)
+        return ToolCall(self.id, self.name, self.arguments, self.protocol_error)
 
 
 @dataclass(frozen=True)
@@ -179,7 +188,10 @@ class ApprovalPolicy:
             return "Creating a local Git Commit writes Target Repository history."
         if tool_call.name == "apply_patch":
             patch = tool_call.arguments.get("patch")
-            if isinstance(patch, str) and "deleted file mode" in patch.lower():
+            if isinstance(patch, str) and any(
+                line.startswith("deleted file mode ") or line == "+++ /dev/null" or line.startswith("+++ /dev/null\t")
+                for line in patch.splitlines()
+            ):
                 return "The patch deletes a Target Repository file."
             return None
         if tool_call.name not in cls._COMMAND_TOOLS:

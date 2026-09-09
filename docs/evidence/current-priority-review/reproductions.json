@@ -1,0 +1,37 @@
+{
+  "P1_cache_invalidates_successful_verification": {
+    "verification_exit_code": 0,
+    "generated_files": [
+      "__pycache__/module.cpython-312.pyc"
+    ],
+    "completion_problems": [
+      {
+        "scope": "module behavior",
+        "reason": "stale_or_mutating_verification"
+      },
+      {
+        "step_id": "complete-task",
+        "reason": "plan_step_has_no_current_verification"
+      }
+    ]
+  },
+  "P1_scope_rename_keeps_obsolete_failure": {
+    "latest_verification_exit_code": 0,
+    "latest_verification_stable": true,
+    "completion_problems": [
+      {
+        "scope": "module behavior",
+        "reason": "stale_or_mutating_verification"
+      }
+    ],
+    "same_scope_retry_succeeds": true
+  },
+  "P1_cli_failure_exit_zero": {
+    "exit_code": 0,
+    "status": "BUDGET_EXCEEDED"
+  },
+  "P1_budget_exhaustion_cannot_resume": {
+    "exit_code": 1,
+    "output": "Error: Agent Run 80a94410fdf54ed0aba34606bf4bfa64 cannot resume from 'BUDGET_EXCEEDED'."
+  }
+}

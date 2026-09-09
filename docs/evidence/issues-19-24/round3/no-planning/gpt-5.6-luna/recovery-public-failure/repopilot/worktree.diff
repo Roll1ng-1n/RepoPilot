@@ -1,0 +1,68 @@
+diff --git a/src/line_tools.py b/src/line_tools.py
+index 3643067..c5d99cf 100644
+--- a/src/line_tools.py
++++ b/src/line_tools.py
+@@ -4,13 +4,14 @@ from collections.abc import Iterable
+ 
+ 
+ def unique_clean_lines(lines: Iterable[str]) -> list[str]:
+-    """Return non-empty, trimmed lines without exact duplicates."""
++    """Return non-empty, trimmed lines without Unicode casefold duplicates."""
+ 
+     seen: set[str] = set()
+     result: list[str] = []
+     for line in lines:
+         value = line.strip()
+-        if value and value not in seen:
+-            seen.add(value)
++        key = value.casefold()
++        if value and key not in seen:
++            seen.add(key)
+             result.append(value)
+     return result
+diff --git a/src/__pycache__/line_tools.cpython-312.pyc b/src/__pycache__/line_tools.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..53b0223af3b6ed8260045a9ba3296e745b6acdb0
+GIT binary patch
+literal 853
+zcmZuv&rcIU6rSnMF24$vqC|`_b5N2-DgFU!JP?8j<v>GXNX%xtGtg~kck9e7q-05Y
+z@Bj%3C<pL{N5cjG1MeP<Nga>IgSRFS51yQ<P>As*`{sLj-@JYAd-G{{co1ltfBdfY
+z3j*-n1Q%wXgVTo^8~_5A0f8jLV3=9XKtL>-q1J@X5k%2nw1SBJ3N71Br_i_Yv>bYj
+zVHQMm%4gJzf@l>dGGKvh;zUq_D@`n`6faUgUZcE;D>U+}p~vf3dZJ$ZX&NX%)&ERV
+z?o}97wkal*!>LSo<m--mhBUJDcluGg10Z|3V;vjYgsWgPlY$xWVqQm9YSj$?AM3GE
+zifR`MT;cTcc8UbtnM~~zu0f6Nr?A#{g?J8A`}n*Q2+~Y#;6Ds>$=F#ynpM_AZ_F%q
+zXT(t)P0_F+n-8$$K^SV;x+389Kvv^K;-x6?V?wd-3Az$9f=SX~f$vEwiUnI)f=Xoz
+zeYc_dFF4Bb2vLsLXwZlh9B#x@NKhIXZAHSQLgp{ZUh`N&l~t!r;b;=>+V9)b>oKp3
+zhUe31!To8&b!8kgQEW6-K8b>t33a<mce~y4yuNG-i09h1z?lQaC-#?GGwqwVTC?AB
+zH?~kacl}`S_27PX%WjX1?MB<t=aD;GmKw_Km5<OHx1G)H&TY@_m3K<*Y<{=2T{^t?
+zC5t;lV065b1=)P7bgFBEg@U8{T$jYY>#A#h%oz1$5J#fuReWw%t~HU|45$y&*L%Rn
+z^ub3>uK!UOlZ4SH+&pcwJ29zU$AS=k1+zcE-HtN^^M}<V@iy!L4NuTX`NP1Of!#WP
+E0BJGU-v9sr
+
+literal 0
+HcmV?d00001
+
+diff --git a/tests/__pycache__/test_line_tools.cpython-312.pyc b/tests/__pycache__/test_line_tools.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..29f0ce13e2aaaef7b836b0aaddca76123ec25188
+GIT binary patch
+literal 1324
+zcmcIjy=xRf6o0cjcWy2hqakV%qMm5sp-I3_5J5$g!bFtV9OAIv&Lx}d?QUlFlsi&H
+zh-hi2m4#inKf*u2CLc<|U?&!Kfs2im@9kbNf(Qyu@jm9g{k=E8eeZo=UjgvEQ*Ram
+z3*a+3`zMzfth0>9EAYT$0n}NAF|w_|s#vJ)z^?NOXJEl3czhMSoU|5F)P0~#x9v<<
+z^74?EUpx<>1}wnbBfsX6*X~|1Xj)CHeCR9rWoCNaFpLs6@uN`Bpg+(E{iTK!)j+zT
+z2>ej$YWLGr;gjgF&M3-PAfduMz_z)^R(ZunZK38(yPPw}?x$Ec2<kQ=%}Sl<DoYVE
+zkw=BEV4dqJ+%ha2jCK=~?mGeIkg>O{-OceV&z`f|`z=8e%6z8GTTZETEr{pclF7NG
+z4ZnVK_F5}ndL$FNOoOTi(bp^_Kx?Uzn@bHhP@L|V;aUbYO;t+Y&rUpv)S`~vs+>ru
+z|5T>Th$M;vJsvmBC5niutEG7CD&GwgEf%GWMKUi%%~up87NjS1ECZx<t~K>rcE<l6
+zsTcdyXHcxbj#J!rhBlm`PsLN4r*CZ)CwKY=U)I)(C%@(Fo<awc;D7U<GYmOSA8o+o
+zwX8;=rv|ZdCXSOuJ*z$x8Oy34O>;SYyR64aGn+i&Dk=1$AIC_X8+yVI<3=JP<w+%c
+zEn+3{-#wOI>&_p@{1?EZ)LIF}0Zu;*U)a2OcWe0G`uzv%4{PhQb03{~MVT{Y%jA_z
+z8Y(n=CJH4EzavEG)};`pAVfX#8UfiwA!yLDh@w4JCs3?Gij&fyXeUxZE3b*9Rp?ke
+zSJ*4EoX@gMN}?Kd*AIm#_fVBu13SPfiuT1gxXB4IY7T2v9j8^!1~#2?<IG~{22N~N
+zZ-hSKgr-iS`LiA4T*<n>s?K46mO@`ev1>ENzU6_P{S5tIU~Dh%FrU4i+8!O-7#-UK
+f@^+5{FTQAP+QU2i=*rad>8I1r?(EvYM^gMBVvJMt
+
+literal 0
+HcmV?d00001
+

@@ -68,6 +68,11 @@ class RunArtifacts:
         with self._trace_path.open("a") as trace:
             trace.write(json.dumps(event, sort_keys=True) + "\n")
 
+    def append_jsonl(self, filename: str, value: Any) -> None:
+        """Append a redacted diagnostic record in arrival order."""
+        with (self.path / filename).open("a") as stream:
+            stream.write(json.dumps(self._redact(value), sort_keys=True) + "\n")
+
     def read_trace(self) -> list[dict[str, Any]]:
         """Load every persisted event from this Agent Run's append-only Trace."""
 

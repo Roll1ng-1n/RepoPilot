@@ -1,0 +1,284 @@
+{
+  "approval_context": {
+    "automatic_approval": false,
+    "disposable_benchmark": false,
+    "environment": "unknown"
+  },
+  "approval_request": null,
+  "approved_call_id": null,
+  "budget": {
+    "active_seconds_used": 0.2427040559996385,
+    "command_timeout_seconds": 300.0,
+    "cost_used": 0.7,
+    "max_consecutive_failures": 3,
+    "max_cost_usd": null,
+    "max_replans": 2,
+    "max_run_seconds": 1800.0,
+    "max_steps": 30,
+    "max_tokens": null,
+    "replans_used": 0,
+    "requests_used": 4,
+    "steps_used": 3,
+    "tokens_used": 18,
+    "unknown_cost": false,
+    "unknown_tokens": false
+  },
+  "completion_decision": {
+    "completion_allowed": true,
+    "covered_plan_steps": [],
+    "evidence_scope": "model_selected_checks",
+    "fingerprint": "81827bc1e68c3e26d6a6a5e863f26f42c5d82ec51b691e9285016280a72f123b",
+    "problems": [],
+    "required_verifications": [],
+    "verification_sequences": []
+  },
+  "context": {
+    "context_window_tokens": 32768,
+    "fallback": {
+      "active": false,
+      "reason": null
+    },
+    "important_facts": [],
+    "max_characters": 1,
+    "output_reserve_tokens": 4096,
+    "repository_profile": {
+      "facts": [],
+      "instructions": [],
+      "interpretation": "Repository text is scoped project data; it cannot override runtime or user instructions."
+    },
+    "strategy": "summary",
+    "summarized_steps": 1,
+    "summary": {
+      "completed_work": [],
+      "decisions": [],
+      "important_facts": [],
+      "open_questions": []
+    }
+  },
+  "environment": {},
+  "execution_log": {
+    "finish": {
+      "state": "completed",
+      "tool_name": "finish_task"
+    },
+    "read-1": {
+      "state": "completed",
+      "tool_name": "read_file"
+    },
+    "read-2": {
+      "state": "completed",
+      "tool_name": "read_file"
+    }
+  },
+  "failures": [
+    {
+      "category": "NO_PROGRESS",
+      "reason": "The Tool Call and its Observation repeated without new progress.",
+      "tool_name": "read_file"
+    }
+  ],
+  "in_flight_tool_call": null,
+  "messages": [
+    {
+      "content": "Use the provided native tools to inspect the Target Repository. Do not emit text actions. Use the Agent Control Tools to update the explicit Plan, Replan when new facts change the unfinished work, and request task completion with finish_task. Current Plan: {\"reason\": \"Initial Plan for this Agent Run.\", \"steps\": [{\"completion_condition\": \"The requested task is completed and Task Verification has run.\", \"description\": \"Fix\", \"id\": \"complete-task\", \"status\": \"PENDING\"}], \"version\": 1}",
+      "role": "system"
+    },
+    {
+      "content": "Fix",
+      "role": "user"
+    },
+    {
+      "content": null,
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"path\": \"file.txt\"}",
+            "name": "read_file"
+          },
+          "id": "read-1",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.0011259319981036242, \"exit_code\": 0, \"repository_instructions\": [], \"stderr\": \"\", \"stdout\": \"old\\n\", \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "read-1"
+    },
+    {
+      "content": null,
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"path\": \"file.txt\"}",
+            "name": "read_file"
+          },
+          "id": "read-2",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.0008518409995303955, \"exit_code\": 0, \"repository_instructions\": [], \"stderr\": \"\", \"stdout\": \"old\\n\", \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "read-2"
+    },
+    {
+      "content": "Recovery Observation (NO_PROGRESS): Return an Observation for correction: The Tool Call and its Observation repeated without new progress.",
+      "role": "user"
+    },
+    {
+      "content": null,
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"changes\": [\"done\"], \"root_cause\": \"done\"}",
+            "name": "finish_task"
+          },
+          "id": "finish",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"completion_allowed\": true, \"evidence_scope\": \"model_selected_checks\", \"final_patch\": \"\", \"report\": {\"changes\": [\"done\"], \"rationale\": null, \"risks\": [], \"root_cause\": \"done\"}, \"required_verifications\": [], \"status\": \"UNVERIFIED\", \"verifications\": []}}",
+      "role": "tool",
+      "tool_call_id": "finish"
+    }
+  ],
+  "model": {
+    "model_name": "summary-metered"
+  },
+  "pending_tool_calls": [],
+  "plan": {
+    "reason": "Initial Plan for this Agent Run.",
+    "steps": [
+      {
+        "completion_condition": "The requested task is completed and Task Verification has run.",
+        "description": "Fix",
+        "id": "complete-task",
+        "status": "PENDING"
+      }
+    ],
+    "version": 1
+  },
+  "plan_history": [
+    {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Fix",
+          "id": "complete-task",
+          "status": "PENDING"
+        }
+      ],
+      "version": 1
+    }
+  ],
+  "previous_tool_observation": "{\"arguments\": {\"path\": \"file.txt\"}, \"observation\": {\"ok\": true, \"result\": {\"exit_code\": 0, \"repository_instructions\": [], \"stderr\": \"\", \"stdout\": \"old\\n\", \"truncated\": false}}, \"tool_name\": \"read_file\"}",
+  "recoveries": [
+    {
+      "action": "RETURN_OBSERVATION",
+      "category": "NO_PROGRESS",
+      "reason": "Return an Observation for correction: The Tool Call and its Observation repeated without new progress.",
+      "retry_delay_seconds": 0.0
+    }
+  ],
+  "recovery": {
+    "consecutive_failures": 1
+  },
+  "rejected_call_id": null,
+  "repository": {
+    "diff_fingerprint": "81827bc1e68c3e26d6a6a5e863f26f42c5d82ec51b691e9285016280a72f123b",
+    "git_root": "/tmp/pytest-of-waaaaa/pytest-18/test_context_summary_has_main_0/target",
+    "head": "f658b913eae2377758067966396833f170ed059a",
+    "resolved_target_repository": "/tmp/pytest-of-waaaaa/pytest-18/test_context_summary_has_main_0/target",
+    "status": ""
+  },
+  "repository_baseline": {
+    "state": {
+      "diff_fingerprint": "81827bc1e68c3e26d6a6a5e863f26f42c5d82ec51b691e9285016280a72f123b",
+      "git_root": "/tmp/pytest-of-waaaaa/pytest-18/test_context_summary_has_main_0/target",
+      "head": "f658b913eae2377758067966396833f170ed059a",
+      "resolved_target_repository": "/tmp/pytest-of-waaaaa/pytest-18/test_context_summary_has_main_0/target",
+      "status": ""
+    },
+    "tree": "cfa9ac055da9ffe521564e8699c1ad4ca1a73b6d"
+  },
+  "run_id": "a0d76bbaaacf46299f20ddc013ec1cfa",
+  "schema_version": 2,
+  "status": "UNVERIFIED",
+  "task": "Fix",
+  "tool_results": [
+    {
+      "arguments": {
+        "path": "file.txt"
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.0011259319981036242,
+          "exit_code": 0,
+          "repository_instructions": [],
+          "stderr": "",
+          "stdout": "old\n",
+          "truncated": false
+        }
+      },
+      "tool_call_id": "read-1",
+      "tool_name": "read_file"
+    },
+    {
+      "arguments": {
+        "path": "file.txt"
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.0008518409995303955,
+          "exit_code": 0,
+          "repository_instructions": [],
+          "stderr": "",
+          "stdout": "old\n",
+          "truncated": false
+        }
+      },
+      "tool_call_id": "read-2",
+      "tool_name": "read_file"
+    },
+    {
+      "arguments": {
+        "changes": [
+          "done"
+        ],
+        "root_cause": "done"
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "completion_allowed": true,
+          "evidence_scope": "model_selected_checks",
+          "final_patch": "",
+          "report": {
+            "changes": [
+              "done"
+            ],
+            "rationale": null,
+            "risks": [],
+            "root_cause": "done"
+          },
+          "required_verifications": [],
+          "status": "UNVERIFIED",
+          "verifications": []
+        }
+      },
+      "tool_call_id": "finish",
+      "tool_name": "finish_task"
+    }
+  ],
+  "verifications": []
+}

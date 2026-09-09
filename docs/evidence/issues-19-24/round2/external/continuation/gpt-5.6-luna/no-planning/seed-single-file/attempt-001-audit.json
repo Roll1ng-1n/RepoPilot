@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-09-08T15:32:38.285153+00:00",
+  "original_slot": "ablation/gpt-5.6-luna/no-planning/seed-single-file",
+  "new_attempt": "continuation/gpt-5.6-luna/no-planning/seed-single-file/attempt-001",
+  "policy": "Fresh pinned task snapshot and unchanged full run budget; prior interrupted artifacts retained.",
+  "runner_sha256": "db8317b699905b30262c6865d4b39653d09320c54993bcf0152916f8c99477cd"
+}

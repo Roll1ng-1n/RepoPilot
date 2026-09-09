@@ -1,0 +1,33 @@
+{
+  "budget": {
+    "command_timeout_seconds": 30,
+    "max_consecutive_failures": 3,
+    "max_replans": 2,
+    "max_run_seconds": 120,
+    "max_steps": 24
+  },
+  "engines": [
+    "repopilot"
+  ],
+  "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "model": {
+    "model_kwargs": {
+      "max_tokens": 2048,
+      "stream": true,
+      "temperature": 1,
+      "timeout": 30
+    },
+    "model_name": "openai/gpt-5.6-luna"
+  },
+  "output_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/round2/external/ablation/gpt-5.6-luna/no-recovery",
+  "proxy_mode": "none",
+  "repeats": 1,
+  "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "task_ids": [
+    "seed-single-file",
+    "recovery-public-failure"
+  ],
+  "tasks_directory": "/tmp/repopilot-evaluation-source-55fgi4fq/src/repopilot/benchmark_tasks"
+}

@@ -1,0 +1,9 @@
+{
+  "archive_sha256": "0f54ca8f9749e316ec8f80b346b9c05456c6d468d3148d913a0cb8865ba511ed",
+  "variant": "no-recovery",
+  "patch_sha256": "9473d21aa14f79b0a89756385cc42ca0d8430393a9ceb796ba2f9b850e358bda",
+  "definition": "Fail at the first runtime-classified failure; no controller retry, correction observation, or recovery replan. Model-driven correction after ordinary nonzero shell output can still occur because that output is not always a classified failure.",
+  "provider_base_url": "https://jojocode.com/v1",
+  "financial_limit_usd": null,
+  "repeats": 1
+}

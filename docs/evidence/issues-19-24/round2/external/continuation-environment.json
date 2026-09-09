@@ -1,0 +1,11 @@
+{
+  "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "packages": {
+    "litellm": "1.100.0",
+    "openai": "2.54.0",
+    "pydantic": "2.13.5",
+    "python-dotenv": "1.2.3",
+    "typer": "0.27.2"
+  }
+}

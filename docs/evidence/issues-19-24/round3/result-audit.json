@@ -1,0 +1,122 @@
+{
+  "sample_count": 12,
+  "unique_run_ids": true,
+  "source_archive_sha256": "ad2ffa8c9608d94a460f4de40267066d705900dca5d70af4433ea4050891e61b",
+  "samples": [
+    {
+      "sample": "smoke/gpt-5.6-sol/seed-single-file/baseline/result.json",
+      "patch_hash_verified": true
+    },
+    {
+      "sample": "smoke/gpt-5.6-sol/seed-single-file/repopilot/result.json",
+      "patch_hash_verified": true,
+      "recoveries": [
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 0.25 seconds: litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+          "retry_delay_seconds": 0.25,
+          "type": "recovery"
+        }
+      ],
+      "budget_exhausted": []
+    },
+    {
+      "sample": "smoke/gpt-5.6-sol/recovery-public-failure/baseline/result.json",
+      "patch_hash_verified": true
+    },
+    {
+      "sample": "smoke/gpt-5.6-sol/recovery-public-failure/repopilot/result.json",
+      "patch_hash_verified": true,
+      "recoveries": [],
+      "budget_exhausted": [
+        "run_time"
+      ]
+    },
+    {
+      "sample": "smoke/gpt-5.6-luna/seed-single-file/baseline/result.json",
+      "patch_hash_verified": true
+    },
+    {
+      "sample": "smoke/gpt-5.6-luna/seed-single-file/repopilot/result.json",
+      "patch_hash_verified": true,
+      "recoveries": [],
+      "budget_exhausted": []
+    },
+    {
+      "sample": "smoke/gpt-5.6-luna/recovery-public-failure/baseline/result.json",
+      "patch_hash_verified": true
+    },
+    {
+      "sample": "smoke/gpt-5.6-luna/recovery-public-failure/repopilot/result.json",
+      "patch_hash_verified": true,
+      "recoveries": [
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0,
+          "type": "recovery"
+        }
+      ],
+      "budget_exhausted": [
+        "run_time"
+      ]
+    },
+    {
+      "sample": "no-planning/gpt-5.6-sol/seed-single-file/repopilot/result.json",
+      "patch_hash_verified": true,
+      "recoveries": [],
+      "budget_exhausted": [],
+      "verification_without_step_ids": true
+    },
+    {
+      "sample": "no-planning/gpt-5.6-sol/recovery-public-failure/repopilot/result.json",
+      "patch_hash_verified": true,
+      "recoveries": [
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 0.25 seconds: litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+          "retry_delay_seconds": 0.25,
+          "type": "recovery"
+        }
+      ],
+      "budget_exhausted": [],
+      "verification_without_step_ids": true
+    },
+    {
+      "sample": "no-planning/gpt-5.6-luna/seed-single-file/repopilot/result.json",
+      "patch_hash_verified": true,
+      "recoveries": [],
+      "budget_exhausted": [
+        "run_time"
+      ],
+      "verification_without_step_ids": true
+    },
+    {
+      "sample": "no-planning/gpt-5.6-luna/recovery-public-failure/repopilot/result.json",
+      "patch_hash_verified": true,
+      "recoveries": [
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 0.25 seconds: litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+          "retry_delay_seconds": 0.25,
+          "type": "recovery"
+        },
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 0.25 seconds: litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+          "retry_delay_seconds": 0.25,
+          "type": "recovery"
+        }
+      ],
+      "budget_exhausted": [
+        "run_time"
+      ],
+      "verification_without_step_ids": true
+    }
+  ]
+}

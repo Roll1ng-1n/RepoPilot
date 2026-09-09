@@ -1,0 +1,25 @@
+Starting gpt-5.6-sol: no-profile
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-7f896030 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/ablation/gpt-5.6-sol/no-profile/seed-single-file/repopilot/workspa
+ce,target=/workspace --user=1000:1000                                           
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-7f896030 with ID 
+f881b8c556a988a18a69c796128258ee99caa7efe5b5b91cede9a985deb1a46d                
+13:32:40 - LiteLLM:WARNING: get_model_cost_map.py:454 - LiteLLM: Failed to fetch remote model cost map from https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json: _ssl.c:983: The handshake operation timed out. Falling back to local backup.
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-e5c7e908 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issues-19-24/ro
+und2/external/ablation/gpt-5.6-sol/no-profile/recovery-public-failure/repopilot/
+workspace,target=/workspace --user=1000:1000                                    
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-e5c7e908 with ID 
+f9edcfbc4bd17a862c39df3b6873ff5866543b0ea3869a953e3371c9ac8f0289                

@@ -1,0 +1,40 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "60e3abdcee1ac299c7a46537c40417f9f62e511bbcdc20c0c3c3e843ffffc350",
+      "before_fingerprint": "eecc484e1a46cfb2eb2a4b947d1d7175133263d1210aaae4edf105f2d7095d77",
+      "command": "python - <<'PY'\nfrom src.slugify import slugify\n\ncases = {\n    \"  Hello   world  \": \"hello-world\",\n    \"one\\ttwo\\nthree\": \"one-two-three\",\n    \"   \\t\\n\": \"\",\n    \"Hello, world!\": \"hello,-world!\",\n}\nfor value, expected in cases.items():\n    actual = slugify(value)\n    assert actual == expected, (value, actual, expected)\nprint('slugify checks passed')\nPY",
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Verify trimming, whitespace collapsing, whitespace-only handling, lowercase conversion, and punctuation preservation.",
+      "result": {
+        "duration_seconds": 0.0812569789999884,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "slugify checks passed\n",
+        "truncated": false
+      },
+      "scope": "src/slugify.py behavior",
+      "sequence": 1
+    },
+    {
+      "after_fingerprint": "60e3abdcee1ac299c7a46537c40417f9f62e511bbcdc20c0c3c3e843ffffc350",
+      "before_fingerprint": "60e3abdcee1ac299c7a46537c40417f9f62e511bbcdc20c0c3c3e843ffffc350",
+      "command": "python - <<'PY'\nfrom src.slugify import slugify\nassert slugify('  Hello   world  ') == 'hello-world'\nassert slugify('one\\ttwo\\nthree') == 'one-two-three'\nassert slugify(' \\t\\n ') == ''\nassert slugify('Hello, world!') == 'hello,-world!'\nprint('slugify checks passed')\nPY",
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Re-run verification after completing the plan step so the final repository state has current behavioral evidence.",
+      "result": {
+        "duration_seconds": 0.07574582299997701,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "slugify checks passed\n",
+        "truncated": false
+      },
+      "scope": "src/slugify.py behavior",
+      "sequence": 2
+    }
+  ]
+}
