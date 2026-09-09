@@ -1,0 +1,3 @@
+# Disposable benchmark repositories and process locks remain local.
+**/workspace/
+**/run.lock

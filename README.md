@@ -50,7 +50,7 @@ repopilot reject RUN_ID --state-dir /path/to/state
 ```
 
 `run` defaults to the Local Environment and prints an explicit warning because it can modify the Target Repository
-directly. Pass `--environment docker --image python:3.12-slim` to use the Docker backend instead. Docker bind-mounts
+directly. Pass `--environment docker --image repopilot-benchmark:py312-git` to use the Docker backend instead. Docker bind-mounts
 the Target Repository at `/workspace`; it is an execution backend, not a complete security boundary. Docker may be
 unavailable on a particular machine, in which case the benchmark records `ENVIRONMENT_UNAVAILABLE` rather than
 silently falling back to Local execution.
@@ -78,8 +78,8 @@ Benchmarks retain normalized `patch.diff` / `patch-manifest.json` separately fro
 The composition layer in `repopilot.cli` creates a model, Execution Environment, Tool Registry, Plan, Context
 Strategy, Run Budget, and artifact store. `AgentRuntime` drives the bounded Agent Run. The Tool Registry validates
 native Tool Calls and dispatches repository, command, verification, Git, and Agent Control operations. Local and
-Docker backends implement the same Execution Environment protocol. Checkpoints make STOPPED and
-`WAITING_FOR_APPROVAL` runs resumable; JSONL Trace events retain the complete audit history even when the prompt
+Docker backends implement the same Execution Environment protocol. Checkpoints support STOPPED, orphaned RUNNING, approval decisions and explicitly extended
+BUDGET_EXCEEDED runs; JSONL Trace events retain the complete audit history even when the prompt
 context is compressed.
 
 For a compact evidence map, see [Capability source matrix](docs/repopilot-capabilities.md). It links each stated
@@ -88,6 +88,12 @@ capability to the relevant CLI path, Runtime Test, Trace/artifact, or implementa
 fixes, verification, and associated commits.
 
 ## Fixed Agent Benchmark
+
+Build the Git/ripgrep image before using the Docker examples:
+
+```bash
+docker build -t repopilot-benchmark:py312-git docker/benchmark
+```
 
 Before a paid Agent Benchmark, probe an OpenAI-compatible endpoint for ordinary text and required native Tool
 Calling. Repeat `--model` to test multiple model IDs; the command reads missing credentials from `.env` by default
@@ -434,3 +440,5 @@ Our other projects:
   &nbsp;&nbsp;
   <a href="https://github.com/SWE-bench/sb-cli"><img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sbcli_logo_text_below.svg" alt="sb-cli" height="120px"></a>
 </div>
+
+See the [#25/#26 repair record](docs/evidence/issues-25-26/summary.md) for the current reliability fixes and 269 passing regressions, and the [remaining issue review](docs/evidence/remaining-issues-review.md) for acceptance status.

@@ -41,7 +41,7 @@ repopilot approve RUN_ID --state-dir /path/to/state
 repopilot reject RUN_ID --state-dir /path/to/state
 ```
 
-`run` 默认使用本地环境，并明确提示它可能直接修改目标仓库。也可以传入 `--environment docker --image python:3.12-slim` 使用 Docker 后端。Docker 会将目标仓库绑定挂载到 `/workspace`；它是执行后端，而不是完整的安全边界。如果机器上无法使用 Docker，基准测试会记录 `ENVIRONMENT_UNAVAILABLE`，不会静默回退到本地执行。
+`run` 默认使用本地环境，并明确提示它可能直接修改目标仓库。也可以传入 `--environment docker --image repopilot-benchmark:py312-git` 使用 Docker 后端。Docker 会将目标仓库绑定挂载到 `/workspace`；它是执行后端，而不是完整的安全边界。如果机器上无法使用 Docker，基准测试会记录 `ENVIRONMENT_UNAVAILABLE`，不会静默回退到本地执行。
 
 ## 架构概览
 
@@ -55,16 +55,20 @@ repopilot reject RUN_ID --state-dir /path/to/state
 
 benchmark 的 `patch.diff` / `patch-manifest.json` 保存规范化补丁；`runtime-patch.diff` / `runtime-patch-manifest.json` 保存 Runtime 原始补丁，避免覆盖。历史 round3 证据保持原样，审计勘误见其报告。
 
-`repopilot.cli` 中的组合层负责创建模型、执行环境、工具注册表、计划、上下文策略、运行预算和产物存储。`AgentRuntime` 驱动有界的 Agent Run。工具注册表负责验证原生工具调用，并分发仓库、命令、验证、Git 和 Agent 控制操作。本地与 Docker 后端实现相同的执行环境协议。检查点使 `STOPPED` 和 `WAITING_FOR_APPROVAL` 状态的运行可以恢复；即使提示上下文被压缩，JSONL 追踪事件仍会保留完整的审计历史。
+`repopilot.cli` 中的组合层负责创建模型、执行环境、工具注册表、计划、上下文策略、运行预算和产物存储。`AgentRuntime` 驱动有界的 Agent Run。工具注册表负责验证原生工具调用，并分发仓库、命令、验证、Git 和 Agent 控制操作。本地与 Docker 后端实现相同的执行环境协议。检查点支持 `STOPPED`、遗留 `RUNNING`、审批处理和显式追加预算后的 `BUDGET_EXCEEDED` 续跑；即使提示上下文被压缩，JSONL 追踪事件仍会保留完整的审计历史。
 
 如需查看精简的证据地图，请参阅[能力来源矩阵](docs/repopilot-capabilities.md)。其中将每项声明的能力关联到对应的 CLI 路径、运行时测试、追踪记录/产物或实现源码。[设计验证记录](docs/repopilot-design-validation-record.md)保存了选定的失败案例、根因、修复、验证结果及相关提交。
 
 ## 固定 Agent 基准测试
 
+先构建包含 Git 和 ripgrep 的执行镜像，再运行对照：
+
 ```bash
+docker build -t repopilot-benchmark:py312-git docker/benchmark
+
 repopilot benchmark \
   --model provider/model-name \
-  --image python:3.12-slim \
+  --image repopilot-benchmark:py312-git \
   --task seed-cross-file \
   --task workflow-long-chain \
   --engine repopilot
@@ -74,7 +78,7 @@ repopilot benchmark \
 
 当前证据由[六种子任务](docs/evidence/stage4-seed6-luna-sol-v1/summary.md)的 72 个样本和[其余 24 项任务](docs/evidence/stage4-24tasks-luna-sol-v1/summary.md)的 288 个样本组成，共覆盖 30 项任务。它们是多轮开发记录，不能用作泛化胜率。Runtime Test 验证 RepoPilot 自身；仓库 verifier 检查目标代码；联合行为指标 `task_pass` 同时要求仓库和行为检查满足条件，无法审计时保留 `null`。
 
-[新增 issue #19–#24 修复记录](docs/evidence/issues-19-24/round2/summary.md)保存本次代码修复、回归输出和剩余验收条件。可用 `repopilot doctor` 检查本地前置条件；用重复的 `--required-verification '命令'` 固定必要检查。普通 `run/resume/approve/reject` 支持 `--stream`、`--request-timeout`、`--max-output-tokens` 和 `--env-file`。
+[历史 issue #19–#24 修复记录](docs/evidence/issues-19-24/round2/summary.md)保存本次代码修复、回归输出和剩余验收条件。可用 `repopilot doctor` 检查本地前置条件；用重复的 `--required-verification '命令'` 固定必要检查。普通 `run/resume/approve/reject` 支持 `--stream`、`--request-timeout`、`--max-output-tokens` 和 `--env-file`。
 
 仓库中提交的[微基准测试摘要](docs/evidence/micro-benchmark-v1/summary.md)是一次保留的历史记录：该次运行包含 12 个样本，但 Docker 不可用。全部 12 个任务/引擎尝试均为 `ENVIRONMENT_UNAVAILABLE`，模型调用次数为 0，且 `success: null`；因此这次运行没有基于模型的结果（应理解为 0/0，而不是 0%）。
 
@@ -311,3 +315,5 @@ mini  # 运行 CLI
   &nbsp;&nbsp;
   <a href="https://github.com/SWE-bench/sb-cli"><img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sbcli_logo_text_below.svg" alt="sb-cli" height="120px"></a>
 </div>
+
+当前可靠性修复与 269 项回归见 [#25/#26 修复记录](docs/evidence/issues-25-26/summary.md)；剩余 Issues 的验收核对见[当前状态](docs/evidence/remaining-issues-review.md)。
