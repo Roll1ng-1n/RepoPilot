@@ -1,0 +1,3 @@
+{"variant": "no-recovery", "messages_before": 3, "input_bytes_before": 9546, "profile_fact_count": 1, "instruction_sources": ["AGENTS.md"], "planning_enabled": true, "messages_after": 3, "input_bytes_after": 9546, "context_changed": false}
+{"variant": "no-recovery", "messages_before": 5, "input_bytes_before": 10710, "profile_fact_count": 1, "instruction_sources": ["AGENTS.md"], "planning_enabled": true, "messages_after": 5, "input_bytes_after": 10710, "context_changed": false}
+{"variant": "no-recovery", "messages_before": 7, "input_bytes_before": 11649, "profile_fact_count": 1, "instruction_sources": ["AGENTS.md"], "planning_enabled": true, "messages_after": 7, "input_bytes_after": 11649, "context_changed": false}

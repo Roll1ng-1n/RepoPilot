@@ -1,0 +1,30 @@
+diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py
+index 74ac50e0060279d5a639cc30185e3c318345d254..4a66cdee8c8e187e69359ffd01e3c624d5056b25 100644
+--- a/src/ledger/normalize.py
++++ b/src/ledger/normalize.py
+@@ -1,2 +1,2 @@
+ def normalize_key(key: str) -> str:
+-    return key
++    return key.strip().casefold()
+diff --git a/src/ledger/report.py b/src/ledger/report.py
+index d21760296bf67b760d8c5fecb4298b97dd87f9e9..e6f194b78a3396ce9e381477dd64bef2f588eff9 100644
+--- a/src/ledger/report.py
++++ b/src/ledger/report.py
+@@ -1,4 +1,16 @@
+ from .normalize import normalize_key
++from decimal import Decimal, ROUND_HALF_UP
+ 
+ def report(rows: list[tuple[str, str]]) -> str:
+-    return ""
++    totals: dict[str, Decimal] = {}
++    for key, amount in rows:
++        normalized = normalize_key(key)
++        if not normalized:
++            continue
++        totals[normalized] = totals.get(normalized, Decimal("0")) + Decimal(amount)
++
++    cents = Decimal("0.01")
++    return "\n".join(
++        f"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}"
++        for key, total in sorted(totals.items())
++    )

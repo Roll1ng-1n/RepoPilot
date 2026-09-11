@@ -1,0 +1,1 @@
+{"duration_seconds": 0.0764516020026349, "exit_code": 0, "stderr": "", "stdout": "./src/inventory/parse.py:1:def parse(text: str):\n./src/inventory/pipeline.py:9:    return render(select(aggregate(normalize(validate(parse(text))))))\n", "truncated": false}

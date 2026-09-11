@@ -1,0 +1,25 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "c2d57b701c35a02daf5f1ebc8f7580d11e38a10bdc45ab6fd1b3c7bcbbe54593",
+      "before_fingerprint": "c2d57b701c35a02daf5f1ebc8f7580d11e38a10bdc45ab6fd1b3c7bcbbe54593",
+      "check_id": "configured-tests",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Run the configured test entry from pyproject.toml after implementing normalization and reporting.",
+      "result": {
+        "duration_seconds": 0.2357914059975883,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "checks and src/ledger behavior",
+      "sequence": 1,
+      "supersedes": []
+    }
+  ]
+}

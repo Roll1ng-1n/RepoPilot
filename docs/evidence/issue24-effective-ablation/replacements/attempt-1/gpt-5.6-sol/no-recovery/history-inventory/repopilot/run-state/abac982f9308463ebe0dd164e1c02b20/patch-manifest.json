@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "a7e51a889c1a69bb21cdd4c38f1cbd45a84f603e453a48cf1814fc863d5eeea9",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/history-inventory/repopilot/workspace",
+      "head": "35640d8ea2aaee0afbaaba1c0268a5e5579facbb",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/history-inventory/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "4800819275fc12bfdb77af400bff6f2f15fc240f"
+  },
+  "bytes": 6077,
+  "final": {
+    "state": {
+      "diff_fingerprint": "7add07deab53e44991794537378648b68aa0fa846fa886f1825f6a06062ab3de",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/history-inventory/repopilot/workspace",
+      "head": "35640d8ea2aaee0afbaaba1c0268a5e5579facbb",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/history-inventory/repopilot/workspace",
+      "status": "?? checks/__pycache__/test_pipeline.cpython-312.pyc\n?? src/__pycache__/__init__.cpython-312.pyc\n?? src/inventory/__pycache__/__init__.cpython-312.pyc\n?? src/inventory/__pycache__/aggregate.cpython-312.pyc\n?? src/inventory/__pycache__/normalize.cpython-312.pyc\n?? src/inventory/__pycache__/parse.cpython-312.pyc\n?? src/inventory/__pycache__/pipeline.cpython-312.pyc\n?? src/inventory/__pycache__/render.cpython-312.pyc\n?? src/inventory/__pycache__/select.cpython-312.pyc\n?? src/inventory/__pycache__/validate.cpython-312.pyc\n"
+    },
+    "tree": "93d8080fe6f922f052e3de8fb73917e1626612c2"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "5e3bfb35538e3c5021f18fcf4204b507328addc5703e98dd65c45cb83eefeac9"
+}

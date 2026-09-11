@@ -1,0 +1,65 @@
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+START gpt-5.6-sol no-profile
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-1b09e671 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/replacements/attempt-1/gpt-5.6-sol/no-profile/history-inventory/repo
+pilot/workspace,target=/workspace --user=1000:1000                              
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-1b09e671 with ID 
+af0b65a9674bd43e738e18b5435d81da16ae6c31754a3147fc3a79e06390b5a2                
+{"model": "gpt-5.6-sol", "variant": "no-profile", "task": "history-inventory", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false, "repository_pass": false, "error": null}
+DONE gpt-5.6-sol no-profile
+START gpt-5.6-sol no-context-selection
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-df4902f3 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/replacements/attempt-1/gpt-5.6-sol/no-context-selection/profile-ledg
+er/repopilot/workspace,target=/workspace --user=1000:1000                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-df4902f3 with ID 
+911c56098d0e4d3bfc2ffb87147077e1937ac3f89c4490893c0b0ae83d9e4e23                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-769a80ec -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/replacements/attempt-1/gpt-5.6-sol/no-context-selection/history-inve
+ntory/repopilot/workspace,target=/workspace --user=1000:1000                    
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-769a80ec with ID 
+8074d6474b8242c3a0f453c9b8d15bb0026dd89e098ea98b7bc20503bd606341                
+{"model": "gpt-5.6-sol", "variant": "no-context-selection", "task": "profile-ledger", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": true, "repository_pass": true, "error": null}
+{"model": "gpt-5.6-sol", "variant": "no-context-selection", "task": "history-inventory", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false, "repository_pass": false, "error": null}
+DONE gpt-5.6-sol no-context-selection
+START gpt-5.6-sol no-planning
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-a799fa82 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/replacements/attempt-1/gpt-5.6-sol/no-planning/history-inventory/rep
+opilot/workspace,target=/workspace --user=1000:1000                             
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-a799fa82 with ID 
+185d6010442c7ad09bfd2c580e4b0d779abc401a580d91495392f28e37a90a40                
+{"model": "gpt-5.6-sol", "variant": "no-planning", "task": "history-inventory", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false, "repository_pass": false, "error": null}
+DONE gpt-5.6-sol no-planning
+START gpt-5.6-sol no-recovery
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-8681cc49 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/profile-ledger/repopi
+lot/workspace,target=/workspace --user=1000:1000                                
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-8681cc49 with ID 
+f53e1c6ef767563b8bf1007680ae121e568c9744e0875a453cf0305db7398470                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-e764d3cc -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/history-inventory/rep
+opilot/workspace,target=/workspace --user=1000:1000                             
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-e764d3cc with ID 
+32eff9fc4ba3e1e0e63e0d73b2aa511cce89d4a814523e40b75df51e42e9c82f                
+{"model": "gpt-5.6-sol", "variant": "no-recovery", "task": "profile-ledger", "engine": "repopilot", "status": "SUCCEEDED", "task_pass": true, "repository_pass": true, "error": null}
+{"model": "gpt-5.6-sol", "variant": "no-recovery", "task": "history-inventory", "engine": "repopilot", "status": "FAILED", "task_pass": false, "repository_pass": false, "error": null}
+DONE gpt-5.6-sol no-recovery

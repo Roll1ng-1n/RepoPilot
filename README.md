@@ -442,3 +442,5 @@ Our other projects:
 </div>
 
 See the [#25/#26 repair record](docs/evidence/issues-25-26/summary.md) for the current reliability fixes and 269 passing regressions, and the [remaining issue review](docs/evidence/remaining-issues-review.md) for acceptance status.
+
+The [fixed two-task ablation study](docs/evidence/issue24-effective-ablation/report.md) retains 24 original runs and nine preselected replacements for upstream-affected failures. Its final 24 cells have 14 repository passes and 12 automatic `task_pass` passes. This small study does not establish an overall benefit: both full-engine long-history runs exhausted their step budgets, and provider errors and incomplete behavior observation affect interpretation. Follow-up issues track [lost progress during context trimming (#27)](https://github.com/Roll1ng-1n/RepoPilot/issues/27), [shared failure counters exhausting transport retries (#28)](https://github.com/Roll1ng-1n/RepoPilot/issues/28), and [uncertain compound-command observation (#29)](https://github.com/Roll1ng-1n/RepoPilot/issues/29).

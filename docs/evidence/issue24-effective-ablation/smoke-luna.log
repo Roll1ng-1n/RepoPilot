@@ -1,0 +1,51 @@
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+START gpt-5.6-luna full
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-20f37593 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-luna/full/profile-ledger/baseline/workspace,target=/wor
+kspace --user=1000:1000                                                         
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-20f37593 with ID 
+254ffdc586726020c85730296846614dd1727b69de36682cf310e4b8e29d0154                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-8e913c77 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-luna/full/profile-ledger/repopilot/workspace,target=/wo
+rkspace --user=1000:1000                                                        
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-8e913c77 with ID 
+6139e04cddc3854103c8fab7a193cd098f7050d9ba3afbaa78911cd49d57fc19                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-3bc7365e -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-luna/full/history-inventory/baseline/workspace,target=/
+workspace --user=1000:1000                                                      
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-3bc7365e with ID 
+2f36c2ce3b89009c1de520817b1e2013b665bed7641a3185639bcc1820ceee8c                
+Retrying <unknown> in 4 seconds as it raised MidStreamFallbackError: litellm.MidStreamFallbackError: litellm.APIConnectionError: APIConnectionError: OpenAIException - peer closed connection without sending complete message body (incomplete chunked read) Original exception: APIConnectionError: litellm.APIConnectionError: APIConnectionError: OpenAIException - peer closed connection without sending complete message body (incomplete chunked read).
+Retrying <unknown> in 4 seconds as it raised MidStreamFallbackError: litellm.MidStreamFallbackError: litellm.APIConnectionError: APIConnectionError: OpenAIException - peer closed connection without sending complete message body (incomplete chunked read) Original exception: APIConnectionError: litellm.APIConnectionError: APIConnectionError: OpenAIException - peer closed connection without sending complete message body (incomplete chunked read).
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-970acd65 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-luna/full/history-inventory/repopilot/workspace,target=
+/workspace --user=1000:1000                                                     
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-970acd65 with ID 
+586d5f705711791e7939cfb5ddee657c0a6cefbb85f841e8d9c4e31afb8cf324                
+{"model": "gpt-5.6-luna", "variant": "full", "task": "profile-ledger", "engine": "baseline", "status": "Submitted", "task_pass": true, "repository_pass": true, "error": null}
+{"model": "gpt-5.6-luna", "variant": "full", "task": "profile-ledger", "engine": "repopilot", "status": "SUCCEEDED", "task_pass": true, "repository_pass": true, "error": null}
+{"model": "gpt-5.6-luna", "variant": "full", "task": "history-inventory", "engine": "baseline", "status": "Submitted", "task_pass": false, "repository_pass": true, "error": null}
+{"model": "gpt-5.6-luna", "variant": "full", "task": "history-inventory", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false, "repository_pass": false, "error": null}
+DONE gpt-5.6-luna full

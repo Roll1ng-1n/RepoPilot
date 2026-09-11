@@ -1,0 +1,41 @@
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+START gpt-5.6-sol full
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-d26884df -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-sol/full/profile-ledger/baseline/workspace,target=/work
+space --user=1000:1000                                                          
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-d26884df with ID 
+977e36bcab45ecc985c81bd631f6fbf467268f1118c7d101646075571b917329                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-14886776 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-sol/full/profile-ledger/repopilot/workspace,target=/wor
+kspace --user=1000:1000                                                         
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-14886776 with ID 
+74bda28963dd5efe13299a3f4e9500a1b50edb86e21d2cfcfb750b64ae81c45d                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-61d3c8b8 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-sol/full/history-inventory/baseline/workspace,target=/w
+orkspace --user=1000:1000                                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-61d3c8b8 with ID 
+0750acce86b7069b6de990eebe757d950b89ff6dbf755ef25f54acea31dbdded                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-d17d4f94 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-sol/full/history-inventory/repopilot/workspace,target=/
+workspace --user=1000:1000                                                      
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-d17d4f94 with ID 
+97dd9f12d8f64c5744b83fa322e448b72b313f05a6ab30b532dc137ed204044f                
+{"model": "gpt-5.6-sol", "variant": "full", "task": "profile-ledger", "engine": "baseline", "status": "Submitted", "task_pass": true, "repository_pass": true, "error": null}
+{"model": "gpt-5.6-sol", "variant": "full", "task": "profile-ledger", "engine": "repopilot", "status": "SUCCEEDED", "task_pass": true, "repository_pass": true, "error": null}
+{"model": "gpt-5.6-sol", "variant": "full", "task": "history-inventory", "engine": "baseline", "status": "Submitted", "task_pass": false, "repository_pass": true, "error": null}
+{"model": "gpt-5.6-sol", "variant": "full", "task": "history-inventory", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false, "repository_pass": false, "error": null}
+DONE gpt-5.6-sol full

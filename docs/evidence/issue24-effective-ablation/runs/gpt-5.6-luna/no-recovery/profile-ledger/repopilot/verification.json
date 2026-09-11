@@ -1,0 +1,46 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "1211898d0cbcea268d654c25d6d74fe21d73a7106ce7d06db8fc525bc5da67b8",
+      "before_fingerprint": "1211898d0cbcea268d654c25d6d74fe21d73a7106ce7d06db8fc525bc5da67b8",
+      "check_id": "configured-unittest",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Run the test entry specified by pyproject.toml after implementing normalization and reporting.",
+      "result": {
+        "duration_seconds": 0.2239934600002016,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "src/ledger implementation and configured checks",
+      "sequence": 1,
+      "supersedes": []
+    },
+    {
+      "after_fingerprint": "1211898d0cbcea268d654c25d6d74fe21d73a7106ce7d06db8fc525bc5da67b8",
+      "before_fingerprint": "1211898d0cbcea268d654c25d6d74fe21d73a7106ce7d06db8fc525bc5da67b8",
+      "check_id": "edge-behavior",
+      "command": "python -c 'from src.ledger.report import report; assert report([]) == \"\"; assert report([(\"  \u00c4 \", \"1.004\"), (\"\u00e4\", \"0.001\"), (\"\", \"9\")]) == \"\u00e4=1.01\"'",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Verify empty input, Unicode casefold normalization, empty-key skipping, exact Decimal summation, and HALF_UP rendering beyond the visible checks.",
+      "result": {
+        "duration_seconds": 0.09291607900013332,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "src/ledger report behavior",
+      "sequence": 2,
+      "supersedes": []
+    }
+  ]
+}

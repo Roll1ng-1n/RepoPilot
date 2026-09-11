@@ -1,0 +1,50 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "ea44d0997d66b8386bc7d9829db6ecfff4454723c5b1b08221446749431d1e24",
+      "before_fingerprint": "ea44d0997d66b8386bc7d9829db6ecfff4454723c5b1b08221446749431d1e24",
+      "check_id": "configured-tests",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "verify"
+      ],
+      "reason": "Run the test entry documented in pyproject.toml after implementing normalization and reporting.",
+      "result": {
+        "duration_seconds": 0.22099551199789857,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "Configured repository checks",
+      "sequence": 1,
+      "supersedes": []
+    },
+    {
+      "after_fingerprint": "ea44d0997d66b8386bc7d9829db6ecfff4454723c5b1b08221446749431d1e24",
+      "before_fingerprint": "ea44d0997d66b8386bc7d9829db6ecfff4454723c5b1b08221446749431d1e24",
+      "check_id": "final-configured-tests",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "inspect",
+        "implement",
+        "verify"
+      ],
+      "reason": "Re-run the documented test command against the final source state and cover inspection, implementation, and verification plan steps.",
+      "result": {
+        "duration_seconds": 0.2256474639980297,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "Final source implementation and configured repository checks",
+      "sequence": 2,
+      "supersedes": [
+        1
+      ]
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py
+index 74ac50e..4a66cde 100644
+--- a/src/ledger/normalize.py
++++ b/src/ledger/normalize.py
+@@ -1,2 +1,2 @@
+ def normalize_key(key: str) -> str:
+-    return key
++    return key.strip().casefold()
+diff --git a/src/ledger/report.py b/src/ledger/report.py
+index d217602..b91d54c 100644
+--- a/src/ledger/report.py
++++ b/src/ledger/report.py
+@@ -1,4 +1,16 @@
+ from .normalize import normalize_key
++from decimal import Decimal, ROUND_HALF_UP
+ 
+ def report(rows: list[tuple[str, str]]) -> str:
+-    return ""
++    totals: dict[str, Decimal] = {}
++    for key, amount in rows:
++        normalized = normalize_key(key)
++        if not normalized:
++            continue
++        totals[normalized] = totals.get(normalized, Decimal("0")) + Decimal(amount)
++
++    lines = []
++    for key in sorted(totals):
++        amount = totals[key].quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
++        lines.append(f"{key}={amount:.2f}")
++    return "\n".join(lines)
+diff --git a/checks/__pycache__/test_ledger.cpython-312.pyc b/checks/__pycache__/test_ledger.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..94aca550f15dbf1c8588745eb02b7b3e66f47c0e
+GIT binary patch
+literal 946
+zcmcIiJ8#oa6h8ObPEDG$JS0ekR6MYFAde!3N~BU-Rct{t9gr8}+LxBpX~MN56pMi&
+z1OFfk5`rzt&tPPsR8`SMOiXNuz|x6x>_qLt$QjN(kMExM$6_%LNXOlGt!)PIos=0F
+zQ(>}!!Vm%oSO^ZiJY;R|a0VP6K%fmE&;_(|vybQRSj%Kb?=#!@K}y4BDknv^BV+#@
+z2!PpBnw0Pvf&hmF;P8MAz|jJZT<>ePu5z3E!as=o8J<2-X38{KLpFq$(7NbF8&N#1
+z1z-<5dC$gEOu)xHLon!rtu<`T=80ylTW3bCT&>=-xniE2Lkvk9N$yUS%*ldRUny5>
+z`Q17hY9p@Zy(khg-g@5iLP_aHOzDvbpGK6+I<qP-I`SaudcLUmX&aSTM6nx+U{A<$
+zx3A_?JsVGQHEXqe!KP!JXbIUX_+l1L&C-!sdUO4=)i_>y`03H^iRn+!3IBOIy-S$G
+zYR1z0@K#ug)o?I#&7JM_W^+ri6&jPJ`08p>h!BG_so%wkNjf!IK$eX|E}*CiX?MND
+zXMQIT$+e3uPmQ$QfA{R3m`~(ogfwhJnXY^2wT0`dyz90*K`$h^;JUPt%p(^OD{mkh
+zLHaK(L(;LQjMf%WWdr!dnGvvw&J2%bP(o1}tSqLw)s;y4<>~set)+Wc<_>x{J-miA
+y@J)(NMP@yl_p{p8<Sn$(ZA2ve)EHx5VeuQ>{>^pfvDc4Ji_1sF<v&1L8sIO*8_Nm+
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/__pycache__/__init__.cpython-312.pyc b/src/__pycache__/__init__.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..ad448597dce5600c58f1e6c989f7aeae9474c983
+GIT binary patch
+literal 123
+zcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdC8b}UUzA;3keHmR
+wUtE-|A0MBYmst`YuUAlci^C>2KczG$)vkyYsFV?ii$RQ!%#4hTMa)1J0N}0}?EnA(
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/ledger/__pycache__/__init__.cpython-312.pyc b/src/ledger/__pycache__/__init__.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..927f20af8bb1b09e8f8ca1a41453829aa02fef4b
+GIT binary patch
+literal 130
+zcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdrKn$?UzA;3keHmR
+zUtE-|pOc!Bo?4_IAD@|*SrQ+wS5SG2!zMRBr8Fniu80+=gAs^}L5z>gjEsy$%s>_Z
+D&<`Az
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/ledger/__pycache__/normalize.cpython-312.pyc b/src/ledger/__pycache__/normalize.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..6339ce1af9d050c934316c539a54b32a34ff9abc
+GIT binary patch
+literal 371
+zcmX@j%ge<81P7!RWw`<A#~=<2us|7~MSzUy3@Hq$3@MDM3~4MWOf4)?jFrrqEVr1m
+zQ!8(=6{VJx7Ud-~!gK;@CLm@8;?H(KVmd<&Ll&|uPz(fCLnwwUkV-TFlM80hWc1Ty
+zy2V;tQj}S6iz7L)I5jOlCq<L72xLbw$XJD6O8VvbMcKs#iOH$@#YM^bIjJe>sYUvE
+z`9-;jIhj?ddIgoYc;UQwpsR~GfEq!Xi^YLN1H%n&zJAM2%WmuI-0~N><u7w9USLuD
+z43uI3+0G2K9js#|LlGxXtcV>*+~Tmw%}*)KNwq8D0dm2HNdOrim>C%vKQJ*eDorT<
+OzyPFX6n_CxV4VO=N=!2V
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/ledger/__pycache__/report.cpython-312.pyc b/src/ledger/__pycache__/report.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..d519879d590805e6918855b84f7404278f347a3c
+GIT binary patch
+literal 1040
+zcmZ8gO-vI(6rS0c-7cj~ZG;FE{6|ww0DmqdfD$TjAZR3bXf&i@r%mg&TW7Z+He18N
+zLrI8~6E(z0!~+Izdhlo>2NN$~W2~dbgC}oI@Z`z2#cdN`GV^}s&A0D;Z}x-V??oVQ
+zyPl;kO9=gR99QIj#{N|>){urYtfMrJVvICNBf69(QIe)n3O;2rQ<#T&;!-DMJ4=(n
+zqnh%NM%DYCu=)!_FpPyiWAJoLPv+U&U3UK$1W{NLo(P*yLRk23UZ0(g%uS9?jnB>A
+z5R@AWrcgMuay&EdK)B)ogTUI4Ky(cyQ32a1g6<3>bQ@YJNCjdw@@;ARpIx9fHSuzr
+zjZ@C;|HP)2+cvc8-q{8`N1A6ganJG)x3Nu!KrdgRD1i#H<<wReyMY0fK}tb_+&V?6
+z7B{D<oA_FzUaLMJC+8(`>nIRgPWhYnT+5c$VH7se<aPR_Q6WalBNS;$D&XcdwJp1S
+z%%HGmTHt{^9q1dl0CQ5gk;`bwOhVw{Jn6d_7uXwCxkH*D31)GJD501Jx0oi>d%0M~
+zf}wJy9*$+RETajUGLo6F!W}|{Vi{IUHwA&Y3ni8Yd`oy6&p{Kip3E@QbP$f$<<GJH
+z1%ux;v$1*BZ}RzmooNZi`#H<PXZx}Mb6|4k#Zg%1CTxqSdg9dL_}3$$rPd-T-ul*l
+za^q5^{cO?uCD2**wN-mgJ&it&Zh2o%ycv5nRp}YsnRq|`?)qNOOi?N3KdN1|7Sz#Q
+z^C5p=@!GdQdnx|tL6KC0N6KV1^f}nO7wmnW*oto&JO15ZZzVWgRH~|f#kb@ulTxlc
+zT8?kblyC30pZlbqugU1p(VBvMhgJrc21~P**3d2u?L(PpI@}^!8vP$o>(LH=ggU(k
+zWKun8T0*vRS)B=DTD;!v3&gtsgLl9t)S<MY<#aZ}Pk`$@b@M!IHG(nzj!yqT=W5i4
+dyGv~)Rvz0pT%KGt_JU_>2x428emklT_7^)&@2~&>
+
+literal 0
+HcmV?d00001
+

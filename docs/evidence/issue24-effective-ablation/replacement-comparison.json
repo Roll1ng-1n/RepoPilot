@@ -1,0 +1,3363 @@
+[
+  {
+    "model": "gpt-5.6-luna",
+    "arm": "no-context-selection",
+    "task": "profile-ledger",
+    "original": {
+      "model": "gpt-5.6-luna",
+      "arm": "no-context-selection",
+      "task": "profile-ledger",
+      "run_id": "d561f53489aa40749163cea94e02f68a",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": true,
+      "task_pass": true,
+      "termination": "false_failure",
+      "recovery_evaluation": {
+        "attempt_count": null,
+        "failure_types": [],
+        "post_recovery_repository_pass": null,
+        "resolved_count": null,
+        "success_rate": null,
+        "trigger_count": null
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 2560,
+        "completion": 842,
+        "prompt": 31928,
+        "reasoning": 0,
+        "total": 32770
+      },
+      "cost": 0.006935199999999999,
+      "estimated_cost_usd": 0.0069352,
+      "duration_seconds": 363.2335285020017,
+      "steps": 13,
+      "recoveries": [
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        }
+      ],
+      "budget_exhaustion": [
+        "context_window"
+      ],
+      "usage_incomplete": false,
+      "cost_incomplete": false,
+      "model_error_responses": 0,
+      "blank_model_responses": 6,
+      "retries": 0,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/ledger/AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_GmfiCEkfsiOUYhk7cPSYrlTB",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 0,
+      "context_limit_requests": 1,
+      "max_input_bytes": 33058,
+      "telemetry_requests": 13,
+      "trace_events": 86,
+      "result_path": "runs/gpt-5.6-luna/no-context-selection/profile-ledger/repopilot/result.json"
+    },
+    "replacement": {
+      "model": "gpt-5.6-luna",
+      "arm": "no-context-selection",
+      "task": "profile-ledger",
+      "run_id": "345b70b4e3734920851eeb697a816ab0",
+      "status": "SUCCEEDED",
+      "repository_pass": true,
+      "task_pass": true,
+      "termination": "correct_success",
+      "recovery_evaluation": {
+        "attempt_count": null,
+        "failure_types": [],
+        "post_recovery_repository_pass": null,
+        "resolved_count": null,
+        "success_rate": null,
+        "trigger_count": null
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 7680,
+        "completion": 1219,
+        "prompt": 26802,
+        "reasoning": 0,
+        "total": 28021
+      },
+      "cost": 0.005440799999999999,
+      "estimated_cost_usd": 0.0054408,
+      "duration_seconds": 163.28213572599634,
+      "steps": 7,
+      "recoveries": [],
+      "failures": [],
+      "budget_exhaustion": [],
+      "usage_incomplete": false,
+      "cost_incomplete": false,
+      "model_error_responses": 0,
+      "blank_model_responses": 0,
+      "retries": 0,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/ledger/AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_YuKF44t48NpJbC2lTG5MNi04",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        },
+        {
+          "arguments": {
+            "status": "COMPLETED",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_lMyGQoQ0VQzyQnrl06gBJXne",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 0,
+      "context_limit_requests": 0,
+      "max_input_bytes": 26458,
+      "telemetry_requests": 7,
+      "trace_events": 69,
+      "result_path": "replacements/attempt-1/gpt-5.6-luna/no-context-selection/profile-ledger/repopilot/result.json"
+    },
+    "reason": {
+      "model": "gpt-5.6-luna",
+      "variant": "no-context-selection",
+      "task": "profile-ledger",
+      "original_run_id": "d561f53489aa40749163cea94e02f68a",
+      "original_result": "runs/gpt-5.6-luna/no-context-selection/profile-ledger/repopilot/result.json",
+      "original_status": "BUDGET_EXCEEDED",
+      "model_error_count": 0,
+      "blank_response_count": 6,
+      "reason": "Explicit provider/transport errors and/or blank successful responses with no tool calls. Blank output is suspected upstream contamination, not proven provider attribution."
+    }
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "arm": "no-planning",
+    "task": "history-inventory",
+    "original": {
+      "model": "gpt-5.6-luna",
+      "arm": "no-planning",
+      "task": "history-inventory",
+      "run_id": "fd4b340d9d234c4e81667661831b0fa1",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": 18,
+        "failure_types": [
+          "test_failure"
+        ],
+        "post_recovery_repository_pass": false,
+        "resolved_count": 0,
+        "success_rate": 0.0,
+        "trigger_count": 1
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 11776,
+        "completion": 10363,
+        "prompt": 139500,
+        "reasoning": 0,
+        "total": 149863
+      },
+      "cost": 0.03821592,
+      "estimated_cost_usd": 0.03821592000000001,
+      "duration_seconds": 1390.9064433489984,
+      "steps": 48,
+      "recoveries": [
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 1 seconds: litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+          "retry_delay_seconds": 1.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "budget_exhaustion": [
+        "steps"
+      ],
+      "usage_incomplete": true,
+      "cost_incomplete": true,
+      "model_error_responses": 1,
+      "blank_model_responses": 1,
+      "retries": 1,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        false
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/inventory/AGENTS.md"
+      ],
+      "planning_calls": [],
+      "context_trim_requests": 45,
+      "context_limit_requests": 0,
+      "max_input_bytes": 1039099,
+      "telemetry_requests": 48,
+      "trace_events": 810,
+      "result_path": "runs/gpt-5.6-luna/no-planning/history-inventory/repopilot/result.json"
+    },
+    "replacement": {
+      "model": "gpt-5.6-luna",
+      "arm": "no-planning",
+      "task": "history-inventory",
+      "run_id": "7a33d784c3054c0690aea00465f7b84a",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": 9,
+        "failure_types": [
+          "test_failure"
+        ],
+        "post_recovery_repository_pass": false,
+        "resolved_count": 0,
+        "success_rate": 0.0,
+        "trigger_count": 1
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": null,
+        "completion": 6134,
+        "prompt": 92692,
+        "reasoning": 0,
+        "total": 98826
+      },
+      "cost": 0.022857919999999997,
+      "estimated_cost_usd": 0.0258992,
+      "duration_seconds": 1420.3366321799986,
+      "steps": 48,
+      "recoveries": [
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "REPLAN",
+          "category": "NO_PROGRESS",
+          "reason": "5 consecutive failures require a Replan: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "REPLAN",
+          "category": "NO_PROGRESS",
+          "reason": "5 consecutive failures require a Replan: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "REPLAN",
+          "category": "NO_PROGRESS",
+          "reason": "5 consecutive failures require a Replan: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "REPLAN",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "5 consecutive failures require a Replan: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "budget_exhaustion": [
+        "steps"
+      ],
+      "usage_incomplete": false,
+      "cost_incomplete": false,
+      "model_error_responses": 0,
+      "blank_model_responses": 20,
+      "retries": 0,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        false
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/inventory/AGENTS.md"
+      ],
+      "planning_calls": [],
+      "context_trim_requests": 29,
+      "context_limit_requests": 0,
+      "max_input_bytes": 565131,
+      "telemetry_requests": 48,
+      "trace_events": 577,
+      "result_path": "replacements/attempt-1/gpt-5.6-luna/no-planning/history-inventory/repopilot/result.json"
+    },
+    "reason": {
+      "model": "gpt-5.6-luna",
+      "variant": "no-planning",
+      "task": "history-inventory",
+      "original_run_id": "fd4b340d9d234c4e81667661831b0fa1",
+      "original_result": "runs/gpt-5.6-luna/no-planning/history-inventory/repopilot/result.json",
+      "original_status": "BUDGET_EXCEEDED",
+      "model_error_count": 1,
+      "blank_response_count": 1,
+      "reason": "Explicit provider/transport errors and/or blank successful responses with no tool calls. Blank output is suspected upstream contamination, not proven provider attribution."
+    }
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "arm": "no-profile",
+    "task": "history-inventory",
+    "original": {
+      "model": "gpt-5.6-luna",
+      "arm": "no-profile",
+      "task": "history-inventory",
+      "run_id": "a309ee9f4fa44723a91278b6d5875699",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": 1,
+        "failure_types": [
+          "test_failure"
+        ],
+        "post_recovery_repository_pass": false,
+        "resolved_count": 0,
+        "success_rate": 0.0,
+        "trigger_count": 1
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": null,
+        "completion": 1539,
+        "prompt": 23941,
+        "reasoning": 0,
+        "total": 25480
+      },
+      "cost": 0.00635852,
+      "estimated_cost_usd": 0.006635,
+      "duration_seconds": 953.4381391889983,
+      "steps": 12,
+      "recoveries": [
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "REPLAN",
+          "category": "NO_PROGRESS",
+          "reason": "5 consecutive failures require a Replan: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "budget_exhaustion": [
+        "context_window"
+      ],
+      "usage_incomplete": false,
+      "cost_incomplete": false,
+      "model_error_responses": 0,
+      "blank_model_responses": 6,
+      "retries": 0,
+      "replans": 1,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        0
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/inventory/AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "reason": "Prior attempts produced no tool calls. Restart with explicit repository inspection, mandatory baseline verification, contract review, implementation, and post-change verification using only permitted source edits.",
+            "steps": [
+              {
+                "completion_condition": "Repository instructions, source files, and all six stage contracts have been inspected; baseline unittest command has been executed via verify_task before any edits.",
+                "description": "Inspect AGENTS.md, src/inventory, and docs/01-parse.md through docs/06-render.md, then run the required baseline test suite.",
+                "id": "inspect-baseline"
+              },
+              {
+                "completion_condition": "All six pipeline stages are implemented in src/inventory/*.py while preserving public signatures and leaving tests/docs/config/instructions unchanged.",
+                "description": "Implement parsing, validation, normalization, aggregation, selection, and rendering according to the reviewed contracts and existing interfaces.",
+                "id": "implement-pipeline"
+              },
+              {
+                "completion_condition": "The required unittest discovery command passes after the repair, and the final diff contains changes only under src/inventory/*.py.",
+                "description": "Run post-change verification, inspect the diff, and confirm end-to-end behavior and scope compliance.",
+                "id": "verify-final"
+              }
+            ]
+          },
+          "tool_call_id": "call_KRGpctDMGVWnfbUiUfnaYg92",
+          "tool_name": "replan",
+          "type": "tool_call"
+        },
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "inspect-baseline"
+          },
+          "tool_call_id": "call_p4xaqvnWzoyk6WO5YXnyxhUY",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 3,
+      "context_limit_requests": 0,
+      "max_input_bytes": 166462,
+      "telemetry_requests": 12,
+      "trace_events": 141,
+      "result_path": "runs/gpt-5.6-luna/no-profile/history-inventory/repopilot/result.json"
+    },
+    "replacement": {
+      "model": "gpt-5.6-luna",
+      "arm": "no-profile",
+      "task": "history-inventory",
+      "run_id": "72afe7af4e4d48c389c2228682421f13",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": 16,
+        "failure_types": [
+          "test_failure"
+        ],
+        "post_recovery_repository_pass": false,
+        "resolved_count": 0,
+        "success_rate": 0.0,
+        "trigger_count": 1
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 15360,
+        "completion": 10667,
+        "prompt": 151786,
+        "reasoning": 0,
+        "total": 162453
+      },
+      "cost": 0.040392800000000006,
+      "estimated_cost_usd": 0.0403928,
+      "duration_seconds": 532.1502713139998,
+      "steps": 48,
+      "recoveries": [
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 0.5 seconds: litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out",
+          "retry_delay_seconds": 0.5
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "budget_exhaustion": [
+        "steps"
+      ],
+      "usage_incomplete": true,
+      "cost_incomplete": true,
+      "model_error_responses": 1,
+      "blank_model_responses": 0,
+      "retries": 1,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        0
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/inventory/AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_qEzewmEDLzwzEHakyzvXCuFP",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 46,
+      "context_limit_requests": 0,
+      "max_input_bytes": 937032,
+      "telemetry_requests": 48,
+      "trace_events": 823,
+      "result_path": "replacements/attempt-1/gpt-5.6-luna/no-profile/history-inventory/repopilot/result.json"
+    },
+    "reason": {
+      "model": "gpt-5.6-luna",
+      "variant": "no-profile",
+      "task": "history-inventory",
+      "original_run_id": "a309ee9f4fa44723a91278b6d5875699",
+      "original_result": "runs/gpt-5.6-luna/no-profile/history-inventory/repopilot/result.json",
+      "original_status": "BUDGET_EXCEEDED",
+      "model_error_count": 0,
+      "blank_response_count": 6,
+      "reason": "Explicit provider/transport errors and/or blank successful responses with no tool calls. Blank output is suspected upstream contamination, not proven provider attribution."
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "arm": "no-context-selection",
+    "task": "history-inventory",
+    "original": {
+      "model": "gpt-5.6-sol",
+      "arm": "no-context-selection",
+      "task": "history-inventory",
+      "run_id": "2238e8778fa3483faef0a842f90b60fd",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": 0,
+        "failure_types": [
+          "test_failure"
+        ],
+        "post_recovery_repository_pass": false,
+        "resolved_count": 0,
+        "success_rate": 0.0,
+        "trigger_count": 1
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 902,
+        "prompt": 53549,
+        "reasoning": 0,
+        "total": 54451
+      },
+      "cost": 0.23223599999999997,
+      "estimated_cost_usd": 0.232236,
+      "duration_seconds": 351.9738071840002,
+      "steps": 15,
+      "recoveries": [
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "REPLAN",
+          "category": "NO_PROGRESS",
+          "reason": "5 consecutive failures require a Replan: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "REPLAN",
+          "category": "NO_PROGRESS",
+          "reason": "5 consecutive failures require a Replan: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        }
+      ],
+      "budget_exhaustion": [
+        "context_window"
+      ],
+      "usage_incomplete": false,
+      "cost_incomplete": false,
+      "model_error_responses": 0,
+      "blank_model_responses": 10,
+      "retries": 0,
+      "replans": 1,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/inventory/AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_JOgDcbBdOFbRjmePO7qvFoFj",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        },
+        {
+          "arguments": {
+            "reason": "Recovery after repeated no-progress responses. Preserve the required baseline result and continue with repository inspection, implementation, and mandatory post-change verification.",
+            "steps": [
+              {
+                "completion_condition": "Contracts and current implementations are reviewed and required signatures are recorded.",
+                "description": "Read all six stage contracts, repository instructions, public source APIs, and checks; identify exact behavioral gaps.",
+                "id": "inspect"
+              },
+              {
+                "completion_condition": "All six contracts are implemented with pure functions and preserved public signatures.",
+                "description": "Implement the parse, validate, normalize, aggregate, select, render, and pipeline behavior within src/inventory/*.py only.",
+                "id": "implement"
+              },
+              {
+                "completion_condition": "The full checks suite passes and only allowed source files are changed.",
+                "description": "Run the required unittest discovery command after edits and inspect the final diff for scope compliance.",
+                "id": "verify"
+              }
+            ]
+          },
+          "tool_call_id": "call_gj0TwLghwfbPpQwdTbBmyFge",
+          "tool_name": "replan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 0,
+      "context_limit_requests": 1,
+      "max_input_bytes": 74082,
+      "telemetry_requests": 15,
+      "trace_events": 122,
+      "result_path": "runs/gpt-5.6-sol/no-context-selection/history-inventory/repopilot/result.json"
+    },
+    "replacement": {
+      "model": "gpt-5.6-sol",
+      "arm": "no-context-selection",
+      "task": "history-inventory",
+      "run_id": "4d2f7ca59ca443ca9016cc42967ea42b",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": 0,
+        "failure_types": [
+          "test_failure"
+        ],
+        "post_recovery_repository_pass": false,
+        "resolved_count": 0,
+        "success_rate": 0.0,
+        "trigger_count": 1
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 5888,
+        "completion": 786,
+        "prompt": 26027,
+        "reasoning": 0,
+        "total": 26813
+      },
+      "cost": 0.0986312,
+      "estimated_cost_usd": 0.0986312,
+      "duration_seconds": 50.21417556599772,
+      "steps": 5,
+      "recoveries": [
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "budget_exhaustion": [
+        "context_window"
+      ],
+      "usage_incomplete": false,
+      "cost_incomplete": false,
+      "model_error_responses": 0,
+      "blank_model_responses": 0,
+      "retries": 0,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/inventory/AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_eiVfCa4XDJrbX5o2Yh0pT0Yr",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 0,
+      "context_limit_requests": 1,
+      "max_input_bytes": 69639,
+      "telemetry_requests": 5,
+      "trace_events": 68,
+      "result_path": "replacements/attempt-1/gpt-5.6-sol/no-context-selection/history-inventory/repopilot/result.json"
+    },
+    "reason": {
+      "model": "gpt-5.6-sol",
+      "variant": "no-context-selection",
+      "task": "history-inventory",
+      "original_run_id": "2238e8778fa3483faef0a842f90b60fd",
+      "original_result": "runs/gpt-5.6-sol/no-context-selection/history-inventory/repopilot/result.json",
+      "original_status": "BUDGET_EXCEEDED",
+      "model_error_count": 0,
+      "blank_response_count": 10,
+      "reason": "Explicit provider/transport errors and/or blank successful responses with no tool calls. Blank output is suspected upstream contamination, not proven provider attribution."
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "arm": "no-context-selection",
+    "task": "profile-ledger",
+    "original": {
+      "model": "gpt-5.6-sol",
+      "arm": "no-context-selection",
+      "task": "profile-ledger",
+      "run_id": "fe4ec8042aff4c23b1b05b0fb4009823",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": true,
+      "task_pass": true,
+      "termination": "false_failure",
+      "recovery_evaluation": {
+        "attempt_count": null,
+        "failure_types": [],
+        "post_recovery_repository_pass": null,
+        "resolved_count": null,
+        "success_rate": null,
+        "trigger_count": null
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 1031,
+        "prompt": 47623,
+        "reasoning": 0,
+        "total": 48654
+      },
+      "cost": 0.211112,
+      "estimated_cost_usd": 0.211112,
+      "duration_seconds": 347.08293034399685,
+      "steps": 13,
+      "recoveries": [
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        }
+      ],
+      "budget_exhaustion": [
+        "context_window"
+      ],
+      "usage_incomplete": false,
+      "cost_incomplete": false,
+      "model_error_responses": 0,
+      "blank_model_responses": 5,
+      "retries": 0,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/ledger/AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_VCYxV1kFIiwpB3bSMirBftQa",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 0,
+      "context_limit_requests": 1,
+      "max_input_bytes": 33024,
+      "telemetry_requests": 13,
+      "trace_events": 84,
+      "result_path": "runs/gpt-5.6-sol/no-context-selection/profile-ledger/repopilot/result.json"
+    },
+    "replacement": {
+      "model": "gpt-5.6-sol",
+      "arm": "no-context-selection",
+      "task": "profile-ledger",
+      "run_id": "1e12043f8b66467fa033748f7c70e6f0",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": true,
+      "task_pass": true,
+      "termination": "false_failure",
+      "recovery_evaluation": {
+        "attempt_count": null,
+        "failure_types": [],
+        "post_recovery_repository_pass": null,
+        "resolved_count": null,
+        "success_rate": null,
+        "trigger_count": null
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 1087,
+        "prompt": 22814,
+        "reasoning": 0,
+        "total": 23901
+      },
+      "cost": 0.11299600000000001,
+      "estimated_cost_usd": 0.112996,
+      "duration_seconds": 89.387934503,
+      "steps": 7,
+      "recoveries": [],
+      "failures": [],
+      "budget_exhaustion": [
+        "context_window"
+      ],
+      "usage_incomplete": false,
+      "cost_incomplete": false,
+      "model_error_responses": 0,
+      "blank_model_responses": 0,
+      "retries": 0,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/ledger/AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_bVPmOM7vuQXx7biv5YBjfjl2",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 0,
+      "context_limit_requests": 1,
+      "max_input_bytes": 33247,
+      "telemetry_requests": 7,
+      "trace_events": 58,
+      "result_path": "replacements/attempt-1/gpt-5.6-sol/no-context-selection/profile-ledger/repopilot/result.json"
+    },
+    "reason": {
+      "model": "gpt-5.6-sol",
+      "variant": "no-context-selection",
+      "task": "profile-ledger",
+      "original_run_id": "fe4ec8042aff4c23b1b05b0fb4009823",
+      "original_result": "runs/gpt-5.6-sol/no-context-selection/profile-ledger/repopilot/result.json",
+      "original_status": "BUDGET_EXCEEDED",
+      "model_error_count": 0,
+      "blank_response_count": 5,
+      "reason": "Explicit provider/transport errors and/or blank successful responses with no tool calls. Blank output is suspected upstream contamination, not proven provider attribution."
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "arm": "no-planning",
+    "task": "history-inventory",
+    "original": {
+      "model": "gpt-5.6-sol",
+      "arm": "no-planning",
+      "task": "history-inventory",
+      "run_id": "80c88ce4ae944029b6921a939052a579",
+      "status": "FAILED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": 0,
+        "failure_types": [
+          "test_failure"
+        ],
+        "post_recovery_repository_pass": false,
+        "resolved_count": 0,
+        "success_rate": 0.0,
+        "trigger_count": 1
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 268,
+        "prompt": 36825,
+        "reasoning": 0,
+        "total": 37093
+      },
+      "cost": 0.15266000000000002,
+      "estimated_cost_usd": 0.15266,
+      "duration_seconds": 785.1467024750018,
+      "steps": 15,
+      "recoveries": [
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "REPLAN",
+          "category": "NO_PROGRESS",
+          "reason": "5 consecutive failures require a Replan: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "REPLAN",
+          "category": "NO_PROGRESS",
+          "reason": "5 consecutive failures require a Replan: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "STOP",
+          "category": "MODEL_ERROR",
+          "reason": "Model request retries exhausted: litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out."
+        }
+      ],
+      "budget_exhaustion": [],
+      "usage_incomplete": true,
+      "cost_incomplete": true,
+      "model_error_responses": 1,
+      "blank_model_responses": 13,
+      "retries": 0,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        false
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/inventory/AGENTS.md"
+      ],
+      "planning_calls": [],
+      "context_trim_requests": 0,
+      "context_limit_requests": 0,
+      "max_input_bytes": 14455,
+      "telemetry_requests": 15,
+      "trace_events": 92,
+      "result_path": "runs/gpt-5.6-sol/no-planning/history-inventory/repopilot/result.json"
+    },
+    "replacement": {
+      "model": "gpt-5.6-sol",
+      "arm": "no-planning",
+      "task": "history-inventory",
+      "run_id": "5d22908136c94364b4b0a8a83d7f2d16",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": 13,
+        "failure_types": [
+          "test_failure"
+        ],
+        "post_recovery_repository_pass": false,
+        "resolved_count": 0,
+        "success_rate": 0.0,
+        "trigger_count": 1
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": null,
+        "completion": 7530,
+        "prompt": 111381,
+        "reasoning": 0,
+        "total": 118911
+      },
+      "cost": 0.5795352,
+      "estimated_cost_usd": 0.596124,
+      "duration_seconds": 1417.6941434920009,
+      "steps": 48,
+      "recoveries": [
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "REPLAN",
+          "category": "NO_PROGRESS",
+          "reason": "5 consecutive failures require a Replan: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "budget_exhaustion": [
+        "steps"
+      ],
+      "usage_incomplete": false,
+      "cost_incomplete": false,
+      "model_error_responses": 0,
+      "blank_model_responses": 13,
+      "retries": 0,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        false
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/inventory/AGENTS.md"
+      ],
+      "planning_calls": [],
+      "context_trim_requests": 38,
+      "context_limit_requests": 0,
+      "max_input_bytes": 712564,
+      "telemetry_requests": 48,
+      "trace_events": 646,
+      "result_path": "replacements/attempt-1/gpt-5.6-sol/no-planning/history-inventory/repopilot/result.json"
+    },
+    "reason": {
+      "model": "gpt-5.6-sol",
+      "variant": "no-planning",
+      "task": "history-inventory",
+      "original_run_id": "80c88ce4ae944029b6921a939052a579",
+      "original_result": "runs/gpt-5.6-sol/no-planning/history-inventory/repopilot/result.json",
+      "original_status": "FAILED",
+      "model_error_count": 1,
+      "blank_response_count": 13,
+      "reason": "Explicit provider/transport errors and/or blank successful responses with no tool calls. Blank output is suspected upstream contamination, not proven provider attribution."
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "arm": "no-profile",
+    "task": "history-inventory",
+    "original": {
+      "model": "gpt-5.6-sol",
+      "arm": "no-profile",
+      "task": "history-inventory",
+      "run_id": "637275d8e7bb49409e64136fe7c9f0ea",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": 13,
+        "failure_types": [
+          "test_failure"
+        ],
+        "post_recovery_repository_pass": false,
+        "resolved_count": 0,
+        "success_rate": 0.0,
+        "trigger_count": 1
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 71680,
+        "completion": 10301,
+        "prompt": 203582,
+        "reasoning": 0,
+        "total": 213883
+      },
+      "cost": 0.7623,
+      "estimated_cost_usd": 0.7623,
+      "duration_seconds": 1760.4639442059997,
+      "steps": 48,
+      "recoveries": [
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 0.5 seconds: litellm.MidStreamFallbackError: litellm.APIConnectionError: APIConnectionError: OpenAIException - peer closed connection without sending complete message body (incomplete chunked read) Original exception: APIConnectionError: litellm.APIConnectionError: APIConnectionError: OpenAIException - peer closed connection without sending complete message body (incomplete chunked read)",
+          "retry_delay_seconds": 0.5
+        },
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 0.25 seconds: litellm.MidStreamFallbackError: litellm.APIConnectionError: APIConnectionError: OpenAIException - peer closed connection without sending complete message body (incomplete chunked read) Original exception: APIConnectionError: litellm.APIConnectionError: APIConnectionError: OpenAIException - peer closed connection without sending complete message body (incomplete chunked read)",
+          "retry_delay_seconds": 0.25
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.MidStreamFallbackError: litellm.APIConnectionError: APIConnectionError: OpenAIException - peer closed connection without sending complete message body (incomplete chunked read) Original exception: APIConnectionError: litellm.APIConnectionError: APIConnectionError: OpenAIException - peer closed connection without sending complete message body (incomplete chunked read)"
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.MidStreamFallbackError: litellm.APIConnectionError: APIConnectionError: OpenAIException - peer closed connection without sending complete message body (incomplete chunked read) Original exception: APIConnectionError: litellm.APIConnectionError: APIConnectionError: OpenAIException - peer closed connection without sending complete message body (incomplete chunked read)"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "budget_exhaustion": [
+        "steps"
+      ],
+      "usage_incomplete": true,
+      "cost_incomplete": true,
+      "model_error_responses": 2,
+      "blank_model_responses": 1,
+      "retries": 2,
+      "replans": 1,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        0
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/inventory/AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_qfgIPa1ZfGVDkbx1V1GB081Y",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        },
+        {
+          "arguments": {
+            "reason": "Contract review confirms six independent stubbed stage modules plus an already-wired pipeline. Split implementation and verification into explicit stage progress while preserving the completed baseline-test requirement.",
+            "steps": [
+              {
+                "completion_condition": "parse returns a decoded top-level JSON list and [] for invalid JSON or non-list values.",
+                "description": "Implement parsing contract in src/inventory/parse.py.",
+                "id": "parse-stage"
+              },
+              {
+                "completion_condition": "validate keeps only valid dict events, rejects bool deltas, strips SKU validity checks, returns fresh sku/delta dicts, and does not mutate input.",
+                "description": "Implement validation contract in src/inventory/validate.py.",
+                "id": "validate-stage"
+              },
+              {
+                "completion_condition": "normalize returns fresh ordered records using stripped Unicode casefolded SKUs and unchanged deltas.",
+                "description": "Implement normalization contract in src/inventory/normalize.py.",
+                "id": "normalize-stage"
+              },
+              {
+                "completion_condition": "aggregate sums all normalized SKU deltas, retains zero totals, and does not mutate records.",
+                "description": "Implement aggregation contract in src/inventory/aggregate.py.",
+                "id": "aggregate-stage"
+              },
+              {
+                "completion_condition": "select returns a fresh mapping containing all and only nonzero balances, including negatives.",
+                "description": "Implement selection contract in src/inventory/select.py.",
+                "id": "select-stage"
+              },
+              {
+                "completion_condition": "render sorts SKUs lexicographically and emits newline-joined sku=integer rows with no trailing newline.",
+                "description": "Implement rendering contract in src/inventory/render.py.",
+                "id": "render-stage"
+              },
+              {
+                "completion_condition": "Stage-focused checks and the required python -m unittest discover -s checks command pass after repair, with pipeline behavior verified end to end.",
+                "description": "Verify each stage and the complete reconciliation pipeline.",
+                "id": "verify-pipeline"
+              }
+            ]
+          },
+          "tool_call_id": "call_fRQ6YdIkwBh8PQDZ1h32zFt7",
+          "tool_name": "replan",
+          "type": "tool_call"
+        },
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "parse-stage"
+          },
+          "tool_call_id": "call_2Efjg1a7bPRv7dXWz9vDci3k",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 45,
+      "context_limit_requests": 0,
+      "max_input_bytes": 935255,
+      "telemetry_requests": 48,
+      "trace_events": 742,
+      "result_path": "runs/gpt-5.6-sol/no-profile/history-inventory/repopilot/result.json"
+    },
+    "replacement": {
+      "model": "gpt-5.6-sol",
+      "arm": "no-profile",
+      "task": "history-inventory",
+      "run_id": "3a43a0e1e5584073adc7476984e3d669",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": 0,
+        "failure_types": [
+          "test_failure"
+        ],
+        "post_recovery_repository_pass": false,
+        "resolved_count": 0,
+        "success_rate": 0.0,
+        "trigger_count": 1
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": null,
+        "completion": 784,
+        "prompt": 10428,
+        "reasoning": 0,
+        "total": 11212
+      },
+      "cost": 0.057392000000000006,
+      "estimated_cost_usd": 0.057392,
+      "duration_seconds": 373.2768071440005,
+      "steps": 7,
+      "recoveries": [
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "RETURN_OBSERVATION",
+          "category": "NO_PROGRESS",
+          "reason": "Return an Observation for correction: The model response contained no Tool Call.",
+          "retry_delay_seconds": 0.0
+        },
+        {
+          "action": "DEBUG_OBSERVATION",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Use the failed Task Verification as a debugging Observation: Task Verification exited with 1.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "budget_exhaustion": [
+        "context_window"
+      ],
+      "usage_incomplete": false,
+      "cost_incomplete": false,
+      "model_error_responses": 0,
+      "blank_model_responses": 4,
+      "retries": 0,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        0
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/inventory/AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_DqYNFSMU7LAxVFjO8SJGBhup",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 0,
+      "context_limit_requests": 0,
+      "max_input_bytes": 70651,
+      "telemetry_requests": 7,
+      "trace_events": 82,
+      "result_path": "replacements/attempt-1/gpt-5.6-sol/no-profile/history-inventory/repopilot/result.json"
+    },
+    "reason": {
+      "model": "gpt-5.6-sol",
+      "variant": "no-profile",
+      "task": "history-inventory",
+      "original_run_id": "637275d8e7bb49409e64136fe7c9f0ea",
+      "original_result": "runs/gpt-5.6-sol/no-profile/history-inventory/repopilot/result.json",
+      "original_status": "BUDGET_EXCEEDED",
+      "model_error_count": 2,
+      "blank_response_count": 1,
+      "reason": "Explicit provider/transport errors and/or blank successful responses with no tool calls. Blank output is suspected upstream contamination, not proven provider attribution."
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "arm": "no-recovery",
+    "task": "history-inventory",
+    "original": {
+      "model": "gpt-5.6-sol",
+      "arm": "no-recovery",
+      "task": "history-inventory",
+      "run_id": "7379440f02eb45048132e32fbf069c64",
+      "status": "FAILED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": null,
+        "failure_types": [],
+        "post_recovery_repository_pass": null,
+        "resolved_count": null,
+        "success_rate": null,
+        "trigger_count": 0
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 2602,
+        "completion": 62,
+        "prompt": 5192,
+        "reasoning": 0,
+        "total": 5254
+      },
+      "cost": 0.0126408,
+      "estimated_cost_usd": 0.012640799999999999,
+      "duration_seconds": 818.0907029580012,
+      "steps": 5,
+      "recoveries": [
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 0.25 seconds: litellm.RateLimitError: RateLimitError: OpenAIException - Too many pending requests, please retry later",
+          "retry_delay_seconds": 0.25
+        },
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 0.5 seconds: litellm.RateLimitError: RateLimitError: OpenAIException - Too many pending requests, please retry later",
+          "retry_delay_seconds": 0.5
+        },
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 1 seconds: litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out.",
+          "retry_delay_seconds": 1.0
+        },
+        {
+          "action": "STOP",
+          "category": "NO_PROGRESS",
+          "reason": "Task/protocol recovery disabled for this experiment.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.RateLimitError: RateLimitError: OpenAIException - Too many pending requests, please retry later"
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.RateLimitError: RateLimitError: OpenAIException - Too many pending requests, please retry later"
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        }
+      ],
+      "budget_exhaustion": [],
+      "usage_incomplete": true,
+      "cost_incomplete": true,
+      "model_error_responses": 3,
+      "blank_model_responses": 1,
+      "retries": 3,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_apQ39HeCp0hKStb53hEuACtG",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 0,
+      "context_limit_requests": 0,
+      "max_input_bytes": 11361,
+      "telemetry_requests": 5,
+      "trace_events": 34,
+      "result_path": "runs/gpt-5.6-sol/no-recovery/history-inventory/repopilot/result.json"
+    },
+    "replacement": {
+      "model": "gpt-5.6-sol",
+      "arm": "no-recovery",
+      "task": "history-inventory",
+      "run_id": "ed9e51510d5249de910f9eac535c8367",
+      "status": "FAILED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": 0,
+        "failure_types": [
+          "test_failure"
+        ],
+        "post_recovery_repository_pass": false,
+        "resolved_count": 0,
+        "success_rate": 0.0,
+        "trigger_count": 1
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 5632,
+        "completion": 161,
+        "prompt": 5882,
+        "reasoning": 0,
+        "total": 6043
+      },
+      "cost": 0.006472800000000001,
+      "estimated_cost_usd": 0.0064728,
+      "duration_seconds": 13.306679230001464,
+      "steps": 1,
+      "recoveries": [
+        {
+          "action": "STOP",
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task/protocol recovery disabled for this experiment.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "budget_exhaustion": [],
+      "usage_incomplete": false,
+      "cost_incomplete": false,
+      "model_error_responses": 0,
+      "blank_model_responses": 0,
+      "retries": 0,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md"
+      ],
+      "planning_calls": [],
+      "context_trim_requests": 0,
+      "context_limit_requests": 0,
+      "max_input_bytes": 9546,
+      "telemetry_requests": 1,
+      "trace_events": 16,
+      "result_path": "replacements/attempt-1/gpt-5.6-sol/no-recovery/history-inventory/repopilot/result.json"
+    },
+    "reason": {
+      "model": "gpt-5.6-sol",
+      "variant": "no-recovery",
+      "task": "history-inventory",
+      "original_run_id": "7379440f02eb45048132e32fbf069c64",
+      "original_result": "runs/gpt-5.6-sol/no-recovery/history-inventory/repopilot/result.json",
+      "original_status": "FAILED",
+      "model_error_count": 3,
+      "blank_response_count": 1,
+      "reason": "Explicit provider/transport errors and/or blank successful responses with no tool calls. Blank output is suspected upstream contamination, not proven provider attribution."
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "arm": "no-recovery",
+    "task": "profile-ledger",
+    "original": {
+      "model": "gpt-5.6-sol",
+      "arm": "no-recovery",
+      "task": "profile-ledger",
+      "run_id": "44df005ebd9245cc929f951a4af4d2e9",
+      "status": "FAILED",
+      "repository_pass": false,
+      "task_pass": false,
+      "termination": "correct_failure",
+      "recovery_evaluation": {
+        "attempt_count": null,
+        "failure_types": [],
+        "post_recovery_repository_pass": null,
+        "resolved_count": null,
+        "success_rate": null,
+        "trigger_count": null
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 0,
+        "completion": 368,
+        "prompt": 8940,
+        "reasoning": 0,
+        "total": 9308
+      },
+      "cost": 0.043120000000000006,
+      "estimated_cost_usd": 0.04312,
+      "duration_seconds": 1151.8005781219981,
+      "steps": 6,
+      "recoveries": [
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 0.25 seconds: litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out.",
+          "retry_delay_seconds": 0.25
+        },
+        {
+          "action": "RETRY_MODEL",
+          "category": "MODEL_ERROR",
+          "reason": "Retrying a transient model error after 0.5 seconds: litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out.",
+          "retry_delay_seconds": 0.5
+        },
+        {
+          "action": "STOP",
+          "category": "NO_PROGRESS",
+          "reason": "Task/protocol recovery disabled for this experiment.",
+          "retry_delay_seconds": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out."
+        },
+        {
+          "category": "NO_PROGRESS",
+          "reason": "The model response contained no Tool Call."
+        }
+      ],
+      "budget_exhaustion": [],
+      "usage_incomplete": true,
+      "cost_incomplete": true,
+      "model_error_responses": 2,
+      "blank_model_responses": 1,
+      "retries": 2,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/ledger/AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_ZyhWQLX4DIrkhtTWkdE5knYi",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 0,
+      "context_limit_requests": 0,
+      "max_input_bytes": 19705,
+      "telemetry_requests": 6,
+      "trace_events": 55,
+      "result_path": "runs/gpt-5.6-sol/no-recovery/profile-ledger/repopilot/result.json"
+    },
+    "replacement": {
+      "model": "gpt-5.6-sol",
+      "arm": "no-recovery",
+      "task": "profile-ledger",
+      "run_id": "cdff7905b8464629b9a302bc5695e738",
+      "status": "SUCCEEDED",
+      "repository_pass": true,
+      "task_pass": true,
+      "termination": "correct_success",
+      "recovery_evaluation": {
+        "attempt_count": null,
+        "failure_types": [],
+        "post_recovery_repository_pass": null,
+        "resolved_count": null,
+        "success_rate": null,
+        "trigger_count": null
+      },
+      "error": null,
+      "source_reference_matches": true,
+      "budget_matches": true,
+      "tokens": {
+        "cache_write": null,
+        "cached": 3584,
+        "completion": 1306,
+        "prompt": 45649,
+        "reasoning": 0,
+        "total": 46955
+      },
+      "cost": 0.1958136,
+      "estimated_cost_usd": 0.1958136,
+      "duration_seconds": 120.68874273900292,
+      "steps": 9,
+      "recoveries": [],
+      "failures": [],
+      "budget_exhaustion": [],
+      "usage_incomplete": false,
+      "cost_incomplete": false,
+      "model_error_responses": 0,
+      "blank_model_responses": 0,
+      "retries": 0,
+      "replans": 0,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "profile_fact_counts": [
+        1
+      ],
+      "planning_enabled": [
+        true
+      ],
+      "instruction_sources": [
+        "AGENTS.md",
+        "src/ledger/AGENTS.md"
+      ],
+      "planning_calls": [
+        {
+          "arguments": {
+            "status": "IN_PROGRESS",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_SwzoLltIDIRZQ6zZq6U5MP6W",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        },
+        {
+          "arguments": {
+            "status": "COMPLETED",
+            "step_id": "complete-task"
+          },
+          "tool_call_id": "call_MbUqrHVOT45cfWwcYg9USXxp",
+          "tool_name": "update_plan",
+          "type": "tool_call"
+        }
+      ],
+      "context_trim_requests": 3,
+      "context_limit_requests": 0,
+      "max_input_bytes": 34851,
+      "telemetry_requests": 9,
+      "trace_events": 75,
+      "result_path": "replacements/attempt-1/gpt-5.6-sol/no-recovery/profile-ledger/repopilot/result.json"
+    },
+    "reason": {
+      "model": "gpt-5.6-sol",
+      "variant": "no-recovery",
+      "task": "profile-ledger",
+      "original_run_id": "44df005ebd9245cc929f951a4af4d2e9",
+      "original_result": "runs/gpt-5.6-sol/no-recovery/profile-ledger/repopilot/result.json",
+      "original_status": "FAILED",
+      "model_error_count": 2,
+      "blank_response_count": 1,
+      "reason": "Explicit provider/transport errors and/or blank successful responses with no tool calls. Blank output is suspected upstream contamination, not proven provider attribution."
+    }
+  }
+]

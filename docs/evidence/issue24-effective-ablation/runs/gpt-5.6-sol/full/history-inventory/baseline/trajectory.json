@@ -1,0 +1,706 @@
+{
+  "info": {
+    "model_stats": {
+      "instance_cost": 0.242836,
+      "api_calls": 7
+    },
+    "config": {
+      "agent": {
+        "system_template": "You are a helpful assistant that can interact with a computer.\n",
+        "instance_template": "Please solve this issue: {{task}}\n\nYou can execute bash commands and edit files to implement the necessary changes.\n\n## Recommended Workflow\n\nThis workflow should be done step-by-step so that you can iterate on your changes and any possible problems.\n\n1. Analyze the codebase by finding and reading relevant files\n2. Create a script to reproduce the issue\n3. Edit the source code to resolve the issue\n4. Verify your fix works by running your script again\n5. Test edge cases to ensure your fix is robust\n6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.\n   Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>\n\n## Command Execution Rules\n\nYou are operating in an environment where\n\n1. You issue at least one command\n2. The system executes the command(s) in a subshell\n3. You see the result(s)\n4. You write your next command(s)\n\nEach response should include:\n\n1. **Reasoning text** where you explain your analysis and plan\n2. At least one tool call with your command\n\n**CRITICAL REQUIREMENTS:**\n\n- Your response SHOULD include reasoning text explaining what you're doing\n- Your response MUST include AT LEAST ONE bash tool call\n- Directory or environment variable changes are not persistent. Every action is executed in a new subshell.\n- However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files\n- Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.\n  Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>\n\nExample of a CORRECT response:\n<example_response>\nI need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.\n\n[Makes bash tool call with {\"command\": \"ls -la\"} as arguments]\n</example_response>\n\n<system_information>\n{{system}} {{release}} {{version}} {{machine}}\n</system_information>\n\n## Useful command examples\n\n### Create a new file:\n\n```bash\ncat <<'EOF' > newfile.py\nimport numpy as np\nhello = \"world\"\nprint(hello)\nEOF\n```\n\n### Edit files with sed:\n\n{%- if system == \"Darwin\" -%}\n<important>\nYou are on MacOS. For all the below examples, you need to use `sed -i ''` instead of `sed -i`.\n</important>\n{%- endif -%}\n\n```bash\n# Replace all occurrences\nsed -i 's/old_string/new_string/g' filename.py\n\n# Replace only first occurrence\nsed -i 's/old_string/new_string/' filename.py\n\n# Replace first occurrence on line 1\nsed -i '1s/old_string/new_string/' filename.py\n\n# Replace all occurrences in lines 1-10\nsed -i '1,10s/old_string/new_string/g' filename.py\n```\n\n### View file content:\n\n```bash\n# View specific lines with numbers\nnl -ba filename.py | sed -n '10,20p'\n```\n\n### Any other command you want to run\n\n```bash\nanything\n```\n",
+        "step_limit": 48,
+        "cost_limit": 0.0,
+        "wall_time_limit_seconds": 7200,
+        "max_consecutive_format_errors": 3,
+        "output_path": null
+      },
+      "agent_type": "minisweagent.agents.default.DefaultAgent",
+      "model": {
+        "model_name": "openai/gpt-5.6-sol",
+        "model_kwargs": {
+          "temperature": 1,
+          "stream": true,
+          "timeout": 120,
+          "max_tokens": 4096,
+          "api_key": "[REDACTED]",
+          "api_base": "[REDACTED]"
+        },
+        "litellm_model_registry": null,
+        "set_cache_control": null,
+        "cost_tracking": "ignore_errors",
+        "format_error_template": "{{ error }}",
+        "observation_template": "{% if output.exception_info %}<exception>{{output.exception_info}}</exception>\n{% endif %}<returncode>{{output.returncode}}</returncode>\n<output>\n{{output.output}}</output>",
+        "multimodal_regex": ""
+      },
+      "model_type": "repopilot.litellm_streaming.StreamingLitellmModel",
+      "environment": {
+        "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "cwd": "/workspace",
+        "env": {},
+        "forward_env": [],
+        "timeout": 60,
+        "executable": "docker",
+        "run_args": [
+          "--rm",
+          "--mount",
+          "type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-sol/full/history-inventory/baseline/workspace,target=/workspace",
+          "--user=1000:1000"
+        ],
+        "container_timeout": "2h",
+        "pull_timeout": 120,
+        "interpreter": [
+          "bash",
+          "-lc"
+        ]
+      },
+      "environment_type": "minisweagent.environments.docker.DockerEnvironment"
+    },
+    "mini_version": "2.4.6",
+    "exit_status": "Submitted",
+    "submission": ""
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant that can interact with a computer."
+    },
+    {
+      "role": "user",
+      "content": "Please solve this issue: Before editing run `python -m unittest discover -s checks`; after repair rerun the same command successfully. Implement the six-stage inventory reconciliation pipeline in src/inventory according to all six docs/01-parse.md through docs/06-render.md contracts. Review each stage contract and track progress through parsing, validation, normalization, aggregation, selection and rendering; verify stages and end-to-end behavior. Preserve public signatures, docs, config, instructions and tests. If verify_task is available, use it for both test-suite runs.\n\nYou can execute bash commands and edit files to implement the necessary changes.\n\n## Recommended Workflow\n\nThis workflow should be done step-by-step so that you can iterate on your changes and any possible problems.\n\n1. Analyze the codebase by finding and reading relevant files\n2. Create a script to reproduce the issue\n3. Edit the source code to resolve the issue\n4. Verify your fix works by running your script again\n5. Test edge cases to ensure your fix is robust\n6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.\n   Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>\n\n## Command Execution Rules\n\nYou are operating in an environment where\n\n1. You issue at least one command\n2. The system executes the command(s) in a subshell\n3. You see the result(s)\n4. You write your next command(s)\n\nEach response should include:\n\n1. **Reasoning text** where you explain your analysis and plan\n2. At least one tool call with your command\n\n**CRITICAL REQUIREMENTS:**\n\n- Your response SHOULD include reasoning text explaining what you're doing\n- Your response MUST include AT LEAST ONE bash tool call\n- Directory or environment variable changes are not persistent. Every action is executed in a new subshell.\n- However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files\n- Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.\n  Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>\n\nExample of a CORRECT response:\n<example_response>\nI need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.\n\n[Makes bash tool call with {\"command\": \"ls -la\"} as arguments]\n</example_response>\n\n<system_information>\nLinux 6.18.33.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun 18 21:54:43 UTC 2026 x86_64\n</system_information>\n\n## Useful command examples\n\n### Create a new file:\n\n```bash\ncat <<'EOF' > newfile.py\nimport numpy as np\nhello = \"world\"\nprint(hello)\nEOF\n```\n\n### Edit files with sed:```bash\n# Replace all occurrences\nsed -i 's/old_string/new_string/g' filename.py\n\n# Replace only first occurrence\nsed -i 's/old_string/new_string/' filename.py\n\n# Replace first occurrence on line 1\nsed -i '1s/old_string/new_string/' filename.py\n\n# Replace all occurrences in lines 1-10\nsed -i '1,10s/old_string/new_string/g' filename.py\n```\n\n### View file content:\n\n```bash\n# View specific lines with numbers\nnl -ba filename.py | sed -n '10,20p'\n```\n\n### Any other command you want to run\n\n```bash\nanything\n```"
+    },
+    {
+      "content": "I\u2019ll first inspect the repository and run the mandated baseline test suite, then read all six stage contracts alongside the current implementation. I\u2019ll preserve the existing public API and use the tests plus targeted checks to drive the repair.",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\":\"pwd && printf '\\\\n-- files --\\\\n' && find . -maxdepth 3 -type f | sort && printf '\\\\n-- baseline --\\\\n' && python -m unittest discover -s checks\"}",
+            "name": "bash"
+          },
+          "id": "call_x5pAD0ng9vfzfuq5u9LpTS56",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": null,
+      "extra": {
+        "actions": [
+          {
+            "command": "pwd && printf '\\n-- files --\\n' && find . -maxdepth 3 -type f | sort && printf '\\n-- baseline --\\n' && python -m unittest discover -s checks",
+            "tool_call_id": "call_x5pAD0ng9vfzfuq5u9LpTS56"
+          }
+        ],
+        "response": {
+          "id": "chatcmpl-202609100157417364644578268d9d6V7Np4r2n",
+          "created": 1789005464,
+          "model": "gpt-5.6-sol",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "choices": [
+            {
+              "finish_reason": "tool_calls",
+              "index": 0,
+              "message": {
+                "content": "I\u2019ll first inspect the repository and run the mandated baseline test suite, then read all six stage contracts alongside the current implementation. I\u2019ll preserve the existing public API and use the tests plus targeted checks to drive the repair.",
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"pwd && printf '\\\\n-- files --\\\\n' && find . -maxdepth 3 -type f | sort && printf '\\\\n-- baseline --\\\\n' && python -m unittest discover -s checks\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_x5pAD0ng9vfzfuq5u9LpTS56",
+                    "type": "function"
+                  }
+                ],
+                "function_call": null
+              }
+            }
+          ],
+          "usage": {
+            "completion_tokens": 124,
+            "prompt_tokens": 850,
+            "total_tokens": 974,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": null,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            }
+          }
+        },
+        "cost": 0.00588,
+        "timestamp": 1789005465.6696334
+      }
+    },
+    {
+      "content": "<returncode>1</returncode>\n<output>\n/workspace\n\n-- files --\n./.git/COMMIT_EDITMSG\n./.git/HEAD\n./.git/config\n./.git/description\n./.git/hooks/applypatch-msg.sample\n./.git/hooks/commit-msg.sample\n./.git/hooks/fsmonitor-watchman.sample\n./.git/hooks/post-update.sample\n./.git/hooks/pre-applypatch.sample\n./.git/hooks/pre-commit.sample\n./.git/hooks/pre-merge-commit.sample\n./.git/hooks/pre-push.sample\n./.git/hooks/pre-rebase.sample\n./.git/hooks/pre-receive.sample\n./.git/hooks/prepare-commit-msg.sample\n./.git/hooks/push-to-checkout.sample\n./.git/hooks/sendemail-validate.sample\n./.git/hooks/update.sample\n./.git/index\n./.git/info/exclude\n./.git/logs/HEAD\n./AGENTS.md\n./checks/test_pipeline.py\n./docs/01-parse.md\n./docs/02-validate.md\n./docs/03-normalize.md\n./docs/04-aggregate.md\n./docs/05-select.md\n./docs/06-render.md\n./pyproject.toml\n./src/__init__.py\n./src/inventory/AGENTS.md\n./src/inventory/__init__.py\n./src/inventory/aggregate.py\n./src/inventory/normalize.py\n./src/inventory/parse.py\n./src/inventory/pipeline.py\n./src/inventory/render.py\n./src/inventory/select.py\n./src/inventory/validate.py\n\n-- baseline --\n.F\n======================================================================\nFAIL: test_pipeline (test_pipeline.Checks.test_pipeline)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/checks/test_pipeline.py\", line 5, in test_pipeline\n    self.assertEqual(reconcile(json.dumps([{\"sku\":\" B \",\"delta\":2},{\"sku\":\"b\",\"delta\":-1},{\"sku\":\"A\",\"delta\":-2}])), \"a=-2\\nb=1\")\nAssertionError: '' != 'a=-2\\nb=1'\n+ a=-2\n+ b=1\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (failures=1)\n</output>",
+      "extra": {
+        "raw_output": "/workspace\n\n-- files --\n./.git/COMMIT_EDITMSG\n./.git/HEAD\n./.git/config\n./.git/description\n./.git/hooks/applypatch-msg.sample\n./.git/hooks/commit-msg.sample\n./.git/hooks/fsmonitor-watchman.sample\n./.git/hooks/post-update.sample\n./.git/hooks/pre-applypatch.sample\n./.git/hooks/pre-commit.sample\n./.git/hooks/pre-merge-commit.sample\n./.git/hooks/pre-push.sample\n./.git/hooks/pre-rebase.sample\n./.git/hooks/pre-receive.sample\n./.git/hooks/prepare-commit-msg.sample\n./.git/hooks/push-to-checkout.sample\n./.git/hooks/sendemail-validate.sample\n./.git/hooks/update.sample\n./.git/index\n./.git/info/exclude\n./.git/logs/HEAD\n./AGENTS.md\n./checks/test_pipeline.py\n./docs/01-parse.md\n./docs/02-validate.md\n./docs/03-normalize.md\n./docs/04-aggregate.md\n./docs/05-select.md\n./docs/06-render.md\n./pyproject.toml\n./src/__init__.py\n./src/inventory/AGENTS.md\n./src/inventory/__init__.py\n./src/inventory/aggregate.py\n./src/inventory/normalize.py\n./src/inventory/parse.py\n./src/inventory/pipeline.py\n./src/inventory/render.py\n./src/inventory/select.py\n./src/inventory/validate.py\n\n-- baseline --\n.F\n======================================================================\nFAIL: test_pipeline (test_pipeline.Checks.test_pipeline)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/checks/test_pipeline.py\", line 5, in test_pipeline\n    self.assertEqual(reconcile(json.dumps([{\"sku\":\" B \",\"delta\":2},{\"sku\":\"b\",\"delta\":-1},{\"sku\":\"A\",\"delta\":-2}])), \"a=-2\\nb=1\")\nAssertionError: '' != 'a=-2\\nb=1'\n+ a=-2\n+ b=1\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (failures=1)\n",
+        "returncode": 1,
+        "timestamp": 1789005465.9096286,
+        "exception_info": ""
+      },
+      "tool_call_id": "call_x5pAD0ng9vfzfuq5u9LpTS56",
+      "role": "tool"
+    },
+    {
+      "content": "The baseline has one failing end-to-end test: `reconcile` returns an empty string instead of the expected sorted inventory. I\u2019ll now inspect the contracts, stage modules, package guidance, and visible tests to identify whether the defect is isolated or the pipeline is largely stubbed.",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\":\"for f in AGENTS.md src/inventory/AGENTS.md docs/*.md checks/test_pipeline.py; do echo \\\"===== $f =====\\\"; cat \\\"$f\\\"; done\"}",
+            "name": "bash"
+          },
+          "id": "call_E1K4LTbk8SsgG4Sj0HcFTQWR",
+          "type": "function"
+        },
+        {
+          "function": {
+            "arguments": "{\"command\":\"for f in src/inventory/*.py pyproject.toml; do echo \\\"===== $f =====\\\"; nl -ba \\\"$f\\\"; done\"}",
+            "name": "bash"
+          },
+          "id": "call_MSmDznhxtce5ZrrGZRis6nTd",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": null,
+      "extra": {
+        "actions": [
+          {
+            "command": "for f in AGENTS.md src/inventory/AGENTS.md docs/*.md checks/test_pipeline.py; do echo \"===== $f =====\"; cat \"$f\"; done",
+            "tool_call_id": "call_E1K4LTbk8SsgG4Sj0HcFTQWR"
+          },
+          {
+            "command": "for f in src/inventory/*.py pyproject.toml; do echo \"===== $f =====\"; nl -ba \"$f\"; done",
+            "tool_call_id": "call_MSmDznhxtce5ZrrGZRis6nTd"
+          }
+        ],
+        "response": {
+          "id": "chatcmpl-202609100157463225301658268d9d6ScE1kIu2",
+          "created": 1789005467,
+          "model": "gpt-5.6-sol",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "choices": [
+            {
+              "finish_reason": "tool_calls",
+              "index": 0,
+              "message": {
+                "content": "The baseline has one failing end-to-end test: `reconcile` returns an empty string instead of the expected sorted inventory. I\u2019ll now inspect the contracts, stage modules, package guidance, and visible tests to identify whether the defect is isolated or the pipeline is largely stubbed.",
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"for f in AGENTS.md src/inventory/AGENTS.md docs/*.md checks/test_pipeline.py; do echo \\\"===== $f =====\\\"; cat \\\"$f\\\"; done\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_E1K4LTbk8SsgG4Sj0HcFTQWR",
+                    "type": "function"
+                  },
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"for f in src/inventory/*.py pyproject.toml; do echo \\\"===== $f =====\\\"; nl -ba \\\"$f\\\"; done\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_MSmDznhxtce5ZrrGZRis6nTd",
+                    "type": "function"
+                  }
+                ],
+                "function_call": null
+              }
+            }
+          ],
+          "usage": {
+            "completion_tokens": 189,
+            "prompt_tokens": 1453,
+            "total_tokens": 1642,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": null,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            }
+          }
+        },
+        "cost": 0.009592,
+        "timestamp": 1789005471.1942017
+      }
+    },
+    {
+      "content": "<returncode>0</returncode>\n<output>\n===== AGENTS.md =====\nOnly change src/inventory/*.py. Do not change checks, docs, config or instructions. Read stage contracts before implementation. Tests must run before editing and after repair.===== src/inventory/AGENTS.md =====\nUse a pure pipeline with no file/network side effects. Preserve every public function signature. Do not silently coerce booleans or fractional numbers into integer deltas.===== docs/01-parse.md =====\n# parse contract\n\nInput is JSON. Return the decoded top-level list; invalid JSON or a non-list top level returns []. Individual bad elements are handled by validate.\n\nAudit sample records used during stage review:\n- Record 000: sku=\"item-0\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 001: sku=\"item-1\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 002: sku=\"item-2\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 003: sku=\"item-3\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 004: sku=\"item-4\", delta=0; audit batch=1, retain order before aggregation.\n- Record 005: sku=\"item-5\", delta=1; audit batch=1, retain order before aggregation.\n- Record 006: sku=\"item-6\", delta=2; audit batch=1, retain order before aggregation.\n- Record 007: sku=\"item-7\", delta=3; audit batch=1, retain order before aggregation.\n- Record 008: sku=\"item-8\", delta=4; audit batch=1, retain order before aggregation.\n- Record 009: sku=\"item-9\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 010: sku=\"item-10\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 011: sku=\"item-11\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 012: sku=\"item-12\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 013: sku=\"item-13\", delta=0; audit batch=1, retain order before aggregation.\n- Record 014: sku=\"item-14\", delta=1; audit batch=1, retain order before aggregation.\n- Record 015: sku=\"item-15\", delta=2; audit batch=1, retain order before aggregation.\n- Record 016: sku=\"item-16\", delta=3; audit batch=1, retain order before aggregation.\n- Record 017: sku=\"item-0\", delta=4; audit batch=1, retain order before aggregation.\n- Record 018: sku=\"item-1\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 019: sku=\"item-2\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 020: sku=\"item-3\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 021: sku=\"item-4\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 022: sku=\"item-5\", delta=0; audit batch=1, retain order before aggregation.\n- Record 023: sku=\"item-6\", delta=1; audit batch=1, retain order before aggregation.\n- Record 024: sku=\"item-7\", delta=2; audit batch=1, retain order before aggregation.\n- Record 025: sku=\"item-8\", delta=3; audit batch=1, retain order before aggregation.\n- Record 026: sku=\"item-9\", delta=4; audit batch=1, retain order before aggregation.\n- Record 027: sku=\"item-10\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 028: sku=\"item-11\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 029: sku=\"item-12\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 030: sku=\"item-13\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 031: sku=\"item-14\", delta=0; audit batch=1, retain order before aggregation.\n- Record 032: sku=\"item-15\", delta=1; audit batch=1, retain order before aggregation.\n- Record 033: sku=\"item-16\", delta=2; audit batch=1, retain order before aggregation.\n- Record 034: sku=\"item-0\", delta=3; audit batch=1, retain order before aggregation.\n- Record 035: sku=\"item-1\", delta=4; audit batch=1, retain order before aggregation.\n- Record 036: sku=\"item-2\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 037: sku=\"item-3\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 038: sku=\"item-4\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 039: sku=\"item-5\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 040: sku=\"item-6\", delta=0; audit batch=1, retain order before aggregation.\n- Record 041: sku=\"item-7\", delta=1; audit batch=1, retain order before aggregation.\n- Record 042: sku=\"item-8\", delta=2; audit batch=1, retain order before aggregation.\n- Record 043: sku=\"item-9\", delta=3; audit batch=1, retain order before aggregation.\n- Record 044: sku=\"item-10\", delta=4; audit batch=1, retain order before aggregation.\n- Record 045: sku=\"item-11\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 046: sku=\"item-12\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 047: sku=\"item-13\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 048: sku=\"item-14\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 049: sku=\"item-15\", delta=0; audit batch=1, retain order before aggregation.\n- Record 050: sku=\"item-16\", delta=1; audit batch=1, retain order before aggregation.\n- Record 051: sku=\"item-0\", delta=2; audit batch=1, retain order before aggregation.\n- Record 052: sku=\"item-1\", delta=3; audit batch=1, retain order before aggregation.\n- Record 053: sku=\"item-2\", delta=4; audit batch=1, retain order before aggregation.\n- Record 054: sku=\"item-3\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 055: sku=\"item-4\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 056: sku=\"item-5\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 057: sku=\"item-6\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 058: sku=\"item-7\", delta=0; audit batch=1, retain order before aggregation.\n- Record 059: sku=\"item-8\", delta=1; audit batch=1, retain order before aggregation.\n- Record 060: sku=\"item-9\", delta=2; audit batch=1, retain order before aggregation.\n- Record 061: sku=\"item-10\", delta=3; audit batch=1, retain order before aggregation.\n- Record 062: sku=\"item-11\", delta=4; audit batch=1, retain order before aggregation.\n- Record 063: sku=\"item-12\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 064: sku=\"item-13\", delta=-3; audit batch=1, retain order before aggregation.\n\nFinal acceptance condition: Input is JSON. Return the decoded top-level list; invalid JSON or a non-list top level returns []. Individual bad elements are handled by validate.\n===== docs/02-validate.md =====\n# validate contract\n\nKeep only dict entries with a nonempty stripped string sku and an int delta. bool is NOT an int for this contract. Ignore extra fields. Return fresh dicts with only sku and delta, without mutating input.\n\nAudit sample records used during stage review:\n- Record 000: sku=\"item-0\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 001: sku=\"item-1\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 002: sku=\"item-2\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 003: sku=\"item-3\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 004: sku=\"item-4\", delta=0; audit batch=2, retain order before aggregation.\n- Record 005: sku=\"item-5\", delta=1; audit batch=2, retain order before aggregation.\n- Record 006: sku=\"item-6\", delta=2; audit batch=2, retain order before aggregation.\n- Record 007: sku=\"item-7\", delta=3; audit batch=2, retain order before aggregation.\n- Record 008: sku=\"item-8\", delta=4; audit batch=2, retain order before aggregation.\n- Record 009: sku=\"item-9\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 010: sku=\"item-10\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 011: sku=\"item-11\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 012: sku=\"item-12\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 013: sku=\"item-13\", delta=0; audit batch=2, retain order before aggregation.\n- Record 014: sku=\"item-14\", delta=1; audit batch=2, retain order before aggregation.\n- Record 015: sku=\"item-15\", delta=2; audit batch=2, retain order before aggregation.\n- Record 016: sku=\"item-16\", delta=3; audit batch=2, retain order before aggregation.\n- Record 017: sku=\"item-0\", delta=4; audit batch=2, retain order before aggregation.\n- Record 018: sku=\"item-1\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 019: sku=\"item-2\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 020: sku=\"item-3\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 021: sku=\"item-4\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 022: sku=\"item-5\", delta=0; audit batch=2, retain order before aggregation.\n- Record 023: sku=\"item-6\", delta=1; audit batch=2, retain order before aggregation.\n- Record 024: sku=\"item-7\", delta=2; audit batch=2, retain order before aggregation.\n- Record 025: sku=\"item-8\", delta=3; audit batch=2, retain order before aggregation.\n- Record 026: sku=\"item-9\", delta=4; audit batch=2, retain order before aggregation.\n- Record 027: sku=\"item-10\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 028: sku=\"item-11\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 029: sku=\"item-12\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 030: sku=\"item-13\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 031: sku=\"item-14\", delta=0; audit batch=2, retain order before aggregation.\n- Record 032: sku=\"item-15\", delta=1; audit batch=2, retain order before aggregation.\n- Record 033: sku=\"item-16\", delta=2; audit batch=2, retain order before aggregation.\n- Record 034: sku=\"item-0\", delta=3; audit batch=2, retain order before aggregation.\n- Record 035: sku=\"item-1\", delta=4; audit batch=2, retain order before aggregation.\n- Record 036: sku=\"item-2\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 037: sku=\"item-3\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 038: sku=\"item-4\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 039: sku=\"item-5\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 040: sku=\"item-6\", delta=0; audit batch=2, retain order before aggregation.\n- Record 041: sku=\"item-7\", delta=1; audit batch=2, retain order before aggregation.\n- Record 042: sku=\"item-8\", delta=2; audit batch=2, retain order before aggregation.\n- Record 043: sku=\"item-9\", delta=3; audit batch=2, retain order before aggregation.\n- Record 044: sku=\"item-10\", delta=4; audit batch=2, retain order before aggregation.\n- Record 045: sku=\"item-11\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 046: sku=\"item-12\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 047: sku=\"item-13\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 048: sku=\"item-14\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 049: sku=\"item-15\", delta=0; audit batch=2, retain order before aggregation.\n- Record 050: sku=\"item-16\", delta=1; audit batch=2, retain order before aggregation.\n- Record 051: sku=\"item-0\", delta=2; audit batch=2, retain order before aggregation.\n- Record 052: sku=\"item-1\", delta=3; audit batch=2, retain order before aggregation.\n- Record 053: sku=\"item-2\", delta=4; audit batch=2, retain order before aggregation.\n- Record 054: sku=\"item-3\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 055: sku=\"item-4\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 056: sku=\"item-5\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 057: sku=\"item-6\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 058: sku=\"item-7\", delta=0; audit batch=2, retain order before aggregation.\n- Record 059: sku=\"item-8\", delta=1; audit batch=2, retain order before aggregation.\n- Record 060: sku=\"item-9\", delta=2; audit batch=2, retain order before aggregation.\n- Record 061: sku=\"item-10\", delta=3; audit batch=2, retain order before aggregation.\n- Record 062: sku=\"item-11\", delta=4; audit batch=2, retain order before aggregation.\n- Record 063: sku=\"item-12\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 064: sku=\"item-13\", delta=-3; audit batch=2, retain order before aggregation.\n\nFinal acceptance condition: Keep only dict entries with a nonempty stripped string sku and an int delta. bool is NOT an int for this contract. Ignore extra fields. Return fresh dicts with only sku and delta, without mutating input.\n===== docs/03-normalize.md =====\n# normalize contract\n\nReturn new records with sku.strip().casefold() and unchanged integer delta. Unicode casefold is required, not lower. Preserve order and never mutate inputs.\n\nAudit sample records used during stage review:\n- Record 000: sku=\"item-0\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 001: sku=\"item-1\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 002: sku=\"item-2\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 003: sku=\"item-3\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 004: sku=\"item-4\", delta=0; audit batch=3, retain order before aggregation.\n- Record 005: sku=\"item-5\", delta=1; audit batch=3, retain order before aggregation.\n- Record 006: sku=\"item-6\", delta=2; audit batch=3, retain order before aggregation.\n- Record 007: sku=\"item-7\", delta=3; audit batch=3, retain order before aggregation.\n- Record 008: sku=\"item-8\", delta=4; audit batch=3, retain order before aggregation.\n- Record 009: sku=\"item-9\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 010: sku=\"item-10\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 011: sku=\"item-11\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 012: sku=\"item-12\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 013: sku=\"item-13\", delta=0; audit batch=3, retain order before aggregation.\n- Record 014: sku=\"item-14\", delta=1; audit batch=3, retain order before aggregation.\n- Record 015: sku=\"item-15\", delta=2; audit batch=3, retain order before aggregation.\n- Record 016: sku=\"item-16\", delta=3; audit batch=3, retain order before aggregation.\n- Record 017: sku=\"item-0\", delta=4; audit batch=3, retain order before aggregation.\n- Record 018: sku=\"item-1\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 019: sku=\"item-2\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 020: sku=\"item-3\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 021: sku=\"item-4\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 022: sku=\"item-5\", delta=0; audit batch=3, retain order before aggregation.\n- Record 023: sku=\"item-6\", delta=1; audit batch=3, retain order before aggregation.\n- Record 024: sku=\"item-7\", delta=2; audit batch=3, retain order before aggregation.\n- Record 025: sku=\"item-8\", delta=3; audit batch=3, retain order before aggregation.\n- Record 026: sku=\"item-9\", delta=4; audit batch=3, retain order before aggregation.\n- Record 027: sku=\"item-10\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 028: sku=\"item-11\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 029: sku=\"item-12\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 030: sku=\"item-13\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 031: sku=\"item-14\", delta=0; audit batch=3, retain order before aggregation.\n- Record 032: sku=\"item-15\", delta=1; audit batch=3, retain order before aggregation.\n- Record 033: sku=\"item-16\", delta=2; audit batch=3, retain order before aggregation.\n- Record 034: sku=\"item-0\", delta=3; audit batch=3, retain order before aggregation.\n- Record 035: sku=\"item-1\", delta=4; audit batch=3, retain order before aggregation.\n- Record 036: sku=\"item-2\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 037: sku=\"item-3\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 038: sku=\"item-4\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 039: sku=\"item-5\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 040: sku=\"item-6\", delta=0; audit batch=3, retain order before aggregation.\n- Record 041: sku=\"item-7\", delta=1; audit batch=3, retain order before aggregation.\n- Record 042: sku=\"item-8\", delta=2; audit batch=3, retain order before aggregation.\n- Record 043: sku=\"item-9\", delta=3; audit batch=3, retain order before aggregation.\n- Record 044: sku=\"item-10\", delta=4; audit batch=3, retain order before aggregation.\n- Record 045: sku=\"item-11\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 046: sku=\"item-12\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 047: sku=\"item-13\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 048: sku=\"item-14\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 049: sku=\"item-15\", delta=0; audit batch=3, retain order before aggregation.\n- Record 050: sku=\"item-16\", delta=1; audit batch=3, retain order before aggregation.\n- Record 051: sku=\"item-0\", delta=2; audit batch=3, retain order before aggregation.\n- Record 052: sku=\"item-1\", delta=3; audit batch=3, retain order before aggregation.\n- Record 053: sku=\"item-2\", delta=4; audit batch=3, retain order before aggregation.\n- Record 054: sku=\"item-3\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 055: sku=\"item-4\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 056: sku=\"item-5\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 057: sku=\"item-6\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 058: sku=\"item-7\", delta=0; audit batch=3, retain order before aggregation.\n- Record 059: sku=\"item-8\", delta=1; audit batch=3, retain order before aggregation.\n- Record 060: sku=\"item-9\", delta=2; audit batch=3, retain order before aggregation.\n- Record 061: sku=\"item-10\", delta=3; audit batch=3, retain order before aggregation.\n- Record 062: sku=\"item-11\", delta=4; audit batch=3, retain order before aggregation.\n- Record 063: sku=\"item-12\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 064: sku=\"item-13\", delta=-3; audit batch=3, retain order before aggregation.\n\nFinal acceptance condition: Return new records with sku.strip().casefold() and unchanged integer delta. Unicode casefold is required, not lower. Preserve order and never mutate inputs.\n===== docs/04-aggregate.md =====\n# aggregate contract\n\nSum deltas for identical normalized sku keys, including negative values. Return a mapping containing zero totals too. Do not mutate records.\n\nAudit sample records used during stage review:\n- Record 000: sku=\"item-0\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 001: sku=\"item-1\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 002: sku=\"item-2\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 003: sku=\"item-3\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 004: sku=\"item-4\", delta=0; audit batch=4, retain order before aggregation.\n- Record 005: sku=\"item-5\", delta=1; audit batch=4, retain order before aggregation.\n- Record 006: sku=\"item-6\", delta=2; audit batch=4, retain order before aggregation.\n- Record 007: sku=\"item-7\", delta=3; audit batch=4, retain order before aggregation.\n- Record 008: sku=\"item-8\", delta=4; audit batch=4, retain order before aggregation.\n- Record 009: sku=\"item-9\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 010: sku=\"item-10\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 011: sku=\"item-11\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 012: sku=\"item-12\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 013: sku=\"item-13\", delta=0; audit batch=4, retain order before aggregation.\n- Record 014: sku=\"item-14\", delta=1; audit batch=4, retain order before aggregation.\n- Record 015: sku=\"item-15\", delta=2; audit batch=4, retain order before aggregation.\n- Record 016: sku=\"item-16\", delta=3; audit batch=4, retain order before aggregation.\n- Record 017: sku=\"item-0\", delta=4; audit batch=4, retain order before aggregation.\n- Record 018: sku=\"item-1\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 019: sku=\"item-2\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 020: sku=\"item-3\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 021: sku=\"item-4\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 022: sku=\"item-5\", delta=0; audit batch=4, retain order before aggregation.\n- Record 023: sku=\"item-6\", delta=1; audit batch=4, retain order before aggregation.\n- Record 024: sku=\"item-7\", delta=2; audit batch=4, retain order before aggregation.\n- Record 025: sku=\"item-8\", delta=3; audit batch=4, retain order before aggregation.\n- Record 026: sku=\"item-9\", delta=4; audit batch=4, retain order before aggregation.\n- Record 027: sku=\"item-10\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 028: sku=\"item-11\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 029: sku=\"item-12\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 030: sku=\"item-13\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 031: sku=\"item-14\", delta=0; audit batch=4, retain order before aggregation.\n- Record 032: sku=\"item-15\", delta=1; audit batch=4, retain order before aggregation.\n- Record 033: sku=\"item-16\", delta=2; audit batch=4, retain order before aggregation.\n- Record 034: sku=\"item-0\", delta=3; audit batch=4, retain order before aggregation.\n- Record 035: sku=\"item-1\", delta=4; audit batch=4, retain order before aggregation.\n- Record 036: sku=\"item-2\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 037: sku=\"item-3\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 038: sku=\"item-4\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 039: sku=\"item-5\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 040: sku=\"item-6\", delta=0; audit batch=4, retain order before aggregation.\n- Record 041: sku=\"item-7\", delta=1; audit batch=4, retain order before aggregation.\n- Record 042: sku=\"item-8\", delta=2; audit batch=4, retain order before aggregation.\n- Record 043: sku=\"item-9\", delta=3; audit batch=4, retain order before aggregation.\n- Record 044: sku=\"item-10\", delta=4; audit batch=4, retain order before aggregation.\n- Record 045: sku=\"item-11\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 046: sku=\"item-12\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 047: sku=\"item-13\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 048: sku=\"item-14\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 049: sku=\"item-15\", delta=0; audit batch=4, retain order before aggregation.\n- Record 050: sku=\"item-16\", delta=1; audit batch=4, retain order before aggregation.\n- Record 051: sku=\"item-0\", delta=2; audit batch=4, retain order before aggregation.\n- Record 052: sku=\"item-1\", delta=3; audit batch=4, retain order before aggregation.\n- Record 053: sku=\"item-2\", delta=4; audit batch=4, retain order before aggregation.\n- Record 054: sku=\"item-3\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 055: sku=\"item-4\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 056: sku=\"item-5\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 057: sku=\"item-6\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 058: sku=\"item-7\", delta=0; audit batch=4, retain order before aggregation.\n- Record 059: sku=\"item-8\", delta=1; audit batch=4, retain order before aggregation.\n- Record 060: sku=\"item-9\", delta=2; audit batch=4, retain order before aggregation.\n- Record 061: sku=\"item-10\", delta=3; audit batch=4, retain order before aggregation.\n- Record 062: sku=\"item-11\", delta=4; audit batch=4, retain order before aggregation.\n- Record 063: sku=\"item-12\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 064: sku=\"item-13\", delta=-3; audit batch=4, retain order before aggregation.\n\nFinal acceptance condition: Sum deltas for identical normalized sku keys, including negative values. Return a mapping containing zero totals too. Do not mutate records.\n===== docs/05-select.md =====\n# select contract\n\nReturn a new mapping omitting exactly zero balances; negative inventory remains. Do not mutate input.\n\nAudit sample records used during stage review:\n- Record 000: sku=\"item-0\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 001: sku=\"item-1\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 002: sku=\"item-2\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 003: sku=\"item-3\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 004: sku=\"item-4\", delta=0; audit batch=5, retain order before aggregation.\n- Record 005: sku=\"item-5\", delta=1; audit batch=5, retain order before aggregation.\n- Record 006: sku=\"item-6\", delta=2; audit batch=5, retain order before aggregation.\n- Record 007: sku=\"item-7\", delta=3; audit batch=5, retain order before aggregation.\n- Record 008: sku=\"item-8\", delta=4; audit batch=5, retain order before aggregation.\n- Record 009: sku=\"item-9\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 010: sku=\"item-10\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 011: sku=\"item-11\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 012: sku=\"item-12\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 013: sku=\"item-13\", delta=0; audit batch=5, retain order before aggregation.\n- Record 014: sku=\"item-14\", delta=1; audit batch=5, retain order before aggregation.\n- Record 015: sku=\"item-15\", delta=2; audit batch=5, retain order before aggregation.\n- Record 016: sku=\"item-16\", delta=3; audit batch=5, retain order before aggregation.\n- Record 017: sku=\"item-0\", delta=4; audit batch=5, retain order before aggregation.\n- Record 018: sku=\"item-1\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 019: sku=\"item-2\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 020: sku=\"item-3\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 021: sku=\"item-4\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 022: sku=\"item-5\", delta=0; audit batch=5, retain order before aggregation.\n- Record 023: sku=\"item-6\", delta=1; audit batch=5, retain order before aggregation.\n- Record 024: sku=\"item-7\", delta=2; audit batch=5, retain order before aggregation.\n- Record 025: sku=\"item-8\", delta=3; audit batch=5, retain order before aggregation.\n- Record 026: sku=\"item-9\", delta=4; audit batch=5, retain order before aggregation.\n- Record 027: sku=\"item-10\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 028: sku=\"item-11\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 029: sku=\"item-12\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 030: sku=\"item-13\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 031: sku=\"item-14\", delta=0; audit batch=5, retain order before aggregation.\n- Record 032: sku=\"item-15\", delta=1; audit batch=5, retain order before aggregation.\n- Record 033: sku=\"item-16\", delta=2; audit batch=5, retain order before aggregation.\n- Record 034: sku=\"item-0\", delta=3; audit batch=5, retain order before aggregation.\n- Record 035: sku=\"item-1\", delta=4; audit batch=5, retain order before aggregation.\n- Record 036: sku=\"item-2\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 037: sku=\"item-3\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 038: sku=\"item-4\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 039: sku=\"item-5\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 040: sku=\"item-6\", delta=0; audit batch=5, retain order before aggregation.\n- Record 041: sku=\"item-7\", delta=1; audit batch=5, retain order before aggregation.\n- Record 042: sku=\"item-8\", delta=2; audit batch=5, retain order before aggregation.\n- Record 043: sku=\"item-9\", delta=3; audit batch=5, retain order before aggregation.\n- Record 044: sku=\"item-10\", delta=4; audit batch=5, retain order before aggregation.\n- Record 045: sku=\"item-11\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 046: sku=\"item-12\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 047: sku=\"item-13\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 048: sku=\"item-14\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 049: sku=\"item-15\", delta=0; audit batch=5, retain order before aggregation.\n- Record 050: sku=\"item-16\", delta=1; audit batch=5, retain order before aggregation.\n- Record 051: sku=\"item-0\", delta=2; audit batch=5, retain order before aggregation.\n- Record 052: sku=\"item-1\", delta=3; audit batch=5, retain order before aggregation.\n- Record 053: sku=\"item-2\", delta=4; audit batch=5, retain order before aggregation.\n- Record 054: sku=\"item-3\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 055: sku=\"item-4\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 056: sku=\"item-5\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 057: sku=\"item-6\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 058: sku=\"item-7\", delta=0; audit batch=5, retain order before aggregation.\n- Record 059: sku=\"item-8\", delta=1; audit batch=5, retain order before aggregation.\n- Record 060: sku=\"item-9\", delta=2; audit batch=5, retain order before aggregation.\n- Record 061: sku=\"item-10\", delta=3; audit batch=5, retain order before aggregation.\n- Record 062: sku=\"item-11\", delta=4; audit batch=5, retain order before aggregation.\n- Record 063: sku=\"item-12\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 064: sku=\"item-13\", delta=-3; audit batch=5, retain order before aggregation.\n\nFinal acceptance condition: Return a new mapping omitting exactly zero balances; negative inventory remains. Do not mutate input.\n===== docs/06-render.md =====\n# render contract\n\nSort normalized sku lexicographically, render sku=integer, join with newline, no trailing newline. Empty mapping renders empty string.\n\nAudit sample records used during stage review:\n- Record 000: sku=\"item-0\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 001: sku=\"item-1\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 002: sku=\"item-2\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 003: sku=\"item-3\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 004: sku=\"item-4\", delta=0; audit batch=6, retain order before aggregation.\n- Record 005: sku=\"item-5\", delta=1; audit batch=6, retain order before aggregation.\n- Record 006: sku=\"item-6\", delta=2; audit batch=6, retain order before aggregation.\n- Record 007: sku=\"item-7\", delta=3; audit batch=6, retain order before aggregation.\n- Record 008: sku=\"item-8\", delta=4; audit batch=6, retain order before aggregation.\n- Record 009: sku=\"item-9\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 010: sku=\"item-10\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 011: sku=\"item-11\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 012: sku=\"item-12\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 013: sku=\"item-13\", delta=0; audit batch=6, retain order before aggregation.\n- Record 014: sku=\"item-14\", delta=1; audit batch=6, retain order before aggregation.\n- Record 015: sku=\"item-15\", delta=2; audit batch=6, retain order before aggregation.\n- Record 016: sku=\"item-16\", delta=3; audit batch=6, retain order before aggregation.\n- Record 017: sku=\"item-0\", delta=4; audit batch=6, retain order before aggregation.\n- Record 018: sku=\"item-1\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 019: sku=\"item-2\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 020: sku=\"item-3\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 021: sku=\"item-4\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 022: sku=\"item-5\", delta=0; audit batch=6, retain order before aggregation.\n- Record 023: sku=\"item-6\", delta=1; audit batch=6, retain order before aggregation.\n- Record 024: sku=\"item-7\", delta=2; audit batch=6, retain order before aggregation.\n- Record 025: sku=\"item-8\", delta=3; audit batch=6, retain order before aggregation.\n- Record 026: sku=\"item-9\", delta=4; audit batch=6, retain order before aggregation.\n- Record 027: sku=\"item-10\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 028: sku=\"item-11\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 029: sku=\"item-12\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 030: sku=\"item-13\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 031: sku=\"item-14\", delta=0; audit batch=6, retain order before aggregation.\n- Record 032: sku=\"item-15\", delta=1; audit batch=6, retain order before aggregation.\n- Record 033: sku=\"item-16\", delta=2; audit batch=6, retain order before aggregation.\n- Record 034: sku=\"item-0\", delta=3; audit batch=6, retain order before aggregation.\n- Record 035: sku=\"item-1\", delta=4; audit batch=6, retain order before aggregation.\n- Record 036: sku=\"item-2\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 037: sku=\"item-3\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 038: sku=\"item-4\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 039: sku=\"item-5\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 040: sku=\"item-6\", delta=0; audit batch=6, retain order before aggregation.\n- Record 041: sku=\"item-7\", delta=1; audit batch=6, retain order before aggregation.\n- Record 042: sku=\"item-8\", delta=2; audit batch=6, retain order before aggregation.\n- Record 043: sku=\"item-9\", delta=3; audit batch=6, retain order before aggregation.\n- Record 044: sku=\"item-10\", delta=4; audit batch=6, retain order before aggregation.\n- Record 045: sku=\"item-11\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 046: sku=\"item-12\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 047: sku=\"item-13\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 048: sku=\"item-14\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 049: sku=\"item-15\", delta=0; audit batch=6, retain order before aggregation.\n- Record 050: sku=\"item-16\", delta=1; audit batch=6, retain order before aggregation.\n- Record 051: sku=\"item-0\", delta=2; audit batch=6, retain order before aggregation.\n- Record 052: sku=\"item-1\", delta=3; audit batch=6, retain order before aggregation.\n- Record 053: sku=\"item-2\", delta=4; audit batch=6, retain order before aggregation.\n- Record 054: sku=\"item-3\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 055: sku=\"item-4\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 056: sku=\"item-5\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 057: sku=\"item-6\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 058: sku=\"item-7\", delta=0; audit batch=6, retain order before aggregation.\n- Record 059: sku=\"item-8\", delta=1; audit batch=6, retain order before aggregation.\n- Record 060: sku=\"item-9\", delta=2; audit batch=6, retain order before aggregation.\n- Record 061: sku=\"item-10\", delta=3; audit batch=6, retain order before aggregation.\n- Record 062: sku=\"item-11\", delta=4; audit batch=6, retain order before aggregation.\n- Record 063: sku=\"item-12\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 064: sku=\"item-13\", delta=-3; audit batch=6, retain order before aggregation.\n\nFinal acceptance condition: Sort normalized sku lexicographically, render sku=integer, join with newline, no trailing newline. Empty mapping renders empty string.\n===== checks/test_pipeline.py =====\nimport unittest,json\nfrom src.inventory.pipeline import reconcile\nclass Checks(unittest.TestCase):\n    def test_pipeline(self):\n        self.assertEqual(reconcile(json.dumps([{\"sku\":\" B \",\"delta\":2},{\"sku\":\"b\",\"delta\":-1},{\"sku\":\"A\",\"delta\":-2}])), \"a=-2\\nb=1\")\n    def test_empty(self):\n        self.assertEqual(reconcile(\"[]\"), \"\")\n</output>",
+      "extra": {
+        "raw_output": "===== AGENTS.md =====\nOnly change src/inventory/*.py. Do not change checks, docs, config or instructions. Read stage contracts before implementation. Tests must run before editing and after repair.===== src/inventory/AGENTS.md =====\nUse a pure pipeline with no file/network side effects. Preserve every public function signature. Do not silently coerce booleans or fractional numbers into integer deltas.===== docs/01-parse.md =====\n# parse contract\n\nInput is JSON. Return the decoded top-level list; invalid JSON or a non-list top level returns []. Individual bad elements are handled by validate.\n\nAudit sample records used during stage review:\n- Record 000: sku=\"item-0\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 001: sku=\"item-1\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 002: sku=\"item-2\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 003: sku=\"item-3\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 004: sku=\"item-4\", delta=0; audit batch=1, retain order before aggregation.\n- Record 005: sku=\"item-5\", delta=1; audit batch=1, retain order before aggregation.\n- Record 006: sku=\"item-6\", delta=2; audit batch=1, retain order before aggregation.\n- Record 007: sku=\"item-7\", delta=3; audit batch=1, retain order before aggregation.\n- Record 008: sku=\"item-8\", delta=4; audit batch=1, retain order before aggregation.\n- Record 009: sku=\"item-9\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 010: sku=\"item-10\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 011: sku=\"item-11\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 012: sku=\"item-12\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 013: sku=\"item-13\", delta=0; audit batch=1, retain order before aggregation.\n- Record 014: sku=\"item-14\", delta=1; audit batch=1, retain order before aggregation.\n- Record 015: sku=\"item-15\", delta=2; audit batch=1, retain order before aggregation.\n- Record 016: sku=\"item-16\", delta=3; audit batch=1, retain order before aggregation.\n- Record 017: sku=\"item-0\", delta=4; audit batch=1, retain order before aggregation.\n- Record 018: sku=\"item-1\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 019: sku=\"item-2\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 020: sku=\"item-3\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 021: sku=\"item-4\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 022: sku=\"item-5\", delta=0; audit batch=1, retain order before aggregation.\n- Record 023: sku=\"item-6\", delta=1; audit batch=1, retain order before aggregation.\n- Record 024: sku=\"item-7\", delta=2; audit batch=1, retain order before aggregation.\n- Record 025: sku=\"item-8\", delta=3; audit batch=1, retain order before aggregation.\n- Record 026: sku=\"item-9\", delta=4; audit batch=1, retain order before aggregation.\n- Record 027: sku=\"item-10\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 028: sku=\"item-11\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 029: sku=\"item-12\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 030: sku=\"item-13\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 031: sku=\"item-14\", delta=0; audit batch=1, retain order before aggregation.\n- Record 032: sku=\"item-15\", delta=1; audit batch=1, retain order before aggregation.\n- Record 033: sku=\"item-16\", delta=2; audit batch=1, retain order before aggregation.\n- Record 034: sku=\"item-0\", delta=3; audit batch=1, retain order before aggregation.\n- Record 035: sku=\"item-1\", delta=4; audit batch=1, retain order before aggregation.\n- Record 036: sku=\"item-2\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 037: sku=\"item-3\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 038: sku=\"item-4\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 039: sku=\"item-5\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 040: sku=\"item-6\", delta=0; audit batch=1, retain order before aggregation.\n- Record 041: sku=\"item-7\", delta=1; audit batch=1, retain order before aggregation.\n- Record 042: sku=\"item-8\", delta=2; audit batch=1, retain order before aggregation.\n- Record 043: sku=\"item-9\", delta=3; audit batch=1, retain order before aggregation.\n- Record 044: sku=\"item-10\", delta=4; audit batch=1, retain order before aggregation.\n- Record 045: sku=\"item-11\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 046: sku=\"item-12\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 047: sku=\"item-13\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 048: sku=\"item-14\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 049: sku=\"item-15\", delta=0; audit batch=1, retain order before aggregation.\n- Record 050: sku=\"item-16\", delta=1; audit batch=1, retain order before aggregation.\n- Record 051: sku=\"item-0\", delta=2; audit batch=1, retain order before aggregation.\n- Record 052: sku=\"item-1\", delta=3; audit batch=1, retain order before aggregation.\n- Record 053: sku=\"item-2\", delta=4; audit batch=1, retain order before aggregation.\n- Record 054: sku=\"item-3\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 055: sku=\"item-4\", delta=-3; audit batch=1, retain order before aggregation.\n- Record 056: sku=\"item-5\", delta=-2; audit batch=1, retain order before aggregation.\n- Record 057: sku=\"item-6\", delta=-1; audit batch=1, retain order before aggregation.\n- Record 058: sku=\"item-7\", delta=0; audit batch=1, retain order before aggregation.\n- Record 059: sku=\"item-8\", delta=1; audit batch=1, retain order before aggregation.\n- Record 060: sku=\"item-9\", delta=2; audit batch=1, retain order before aggregation.\n- Record 061: sku=\"item-10\", delta=3; audit batch=1, retain order before aggregation.\n- Record 062: sku=\"item-11\", delta=4; audit batch=1, retain order before aggregation.\n- Record 063: sku=\"item-12\", delta=-4; audit batch=1, retain order before aggregation.\n- Record 064: sku=\"item-13\", delta=-3; audit batch=1, retain order before aggregation.\n\nFinal acceptance condition: Input is JSON. Return the decoded top-level list; invalid JSON or a non-list top level returns []. Individual bad elements are handled by validate.\n===== docs/02-validate.md =====\n# validate contract\n\nKeep only dict entries with a nonempty stripped string sku and an int delta. bool is NOT an int for this contract. Ignore extra fields. Return fresh dicts with only sku and delta, without mutating input.\n\nAudit sample records used during stage review:\n- Record 000: sku=\"item-0\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 001: sku=\"item-1\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 002: sku=\"item-2\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 003: sku=\"item-3\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 004: sku=\"item-4\", delta=0; audit batch=2, retain order before aggregation.\n- Record 005: sku=\"item-5\", delta=1; audit batch=2, retain order before aggregation.\n- Record 006: sku=\"item-6\", delta=2; audit batch=2, retain order before aggregation.\n- Record 007: sku=\"item-7\", delta=3; audit batch=2, retain order before aggregation.\n- Record 008: sku=\"item-8\", delta=4; audit batch=2, retain order before aggregation.\n- Record 009: sku=\"item-9\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 010: sku=\"item-10\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 011: sku=\"item-11\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 012: sku=\"item-12\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 013: sku=\"item-13\", delta=0; audit batch=2, retain order before aggregation.\n- Record 014: sku=\"item-14\", delta=1; audit batch=2, retain order before aggregation.\n- Record 015: sku=\"item-15\", delta=2; audit batch=2, retain order before aggregation.\n- Record 016: sku=\"item-16\", delta=3; audit batch=2, retain order before aggregation.\n- Record 017: sku=\"item-0\", delta=4; audit batch=2, retain order before aggregation.\n- Record 018: sku=\"item-1\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 019: sku=\"item-2\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 020: sku=\"item-3\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 021: sku=\"item-4\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 022: sku=\"item-5\", delta=0; audit batch=2, retain order before aggregation.\n- Record 023: sku=\"item-6\", delta=1; audit batch=2, retain order before aggregation.\n- Record 024: sku=\"item-7\", delta=2; audit batch=2, retain order before aggregation.\n- Record 025: sku=\"item-8\", delta=3; audit batch=2, retain order before aggregation.\n- Record 026: sku=\"item-9\", delta=4; audit batch=2, retain order before aggregation.\n- Record 027: sku=\"item-10\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 028: sku=\"item-11\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 029: sku=\"item-12\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 030: sku=\"item-13\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 031: sku=\"item-14\", delta=0; audit batch=2, retain order before aggregation.\n- Record 032: sku=\"item-15\", delta=1; audit batch=2, retain order before aggregation.\n- Record 033: sku=\"item-16\", delta=2; audit batch=2, retain order before aggregation.\n- Record 034: sku=\"item-0\", delta=3; audit batch=2, retain order before aggregation.\n- Record 035: sku=\"item-1\", delta=4; audit batch=2, retain order before aggregation.\n- Record 036: sku=\"item-2\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 037: sku=\"item-3\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 038: sku=\"item-4\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 039: sku=\"item-5\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 040: sku=\"item-6\", delta=0; audit batch=2, retain order before aggregation.\n- Record 041: sku=\"item-7\", delta=1; audit batch=2, retain order before aggregation.\n- Record 042: sku=\"item-8\", delta=2; audit batch=2, retain order before aggregation.\n- Record 043: sku=\"item-9\", delta=3; audit batch=2, retain order before aggregation.\n- Record 044: sku=\"item-10\", delta=4; audit batch=2, retain order before aggregation.\n- Record 045: sku=\"item-11\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 046: sku=\"item-12\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 047: sku=\"item-13\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 048: sku=\"item-14\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 049: sku=\"item-15\", delta=0; audit batch=2, retain order before aggregation.\n- Record 050: sku=\"item-16\", delta=1; audit batch=2, retain order before aggregation.\n- Record 051: sku=\"item-0\", delta=2; audit batch=2, retain order before aggregation.\n- Record 052: sku=\"item-1\", delta=3; audit batch=2, retain order before aggregation.\n- Record 053: sku=\"item-2\", delta=4; audit batch=2, retain order before aggregation.\n- Record 054: sku=\"item-3\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 055: sku=\"item-4\", delta=-3; audit batch=2, retain order before aggregation.\n- Record 056: sku=\"item-5\", delta=-2; audit batch=2, retain order before aggregation.\n- Record 057: sku=\"item-6\", delta=-1; audit batch=2, retain order before aggregation.\n- Record 058: sku=\"item-7\", delta=0; audit batch=2, retain order before aggregation.\n- Record 059: sku=\"item-8\", delta=1; audit batch=2, retain order before aggregation.\n- Record 060: sku=\"item-9\", delta=2; audit batch=2, retain order before aggregation.\n- Record 061: sku=\"item-10\", delta=3; audit batch=2, retain order before aggregation.\n- Record 062: sku=\"item-11\", delta=4; audit batch=2, retain order before aggregation.\n- Record 063: sku=\"item-12\", delta=-4; audit batch=2, retain order before aggregation.\n- Record 064: sku=\"item-13\", delta=-3; audit batch=2, retain order before aggregation.\n\nFinal acceptance condition: Keep only dict entries with a nonempty stripped string sku and an int delta. bool is NOT an int for this contract. Ignore extra fields. Return fresh dicts with only sku and delta, without mutating input.\n===== docs/03-normalize.md =====\n# normalize contract\n\nReturn new records with sku.strip().casefold() and unchanged integer delta. Unicode casefold is required, not lower. Preserve order and never mutate inputs.\n\nAudit sample records used during stage review:\n- Record 000: sku=\"item-0\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 001: sku=\"item-1\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 002: sku=\"item-2\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 003: sku=\"item-3\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 004: sku=\"item-4\", delta=0; audit batch=3, retain order before aggregation.\n- Record 005: sku=\"item-5\", delta=1; audit batch=3, retain order before aggregation.\n- Record 006: sku=\"item-6\", delta=2; audit batch=3, retain order before aggregation.\n- Record 007: sku=\"item-7\", delta=3; audit batch=3, retain order before aggregation.\n- Record 008: sku=\"item-8\", delta=4; audit batch=3, retain order before aggregation.\n- Record 009: sku=\"item-9\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 010: sku=\"item-10\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 011: sku=\"item-11\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 012: sku=\"item-12\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 013: sku=\"item-13\", delta=0; audit batch=3, retain order before aggregation.\n- Record 014: sku=\"item-14\", delta=1; audit batch=3, retain order before aggregation.\n- Record 015: sku=\"item-15\", delta=2; audit batch=3, retain order before aggregation.\n- Record 016: sku=\"item-16\", delta=3; audit batch=3, retain order before aggregation.\n- Record 017: sku=\"item-0\", delta=4; audit batch=3, retain order before aggregation.\n- Record 018: sku=\"item-1\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 019: sku=\"item-2\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 020: sku=\"item-3\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 021: sku=\"item-4\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 022: sku=\"item-5\", delta=0; audit batch=3, retain order before aggregation.\n- Record 023: sku=\"item-6\", delta=1; audit batch=3, retain order before aggregation.\n- Record 024: sku=\"item-7\", delta=2; audit batch=3, retain order before aggregation.\n- Record 025: sku=\"item-8\", delta=3; audit batch=3, retain order before aggregation.\n- Record 026: sku=\"item-9\", delta=4; audit batch=3, retain order before aggregation.\n- Record 027: sku=\"item-10\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 028: sku=\"item-11\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 029: sku=\"item-12\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 030: sku=\"item-13\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 031: sku=\"item-14\", delta=0; audit batch=3, retain order before aggregation.\n- Record 032: sku=\"item-15\", delta=1; audit batch=3, retain order before aggregation.\n- Record 033: sku=\"item-16\", delta=2; audit batch=3, retain order before aggregation.\n- Record 034: sku=\"item-0\", delta=3; audit batch=3, retain order before aggregation.\n- Record 035: sku=\"item-1\", delta=4; audit batch=3, retain order before aggregation.\n- Record 036: sku=\"item-2\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 037: sku=\"item-3\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 038: sku=\"item-4\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 039: sku=\"item-5\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 040: sku=\"item-6\", delta=0; audit batch=3, retain order before aggregation.\n- Record 041: sku=\"item-7\", delta=1; audit batch=3, retain order before aggregation.\n- Record 042: sku=\"item-8\", delta=2; audit batch=3, retain order before aggregation.\n- Record 043: sku=\"item-9\", delta=3; audit batch=3, retain order before aggregation.\n- Record 044: sku=\"item-10\", delta=4; audit batch=3, retain order before aggregation.\n- Record 045: sku=\"item-11\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 046: sku=\"item-12\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 047: sku=\"item-13\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 048: sku=\"item-14\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 049: sku=\"item-15\", delta=0; audit batch=3, retain order before aggregation.\n- Record 050: sku=\"item-16\", delta=1; audit batch=3, retain order before aggregation.\n- Record 051: sku=\"item-0\", delta=2; audit batch=3, retain order before aggregation.\n- Record 052: sku=\"item-1\", delta=3; audit batch=3, retain order before aggregation.\n- Record 053: sku=\"item-2\", delta=4; audit batch=3, retain order before aggregation.\n- Record 054: sku=\"item-3\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 055: sku=\"item-4\", delta=-3; audit batch=3, retain order before aggregation.\n- Record 056: sku=\"item-5\", delta=-2; audit batch=3, retain order before aggregation.\n- Record 057: sku=\"item-6\", delta=-1; audit batch=3, retain order before aggregation.\n- Record 058: sku=\"item-7\", delta=0; audit batch=3, retain order before aggregation.\n- Record 059: sku=\"item-8\", delta=1; audit batch=3, retain order before aggregation.\n- Record 060: sku=\"item-9\", delta=2; audit batch=3, retain order before aggregation.\n- Record 061: sku=\"item-10\", delta=3; audit batch=3, retain order before aggregation.\n- Record 062: sku=\"item-11\", delta=4; audit batch=3, retain order before aggregation.\n- Record 063: sku=\"item-12\", delta=-4; audit batch=3, retain order before aggregation.\n- Record 064: sku=\"item-13\", delta=-3; audit batch=3, retain order before aggregation.\n\nFinal acceptance condition: Return new records with sku.strip().casefold() and unchanged integer delta. Unicode casefold is required, not lower. Preserve order and never mutate inputs.\n===== docs/04-aggregate.md =====\n# aggregate contract\n\nSum deltas for identical normalized sku keys, including negative values. Return a mapping containing zero totals too. Do not mutate records.\n\nAudit sample records used during stage review:\n- Record 000: sku=\"item-0\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 001: sku=\"item-1\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 002: sku=\"item-2\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 003: sku=\"item-3\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 004: sku=\"item-4\", delta=0; audit batch=4, retain order before aggregation.\n- Record 005: sku=\"item-5\", delta=1; audit batch=4, retain order before aggregation.\n- Record 006: sku=\"item-6\", delta=2; audit batch=4, retain order before aggregation.\n- Record 007: sku=\"item-7\", delta=3; audit batch=4, retain order before aggregation.\n- Record 008: sku=\"item-8\", delta=4; audit batch=4, retain order before aggregation.\n- Record 009: sku=\"item-9\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 010: sku=\"item-10\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 011: sku=\"item-11\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 012: sku=\"item-12\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 013: sku=\"item-13\", delta=0; audit batch=4, retain order before aggregation.\n- Record 014: sku=\"item-14\", delta=1; audit batch=4, retain order before aggregation.\n- Record 015: sku=\"item-15\", delta=2; audit batch=4, retain order before aggregation.\n- Record 016: sku=\"item-16\", delta=3; audit batch=4, retain order before aggregation.\n- Record 017: sku=\"item-0\", delta=4; audit batch=4, retain order before aggregation.\n- Record 018: sku=\"item-1\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 019: sku=\"item-2\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 020: sku=\"item-3\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 021: sku=\"item-4\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 022: sku=\"item-5\", delta=0; audit batch=4, retain order before aggregation.\n- Record 023: sku=\"item-6\", delta=1; audit batch=4, retain order before aggregation.\n- Record 024: sku=\"item-7\", delta=2; audit batch=4, retain order before aggregation.\n- Record 025: sku=\"item-8\", delta=3; audit batch=4, retain order before aggregation.\n- Record 026: sku=\"item-9\", delta=4; audit batch=4, retain order before aggregation.\n- Record 027: sku=\"item-10\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 028: sku=\"item-11\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 029: sku=\"item-12\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 030: sku=\"item-13\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 031: sku=\"item-14\", delta=0; audit batch=4, retain order before aggregation.\n- Record 032: sku=\"item-15\", delta=1; audit batch=4, retain order before aggregation.\n- Record 033: sku=\"item-16\", delta=2; audit batch=4, retain order before aggregation.\n- Record 034: sku=\"item-0\", delta=3; audit batch=4, retain order before aggregation.\n- Record 035: sku=\"item-1\", delta=4; audit batch=4, retain order before aggregation.\n- Record 036: sku=\"item-2\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 037: sku=\"item-3\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 038: sku=\"item-4\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 039: sku=\"item-5\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 040: sku=\"item-6\", delta=0; audit batch=4, retain order before aggregation.\n- Record 041: sku=\"item-7\", delta=1; audit batch=4, retain order before aggregation.\n- Record 042: sku=\"item-8\", delta=2; audit batch=4, retain order before aggregation.\n- Record 043: sku=\"item-9\", delta=3; audit batch=4, retain order before aggregation.\n- Record 044: sku=\"item-10\", delta=4; audit batch=4, retain order before aggregation.\n- Record 045: sku=\"item-11\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 046: sku=\"item-12\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 047: sku=\"item-13\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 048: sku=\"item-14\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 049: sku=\"item-15\", delta=0; audit batch=4, retain order before aggregation.\n- Record 050: sku=\"item-16\", delta=1; audit batch=4, retain order before aggregation.\n- Record 051: sku=\"item-0\", delta=2; audit batch=4, retain order before aggregation.\n- Record 052: sku=\"item-1\", delta=3; audit batch=4, retain order before aggregation.\n- Record 053: sku=\"item-2\", delta=4; audit batch=4, retain order before aggregation.\n- Record 054: sku=\"item-3\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 055: sku=\"item-4\", delta=-3; audit batch=4, retain order before aggregation.\n- Record 056: sku=\"item-5\", delta=-2; audit batch=4, retain order before aggregation.\n- Record 057: sku=\"item-6\", delta=-1; audit batch=4, retain order before aggregation.\n- Record 058: sku=\"item-7\", delta=0; audit batch=4, retain order before aggregation.\n- Record 059: sku=\"item-8\", delta=1; audit batch=4, retain order before aggregation.\n- Record 060: sku=\"item-9\", delta=2; audit batch=4, retain order before aggregation.\n- Record 061: sku=\"item-10\", delta=3; audit batch=4, retain order before aggregation.\n- Record 062: sku=\"item-11\", delta=4; audit batch=4, retain order before aggregation.\n- Record 063: sku=\"item-12\", delta=-4; audit batch=4, retain order before aggregation.\n- Record 064: sku=\"item-13\", delta=-3; audit batch=4, retain order before aggregation.\n\nFinal acceptance condition: Sum deltas for identical normalized sku keys, including negative values. Return a mapping containing zero totals too. Do not mutate records.\n===== docs/05-select.md =====\n# select contract\n\nReturn a new mapping omitting exactly zero balances; negative inventory remains. Do not mutate input.\n\nAudit sample records used during stage review:\n- Record 000: sku=\"item-0\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 001: sku=\"item-1\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 002: sku=\"item-2\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 003: sku=\"item-3\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 004: sku=\"item-4\", delta=0; audit batch=5, retain order before aggregation.\n- Record 005: sku=\"item-5\", delta=1; audit batch=5, retain order before aggregation.\n- Record 006: sku=\"item-6\", delta=2; audit batch=5, retain order before aggregation.\n- Record 007: sku=\"item-7\", delta=3; audit batch=5, retain order before aggregation.\n- Record 008: sku=\"item-8\", delta=4; audit batch=5, retain order before aggregation.\n- Record 009: sku=\"item-9\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 010: sku=\"item-10\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 011: sku=\"item-11\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 012: sku=\"item-12\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 013: sku=\"item-13\", delta=0; audit batch=5, retain order before aggregation.\n- Record 014: sku=\"item-14\", delta=1; audit batch=5, retain order before aggregation.\n- Record 015: sku=\"item-15\", delta=2; audit batch=5, retain order before aggregation.\n- Record 016: sku=\"item-16\", delta=3; audit batch=5, retain order before aggregation.\n- Record 017: sku=\"item-0\", delta=4; audit batch=5, retain order before aggregation.\n- Record 018: sku=\"item-1\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 019: sku=\"item-2\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 020: sku=\"item-3\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 021: sku=\"item-4\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 022: sku=\"item-5\", delta=0; audit batch=5, retain order before aggregation.\n- Record 023: sku=\"item-6\", delta=1; audit batch=5, retain order before aggregation.\n- Record 024: sku=\"item-7\", delta=2; audit batch=5, retain order before aggregation.\n- Record 025: sku=\"item-8\", delta=3; audit batch=5, retain order before aggregation.\n- Record 026: sku=\"item-9\", delta=4; audit batch=5, retain order before aggregation.\n- Record 027: sku=\"item-10\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 028: sku=\"item-11\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 029: sku=\"item-12\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 030: sku=\"item-13\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 031: sku=\"item-14\", delta=0; audit batch=5, retain order before aggregation.\n- Record 032: sku=\"item-15\", delta=1; audit batch=5, retain order before aggregation.\n- Record 033: sku=\"item-16\", delta=2; audit batch=5, retain order before aggregation.\n- Record 034: sku=\"item-0\", delta=3; audit batch=5, retain order before aggregation.\n- Record 035: sku=\"item-1\", delta=4; audit batch=5, retain order before aggregation.\n- Record 036: sku=\"item-2\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 037: sku=\"item-3\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 038: sku=\"item-4\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 039: sku=\"item-5\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 040: sku=\"item-6\", delta=0; audit batch=5, retain order before aggregation.\n- Record 041: sku=\"item-7\", delta=1; audit batch=5, retain order before aggregation.\n- Record 042: sku=\"item-8\", delta=2; audit batch=5, retain order before aggregation.\n- Record 043: sku=\"item-9\", delta=3; audit batch=5, retain order before aggregation.\n- Record 044: sku=\"item-10\", delta=4; audit batch=5, retain order before aggregation.\n- Record 045: sku=\"item-11\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 046: sku=\"item-12\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 047: sku=\"item-13\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 048: sku=\"item-14\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 049: sku=\"item-15\", delta=0; audit batch=5, retain order before aggregation.\n- Record 050: sku=\"item-16\", delta=1; audit batch=5, retain order before aggregation.\n- Record 051: sku=\"item-0\", delta=2; audit batch=5, retain order before aggregation.\n- Record 052: sku=\"item-1\", delta=3; audit batch=5, retain order before aggregation.\n- Record 053: sku=\"item-2\", delta=4; audit batch=5, retain order before aggregation.\n- Record 054: sku=\"item-3\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 055: sku=\"item-4\", delta=-3; audit batch=5, retain order before aggregation.\n- Record 056: sku=\"item-5\", delta=-2; audit batch=5, retain order before aggregation.\n- Record 057: sku=\"item-6\", delta=-1; audit batch=5, retain order before aggregation.\n- Record 058: sku=\"item-7\", delta=0; audit batch=5, retain order before aggregation.\n- Record 059: sku=\"item-8\", delta=1; audit batch=5, retain order before aggregation.\n- Record 060: sku=\"item-9\", delta=2; audit batch=5, retain order before aggregation.\n- Record 061: sku=\"item-10\", delta=3; audit batch=5, retain order before aggregation.\n- Record 062: sku=\"item-11\", delta=4; audit batch=5, retain order before aggregation.\n- Record 063: sku=\"item-12\", delta=-4; audit batch=5, retain order before aggregation.\n- Record 064: sku=\"item-13\", delta=-3; audit batch=5, retain order before aggregation.\n\nFinal acceptance condition: Return a new mapping omitting exactly zero balances; negative inventory remains. Do not mutate input.\n===== docs/06-render.md =====\n# render contract\n\nSort normalized sku lexicographically, render sku=integer, join with newline, no trailing newline. Empty mapping renders empty string.\n\nAudit sample records used during stage review:\n- Record 000: sku=\"item-0\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 001: sku=\"item-1\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 002: sku=\"item-2\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 003: sku=\"item-3\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 004: sku=\"item-4\", delta=0; audit batch=6, retain order before aggregation.\n- Record 005: sku=\"item-5\", delta=1; audit batch=6, retain order before aggregation.\n- Record 006: sku=\"item-6\", delta=2; audit batch=6, retain order before aggregation.\n- Record 007: sku=\"item-7\", delta=3; audit batch=6, retain order before aggregation.\n- Record 008: sku=\"item-8\", delta=4; audit batch=6, retain order before aggregation.\n- Record 009: sku=\"item-9\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 010: sku=\"item-10\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 011: sku=\"item-11\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 012: sku=\"item-12\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 013: sku=\"item-13\", delta=0; audit batch=6, retain order before aggregation.\n- Record 014: sku=\"item-14\", delta=1; audit batch=6, retain order before aggregation.\n- Record 015: sku=\"item-15\", delta=2; audit batch=6, retain order before aggregation.\n- Record 016: sku=\"item-16\", delta=3; audit batch=6, retain order before aggregation.\n- Record 017: sku=\"item-0\", delta=4; audit batch=6, retain order before aggregation.\n- Record 018: sku=\"item-1\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 019: sku=\"item-2\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 020: sku=\"item-3\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 021: sku=\"item-4\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 022: sku=\"item-5\", delta=0; audit batch=6, retain order before aggregation.\n- Record 023: sku=\"item-6\", delta=1; audit batch=6, retain order before aggregation.\n- Record 024: sku=\"item-7\", delta=2; audit batch=6, retain order before aggregation.\n- Record 025: sku=\"item-8\", delta=3; audit batch=6, retain order before aggregation.\n- Record 026: sku=\"item-9\", delta=4; audit batch=6, retain order before aggregation.\n- Record 027: sku=\"item-10\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 028: sku=\"item-11\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 029: sku=\"item-12\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 030: sku=\"item-13\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 031: sku=\"item-14\", delta=0; audit batch=6, retain order before aggregation.\n- Record 032: sku=\"item-15\", delta=1; audit batch=6, retain order before aggregation.\n- Record 033: sku=\"item-16\", delta=2; audit batch=6, retain order before aggregation.\n- Record 034: sku=\"item-0\", delta=3; audit batch=6, retain order before aggregation.\n- Record 035: sku=\"item-1\", delta=4; audit batch=6, retain order before aggregation.\n- Record 036: sku=\"item-2\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 037: sku=\"item-3\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 038: sku=\"item-4\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 039: sku=\"item-5\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 040: sku=\"item-6\", delta=0; audit batch=6, retain order before aggregation.\n- Record 041: sku=\"item-7\", delta=1; audit batch=6, retain order before aggregation.\n- Record 042: sku=\"item-8\", delta=2; audit batch=6, retain order before aggregation.\n- Record 043: sku=\"item-9\", delta=3; audit batch=6, retain order before aggregation.\n- Record 044: sku=\"item-10\", delta=4; audit batch=6, retain order before aggregation.\n- Record 045: sku=\"item-11\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 046: sku=\"item-12\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 047: sku=\"item-13\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 048: sku=\"item-14\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 049: sku=\"item-15\", delta=0; audit batch=6, retain order before aggregation.\n- Record 050: sku=\"item-16\", delta=1; audit batch=6, retain order before aggregation.\n- Record 051: sku=\"item-0\", delta=2; audit batch=6, retain order before aggregation.\n- Record 052: sku=\"item-1\", delta=3; audit batch=6, retain order before aggregation.\n- Record 053: sku=\"item-2\", delta=4; audit batch=6, retain order before aggregation.\n- Record 054: sku=\"item-3\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 055: sku=\"item-4\", delta=-3; audit batch=6, retain order before aggregation.\n- Record 056: sku=\"item-5\", delta=-2; audit batch=6, retain order before aggregation.\n- Record 057: sku=\"item-6\", delta=-1; audit batch=6, retain order before aggregation.\n- Record 058: sku=\"item-7\", delta=0; audit batch=6, retain order before aggregation.\n- Record 059: sku=\"item-8\", delta=1; audit batch=6, retain order before aggregation.\n- Record 060: sku=\"item-9\", delta=2; audit batch=6, retain order before aggregation.\n- Record 061: sku=\"item-10\", delta=3; audit batch=6, retain order before aggregation.\n- Record 062: sku=\"item-11\", delta=4; audit batch=6, retain order before aggregation.\n- Record 063: sku=\"item-12\", delta=-4; audit batch=6, retain order before aggregation.\n- Record 064: sku=\"item-13\", delta=-3; audit batch=6, retain order before aggregation.\n\nFinal acceptance condition: Sort normalized sku lexicographically, render sku=integer, join with newline, no trailing newline. Empty mapping renders empty string.\n===== checks/test_pipeline.py =====\nimport unittest,json\nfrom src.inventory.pipeline import reconcile\nclass Checks(unittest.TestCase):\n    def test_pipeline(self):\n        self.assertEqual(reconcile(json.dumps([{\"sku\":\" B \",\"delta\":2},{\"sku\":\"b\",\"delta\":-1},{\"sku\":\"A\",\"delta\":-2}])), \"a=-2\\nb=1\")\n    def test_empty(self):\n        self.assertEqual(reconcile(\"[]\"), \"\")\n",
+        "returncode": 0,
+        "timestamp": 1789005519.472054,
+        "exception_info": ""
+      },
+      "tool_call_id": "call_E1K4LTbk8SsgG4Sj0HcFTQWR",
+      "role": "tool"
+    },
+    {
+      "content": "<returncode>0</returncode>\n<output>\n===== src/inventory/__init__.py =====\n===== src/inventory/aggregate.py =====\n     1\tdef aggregate(events: list):\n     2\t    return {}\n===== src/inventory/normalize.py =====\n     1\tdef normalize(events: list):\n     2\t    return []\n===== src/inventory/parse.py =====\n     1\tdef parse(text: str):\n     2\t    return []\n===== src/inventory/pipeline.py =====\n     1\tfrom .parse import parse\n     2\tfrom .validate import validate\n     3\tfrom .normalize import normalize\n     4\tfrom .aggregate import aggregate\n     5\tfrom .select import select\n     6\tfrom .render import render\n     7\t\n     8\tdef reconcile(text: str) -> str:\n     9\t    return render(select(aggregate(normalize(validate(parse(text))))))\n===== src/inventory/render.py =====\n     1\tdef render(balances: dict):\n     2\t    return \"\"\n===== src/inventory/select.py =====\n     1\tdef select(balances: dict):\n     2\t    return {}\n===== src/inventory/validate.py =====\n     1\tdef validate(events: list):\n     2\t    return []\n===== pyproject.toml =====\n     1\t[project]\n     2\tname = \"inventory-fixture\"\n     3\tversion = \"0.0.1\"\n     4\t[tool.inventory]\n     5\ttest-command = \"python -m unittest discover -s checks\"\n     6\tcontracts = \"docs/01-parse.md through docs/06-render.md\"\n</output>",
+      "extra": {
+        "raw_output": "===== src/inventory/__init__.py =====\n===== src/inventory/aggregate.py =====\n     1\tdef aggregate(events: list):\n     2\t    return {}\n===== src/inventory/normalize.py =====\n     1\tdef normalize(events: list):\n     2\t    return []\n===== src/inventory/parse.py =====\n     1\tdef parse(text: str):\n     2\t    return []\n===== src/inventory/pipeline.py =====\n     1\tfrom .parse import parse\n     2\tfrom .validate import validate\n     3\tfrom .normalize import normalize\n     4\tfrom .aggregate import aggregate\n     5\tfrom .select import select\n     6\tfrom .render import render\n     7\t\n     8\tdef reconcile(text: str) -> str:\n     9\t    return render(select(aggregate(normalize(validate(parse(text))))))\n===== src/inventory/render.py =====\n     1\tdef render(balances: dict):\n     2\t    return \"\"\n===== src/inventory/select.py =====\n     1\tdef select(balances: dict):\n     2\t    return {}\n===== src/inventory/validate.py =====\n     1\tdef validate(events: list):\n     2\t    return []\n===== pyproject.toml =====\n     1\t[project]\n     2\tname = \"inventory-fixture\"\n     3\tversion = \"0.0.1\"\n     4\t[tool.inventory]\n     5\ttest-command = \"python -m unittest discover -s checks\"\n     6\tcontracts = \"docs/01-parse.md through docs/06-render.md\"\n",
+        "returncode": 0,
+        "timestamp": 1789005519.4728837,
+        "exception_info": ""
+      },
+      "tool_call_id": "call_MSmDznhxtce5ZrrGZRis6nTd",
+      "role": "tool"
+    },
+    {
+      "content": "The implementation confirms all six stages are stubs, while the pipeline wiring already reflects the required order. I\u2019ll implement each contract independently: JSON parsing with safe fallback, strict validation excluding booleans, immutable normalization using `casefold`, insertion-preserving aggregation including zero totals, zero-only selection, and sorted rendering. No files outside `src/inventory/*.py` will be changed.",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\":\"cat <<'EOF' > src/inventory/parse.py\\n\\\"\\\"\\\"JSON input parsing for the inventory pipeline.\\\"\\\"\\\"\\n\\nimport json\\n\\n\\ndef parse(text: str):\\n    \\\"\\\"\\\"Decode *text* into a top-level list, or return an empty list.\\\"\\\"\\\"\\n    try:\\n        value = json.loads(text)\\n    except (TypeError, ValueError):\\n        return []\\n    return value if isinstance(value, list) else []\\nEOF\\n\\ncat <<'EOF' > src/inventory/validate.py\\n\\\"\\\"\\\"Validation and filtering of parsed inventory events.\\\"\\\"\\\"\\n\\n\\ndef validate(events: list):\\n    \\\"\\\"\\\"Return fresh, minimal records that satisfy the event contract.\\\"\\\"\\\"\\n    valid = []\\n    for event in events:\\n        if not isinstance(event, dict):\\n            continue\\n        sku = event.get(\\\"sku\\\")\\n        delta = event.get(\\\"delta\\\")\\n        if not isinstance(sku, str) or not sku.strip():\\n            continue\\n        if isinstance(delta, bool) or not isinstance(delta, int):\\n            continue\\n        valid.append({\\\"sku\\\": sku, \\\"delta\\\": delta})\\n    return valid\\nEOF\\n\\ncat <<'EOF' > src/inventory/normalize.py\\n\\\"\\\"\\\"Canonicalization of validated inventory events.\\\"\\\"\\\"\\n\\n\\ndef normalize(events: list):\\n    \\\"\\\"\\\"Return new events with canonical, case-insensitive SKU keys.\\\"\\\"\\\"\\n    return [{\\\"sku\\\": event[\\\"sku\\\"].strip().casefold(), \\\"delta\\\": event[\\\"delta\\\"]}\\n            for event in events]\\nEOF\\n\\ncat <<'EOF' > src/inventory/aggregate.py\\n\\\"\\\"\\\"Balance aggregation for normalized inventory events.\\\"\\\"\\\"\\n\\n\\ndef aggregate(events: list):\\n    \\\"\\\"\\\"Sum event deltas by SKU, retaining keys whose total is zero.\\\"\\\"\\\"\\n    balances = {}\\n    for event in events:\\n        sku = event[\\\"sku\\\"]\\n        balances[sku] = balances.get(sku, 0) + event[\\\"delta\\\"]\\n    return balances\\nEOF\\n\\ncat <<'EOF' > src/inventory/select.py\\n\\\"\\\"\\\"Selection of non-zero inventory balances.\\\"\\\"\\\"\\n\\n\\ndef select(balances: dict):\\n    \\\"\\\"\\\"Return a new mapping containing every non-zero balance.\\\"\\\"\\\"\\n    return {sku: balance for sku, balance in balances.items() if balance != 0}\\nEOF\\n\\ncat <<'EOF' > src/inventory/render.py\\n\\\"\\\"\\\"Text rendering of inventory balances.\\\"\\\"\\\"\\n\\n\\ndef render(balances: dict):\\n    \\\"\\\"\\\"Render balances in lexicographic SKU order without a trailing newline.\\\"\\\"\\\"\\n    return \\\"\\\\n\\\".join(f\\\"{sku}={balances[sku]}\\\" for sku in sorted(balances))\\nEOF\\n\\npython -m unittest discover -s checks\"}",
+            "name": "bash"
+          },
+          "id": "call_FiqOGq2WRTUlcLFutbMSZryk",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": null,
+      "extra": {
+        "actions": [
+          {
+            "command": "cat <<'EOF' > src/inventory/parse.py\n\"\"\"JSON input parsing for the inventory pipeline.\"\"\"\n\nimport json\n\n\ndef parse(text: str):\n    \"\"\"Decode *text* into a top-level list, or return an empty list.\"\"\"\n    try:\n        value = json.loads(text)\n    except (TypeError, ValueError):\n        return []\n    return value if isinstance(value, list) else []\nEOF\n\ncat <<'EOF' > src/inventory/validate.py\n\"\"\"Validation and filtering of parsed inventory events.\"\"\"\n\n\ndef validate(events: list):\n    \"\"\"Return fresh, minimal records that satisfy the event contract.\"\"\"\n    valid = []\n    for event in events:\n        if not isinstance(event, dict):\n            continue\n        sku = event.get(\"sku\")\n        delta = event.get(\"delta\")\n        if not isinstance(sku, str) or not sku.strip():\n            continue\n        if isinstance(delta, bool) or not isinstance(delta, int):\n            continue\n        valid.append({\"sku\": sku, \"delta\": delta})\n    return valid\nEOF\n\ncat <<'EOF' > src/inventory/normalize.py\n\"\"\"Canonicalization of validated inventory events.\"\"\"\n\n\ndef normalize(events: list):\n    \"\"\"Return new events with canonical, case-insensitive SKU keys.\"\"\"\n    return [{\"sku\": event[\"sku\"].strip().casefold(), \"delta\": event[\"delta\"]}\n            for event in events]\nEOF\n\ncat <<'EOF' > src/inventory/aggregate.py\n\"\"\"Balance aggregation for normalized inventory events.\"\"\"\n\n\ndef aggregate(events: list):\n    \"\"\"Sum event deltas by SKU, retaining keys whose total is zero.\"\"\"\n    balances = {}\n    for event in events:\n        sku = event[\"sku\"]\n        balances[sku] = balances.get(sku, 0) + event[\"delta\"]\n    return balances\nEOF\n\ncat <<'EOF' > src/inventory/select.py\n\"\"\"Selection of non-zero inventory balances.\"\"\"\n\n\ndef select(balances: dict):\n    \"\"\"Return a new mapping containing every non-zero balance.\"\"\"\n    return {sku: balance for sku, balance in balances.items() if balance != 0}\nEOF\n\ncat <<'EOF' > src/inventory/render.py\n\"\"\"Text rendering of inventory balances.\"\"\"\n\n\ndef render(balances: dict):\n    \"\"\"Render balances in lexicographic SKU order without a trailing newline.\"\"\"\n    return \"\\n\".join(f\"{sku}={balances[sku]}\" for sku in sorted(balances))\nEOF\n\npython -m unittest discover -s checks",
+            "tool_call_id": "call_FiqOGq2WRTUlcLFutbMSZryk"
+          }
+        ],
+        "response": {
+          "id": "chatcmpl-202609100157520482025248268d9d6aYrqlGQM",
+          "created": 1789005473,
+          "model": "gpt-5.6-sol",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "choices": [
+            {
+              "finish_reason": "tool_calls",
+              "index": 0,
+              "message": {
+                "content": "The implementation confirms all six stages are stubs, while the pipeline wiring already reflects the required order. I\u2019ll implement each contract independently: JSON parsing with safe fallback, strict validation excluding booleans, immutable normalization using `casefold`, insertion-preserving aggregation including zero totals, zero-only selection, and sorted rendering. No files outside `src/inventory/*.py` will be changed.",
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"cat <<'EOF' > src/inventory/parse.py\\n\\\"\\\"\\\"JSON input parsing for the inventory pipeline.\\\"\\\"\\\"\\n\\nimport json\\n\\n\\ndef parse(text: str):\\n    \\\"\\\"\\\"Decode *text* into a top-level list, or return an empty list.\\\"\\\"\\\"\\n    try:\\n        value = json.loads(text)\\n    except (TypeError, ValueError):\\n        return []\\n    return value if isinstance(value, list) else []\\nEOF\\n\\ncat <<'EOF' > src/inventory/validate.py\\n\\\"\\\"\\\"Validation and filtering of parsed inventory events.\\\"\\\"\\\"\\n\\n\\ndef validate(events: list):\\n    \\\"\\\"\\\"Return fresh, minimal records that satisfy the event contract.\\\"\\\"\\\"\\n    valid = []\\n    for event in events:\\n        if not isinstance(event, dict):\\n            continue\\n        sku = event.get(\\\"sku\\\")\\n        delta = event.get(\\\"delta\\\")\\n        if not isinstance(sku, str) or not sku.strip():\\n            continue\\n        if isinstance(delta, bool) or not isinstance(delta, int):\\n            continue\\n        valid.append({\\\"sku\\\": sku, \\\"delta\\\": delta})\\n    return valid\\nEOF\\n\\ncat <<'EOF' > src/inventory/normalize.py\\n\\\"\\\"\\\"Canonicalization of validated inventory events.\\\"\\\"\\\"\\n\\n\\ndef normalize(events: list):\\n    \\\"\\\"\\\"Return new events with canonical, case-insensitive SKU keys.\\\"\\\"\\\"\\n    return [{\\\"sku\\\": event[\\\"sku\\\"].strip().casefold(), \\\"delta\\\": event[\\\"delta\\\"]}\\n            for event in events]\\nEOF\\n\\ncat <<'EOF' > src/inventory/aggregate.py\\n\\\"\\\"\\\"Balance aggregation for normalized inventory events.\\\"\\\"\\\"\\n\\n\\ndef aggregate(events: list):\\n    \\\"\\\"\\\"Sum event deltas by SKU, retaining keys whose total is zero.\\\"\\\"\\\"\\n    balances = {}\\n    for event in events:\\n        sku = event[\\\"sku\\\"]\\n        balances[sku] = balances.get(sku, 0) + event[\\\"delta\\\"]\\n    return balances\\nEOF\\n\\ncat <<'EOF' > src/inventory/select.py\\n\\\"\\\"\\\"Selection of non-zero inventory balances.\\\"\\\"\\\"\\n\\n\\ndef select(balances: dict):\\n    \\\"\\\"\\\"Return a new mapping containing every non-zero balance.\\\"\\\"\\\"\\n    return {sku: balance for sku, balance in balances.items() if balance != 0}\\nEOF\\n\\ncat <<'EOF' > src/inventory/render.py\\n\\\"\\\"\\\"Text rendering of inventory balances.\\\"\\\"\\\"\\n\\n\\ndef render(balances: dict):\\n    \\\"\\\"\\\"Render balances in lexicographic SKU order without a trailing newline.\\\"\\\"\\\"\\n    return \\\"\\\\n\\\".join(f\\\"{sku}={balances[sku]}\\\" for sku in sorted(balances))\\nEOF\\n\\npython -m unittest discover -s checks\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_FiqOGq2WRTUlcLFutbMSZryk",
+                    "type": "function"
+                  }
+                ],
+                "function_call": null
+              }
+            }
+          ],
+          "usage": {
+            "completion_tokens": 950,
+            "prompt_tokens": 12432,
+            "total_tokens": 13382,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": null,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            }
+          }
+        },
+        "cost": 0.068728,
+        "timestamp": 1789005490.8586955
+      }
+    },
+    {
+      "content": "<returncode>0</returncode>\n<output>\n..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n</output>",
+      "extra": {
+        "raw_output": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "returncode": 0,
+        "timestamp": 1789005491.093292,
+        "exception_info": ""
+      },
+      "tool_call_id": "call_FiqOGq2WRTUlcLFutbMSZryk",
+      "role": "tool"
+    },
+    {
+      "content": "The repaired pipeline now passes the required visible suite. I\u2019ll perform stage-by-stage contract checks for malformed input, strict numeric typing, Unicode case folding, immutability, zero retention/removal, ordering, and exact rendering, then review the diff to ensure only permitted source files changed.",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\":\"python - <<'PY'\\nfrom src.inventory.parse import parse\\nfrom src.inventory.validate import validate\\nfrom src.inventory.normalize import normalize\\nfrom src.inventory.aggregate import aggregate\\nfrom src.inventory.select import select\\nfrom src.inventory.render import render\\n\\nassert parse('{bad') == []\\nassert parse('{}') == []\\nassert parse('[1, {\\\"sku\\\":\\\"x\\\",\\\"delta\\\":1}]') == [1, {\\\"sku\\\":\\\"x\\\",\\\"delta\\\":1}]\\nraw = [{\\\"sku\\\":\\\" X \\\",\\\"delta\\\":1,\\\"extra\\\":True}, {\\\"sku\\\":\\\"\\\", \\\"delta\\\":2}, {\\\"sku\\\":\\\"y\\\", \\\"delta\\\":True}, {\\\"sku\\\":\\\"z\\\", \\\"delta\\\":1.5}, None]\\nvalidated = validate(raw)\\nassert validated == [{\\\"sku\\\":\\\" X \\\",\\\"delta\\\":1}]\\nassert raw[0] == {\\\"sku\\\":\\\" X \\\",\\\"delta\\\":1,\\\"extra\\\":True}\\nnormalized = normalize([{\\\"sku\\\":\\\"  Stra\u00dfe \\\",\\\"delta\\\":-2}, {\\\"sku\\\":\\\"X\\\", \\\"delta\\\":2}])\\nassert normalized == [{\\\"sku\\\":\\\"strasse\\\", \\\"delta\\\":-2}, {\\\"sku\\\":\\\"x\\\", \\\"delta\\\":2}]\\nassert aggregate(normalized + [{\\\"sku\\\":\\\"x\\\", \\\"delta\\\":-2}]) == {\\\"strasse\\\":-2, \\\"x\\\":0}\\nbalances = {\\\"b\\\": 1, \\\"a\\\": 0, \\\"c\\\": -3}\\nassert select(balances) == {\\\"b\\\":1, \\\"c\\\":-3}\\nassert balances == {\\\"b\\\": 1, \\\"a\\\": 0, \\\"c\\\": -3}\\nassert render({\\\"b\\\":1,\\\"a\\\":-2}) == \\\"a=-2\\\\nb=1\\\"\\nassert render({}) == \\\"\\\"\\nprint('stage contract checks: OK')\\nPY\\n\\ngit diff -- src/inventory && printf '\\\\n-- status --\\\\n' && git status --short\"}",
+            "name": "bash"
+          },
+          "id": "call_w1vlX7hFc1cmXe7CCUbfyihG",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": null,
+      "extra": {
+        "actions": [
+          {
+            "command": "python - <<'PY'\nfrom src.inventory.parse import parse\nfrom src.inventory.validate import validate\nfrom src.inventory.normalize import normalize\nfrom src.inventory.aggregate import aggregate\nfrom src.inventory.select import select\nfrom src.inventory.render import render\n\nassert parse('{bad') == []\nassert parse('{}') == []\nassert parse('[1, {\"sku\":\"x\",\"delta\":1}]') == [1, {\"sku\":\"x\",\"delta\":1}]\nraw = [{\"sku\":\" X \",\"delta\":1,\"extra\":True}, {\"sku\":\"\", \"delta\":2}, {\"sku\":\"y\", \"delta\":True}, {\"sku\":\"z\", \"delta\":1.5}, None]\nvalidated = validate(raw)\nassert validated == [{\"sku\":\" X \",\"delta\":1}]\nassert raw[0] == {\"sku\":\" X \",\"delta\":1,\"extra\":True}\nnormalized = normalize([{\"sku\":\"  Stra\u00dfe \",\"delta\":-2}, {\"sku\":\"X\", \"delta\":2}])\nassert normalized == [{\"sku\":\"strasse\", \"delta\":-2}, {\"sku\":\"x\", \"delta\":2}]\nassert aggregate(normalized + [{\"sku\":\"x\", \"delta\":-2}]) == {\"strasse\":-2, \"x\":0}\nbalances = {\"b\": 1, \"a\": 0, \"c\": -3}\nassert select(balances) == {\"b\":1, \"c\":-3}\nassert balances == {\"b\": 1, \"a\": 0, \"c\": -3}\nassert render({\"b\":1,\"a\":-2}) == \"a=-2\\nb=1\"\nassert render({}) == \"\"\nprint('stage contract checks: OK')\nPY\n\ngit diff -- src/inventory && printf '\\n-- status --\\n' && git status --short",
+            "tool_call_id": "call_w1vlX7hFc1cmXe7CCUbfyihG"
+          }
+        ],
+        "response": {
+          "id": "chatcmpl-202609100158118135108958268d9d6NXedY2at",
+          "created": 1789005493,
+          "model": "gpt-5.6-sol",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "choices": [
+            {
+              "finish_reason": "tool_calls",
+              "index": 0,
+              "message": {
+                "content": "The repaired pipeline now passes the required visible suite. I\u2019ll perform stage-by-stage contract checks for malformed input, strict numeric typing, Unicode case folding, immutability, zero retention/removal, ordering, and exact rendering, then review the diff to ensure only permitted source files changed.",
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"python - <<'PY'\\nfrom src.inventory.parse import parse\\nfrom src.inventory.validate import validate\\nfrom src.inventory.normalize import normalize\\nfrom src.inventory.aggregate import aggregate\\nfrom src.inventory.select import select\\nfrom src.inventory.render import render\\n\\nassert parse('{bad') == []\\nassert parse('{}') == []\\nassert parse('[1, {\\\"sku\\\":\\\"x\\\",\\\"delta\\\":1}]') == [1, {\\\"sku\\\":\\\"x\\\",\\\"delta\\\":1}]\\nraw = [{\\\"sku\\\":\\\" X \\\",\\\"delta\\\":1,\\\"extra\\\":True}, {\\\"sku\\\":\\\"\\\", \\\"delta\\\":2}, {\\\"sku\\\":\\\"y\\\", \\\"delta\\\":True}, {\\\"sku\\\":\\\"z\\\", \\\"delta\\\":1.5}, None]\\nvalidated = validate(raw)\\nassert validated == [{\\\"sku\\\":\\\" X \\\",\\\"delta\\\":1}]\\nassert raw[0] == {\\\"sku\\\":\\\" X \\\",\\\"delta\\\":1,\\\"extra\\\":True}\\nnormalized = normalize([{\\\"sku\\\":\\\"  Stra\u00dfe \\\",\\\"delta\\\":-2}, {\\\"sku\\\":\\\"X\\\", \\\"delta\\\":2}])\\nassert normalized == [{\\\"sku\\\":\\\"strasse\\\", \\\"delta\\\":-2}, {\\\"sku\\\":\\\"x\\\", \\\"delta\\\":2}]\\nassert aggregate(normalized + [{\\\"sku\\\":\\\"x\\\", \\\"delta\\\":-2}]) == {\\\"strasse\\\":-2, \\\"x\\\":0}\\nbalances = {\\\"b\\\": 1, \\\"a\\\": 0, \\\"c\\\": -3}\\nassert select(balances) == {\\\"b\\\":1, \\\"c\\\":-3}\\nassert balances == {\\\"b\\\": 1, \\\"a\\\": 0, \\\"c\\\": -3}\\nassert render({\\\"b\\\":1,\\\"a\\\":-2}) == \\\"a=-2\\\\nb=1\\\"\\nassert render({}) == \\\"\\\"\\nprint('stage contract checks: OK')\\nPY\\n\\ngit diff -- src/inventory && printf '\\\\n-- status --\\\\n' && git status --short\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_w1vlX7hFc1cmXe7CCUbfyihG",
+                    "type": "function"
+                  }
+                ],
+                "function_call": null
+              }
+            }
+          ],
+          "usage": {
+            "completion_tokens": 595,
+            "prompt_tokens": 13219,
+            "total_tokens": 13814,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": null,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 11776,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            }
+          }
+        },
+        "cost": 0.0223824,
+        "timestamp": 1789005504.4891806
+      }
+    },
+    {
+      "content": "<returncode>0</returncode>\n<output>\nstage contract checks: OK\ndiff --git a/src/inventory/aggregate.py b/src/inventory/aggregate.py\nindex 76fa4d2..b28a088 100644\n--- a/src/inventory/aggregate.py\n+++ b/src/inventory/aggregate.py\n@@ -1,2 +1,10 @@\n+\"\"\"Balance aggregation for normalized inventory events.\"\"\"\n+\n+\n def aggregate(events: list):\n-    return {}\n+    \"\"\"Sum event deltas by SKU, retaining keys whose total is zero.\"\"\"\n+    balances = {}\n+    for event in events:\n+        sku = event[\"sku\"]\n+        balances[sku] = balances.get(sku, 0) + event[\"delta\"]\n+    return balances\ndiff --git a/src/inventory/normalize.py b/src/inventory/normalize.py\nindex b8167f5..16db235 100644\n--- a/src/inventory/normalize.py\n+++ b/src/inventory/normalize.py\n@@ -1,2 +1,7 @@\n+\"\"\"Canonicalization of validated inventory events.\"\"\"\n+\n+\n def normalize(events: list):\n-    return []\n+    \"\"\"Return new events with canonical, case-insensitive SKU keys.\"\"\"\n+    return [{\"sku\": event[\"sku\"].strip().casefold(), \"delta\": event[\"delta\"]}\n+            for event in events]\ndiff --git a/src/inventory/parse.py b/src/inventory/parse.py\nindex 9ebd2e7..a3e3c4b 100644\n--- a/src/inventory/parse.py\n+++ b/src/inventory/parse.py\n@@ -1,2 +1,12 @@\n+\"\"\"JSON input parsing for the inventory pipeline.\"\"\"\n+\n+import json\n+\n+\n def parse(text: str):\n-    return []\n+    \"\"\"Decode *text* into a top-level list, or return an empty list.\"\"\"\n+    try:\n+        value = json.loads(text)\n+    except (TypeError, ValueError):\n+        return []\n+    return value if isinstance(value, list) else []\ndiff --git a/src/inventory/render.py b/src/inventory/render.py\nindex 9814798..7e9b8bb 100644\n--- a/src/inventory/render.py\n+++ b/src/inventory/render.py\n@@ -1,2 +1,6 @@\n+\"\"\"Text rendering of inventory balances.\"\"\"\n+\n+\n def render(balances: dict):\n-    return \"\"\n+    \"\"\"Render balances in lexicographic SKU order without a trailing newline.\"\"\"\n+    return \"\\n\".join(f\"{sku}={balances[sku]}\" for sku in sorted(balances))\ndiff --git a/src/inventory/select.py b/src/inventory/select.py\nindex 6f1a654..67119a3 100644\n--- a/src/inventory/select.py\n+++ b/src/inventory/select.py\n@@ -1,2 +1,6 @@\n+\"\"\"Selection of non-zero inventory balances.\"\"\"\n+\n+\n def select(balances: dict):\n-    return {}\n+    \"\"\"Return a new mapping containing every non-zero balance.\"\"\"\n+    return {sku: balance for sku, balance in balances.items() if balance != 0}\ndiff --git a/src/inventory/validate.py b/src/inventory/validate.py\nindex 3b5d2f9..8a1fa65 100644\n--- a/src/inventory/validate.py\n+++ b/src/inventory/validate.py\n@@ -1,2 +1,17 @@\n+\"\"\"Validation and filtering of parsed inventory events.\"\"\"\n+\n+\n def validate(events: list):\n-    return []\n+    \"\"\"Return fresh, minimal records that satisfy the event contract.\"\"\"\n+    valid = []\n+    for event in events:\n+        if not isinstance(event, dict):\n+            continue\n+        sku = event.get(\"sku\")\n+        delta = event.get(\"delta\")\n+        if not isinstance(sku, str) or not sku.strip():\n+            continue\n+        if isinstance(delta, bool) or not isinstance(delta, int):\n+            continue\n+        valid.append({\"sku\": sku, \"delta\": delta})\n+    return valid\n\n-- status --\n M src/inventory/aggregate.py\n M src/inventory/normalize.py\n M src/inventory/parse.py\n M src/inventory/render.py\n M src/inventory/select.py\n M src/inventory/validate.py\n?? checks/__pycache__/\n?? src/__pycache__/\n?? src/inventory/__pycache__/\n</output>",
+      "extra": {
+        "raw_output": "stage contract checks: OK\ndiff --git a/src/inventory/aggregate.py b/src/inventory/aggregate.py\nindex 76fa4d2..b28a088 100644\n--- a/src/inventory/aggregate.py\n+++ b/src/inventory/aggregate.py\n@@ -1,2 +1,10 @@\n+\"\"\"Balance aggregation for normalized inventory events.\"\"\"\n+\n+\n def aggregate(events: list):\n-    return {}\n+    \"\"\"Sum event deltas by SKU, retaining keys whose total is zero.\"\"\"\n+    balances = {}\n+    for event in events:\n+        sku = event[\"sku\"]\n+        balances[sku] = balances.get(sku, 0) + event[\"delta\"]\n+    return balances\ndiff --git a/src/inventory/normalize.py b/src/inventory/normalize.py\nindex b8167f5..16db235 100644\n--- a/src/inventory/normalize.py\n+++ b/src/inventory/normalize.py\n@@ -1,2 +1,7 @@\n+\"\"\"Canonicalization of validated inventory events.\"\"\"\n+\n+\n def normalize(events: list):\n-    return []\n+    \"\"\"Return new events with canonical, case-insensitive SKU keys.\"\"\"\n+    return [{\"sku\": event[\"sku\"].strip().casefold(), \"delta\": event[\"delta\"]}\n+            for event in events]\ndiff --git a/src/inventory/parse.py b/src/inventory/parse.py\nindex 9ebd2e7..a3e3c4b 100644\n--- a/src/inventory/parse.py\n+++ b/src/inventory/parse.py\n@@ -1,2 +1,12 @@\n+\"\"\"JSON input parsing for the inventory pipeline.\"\"\"\n+\n+import json\n+\n+\n def parse(text: str):\n-    return []\n+    \"\"\"Decode *text* into a top-level list, or return an empty list.\"\"\"\n+    try:\n+        value = json.loads(text)\n+    except (TypeError, ValueError):\n+        return []\n+    return value if isinstance(value, list) else []\ndiff --git a/src/inventory/render.py b/src/inventory/render.py\nindex 9814798..7e9b8bb 100644\n--- a/src/inventory/render.py\n+++ b/src/inventory/render.py\n@@ -1,2 +1,6 @@\n+\"\"\"Text rendering of inventory balances.\"\"\"\n+\n+\n def render(balances: dict):\n-    return \"\"\n+    \"\"\"Render balances in lexicographic SKU order without a trailing newline.\"\"\"\n+    return \"\\n\".join(f\"{sku}={balances[sku]}\" for sku in sorted(balances))\ndiff --git a/src/inventory/select.py b/src/inventory/select.py\nindex 6f1a654..67119a3 100644\n--- a/src/inventory/select.py\n+++ b/src/inventory/select.py\n@@ -1,2 +1,6 @@\n+\"\"\"Selection of non-zero inventory balances.\"\"\"\n+\n+\n def select(balances: dict):\n-    return {}\n+    \"\"\"Return a new mapping containing every non-zero balance.\"\"\"\n+    return {sku: balance for sku, balance in balances.items() if balance != 0}\ndiff --git a/src/inventory/validate.py b/src/inventory/validate.py\nindex 3b5d2f9..8a1fa65 100644\n--- a/src/inventory/validate.py\n+++ b/src/inventory/validate.py\n@@ -1,2 +1,17 @@\n+\"\"\"Validation and filtering of parsed inventory events.\"\"\"\n+\n+\n def validate(events: list):\n-    return []\n+    \"\"\"Return fresh, minimal records that satisfy the event contract.\"\"\"\n+    valid = []\n+    for event in events:\n+        if not isinstance(event, dict):\n+            continue\n+        sku = event.get(\"sku\")\n+        delta = event.get(\"delta\")\n+        if not isinstance(sku, str) or not sku.strip():\n+            continue\n+        if isinstance(delta, bool) or not isinstance(delta, int):\n+            continue\n+        valid.append({\"sku\": sku, \"delta\": delta})\n+    return valid\n\n-- status --\n M src/inventory/aggregate.py\n M src/inventory/normalize.py\n M src/inventory/parse.py\n M src/inventory/render.py\n M src/inventory/select.py\n M src/inventory/validate.py\n?? checks/__pycache__/\n?? src/__pycache__/\n?? src/inventory/__pycache__/\n",
+        "returncode": 0,
+        "timestamp": 1789005504.6158407,
+        "exception_info": ""
+      },
+      "tool_call_id": "call_w1vlX7hFc1cmXe7CCUbfyihG",
+      "role": "tool"
+    },
+    {
+      "content": "All targeted stage checks pass and the diff is limited to the six implementation modules. The test runs created untracked Python bytecode directories, so I\u2019ll remove those artifacts, rerun the exact mandated suite once more as the final verification, and then submit.",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\":\"rm -rf checks/__pycache__ src/__pycache__ src/inventory/__pycache__ && python -m unittest discover -s checks && git status --short\"}",
+            "name": "bash"
+          },
+          "id": "call_JF2CyGeIZH7qE7xBY42cBrgy",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": null,
+      "extra": {
+        "actions": [
+          {
+            "command": "rm -rf checks/__pycache__ src/__pycache__ src/inventory/__pycache__ && python -m unittest discover -s checks && git status --short",
+            "tool_call_id": "call_JF2CyGeIZH7qE7xBY42cBrgy"
+          }
+        ],
+        "response": {
+          "id": "chatcmpl-202609100158253334351358268d9d6mrapX7VP",
+          "created": 1789005518,
+          "model": "gpt-5.6-sol",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "choices": [
+            {
+              "finish_reason": "tool_calls",
+              "index": 0,
+              "message": {
+                "content": "All targeted stage checks pass and the diff is limited to the six implementation modules. The test runs created untracked Python bytecode directories, so I\u2019ll remove those artifacts, rerun the exact mandated suite once more as the final verification, and then submit.",
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"rm -rf checks/__pycache__ src/__pycache__ src/inventory/__pycache__ && python -m unittest discover -s checks && git status --short\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_JF2CyGeIZH7qE7xBY42cBrgy",
+                    "type": "function"
+                  }
+                ],
+                "function_call": null
+              }
+            }
+          ],
+          "usage": {
+            "completion_tokens": 166,
+            "prompt_tokens": 14692,
+            "total_tokens": 14858,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": null,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            }
+          }
+        },
+        "cost": 0.062088000000000004,
+        "timestamp": 1789005525.712412
+      }
+    },
+    {
+      "content": "<returncode>0</returncode>\n<output>\n..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n M src/inventory/aggregate.py\n M src/inventory/normalize.py\n M src/inventory/parse.py\n M src/inventory/render.py\n M src/inventory/select.py\n M src/inventory/validate.py\n?? checks/__pycache__/\n?? src/__pycache__/\n?? src/inventory/__pycache__/\n</output>",
+      "extra": {
+        "raw_output": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n M src/inventory/aggregate.py\n M src/inventory/normalize.py\n M src/inventory/parse.py\n M src/inventory/render.py\n M src/inventory/select.py\n M src/inventory/validate.py\n?? checks/__pycache__/\n?? src/__pycache__/\n?? src/inventory/__pycache__/\n",
+        "returncode": 0,
+        "timestamp": 1789005525.96659,
+        "exception_info": ""
+      },
+      "tool_call_id": "call_JF2CyGeIZH7qE7xBY42cBrgy",
+      "role": "tool"
+    },
+    {
+      "content": "The final mandated test suite passes. Python recreated bytecode caches during that run; I\u2019ll clean those generated artifacts now, verify the working tree contains only the six allowed source changes, and then issue the required submission command as the final action.",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\":\"rm -rf checks/__pycache__ src/__pycache__ src/inventory/__pycache__ && git status --short\"}",
+            "name": "bash"
+          },
+          "id": "call_rkNzGEAsPvdrbttG1GSkFZrA",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": null,
+      "extra": {
+        "actions": [
+          {
+            "command": "rm -rf checks/__pycache__ src/__pycache__ src/inventory/__pycache__ && git status --short",
+            "tool_call_id": "call_rkNzGEAsPvdrbttG1GSkFZrA"
+          }
+        ],
+        "response": {
+          "id": "chatcmpl-202609100158469968503308268d9d6TIeUId8f",
+          "created": 1789005541,
+          "model": "gpt-5.6-sol",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "choices": [
+            {
+              "finish_reason": "tool_calls",
+              "index": 0,
+              "message": {
+                "content": "The final mandated test suite passes. Python recreated bytecode caches during that run; I\u2019ll clean those generated artifacts now, verify the working tree contains only the six allowed source changes, and then issue the required submission command as the final action.",
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"rm -rf checks/__pycache__ src/__pycache__ src/inventory/__pycache__ && git status --short\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_rkNzGEAsPvdrbttG1GSkFZrA",
+                    "type": "function"
+                  }
+                ],
+                "function_call": null
+              }
+            }
+          ],
+          "usage": {
+            "completion_tokens": 140,
+            "prompt_tokens": 14912,
+            "total_tokens": 15052,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": null,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            }
+          }
+        },
+        "cost": 0.062448000000000004,
+        "timestamp": 1789005547.699928
+      }
+    },
+    {
+      "content": "<returncode>0</returncode>\n<output>\n M src/inventory/aggregate.py\n M src/inventory/normalize.py\n M src/inventory/parse.py\n M src/inventory/render.py\n M src/inventory/select.py\n M src/inventory/validate.py\n</output>",
+      "extra": {
+        "raw_output": " M src/inventory/aggregate.py\n M src/inventory/normalize.py\n M src/inventory/parse.py\n M src/inventory/render.py\n M src/inventory/select.py\n M src/inventory/validate.py\n",
+        "returncode": 0,
+        "timestamp": 1789005547.7707102,
+        "exception_info": ""
+      },
+      "tool_call_id": "call_rkNzGEAsPvdrbttG1GSkFZrA",
+      "role": "tool"
+    },
+    {
+      "content": "The repository is clean aside from the six permitted implementation files, and all checks have passed. I\u2019m submitting the completed repair now.",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\":\"echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\"}",
+            "name": "bash"
+          },
+          "id": "call_uYdR40KHxLVPc0muWUglEXpG",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": null,
+      "extra": {
+        "actions": [
+          {
+            "command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT",
+            "tool_call_id": "call_uYdR40KHxLVPc0muWUglEXpG"
+          }
+        ],
+        "response": {
+          "id": "chatcmpl-202609100159092399183078268d9d6HStxRYqS",
+          "created": 1789005572,
+          "model": "gpt-5.6-sol",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "choices": [
+            {
+              "finish_reason": "tool_calls",
+              "index": 0,
+              "message": {
+                "content": "The repository is clean aside from the six permitted implementation files, and all checks have passed. I\u2019m submitting the completed repair now.",
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_uYdR40KHxLVPc0muWUglEXpG",
+                    "type": "function"
+                  }
+                ],
+                "function_call": null
+              }
+            }
+          ],
+          "usage": {
+            "completion_tokens": 58,
+            "prompt_tokens": 15081,
+            "total_tokens": 15139,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": null,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 13824,
+              "text_tokens": 0,
+              "image_tokens": 0,
+              "video_tokens": null
+            }
+          }
+        },
+        "cost": 0.0117176,
+        "timestamp": 1789005574.2360005
+      }
+    },
+    {
+      "role": "exit",
+      "content": "",
+      "extra": {
+        "exit_status": "Submitted",
+        "submission": ""
+      }
+    }
+  ],
+  "trajectory_format": "mini-swe-agent-1.1",
+  "benchmark": {
+    "engine": "baseline"
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-luna/full/profile-ledger/baseline",
+  "behavior_pass": true,
+  "capabilities": [],
+  "category": "cross-file",
+  "engine": "baseline",
+  "error": null,
+  "evaluation": {
+    "approval_events": [],
+    "behavior_pass": true,
+    "behavior_verifier": {},
+    "budget_usage": {
+      "complete_audit": false,
+      "limits": {
+        "command_timeout_seconds": 60,
+        "max_consecutive_failures": 5,
+        "max_replans": 4,
+        "max_run_seconds": 7200,
+        "max_steps": 48
+      },
+      "replans_used": null,
+      "steps_used": 7
+    },
+    "churn": {
+      "final_step": 7,
+      "first_solved_step": null,
+      "post_solution_steps": null,
+      "reason": "Missing immutable repository states at every step boundary.",
+      "status": "unsupported"
+    },
+    "duration": {
+      "llm_seconds": null,
+      "orchestration_seconds": null,
+      "tool_seconds": null,
+      "wall_clock_seconds": 177.7182346749978
+    },
+    "recovery": {
+      "attempt_count": null,
+      "failure_types": [],
+      "post_recovery_repository_pass": null,
+      "resolved_count": null,
+      "success_rate": null,
+      "trigger_count": null
+    },
+    "replan": {
+      "evidence_count": null,
+      "missed_scenarios": null,
+      "post_replan_repository_pass": null,
+      "success_rate": null,
+      "trigger_rate": null,
+      "triggered_count": 0,
+      "triggered_scenarios": null,
+      "unnecessary_replans": null,
+      "valid_count": null
+    },
+    "repository_pass": true,
+    "schema_version": 4,
+    "task_pass": true,
+    "termination": "correct_success",
+    "tool_quality": {
+      "failure_count": 1,
+      "failure_rate": 0.1111111111111111,
+      "recovery_rate": null,
+      "recovery_scope": "manifest-declared public-command failures only",
+      "redundant_calls": null
+    }
+  },
+  "metrics": {
+    "commits": [],
+    "cost": 0.00452284,
+    "duration_seconds": 177.7182346749978,
+    "errors": [
+      {
+        "returncode": 1,
+        "type": "command"
+      }
+    ],
+    "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "llm_calls": 7,
+    "openai_standard_estimated_cost_usd": 0.00452284,
+    "patch": {
+      "changed": true,
+      "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-luna/full/profile-ledger/baseline/patch.diff",
+      "sha256": "35053386213a1de96c7f9bc0ea1998af4bcfc715795d65239af7e65a563a57f3"
+    },
+    "preflight": {
+      "checks": [
+        {
+          "command": [
+            "docker",
+            "image",
+            "inspect",
+            "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+          ],
+          "duration_seconds": 0.045581062000565,
+          "exit_code": 0,
+          "name": "image_inspect",
+          "stderr": "",
+          "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "python",
+            "--version"
+          ],
+          "duration_seconds": 0.6581895410017751,
+          "exit_code": 0,
+          "name": "python",
+          "stderr": "",
+          "stdout": "Python 3.12.14\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "git",
+            "--version"
+          ],
+          "duration_seconds": 0.5938067930001125,
+          "exit_code": 0,
+          "name": "git",
+          "stderr": "",
+          "stdout": "git version 2.47.3\n"
+        }
+      ],
+      "error": null,
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "status": "READY"
+    },
+    "replans": null,
+    "retries": null,
+    "run_budget": {
+      "command_timeout_seconds": 60,
+      "max_consecutive_failures": 5,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48
+    },
+    "steps": 7,
+    "tokens": {
+      "cache_write": null,
+      "cached": 5632,
+      "completion": 1847,
+      "prompt": 16601,
+      "reasoning": 0,
+      "total": 18448
+    },
+    "tool_calls": 9,
+    "tool_failures": 1,
+    "trajectory_status": "Submitted"
+  },
+  "model": "openai/gpt-5.6-luna",
+  "repeat": 1,
+  "repository_pass": true,
+  "run_id": "aa4e26c1209d49b2819b96e7f17410e9",
+  "status": "Submitted",
+  "success": true,
+  "task_id": "profile-ledger",
+  "task_pass": true,
+  "verifier": {
+    "duration_seconds": 0.03482747899761307,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "hidden checks passed\n",
+    "success_condition": {
+      "verifier_exit_code": 0
+    }
+  }
+}

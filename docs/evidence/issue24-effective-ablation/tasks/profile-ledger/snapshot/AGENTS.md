@@ -1,0 +1,1 @@
+Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.

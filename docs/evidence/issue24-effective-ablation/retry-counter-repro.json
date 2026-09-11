@@ -1,0 +1,35 @@
+{
+  "source_sha256": "3e70afeff8927dbb8f500cbb02e82e4a4bc234f4d0744ab4ac75dd7ea9f3891f",
+  "max_consecutive_failures": 5,
+  "prior_model_errors": 0,
+  "prior_no_progress": 4,
+  "prior_decisions": [
+    {
+      "action": "RETURN_OBSERVATION",
+      "reason": "Return an Observation for correction: empty response",
+      "retry_delay_seconds": 0.0
+    },
+    {
+      "action": "RETURN_OBSERVATION",
+      "reason": "Return an Observation for correction: empty response",
+      "retry_delay_seconds": 0.0
+    },
+    {
+      "action": "RETURN_OBSERVATION",
+      "reason": "Return an Observation for correction: empty response",
+      "retry_delay_seconds": 0.0
+    },
+    {
+      "action": "RETURN_OBSERVATION",
+      "reason": "Return an Observation for correction: empty response",
+      "retry_delay_seconds": 0.0
+    }
+  ],
+  "first_transient_model_error": {
+    "action": "STOP",
+    "reason": "Model request retries exhausted: timeout",
+    "retry_delay_seconds": 0.0
+  },
+  "expected_first_transient_action": "RETRY_MODEL",
+  "model_calls": 0
+}

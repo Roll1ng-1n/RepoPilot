@@ -1,0 +1,9 @@
+[project]
+name = "ledger-fixture"
+version = "0.0.1"
+[tool.ledger]
+test-command = "python -m unittest discover -s checks"
+key-normalization = "strip then Unicode casefold"
+rounding = "sum exact Decimal amounts per normalized key, then round HALF_UP to 2 places"
+empty-key = "skip"
+output-order = "normalized key ascending"

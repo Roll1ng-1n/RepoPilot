@@ -1,0 +1,25 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "16928297b3e21f0359a9cda00df6dc3d70d68fafe60a5a49f8e999ab9bb04566",
+      "before_fingerprint": "16928297b3e21f0359a9cda00df6dc3d70d68fafe60a5a49f8e999ab9bb04566",
+      "check_id": "configured-unittest",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Run the test entry specified by pyproject.toml after implementing normalize_key and report.",
+      "result": {
+        "duration_seconds": 0.2970846590033034,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "Configured checks in checks/",
+      "sequence": 1,
+      "supersedes": []
+    }
+  ]
+}

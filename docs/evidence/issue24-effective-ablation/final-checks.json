@@ -1,0 +1,18 @@
+{
+  "retained_attempts": 33,
+  "effective_cells": 24,
+  "all_run_ids_unique": true,
+  "original_audit_violations": [],
+  "replacement_audit_violations": [],
+  "credential_scan_files": 2075,
+  "credential_matches": 0,
+  "recorded_tokens_all_attempts": 1921346,
+  "recorded_cost_all_attempts": 4.16523896,
+  "actual_billed_cost": null,
+  "effective_repository_pass": 14,
+  "effective_task_pass": {
+    "true": 12,
+    "false": 12,
+    "null": 0
+  }
+}

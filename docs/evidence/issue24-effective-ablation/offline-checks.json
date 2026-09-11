@@ -1,0 +1,54 @@
+[
+  {
+    "task": "history-inventory",
+    "seed_verifier": 1,
+    "seed_public": 1,
+    "solution_verifier": 0
+  },
+  {
+    "task": "profile-ledger",
+    "seed_verifier": 1,
+    "seed_public": 1,
+    "solution_verifier": 0
+  },
+  {
+    "variant": "full",
+    "profile_facts": 1,
+    "planning": true,
+    "task_recovery": "DEBUG_OBSERVATION",
+    "transport_retry_preserved": true,
+    "long_history_switch_verified": true
+  },
+  {
+    "variant": "no-profile",
+    "profile_facts": 0,
+    "planning": true,
+    "task_recovery": "DEBUG_OBSERVATION",
+    "transport_retry_preserved": true,
+    "long_history_switch_verified": true
+  },
+  {
+    "variant": "no-context-selection",
+    "profile_facts": 1,
+    "planning": true,
+    "task_recovery": "DEBUG_OBSERVATION",
+    "transport_retry_preserved": true,
+    "long_history_switch_verified": true
+  },
+  {
+    "variant": "no-planning",
+    "profile_facts": 1,
+    "planning": false,
+    "task_recovery": "DEBUG_OBSERVATION",
+    "transport_retry_preserved": true,
+    "long_history_switch_verified": true
+  },
+  {
+    "variant": "no-recovery",
+    "profile_facts": 1,
+    "planning": true,
+    "task_recovery": "STOP",
+    "transport_retry_preserved": true,
+    "long_history_switch_verified": true
+  }
+]

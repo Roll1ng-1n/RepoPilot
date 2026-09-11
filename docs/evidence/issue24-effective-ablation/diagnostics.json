@@ -1,0 +1,1002 @@
+[
+  {
+    "result_path": "runs/gpt-5.6-luna/full/history-inventory/baseline/result.json",
+    "tool_counts": {},
+    "read_paths": {},
+    "verification_commands": [],
+    "baseline_suite_commands": [
+      "{\"command\":\"python -m unittest discover -s checks; printf '\\\\n--- files ---\\\\n'; find . -maxdepth 3 -type f | sort\"}",
+      "{\"command\":\"cat <<'EOF' > src/inventory/parse.py\\nimport json\\n\\n\\ndef parse(text: str):\\n    \\\"\\\"\\\"Decode a JSON list, returning an empty list for invalid top-level input.\\\"\\\"\\\"\\n    try:\\n        value = json.loads(text)\\n    except (TypeError, ValueError):\\n        return []\\n    return value if isinstance(value, list) else []\\nEOF\\n\\ncat <<'EOF' > src/inventory/validate.py\\ndef validate(events: list):\\n    \\\"\\\"\\\"Keep only records with a non-empty string SKU and an integer delta.\\\"\\\"\\\"\\n    valid = []\\n    for event in events:\\n        if not isinstance(event, dict):\\n            continue\\n        sku = event.get(\\\"sku\\\")\\n        delta = event.get(\\\"delta\\\")\\n        if not isinstance(sku, str) or not sku.strip():\\n            continue\\n        if isinstance(delta, bool) or not isinstance(delta, int):\\n            continue\\n        valid.append({\\\"sku\\\": sku, \\\"delta\\\": delta})\\n    return valid\\nEOF\\n\\ncat <<'EOF' > src/inventory/normalize.py\\ndef normalize(events: list):\\n    \\\"\\\"\\\"Normalize SKU spelling without changing input records or their order.\\\"\\\"\\\"\\n    return [\\n        {\\\"sku\\\": event[\\\"sku\\\"].strip().casefold(), \\\"delta\\\": event[\\\"delta\\\"]}\\n        for event in events\\n    ]\\nEOF\\n\\ncat <<'EOF' > src/inventory/aggregate.py\\ndef aggregate(events: list):\\n    \\\"\\\"\\\"Sum deltas by normalized SKU, retaining keys whose total is zero.\\\"\\\"\\\"\\n    balances = {}\\n    for event in events:\\n        sku = event[\\\"sku\\\"]\\n        balances[sku] = balances.get(sku, 0) + event[\\\"delta\\\"]\\n    return balances\\nEOF\\n\\ncat <<'EOF' > src/inventory/select.py\\ndef select(balances: dict):\\n    \\\"\\\"\\\"Return a fresh mapping containing only non-zero balances.\\\"\\\"\\\"\\n    return {sku: balance for sku, balance in balances.items() if balance != 0}\\nEOF\\n\\ncat <<'EOF' > src/inventory/render.py\\ndef render(balances: dict):\\n    \\\"\\\"\\\"Render balances in sorted SKU order, one entry per line.\\\"\\\"\\\"\\n    return \\\"\\\\n\\\".join(f\\\"{sku}={balances[sku]}\\\" for sku in sorted(balances))\\nEOF\\n\\npython -m unittest discover -s checks\"}",
+      "{\"command\":\"python - <<'PY'\\nfrom src.inventory.parse import parse\\nfrom src.inventory.validate import validate\\nfrom src.inventory.normalize import normalize\\nfrom src.inventory.aggregate import aggregate\\nfrom src.inventory.select import select\\nfrom src.inventory.render import render\\n\\nassert parse('{bad') == []\\nassert parse('{\\\"x\\\": 1}') == []\\nraw = [\\n    {'sku': '  Straße ', 'delta': 2, 'extra': 'ignored'},\\n    {'sku': 'STRASSE', 'delta': -2},\\n    {'sku': 'ok', 'delta': True},\\n    {'sku': 'fraction', 'delta': 1.5},\\n    {'sku': '   ', 'delta': 1},\\n    'bad',\\n]\\nvalidated = validate(raw)\\nassert validated == [{'sku': '  Straße ', 'delta': 2}, {'sku': 'STRASSE', 'delta': -2}]\\nassert raw[0] == {'sku': '  Straße ', 'delta': 2, 'extra': 'ignored'}\\nnormalized = normalize(validated)\\nassert normalized == [{'sku': 'strasse', 'delta': 2}, {'sku': 'strasse', 'delta': -2}]\\nbalances = aggregate(normalized + [{'sku': 'zero', 'delta': 0}, {'sku': 'negative', 'delta': -3}])\\nassert balances == {'strasse': 0, 'zero': 0, 'negative': -3}\\nselected = select(balances)\\nassert selected == {'negative': -3}\\nassert balances == {'strasse': 0, 'zero': 0, 'negative': -3}\\nassert render({'z': 1, 'a': -2}) == 'a=-2\\\\nz=1'\\nassert render({}) == ''\\nprint('stage checks passed')\\nPY\\nprintf '\\\\n--- diff ---\\\\n'\\ngit diff -- src/inventory\\nprintf '\\\\n--- required suite ---\\\\n'\\npython -m unittest discover -s checks\"}"
+    ],
+    "baseline_test_outputs": [
+      "<returncode>0</returncode>\n<output>\n.F\n======================================================================\nFAIL: test_pipeline (test_pipeline.Checks.test_pipeline)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/checks/test_pipeline.py\", line 5, in test_pipeline\n    self.assertEqual(reconcile(json.dumps([{\"sku\":\" B \",\"delta\":2},{\"sku\":\"b\",\"delta\":-1},{\"sku\":\"A\",\"delta\":-2}])), \"a=-2\\nb=1\")\nAssertionError: '' != 'a=-2\\nb=1'\n+ a=-2\n+ b=1\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (failures=1)\n\n--- files ---\n./.git/COMMIT_EDITMSG\n./.git/HEAD\n./.git/config\n./.git/description\n./.git/hooks/applypatch-msg.sample\n./.git/hooks/commit-msg.sample\n./.git/hooks/fsmonitor-watchman.sample\n./.git/hooks/post-update.sample\n./.git/hooks/pre-applypatch.sample\n./.git/hooks/pre-commit.sample\n./.git/hooks/pre-merge-commit.sample\n./.git/hooks/pre-push.sample\n./.git/hooks/pre-rebase.sample\n./.git/hooks/pre-receive.sample\n./.git/hooks/prepare-commit-msg.sample\n./.git/hooks/push-to-checkout.sample\n./.git/hooks/sendemail-validate.sample\n./.git/hooks/update.sample\n./.git/index\n./.git/info/exclude\n./.git/logs/HEAD\n./AGENTS.md\n./checks/__pycache__/test_pipeline.cpython-312.pyc\n./checks/test_pipeline.py\n./docs/01-parse.md\n./docs/02-validate.md\n./docs/03-normalize.md\n./docs/04-aggregate.md\n./docs/05-select.md\n./docs/06-render.md\n./pyproject.toml\n./src/__init__.py\n./src/__pycache__/__init__.cpython-312.pyc\n./src/inventory/AGENTS.md\n./src/inventory/__init__.py\n./src/inventory/aggregate.py\n./src/inventory/normalize.py\n./src/inventory/parse.py\n./src/inventory/pipeline.py\n./src/inventory/render.py\n./src/inventory/select.py\n./src/inventory/validate.py\n</output>",
+      "<returncode>0</returncode>\n<output>\n..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n</output>",
+      "<returncode>0</returncode>\n<output>\nstage checks passed\n\n--- diff ---\ndiff --git a/src/inventory/aggregate.py b/src/inventory/aggregate.py\nindex 76fa4d2..2e6a9e6 100644\n--- a/src/inventory/aggregate.py\n+++ b/src/inventory/aggregate.py\n@@ -1,2 +1,7 @@\n def aggregate(events: list):\n-    return {}\n+    \"\"\"Sum deltas by normalized SKU, retaining keys whose total is zero.\"\"\"\n+    balances = {}\n+    for event in events:\n+        sku = event[\"sku\"]\n+        balances[sku] = balances.get(sku, 0) + event[\"delta\"]\n+    return balances\ndiff --git a/src/inventory/normalize.py b/src/inventory/normalize.py\nindex b8167f5..703acc4 100644\n--- a/src/inventory/normalize.py\n+++ b/src/inventory/normalize.py\n@@ -1,2 +1,6 @@\n def normalize(events: list):\n-    return []\n+    \"\"\"Normalize SKU spelling without changing input records or their order.\"\"\"\n+    return [\n+        {\"sku\": event[\"sku\"].strip().casefold(), \"delta\": event[\"delta\"]}\n+        for event in events\n+    ]\ndiff --git a/src/inventory/parse.py b/src/inventory/parse.py\nindex 9ebd2e7..0a8d476 100644\n--- a/src/inventory/parse.py\n+++ b/src/inventory/parse.py\n@@ -1,2 +1,10 @@\n+import json\n+\n+\n def parse(text: str):\n-    return []\n+    \"\"\"Decode a JSON list, returning an empty list for invalid top-level input.\"\"\"\n+    try:\n+        value = json.loads(text)\n+    except (TypeError, ValueError):\n+        return []\n+    return value if isinstance(value, list) else []\ndiff --git a/src/inventory/render.py b/src/inventory/render.py\nindex 9814798..500e98c 100644\n--- a/src/inventory/render.py\n+++ b/src/inventory/render.py\n@@ -1,2 +1,3 @@\n def render(balances: dict):\n-    return \"\"\n+    \"\"\"Render balances in sorted SKU order, one entry per line.\"\"\"\n+    return \"\\n\".join(f\"{sku}={balances[sku]}\" for sku in sorted(balances))\ndiff --git a/src/inventory/select.py b/src/inventory/select.py\nindex 6f1a654..4ba2cf1 100644\n--- a/src/inventory/select.py\n+++ b/src/inventory/select.py\n@@ -1,2 +1,3 @@\n def select(balances: dict):\n-    return {}\n+    \"\"\"Return a fresh mapping containing only non-zero balances.\"\"\"\n+    return {sku: balance for sku, balance in balances.items() if balance != 0}\ndiff --git a/src/inventory/validate.py b/src/inventory/validate.py\nindex 3b5d2f9..d44b1f0 100644\n--- a/src/inventory/validate.py\n+++ b/src/inventory/validate.py\n@@ -1,2 +1,14 @@\n def validate(events: list):\n-    return []\n+    \"\"\"Keep only records with a non-empty string SKU and an integer delta.\"\"\"\n+    valid = []\n+    for event in events:\n+        if not isinstance(event, dict):\n+            continue\n+        sku = event.get(\"sku\")\n+        delta = event.get(\"delta\")\n+        if not isinstance(sku, str) or not sku.strip():\n+            continue\n+        if isinstance(delta, bool) or not isinstance(delta, int):\n+            continue\n+        valid.append({\"sku\": sku, \"delta\": delta})\n+    return valid\n\n--- required suite ---\n..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n</output>"
+    ]
+  },
+  {
+    "result_path": "runs/gpt-5.6-luna/full/history-inventory/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 2,
+      "run_command": 2,
+      "list_files": 42,
+      "verify_task": 18,
+      "read_file": 217,
+      "replan": 1
+    },
+    "read_paths": {
+      "checks/test_pipeline.py": 14,
+      "docs/01-parse.md": 18,
+      "docs/02-validate.md": 18,
+      "docs/03-normalize.md": 18,
+      "docs/04-aggregate.md": 18,
+      "docs/05-select.md": 18,
+      "docs/06-render.md": 18,
+      "src/inventory/AGENTS.md": 4,
+      "src/inventory/parse.py": 11,
+      "src/inventory/validate.py": 11,
+      "src/inventory/normalize.py": 11,
+      "src/inventory/aggregate.py": 11,
+      "src/inventory/select.py": 11,
+      "src/inventory/render.py": 11,
+      "src/inventory/pipeline.py": 11,
+      "src/inventory/__init__.py": 13,
+      "AGENTS.md": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Baseline verification exposed the expected unimplemented pipeline; split the work into contract review, implementation, and final verification while preserving the completed baseline step context.",
+      "steps": [
+        {
+          "completion_condition": "All six stage contracts and existing source/tests are reviewed, with required public signatures identified.",
+          "description": "Read docs/01-parse.md through docs/06-render.md and inspect src/inventory and checks without editing.",
+          "id": "review-contracts",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "completion_condition": "Parsing, validation, normalization, aggregation, selection, and rendering are implemented in src/inventory/*.py according to the reviewed contracts.",
+          "description": "Implement the pure six-stage inventory reconciliation pipeline without changing public signatures or non-source files.",
+          "id": "implement-pipeline",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "The required unittest command passes after changes and the implementation diff is limited to permitted files.",
+          "description": "Run the required post-repair test suite and inspect the final diff for scope and contract compliance.",
+          "id": "verify-final",
+          "status": "PENDING"
+        }
+      ],
+      "version": 2
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-luna/full/profile-ledger/baseline/result.json",
+    "tool_counts": {},
+    "read_paths": {},
+    "verification_commands": [],
+    "baseline_suite_commands": [
+      "{\"command\":\"python -m unittest discover -s checks; status=$?; cat > /tmp/repro_ledger.py <<'PY'\\nfrom src.ledger.report import report\\n\\nrows = [(\\\" A \\\", \\\"1.005\\\"), (\\\"a\\\", \\\"1.005\\\"), (\\\"B\\\", \\\"-0.005\\\"), (\\\" Straße \\\", \\\"1\\\"), (\\\"STRASSE\\\", \\\"2\\\"), (\\\" \\\", \\\"99\\\")]\\nprint(repr(report(rows)))\\nPY\\npython /tmp/repro_ledger.py; exit $status\"}",
+      "{\"command\":\"python -m unittest discover -s checks\"}"
+    ],
+    "baseline_test_outputs": [
+      "<returncode>1</returncode>\n<output>\nFF\n======================================================================\nFAIL: test_report (test_ledger.Checks.test_report)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/checks/test_ledger.py\", line 5, in test_report\n    self.assertEqual(report([(\" A \",\"1.005\"),(\"a\",\"1.005\"),(\"B\",\"-0.005\")]), \"a=2.01\\nb=-0.01\")\nAssertionError: '' != 'a=2.01\\nb=-0.01'\n+ a=2.01\n+ b=-0.01\n\n\n======================================================================\nFAIL: test_unicode (test_ledger.Checks.test_unicode)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/checks/test_ledger.py\", line 7, in test_unicode\n    self.assertEqual(report([(\" Straße \",\"1\"),(\"STRASSE\",\"2\"),(\" \",\"99\")]), \"strasse=3.00\")\nAssertionError: '' != 'strasse=3.00'\n+ strasse=3.00\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nFAILED (failures=2)\nTraceback (most recent call last):\n  File \"/tmp/repro_ledger.py\", line 1, in <module>\n    from src.ledger.report import report\nModuleNotFoundError: No module named 'src'\n</output>",
+      "<returncode>0</returncode>\n<output>\n..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n</output>"
+    ]
+  },
+  {
+    "result_path": "runs/gpt-5.6-luna/full/profile-ledger/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 2,
+      "list_files": 2,
+      "read_file": 7,
+      "apply_patch": 1,
+      "verify_task": 1,
+      "view_diff": 1,
+      "run_command": 2,
+      "finish_task": 1
+    },
+    "read_paths": {
+      "AGENTS.md": 1,
+      "pyproject.toml": 1,
+      "src/ledger/AGENTS.md": 1,
+      "src/ledger/normalize.py": 1,
+      "src/ledger/report.py": 1,
+      "src/ledger/__init__.py": 1,
+      "checks/test_ledger.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "COMPLETED"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-luna/no-context-selection/history-inventory/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 1,
+      "verify_task": 1,
+      "list_files": 3,
+      "read_file": 16
+    },
+    "read_paths": {
+      "checks/test_pipeline.py": 1,
+      "docs/01-parse.md": 1,
+      "docs/02-validate.md": 1,
+      "docs/03-normalize.md": 1,
+      "docs/04-aggregate.md": 1,
+      "docs/05-select.md": 1,
+      "docs/06-render.md": 1,
+      "src/inventory/AGENTS.md": 1,
+      "src/inventory/parse.py": 1,
+      "src/inventory/validate.py": 1,
+      "src/inventory/normalize.py": 1,
+      "src/inventory/aggregate.py": 1,
+      "src/inventory/select.py": 1,
+      "src/inventory/render.py": 1,
+      "src/inventory/pipeline.py": 1,
+      "src/inventory/__init__.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Before editing run `python -m unittest discover -s checks`; after repair rerun the same command successfully. Implement the six-stage inventory reconciliation pipeline in src/inventory according to all six docs/01-parse.md through docs/06-render.md contracts. Review each stage contract and track progress through parsing, validation, normalization, aggregation, selection and rendering; verify stages and end-to-end behavior. Preserve public signatures, docs, config, instructions and tests. If verify_task is available, use it for both test-suite runs.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-luna/no-context-selection/profile-ledger/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 1,
+      "read_file": 7,
+      "list_files": 2,
+      "apply_patch": 1,
+      "verify_task": 1,
+      "view_diff": 1
+    },
+    "read_paths": {
+      "AGENTS.md": 1,
+      "pyproject.toml": 1,
+      "src/ledger/AGENTS.md": 1,
+      "src/ledger/normalize.py": 1,
+      "src/ledger/report.py": 1,
+      "checks/test_ledger.py": 1,
+      "src/ledger/__init__.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-luna/no-planning/history-inventory/repopilot/result.json",
+    "tool_counts": {
+      "verify_task": 17,
+      "list_files": 39,
+      "read_file": 243,
+      "run_command": 2
+    },
+    "read_paths": {
+      "checks/test_pipeline.py": 14,
+      "docs/01-parse.md": 19,
+      "docs/02-validate.md": 19,
+      "docs/03-normalize.md": 19,
+      "docs/04-aggregate.md": 19,
+      "docs/05-select.md": 19,
+      "docs/06-render.md": 19,
+      "src/inventory/parse.py": 13,
+      "src/inventory/validate.py": 13,
+      "src/inventory/normalize.py": 13,
+      "src/inventory/aggregate.py": 13,
+      "src/inventory/select.py": 13,
+      "src/inventory/render.py": 13,
+      "src/inventory/pipeline.py": 15,
+      "src/inventory/__init__.py": 16,
+      "src/inventory/AGENTS.md": 5,
+      "checks/test_contracts.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Before editing run `python -m unittest discover -s checks`; after repair rerun the same command successfully. Implement the six-stage inventory reconciliation pipeline in src/inventory according to all six docs/01-parse.md through docs/06-render.md contracts. Review each stage contract and track progress through parsing, validation, normalization, aggregation, selection and rendering; verify stages and end-to-end behavior. Preserve public signatures, docs, config, instructions and tests. If verify_task is available, use it for both test-suite runs.",
+          "id": "complete-task",
+          "status": "PENDING"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-luna/no-planning/profile-ledger/repopilot/result.json",
+    "tool_counts": {
+      "list_files": 2,
+      "read_file": 7,
+      "apply_patch": 1,
+      "view_diff": 1,
+      "verify_task": 1,
+      "finish_task": 1
+    },
+    "read_paths": {
+      "AGENTS.md": 1,
+      "pyproject.toml": 1,
+      "src/ledger/AGENTS.md": 1,
+      "src/ledger/normalize.py": 1,
+      "src/ledger/report.py": 1,
+      "checks/test_ledger.py": 1,
+      "src/ledger/__init__.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "PENDING"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-luna/no-profile/history-inventory/repopilot/result.json",
+    "tool_counts": {
+      "replan": 1,
+      "list_files": 4,
+      "read_file": 30,
+      "verify_task": 2,
+      "update_plan": 1
+    },
+    "read_paths": {
+      "AGENTS.md": 2,
+      "docs/01-parse.md": 3,
+      "docs/02-validate.md": 3,
+      "docs/03-normalize.md": 3,
+      "docs/04-aggregate.md": 3,
+      "docs/05-select.md": 3,
+      "docs/06-render.md": 3,
+      "src/inventory/AGENTS.md": 1,
+      "src/inventory/parse.py": 1,
+      "src/inventory/validate.py": 1,
+      "src/inventory/normalize.py": 1,
+      "src/inventory/aggregate.py": 1,
+      "src/inventory/select.py": 1,
+      "src/inventory/render.py": 1,
+      "src/inventory/pipeline.py": 1,
+      "src/inventory/__init__.py": 1,
+      "checks/test_pipeline.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Prior attempts produced no tool calls. Restart with explicit repository inspection, mandatory baseline verification, contract review, implementation, and post-change verification using only permitted source edits.",
+      "steps": [
+        {
+          "completion_condition": "Repository instructions, source files, and all six stage contracts have been inspected; baseline unittest command has been executed via verify_task before any edits.",
+          "description": "Inspect AGENTS.md, src/inventory, and docs/01-parse.md through docs/06-render.md, then run the required baseline test suite.",
+          "id": "inspect-baseline",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "completion_condition": "All six pipeline stages are implemented in src/inventory/*.py while preserving public signatures and leaving tests/docs/config/instructions unchanged.",
+          "description": "Implement parsing, validation, normalization, aggregation, selection, and rendering according to the reviewed contracts and existing interfaces.",
+          "id": "implement-pipeline",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "The required unittest discovery command passes after the repair, and the final diff contains changes only under src/inventory/*.py.",
+          "description": "Run post-change verification, inspect the diff, and confirm end-to-end behavior and scope compliance.",
+          "id": "verify-final",
+          "status": "PENDING"
+        }
+      ],
+      "version": 2
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-luna/no-profile/profile-ledger/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 4,
+      "list_files": 2,
+      "read_file": 8,
+      "replan": 2,
+      "apply_patch": 1,
+      "view_diff": 1,
+      "verify_task": 2,
+      "finish_task": 2
+    },
+    "read_paths": {
+      "AGENTS.md": 1,
+      "pyproject.toml": 2,
+      "src/ledger/AGENTS.md": 1,
+      "src/ledger/normalize.py": 1,
+      "src/ledger/report.py": 1,
+      "checks/test_ledger.py": 1,
+      "src/ledger/__init__.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Prior responses failed to advance because they emitted no executable repository action. This plan explicitly separates inspection, source-only implementation, and configured verification.",
+      "steps": [
+        {
+          "completion_condition": "Applicable AGENTS.md files, pyproject.toml, target modules, and checks have been read.",
+          "description": "Inspect the repository contract and current implementations before editing.",
+          "id": "inspect",
+          "status": "COMPLETED"
+        },
+        {
+          "completion_condition": "Only src/ledger/normalize.py and src/ledger/report.py contain the required implementation, with signatures preserved and no configuration or check changes.",
+          "description": "Implement Unicode strip/casefold normalization and Decimal HALF_UP reporting with skipped empty keys and sorted output.",
+          "id": "implement",
+          "status": "COMPLETED"
+        },
+        {
+          "completion_condition": "python -m unittest discover -s checks passes and the final diff is limited to allowed src/ledger Python files.",
+          "description": "Run the documented test command and inspect the final diff for scope and behavior.",
+          "id": "verify",
+          "status": "COMPLETED"
+        }
+      ],
+      "version": 3
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-luna/no-recovery/history-inventory/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 1,
+      "list_files": 1,
+      "verify_task": 1
+    },
+    "read_paths": {},
+    "verification_commands": [
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Before editing run `python -m unittest discover -s checks`; after repair rerun the same command successfully. Implement the six-stage inventory reconciliation pipeline in src/inventory according to all six docs/01-parse.md through docs/06-render.md contracts. Review each stage contract and track progress through parsing, validation, normalization, aggregation, selection and rendering; verify stages and end-to-end behavior. Preserve public signatures, docs, config, instructions and tests. If verify_task is available, use it for both test-suite runs.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-luna/no-recovery/profile-ledger/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 2,
+      "list_files": 2,
+      "read_file": 7,
+      "apply_patch": 1,
+      "verify_task": 2,
+      "view_diff": 1,
+      "run_command": 2,
+      "finish_task": 1
+    },
+    "read_paths": {
+      "AGENTS.md": 1,
+      "pyproject.toml": 1,
+      "src/ledger/AGENTS.md": 1,
+      "src/ledger/normalize.py": 1,
+      "src/ledger/report.py": 1,
+      "src/ledger/__init__.py": 1,
+      "checks/test_ledger.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks",
+      "python -c 'from src.ledger.report import report; assert report([]) == \"\"; assert report([(\"  Ä \", \"1.004\"), (\"ä\", \"0.001\"), (\"\", \"9\")]) == \"ä=1.01\"'"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "COMPLETED"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-sol/full/history-inventory/baseline/result.json",
+    "tool_counts": {},
+    "read_paths": {},
+    "verification_commands": [],
+    "baseline_suite_commands": [
+      "{\"command\":\"pwd && printf '\\\\n-- files --\\\\n' && find . -maxdepth 3 -type f | sort && printf '\\\\n-- baseline --\\\\n' && python -m unittest discover -s checks\"}",
+      "{\"command\":\"cat <<'EOF' > src/inventory/parse.py\\n\\\"\\\"\\\"JSON input parsing for the inventory pipeline.\\\"\\\"\\\"\\n\\nimport json\\n\\n\\ndef parse(text: str):\\n    \\\"\\\"\\\"Decode *text* into a top-level list, or return an empty list.\\\"\\\"\\\"\\n    try:\\n        value = json.loads(text)\\n    except (TypeError, ValueError):\\n        return []\\n    return value if isinstance(value, list) else []\\nEOF\\n\\ncat <<'EOF' > src/inventory/validate.py\\n\\\"\\\"\\\"Validation and filtering of parsed inventory events.\\\"\\\"\\\"\\n\\n\\ndef validate(events: list):\\n    \\\"\\\"\\\"Return fresh, minimal records that satisfy the event contract.\\\"\\\"\\\"\\n    valid = []\\n    for event in events:\\n        if not isinstance(event, dict):\\n            continue\\n        sku = event.get(\\\"sku\\\")\\n        delta = event.get(\\\"delta\\\")\\n        if not isinstance(sku, str) or not sku.strip():\\n            continue\\n        if isinstance(delta, bool) or not isinstance(delta, int):\\n            continue\\n        valid.append({\\\"sku\\\": sku, \\\"delta\\\": delta})\\n    return valid\\nEOF\\n\\ncat <<'EOF' > src/inventory/normalize.py\\n\\\"\\\"\\\"Canonicalization of validated inventory events.\\\"\\\"\\\"\\n\\n\\ndef normalize(events: list):\\n    \\\"\\\"\\\"Return new events with canonical, case-insensitive SKU keys.\\\"\\\"\\\"\\n    return [{\\\"sku\\\": event[\\\"sku\\\"].strip().casefold(), \\\"delta\\\": event[\\\"delta\\\"]}\\n            for event in events]\\nEOF\\n\\ncat <<'EOF' > src/inventory/aggregate.py\\n\\\"\\\"\\\"Balance aggregation for normalized inventory events.\\\"\\\"\\\"\\n\\n\\ndef aggregate(events: list):\\n    \\\"\\\"\\\"Sum event deltas by SKU, retaining keys whose total is zero.\\\"\\\"\\\"\\n    balances = {}\\n    for event in events:\\n        sku = event[\\\"sku\\\"]\\n        balances[sku] = balances.get(sku, 0) + event[\\\"delta\\\"]\\n    return balances\\nEOF\\n\\ncat <<'EOF' > src/inventory/select.py\\n\\\"\\\"\\\"Selection of non-zero inventory balances.\\\"\\\"\\\"\\n\\n\\ndef select(balances: dict):\\n    \\\"\\\"\\\"Return a new mapping containing every non-zero balance.\\\"\\\"\\\"\\n    return {sku: balance for sku, balance in balances.items() if balance != 0}\\nEOF\\n\\ncat <<'EOF' > src/inventory/render.py\\n\\\"\\\"\\\"Text rendering of inventory balances.\\\"\\\"\\\"\\n\\n\\ndef render(balances: dict):\\n    \\\"\\\"\\\"Render balances in lexicographic SKU order without a trailing newline.\\\"\\\"\\\"\\n    return \\\"\\\\n\\\".join(f\\\"{sku}={balances[sku]}\\\" for sku in sorted(balances))\\nEOF\\n\\npython -m unittest discover -s checks\"}",
+      "{\"command\":\"rm -rf checks/__pycache__ src/__pycache__ src/inventory/__pycache__ && python -m unittest discover -s checks && git status --short\"}"
+    ],
+    "baseline_test_outputs": [
+      "<returncode>1</returncode>\n<output>\n/workspace\n\n-- files --\n./.git/COMMIT_EDITMSG\n./.git/HEAD\n./.git/config\n./.git/description\n./.git/hooks/applypatch-msg.sample\n./.git/hooks/commit-msg.sample\n./.git/hooks/fsmonitor-watchman.sample\n./.git/hooks/post-update.sample\n./.git/hooks/pre-applypatch.sample\n./.git/hooks/pre-commit.sample\n./.git/hooks/pre-merge-commit.sample\n./.git/hooks/pre-push.sample\n./.git/hooks/pre-rebase.sample\n./.git/hooks/pre-receive.sample\n./.git/hooks/prepare-commit-msg.sample\n./.git/hooks/push-to-checkout.sample\n./.git/hooks/sendemail-validate.sample\n./.git/hooks/update.sample\n./.git/index\n./.git/info/exclude\n./.git/logs/HEAD\n./AGENTS.md\n./checks/test_pipeline.py\n./docs/01-parse.md\n./docs/02-validate.md\n./docs/03-normalize.md\n./docs/04-aggregate.md\n./docs/05-select.md\n./docs/06-render.md\n./pyproject.toml\n./src/__init__.py\n./src/inventory/AGENTS.md\n./src/inventory/__init__.py\n./src/inventory/aggregate.py\n./src/inventory/normalize.py\n./src/inventory/parse.py\n./src/inventory/pipeline.py\n./src/inventory/render.py\n./src/inventory/select.py\n./src/inventory/validate.py\n\n-- baseline --\n.F\n======================================================================\nFAIL: test_pipeline (test_pipeline.Checks.test_pipeline)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/checks/test_pipeline.py\", line 5, in test_pipeline\n    self.assertEqual(reconcile(json.dumps([{\"sku\":\" B \",\"delta\":2},{\"sku\":\"b\",\"delta\":-1},{\"sku\":\"A\",\"delta\":-2}])), \"a=-2\\nb=1\")\nAssertionError: '' != 'a=-2\\nb=1'\n+ a=-2\n+ b=1\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (failures=1)\n</output>",
+      "<returncode>0</returncode>\n<output>\n..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n</output>",
+      "<returncode>0</returncode>\n<output>\n..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n M src/inventory/aggregate.py\n M src/inventory/normalize.py\n M src/inventory/parse.py\n M src/inventory/render.py\n M src/inventory/select.py\n M src/inventory/validate.py\n?? checks/__pycache__/\n?? src/__pycache__/\n?? src/inventory/__pycache__/\n</output>"
+    ]
+  },
+  {
+    "result_path": "runs/gpt-5.6-sol/full/history-inventory/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 1,
+      "list_files": 39,
+      "verify_task": 18,
+      "read_file": 215
+    },
+    "read_paths": {
+      "docs/01-parse.md": 17,
+      "docs/02-validate.md": 17,
+      "docs/03-normalize.md": 17,
+      "docs/04-aggregate.md": 17,
+      "docs/05-select.md": 17,
+      "docs/06-render.md": 17,
+      "src/inventory/parse.py": 11,
+      "src/inventory/validate.py": 11,
+      "src/inventory/normalize.py": 11,
+      "src/inventory/aggregate.py": 11,
+      "src/inventory/select.py": 11,
+      "src/inventory/render.py": 11,
+      "src/inventory/pipeline.py": 11,
+      "src/inventory/__init__.py": 12,
+      "checks/test_pipeline.py": 16,
+      "src/inventory/AGENTS.md": 8
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Before editing run `python -m unittest discover -s checks`; after repair rerun the same command successfully. Implement the six-stage inventory reconciliation pipeline in src/inventory according to all six docs/01-parse.md through docs/06-render.md contracts. Review each stage contract and track progress through parsing, validation, normalization, aggregation, selection and rendering; verify stages and end-to-end behavior. Preserve public signatures, docs, config, instructions and tests. If verify_task is available, use it for both test-suite runs.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-sol/full/profile-ledger/baseline/result.json",
+    "tool_counts": {},
+    "read_paths": {},
+    "verification_commands": [],
+    "baseline_suite_commands": [
+      "{\"command\":\"python -m unittest discover -s checks; printf '\\\\nReproduction of current behavior:\\\\n'; python - <<'PY'\\nfrom src.ledger.normalize import normalize_key\\nfrom src.ledger.report import report\\nprint(repr(normalize_key('  Straße  ')))\\nprint(repr(report([(' A ', '1.005'), ('a', '1.005'), ('B', '-0.005'), (' ', '99')])))\\nPY\"}",
+      "{\"command\":\"set -e\\npython -m unittest discover -s checks\\npython - <<'PY'\\nfrom src.ledger.normalize import normalize_key\\nfrom src.ledger.report import report\\n\\nassert normalize_key('  Straße\\\\u00a0') == 'strasse'\\nassert report([]) == ''\\nassert report([(' ', '999'), ('\\\\t', '1')]) == ''\\nassert report([(' z ', '1.005'), ('Z', '1.005'), ('a', '2'), ('B', '-0.005')]) == 'a=2.00\\\\nb=-0.01\\\\nz=2.01'\\nassert report([('x', '0.005')]) == 'x=0.01'\\nassert report([('x', '-0.005')]) == 'x=-0.01'\\nassert report([('x', '0.004'), ('X', '0.001')]) == 'x=0.01'\\nprint('edge cases passed')\\nPY\\nprintf '\\\\nFinal status and diff check:\\\\n'\\ngit status --short\\ngit diff --check\\ngit diff --stat\"}"
+    ],
+    "baseline_test_outputs": [
+      "<returncode>0</returncode>\n<output>\nFF\n======================================================================\nFAIL: test_report (test_ledger.Checks.test_report)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/checks/test_ledger.py\", line 5, in test_report\n    self.assertEqual(report([(\" A \",\"1.005\"),(\"a\",\"1.005\"),(\"B\",\"-0.005\")]), \"a=2.01\\nb=-0.01\")\nAssertionError: '' != 'a=2.01\\nb=-0.01'\n+ a=2.01\n+ b=-0.01\n\n\n======================================================================\nFAIL: test_unicode (test_ledger.Checks.test_unicode)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/checks/test_ledger.py\", line 7, in test_unicode\n    self.assertEqual(report([(\" Straße \",\"1\"),(\"STRASSE\",\"2\"),(\" \",\"99\")]), \"strasse=3.00\")\nAssertionError: '' != 'strasse=3.00'\n+ strasse=3.00\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nFAILED (failures=2)\n\nReproduction of current behavior:\n'  Straße  '\n''\n</output>",
+      "<returncode>0</returncode>\n<output>\n..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\nedge cases passed\n\nFinal status and diff check:\n M src/ledger/normalize.py\n M src/ledger/report.py\n?? checks/__pycache__/\n?? src/__pycache__/\n?? src/ledger/__pycache__/\n src/ledger/normalize.py |  2 +-\n src/ledger/report.py    | 17 ++++++++++++++++-\n 2 files changed, 17 insertions(+), 2 deletions(-)\n</output>"
+    ]
+  },
+  {
+    "result_path": "runs/gpt-5.6-sol/full/profile-ledger/repopilot/result.json",
+    "tool_counts": {
+      "list_files": 3,
+      "read_file": 7,
+      "update_plan": 2,
+      "apply_patch": 1,
+      "view_diff": 2,
+      "verify_task": 1,
+      "run_command": 2,
+      "finish_task": 1
+    },
+    "read_paths": {
+      "AGENTS.md": 1,
+      "pyproject.toml": 1,
+      "src/ledger/AGENTS.md": 1,
+      "src/ledger/normalize.py": 1,
+      "src/ledger/report.py": 1,
+      "src/ledger/__init__.py": 1,
+      "checks/test_ledger.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "COMPLETED"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-sol/no-context-selection/history-inventory/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 1,
+      "verify_task": 1,
+      "list_files": 3,
+      "replan": 1,
+      "read_file": 15
+    },
+    "read_paths": {
+      "docs/01-parse.md": 1,
+      "docs/02-validate.md": 1,
+      "docs/03-normalize.md": 1,
+      "docs/04-aggregate.md": 1,
+      "docs/05-select.md": 1,
+      "docs/06-render.md": 1,
+      "src/inventory/parse.py": 1,
+      "src/inventory/validate.py": 1,
+      "src/inventory/normalize.py": 1,
+      "src/inventory/aggregate.py": 1,
+      "src/inventory/select.py": 1,
+      "src/inventory/render.py": 1,
+      "src/inventory/pipeline.py": 1,
+      "checks/test_pipeline.py": 1,
+      "src/inventory/AGENTS.md": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Recovery after repeated no-progress responses. Preserve the required baseline result and continue with repository inspection, implementation, and mandatory post-change verification.",
+      "steps": [
+        {
+          "completion_condition": "Contracts and current implementations are reviewed and required signatures are recorded.",
+          "description": "Read all six stage contracts, repository instructions, public source APIs, and checks; identify exact behavioral gaps.",
+          "id": "inspect",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "All six contracts are implemented with pure functions and preserved public signatures.",
+          "description": "Implement the parse, validate, normalize, aggregate, select, render, and pipeline behavior within src/inventory/*.py only.",
+          "id": "implement",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "The full checks suite passes and only allowed source files are changed.",
+          "description": "Run the required unittest discovery command after edits and inspect the final diff for scope compliance.",
+          "id": "verify",
+          "status": "PENDING"
+        }
+      ],
+      "version": 2
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-sol/no-context-selection/profile-ledger/repopilot/result.json",
+    "tool_counts": {
+      "list_files": 2,
+      "read_file": 7,
+      "update_plan": 1,
+      "apply_patch": 1,
+      "verify_task": 1,
+      "view_diff": 1
+    },
+    "read_paths": {
+      "AGENTS.md": 1,
+      "pyproject.toml": 1,
+      "src/ledger/AGENTS.md": 1,
+      "src/ledger/normalize.py": 1,
+      "src/ledger/report.py": 1,
+      "src/ledger/__init__.py": 1,
+      "checks/test_ledger.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-sol/no-planning/history-inventory/repopilot/result.json",
+    "tool_counts": {
+      "list_files": 2,
+      "read_file": 1,
+      "verify_task": 1
+    },
+    "read_paths": {
+      "AGENTS.md": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Before editing run `python -m unittest discover -s checks`; after repair rerun the same command successfully. Implement the six-stage inventory reconciliation pipeline in src/inventory according to all six docs/01-parse.md through docs/06-render.md contracts. Review each stage contract and track progress through parsing, validation, normalization, aggregation, selection and rendering; verify stages and end-to-end behavior. Preserve public signatures, docs, config, instructions and tests. If verify_task is available, use it for both test-suite runs.",
+          "id": "complete-task",
+          "status": "PENDING"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-sol/no-planning/profile-ledger/repopilot/result.json",
+    "tool_counts": {
+      "list_files": 2,
+      "read_file": 7,
+      "run_command": 1,
+      "apply_patch": 1,
+      "verify_task": 1,
+      "finish_task": 1
+    },
+    "read_paths": {
+      "AGENTS.md": 1,
+      "pyproject.toml": 1,
+      "src/ledger/AGENTS.md": 1,
+      "src/ledger/normalize.py": 1,
+      "src/ledger/report.py": 1,
+      "src/ledger/__init__.py": 1,
+      "checks/test_ledger.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "PENDING"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-sol/no-profile/history-inventory/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 2,
+      "list_files": 29,
+      "run_command": 2,
+      "read_file": 221,
+      "verify_task": 13,
+      "search_code": 2,
+      "replan": 1
+    },
+    "read_paths": {
+      "AGENTS.md": 4,
+      "src/inventory/AGENTS.md": 7,
+      "docs/01-parse.md": 17,
+      "docs/02-validate.md": 17,
+      "docs/03-normalize.md": 17,
+      "docs/04-aggregate.md": 17,
+      "docs/05-select.md": 17,
+      "docs/06-render.md": 17,
+      "checks/test_pipeline.py": 8,
+      "src/inventory/parse.py": 13,
+      "src/inventory/validate.py": 13,
+      "src/inventory/normalize.py": 13,
+      "src/inventory/aggregate.py": 13,
+      "src/inventory/select.py": 13,
+      "src/inventory/render.py": 13,
+      "src/inventory/pipeline.py": 13,
+      "checks/test_inventory.py": 1,
+      "src/inventory/__init__.py": 6,
+      "src/inventory/AGENTS.md}},{": 1,
+      "checks/test_stages.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks",
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Contract review confirms six independent stubbed stage modules plus an already-wired pipeline. Split implementation and verification into explicit stage progress while preserving the completed baseline-test requirement.",
+      "steps": [
+        {
+          "completion_condition": "parse returns a decoded top-level JSON list and [] for invalid JSON or non-list values.",
+          "description": "Implement parsing contract in src/inventory/parse.py.",
+          "id": "parse-stage",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "completion_condition": "validate keeps only valid dict events, rejects bool deltas, strips SKU validity checks, returns fresh sku/delta dicts, and does not mutate input.",
+          "description": "Implement validation contract in src/inventory/validate.py.",
+          "id": "validate-stage",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "normalize returns fresh ordered records using stripped Unicode casefolded SKUs and unchanged deltas.",
+          "description": "Implement normalization contract in src/inventory/normalize.py.",
+          "id": "normalize-stage",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "aggregate sums all normalized SKU deltas, retains zero totals, and does not mutate records.",
+          "description": "Implement aggregation contract in src/inventory/aggregate.py.",
+          "id": "aggregate-stage",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "select returns a fresh mapping containing all and only nonzero balances, including negatives.",
+          "description": "Implement selection contract in src/inventory/select.py.",
+          "id": "select-stage",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "render sorts SKUs lexicographically and emits newline-joined sku=integer rows with no trailing newline.",
+          "description": "Implement rendering contract in src/inventory/render.py.",
+          "id": "render-stage",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "Stage-focused checks and the required python -m unittest discover -s checks command pass after repair, with pipeline behavior verified end to end.",
+          "description": "Verify each stage and the complete reconciliation pipeline.",
+          "id": "verify-pipeline",
+          "status": "PENDING"
+        }
+      ],
+      "version": 2
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-sol/no-profile/profile-ledger/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 2,
+      "list_files": 2,
+      "read_file": 7,
+      "apply_patch": 1,
+      "view_diff": 1,
+      "verify_task": 1,
+      "finish_task": 1
+    },
+    "read_paths": {
+      "AGENTS.md": 1,
+      "pyproject.toml": 1,
+      "src/ledger/AGENTS.md": 1,
+      "src/ledger/normalize.py": 1,
+      "src/ledger/report.py": 1,
+      "checks/test_ledger.py": 1,
+      "src/ledger/__init__.py": 1
+    },
+    "verification_commands": [
+      "python -m unittest discover -s checks"
+    ],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "COMPLETED"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-sol/no-recovery/history-inventory/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 1
+    },
+    "read_paths": {},
+    "verification_commands": [],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Before editing run `python -m unittest discover -s checks`; after repair rerun the same command successfully. Implement the six-stage inventory reconciliation pipeline in src/inventory according to all six docs/01-parse.md through docs/06-render.md contracts. Review each stage contract and track progress through parsing, validation, normalization, aggregation, selection and rendering; verify stages and end-to-end behavior. Preserve public signatures, docs, config, instructions and tests. If verify_task is available, use it for both test-suite runs.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    }
+  },
+  {
+    "result_path": "runs/gpt-5.6-sol/no-recovery/profile-ledger/repopilot/result.json",
+    "tool_counts": {
+      "update_plan": 1,
+      "list_files": 3,
+      "read_file": 7
+    },
+    "read_paths": {
+      "AGENTS.md": 1,
+      "pyproject.toml": 1,
+      "src/ledger/AGENTS.md": 1,
+      "src/ledger/normalize.py": 1,
+      "src/ledger/report.py": 1,
+      "src/ledger/__init__.py": 1,
+      "checks/test_ledger.py": 1
+    },
+    "verification_commands": [],
+    "context_strategy": "none",
+    "context_summary": null,
+    "durable_facts": [],
+    "final_plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    }
+  }
+]

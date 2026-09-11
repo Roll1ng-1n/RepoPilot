@@ -1,0 +1,30 @@
+{
+  "archive_sha256": "9b6ecea5b90e334c394e7e832a431486818b5cd891aeb3ebafb8b033e00f31f4",
+  "variant": "no-context-selection",
+  "replacement_plan_sha256": "97644dbb1d4a530892bd623dbc898e7a315202e289df08339fd4899064c8548b",
+  "replaces": [
+    {
+      "model": "gpt-5.6-sol",
+      "variant": "no-context-selection",
+      "task": "history-inventory",
+      "original_run_id": "2238e8778fa3483faef0a842f90b60fd",
+      "original_result": "runs/gpt-5.6-sol/no-context-selection/history-inventory/repopilot/result.json",
+      "original_status": "BUDGET_EXCEEDED",
+      "model_error_count": 0,
+      "blank_response_count": 10,
+      "reason": "Explicit provider/transport errors and/or blank successful responses with no tool calls. Blank output is suspected upstream contamination, not proven provider attribution."
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "variant": "no-context-selection",
+      "task": "profile-ledger",
+      "original_run_id": "fe4ec8042aff4c23b1b05b0fb4009823",
+      "original_result": "runs/gpt-5.6-sol/no-context-selection/profile-ledger/repopilot/result.json",
+      "original_status": "BUDGET_EXCEEDED",
+      "model_error_count": 0,
+      "blank_response_count": 5,
+      "reason": "Explicit provider/transport errors and/or blank successful responses with no tool calls. Blank output is suspected upstream contamination, not proven provider attribution."
+    }
+  ],
+  "experiment_files_sha256": "c62aae02cb7fadbfd40a12ffcf0b2d47fe1eb89aee792227c1bed0461ba769bf"
+}

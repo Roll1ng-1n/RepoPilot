@@ -1,0 +1,28 @@
+{
+  "current": {
+    "reason": "Initial Plan for this Agent Run.",
+    "steps": [
+      {
+        "completion_condition": "The requested task is completed and Task Verification has run.",
+        "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+        "id": "complete-task",
+        "status": "IN_PROGRESS"
+      }
+    ],
+    "version": 1
+  },
+  "history": [
+    {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "id": "profile-ledger",
+  "category": "cross-file",
+  "capabilities": [],
+  "behavior_requirements": [],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "issue24-v1",
+    "sha256": "4401c3306f6fb9d57eff98145586031265600138731ed3df09669e64bb467f53"
+  },
+  "task_statement": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+  "timeout_seconds": 7200,
+  "run_budget": {
+    "max_steps": 48,
+    "max_replans": 4,
+    "max_consecutive_failures": 5,
+    "command_timeout_seconds": 60,
+    "max_run_seconds": 7200
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 30
+  }
+}

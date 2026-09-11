@@ -1,0 +1,7 @@
+{
+  "scope": "benchmark_normalized_delta",
+  "patch": "patch.diff",
+  "bytes": 1015,
+  "sha256": "12e18a242dad8aca290d493cb9eb5c200aa2fa69ef3ea5ca2a7ac5dd3fc0d0a8",
+  "initial_head": "87d499bd8afd8bdd889f807a950e2545e9ff789e"
+}

@@ -1,0 +1,200 @@
+{
+  "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-context-selection/profile-ledger/repopilot",
+  "behavior_pass": true,
+  "capabilities": [],
+  "category": "cross-file",
+  "engine": "repopilot",
+  "error": null,
+  "evaluation": {
+    "approval_events": [],
+    "behavior_pass": true,
+    "behavior_verifier": {},
+    "budget_usage": {
+      "complete_audit": false,
+      "limits": {
+        "command_timeout_seconds": 60,
+        "max_consecutive_failures": 5,
+        "max_replans": 4,
+        "max_run_seconds": 7200,
+        "max_steps": 48
+      },
+      "replans_used": 0,
+      "steps_used": 13
+    },
+    "churn": {
+      "final_step": 13,
+      "first_solved_step": null,
+      "post_solution_steps": null,
+      "reason": "Missing immutable repository states at every step boundary.",
+      "status": "unsupported"
+    },
+    "duration": {
+      "llm_seconds": 344.2191337700024,
+      "orchestration_seconds": null,
+      "tool_seconds": null,
+      "wall_clock_seconds": 347.08293034399685
+    },
+    "recovery": {
+      "attempt_count": null,
+      "failure_types": [],
+      "post_recovery_repository_pass": null,
+      "resolved_count": null,
+      "success_rate": null,
+      "trigger_count": null
+    },
+    "replan": {
+      "evidence_count": null,
+      "missed_scenarios": null,
+      "post_replan_repository_pass": null,
+      "success_rate": null,
+      "trigger_rate": null,
+      "triggered_count": 0,
+      "triggered_scenarios": null,
+      "unnecessary_replans": null,
+      "valid_count": null
+    },
+    "repository_pass": true,
+    "schema_version": 4,
+    "task_pass": true,
+    "termination": "false_failure",
+    "tool_quality": {
+      "failure_count": 0,
+      "failure_rate": 0.0,
+      "recovery_rate": null,
+      "recovery_scope": "manifest-declared public-command failures only",
+      "redundant_calls": 0
+    }
+  },
+  "metrics": {
+    "commits": [],
+    "cost": 0.211112,
+    "duration_seconds": 347.08293034399685,
+    "errors": [
+      {
+        "category": "NO_PROGRESS",
+        "reason": "The model response contained no Tool Call."
+      },
+      {
+        "category": "NO_PROGRESS",
+        "reason": "The model response contained no Tool Call."
+      },
+      {
+        "category": "NO_PROGRESS",
+        "reason": "The model response contained no Tool Call."
+      },
+      {
+        "category": "NO_PROGRESS",
+        "reason": "The model response contained no Tool Call."
+      },
+      {
+        "category": "NO_PROGRESS",
+        "reason": "The model response contained no Tool Call."
+      }
+    ],
+    "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "llm_calls": 12,
+    "openai_standard_estimated_cost_usd": 0.211112,
+    "patch": {
+      "changed": true,
+      "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-context-selection/profile-ledger/repopilot/patch.diff",
+      "sha256": "ad9512ca746f31b15e34aa52966cc5ea1c4c9b66ac8724b5c97c5f3340430136"
+    },
+    "preflight": {
+      "checks": [
+        {
+          "command": [
+            "docker",
+            "image",
+            "inspect",
+            "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+          ],
+          "duration_seconds": 0.036054106003575725,
+          "exit_code": 0,
+          "name": "image_inspect",
+          "stderr": "",
+          "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "python",
+            "--version"
+          ],
+          "duration_seconds": 0.4502559460015618,
+          "exit_code": 0,
+          "name": "python",
+          "stderr": "",
+          "stdout": "Python 3.12.14\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "git",
+            "--version"
+          ],
+          "duration_seconds": 0.4266791979971458,
+          "exit_code": 0,
+          "name": "git",
+          "stderr": "",
+          "stdout": "git version 2.47.3\n"
+        }
+      ],
+      "error": null,
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "status": "READY"
+    },
+    "replans": 0,
+    "retries": 0,
+    "run_budget": {
+      "command_timeout_seconds": 60,
+      "max_consecutive_failures": 5,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48
+    },
+    "steps": 13,
+    "tokens": {
+      "cache_write": null,
+      "cached": 0,
+      "completion": 1031,
+      "prompt": 47623,
+      "reasoning": 0,
+      "total": 48654
+    },
+    "tool_calls": 13,
+    "tool_failures": 0,
+    "trajectory_status": "BUDGET_EXCEEDED",
+    "verifier_success": true
+  },
+  "model": "openai/gpt-5.6-sol",
+  "repeat": 1,
+  "repository_pass": true,
+  "run_id": "fe4ec8042aff4c23b1b05b0fb4009823",
+  "status": "BUDGET_EXCEEDED",
+  "success": true,
+  "task_id": "profile-ledger",
+  "task_pass": true,
+  "verifier": {
+    "duration_seconds": 0.021366412998759188,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "hidden checks passed\n",
+    "success_condition": {
+      "verifier_exit_code": 0
+    }
+  }
+}

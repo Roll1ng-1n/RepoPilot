@@ -1,0 +1,71 @@
+{
+  "models": [
+    "gpt-5.6-sol",
+    "gpt-5.6-luna"
+  ],
+  "tasks": [
+    "profile-ledger",
+    "history-inventory"
+  ],
+  "arms": [
+    "baseline",
+    "full",
+    "no-profile",
+    "no-context-selection",
+    "no-planning",
+    "no-recovery"
+  ],
+  "repeats": 1,
+  "total_runs": 24,
+  "smoke_runs": 8,
+  "reuse_smoke_full_and_baseline": true,
+  "budgets": {
+    "max_steps": 48,
+    "max_replans": 4,
+    "max_consecutive_failures": 5,
+    "command_timeout_seconds": 60,
+    "max_run_seconds": 7200
+  },
+  "model_kwargs": {
+    "temperature": 1,
+    "stream": true,
+    "timeout": 120,
+    "max_tokens": 4096
+  },
+  "transport_retries": "Preserved in all arms, including no-recovery; no short whole-task timeout.",
+  "variants": {
+    "full": "Production defaults with telemetry only",
+    "baseline": "Upstream baseline, no experimental patches",
+    "no-profile": "Remove discovered facts; retain applicable instructions",
+    "no-context-selection": "Keep entire request history; stop at context-window budget rather than send oversized input",
+    "no-planning": "Remove planning tools and plan step fields",
+    "no-recovery": "Stop task/protocol failures; preserve transient MODEL_ERROR retries"
+  },
+  "ablation_order": {
+    "gpt-5.6-sol": [
+      "no-profile",
+      "no-context-selection",
+      "no-planning",
+      "no-recovery"
+    ],
+    "gpt-5.6-luna": [
+      "no-recovery",
+      "no-planning",
+      "no-context-selection",
+      "no-profile"
+    ]
+  },
+  "smoke_gate": "Manually inspect native tools, terminal outcomes, verifier and telemetry; preserve invalid/interrupted trials before any replacement.",
+  "reporting": [
+    "task_pass true/false/null",
+    "repository_pass",
+    "terminal status",
+    "tokens",
+    "elapsed seconds",
+    "cost (null if unavailable)",
+    "recovery actions",
+    "actual mechanism activation",
+    "patch manifest integrity"
+  ],
+  "limitations": "One sample per cell; descriptive evidence only. Mechanism activation must be checked in real traces; no benefit is a valid result."
+}

@@ -1,0 +1,25 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "1211898d0cbcea268d654c25d6d74fe21d73a7106ce7d06db8fc525bc5da67b8",
+      "before_fingerprint": "1211898d0cbcea268d654c25d6d74fe21d73a7106ce7d06db8fc525bc5da67b8",
+      "check_id": "configured-unittest",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Run the test command specified by pyproject.toml to verify normalize_key and report behavior.",
+      "result": {
+        "duration_seconds": 0.2549083609992522,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "checks and src/ledger implementation",
+      "sequence": 1,
+      "supersedes": []
+    }
+  ]
+}

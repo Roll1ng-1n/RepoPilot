@@ -1,0 +1,112 @@
+diff --git a/checks/__pycache__/test_ledger.cpython-312.pyc b/checks/__pycache__/test_ledger.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..94aca550f15dbf1c8588745eb02b7b3e66f47c0e
+GIT binary patch
+literal 946
+zcmcIiJ8#oa6h8ObPEDG$JS0ekR6MYFAde!3N~BU-Rct{t9gr8}+LxBpX~MN56pMi&
+z1OFfk5`rzt&tPPsR8`SMOiXNuz|x6x>_qLt$QjN(kMExM$6_%LNXOlGt!)PIos=0F
+zQ(>}!!Vm%oSO^ZiJY;R|a0VP6K%fmE&;_(|vybQRSj%Kb?=#!@K}y4BDknv^BV+#@
+z2!PpBnw0Pvf&hmF;P8MAz|jJZT<>ePu5z3E!as=o8J<2-X38{KLpFq$(7NbF8&N#1
+z1z-<5dC$gEOu)xHLon!rtu<`T=80ylTW3bCT&>=-xniE2Lkvk9N$yUS%*ldRUny5>
+z`Q17hY9p@Zy(khg-g@5iLP_aHOzDvbpGK6+I<qP-I`SaudcLUmX&aSTM6nx+U{A<$
+zx3A_?JsVGQHEXqe!KP!JXbIUX_+l1L&C-!sdUO4=)i_>y`03H^iRn+!3IBOIy-S$G
+zYR1z0@K#ug)o?I#&7JM_W^+ri6&jPJ`08p>h!BG_so%wkNjf!IK$eX|E}*CiX?MND
+zXMQIT$+e3uPmQ$QfA{R3m`~(ogfwhJnXY^2wT0`dyz90*K`$h^;JUPt%p(^OD{mkh
+zLHaK(L(;LQjMf%WWdr!dnGvvw&J2%bP(o1}tSqLw)s;y4<>~set)+Wc<_>x{J-miA
+y@J)(NMP@yl_p{p8<Sn$(ZA2ve)EHx5VeuQ>{>^pfvDc4Ji_1sF<v&1L8sIO*8_Nm+
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/__pycache__/__init__.cpython-312.pyc b/src/__pycache__/__init__.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..ad448597dce5600c58f1e6c989f7aeae9474c983
+GIT binary patch
+literal 123
+zcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdC8b}UUzA;3keHmR
+wUtE-|A0MBYmst`YuUAlci^C>2KczG$)vkyYsFV?ii$RQ!%#4hTMa)1J0N}0}?EnA(
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/ledger/__pycache__/__init__.cpython-312.pyc b/src/ledger/__pycache__/__init__.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..927f20af8bb1b09e8f8ca1a41453829aa02fef4b
+GIT binary patch
+literal 130
+zcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdrKn$?UzA;3keHmR
+zUtE-|pOc!Bo?4_IAD@|*SrQ+wS5SG2!zMRBr8Fniu80+=gAs^}L5z>gjEsy$%s>_Z
+D&<`Az
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/ledger/__pycache__/normalize.cpython-312.pyc b/src/ledger/__pycache__/normalize.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..9cf4fc03cac3a345c6e23612686c13e15f9abdd5
+GIT binary patch
+literal 371
+zcmX@j%ge<81R7F{vfP05V-N=hSfGs0B0$D;h7^WWh7`tBhBTHGrWTec#!6;QmRro(
+zsg<|bic(8Ti}I2gVLE{{6A&{4@n<_AF`c1?Aq!a+C<X$nArwOvNF^G8$ptfLGWuyU
+z-C`{+DatIk#gUv?oSK%OlcLF31hS(TWURt3CH?aJqU_>=#N<@{;-X~zoYa)`)FS=7
+z{G!~%oXo0Jy@JYHyl`GT(A7m8K#d^H#o|Dsf#C)>U%zFiWw-TpZuyJc@|U?4FR&<n
+z21+r2Y-a}A4%V@fp@<VGR>Te@ZgJS;=BJeAq}mnn0J&hpB!G+$%#4hTAD9>!l_nH_
+OU;t7xiobv;uucGUvrC%*
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/ledger/__pycache__/report.cpython-312.pyc b/src/ledger/__pycache__/report.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..06f746f002c7990442229cd93ae4d1e0d367aff7
+GIT binary patch
+literal 1069
+zcmZ8g&1(}u6rb6d-F!5m4Yp{T*6*rOXsbOHR4lEvV5voEk)V{2orJ_qHqLG+4IAmf
+zLkh*llMxY%dZ_445B>qY>7g}<aa25b@)oEkPrgaI3HV^<y?O69?`z(C2nPKK=v3eH
+z^q7LsFL`iD-4k{%f$#|FNXG`s;3&pOS9D@184@KK8l`ZiOl2DLFi%411+-kc3MZ;-
+z_i5C-?1^}PV^Bu02xd*5i5aN^TfD=Te}fW56ycd<@f4^<@cOm+*~!J}@tLW``8h$k
+zxnv2AGds_-ap}S(4+sR-?gD5Zp%f}&2Th{eQwZIHQi@8E*e$%Hyxx<G)S(t$>vnKj
+z-u{mqYP)4ax$d3U;7?N9X3OXea!3oc7oh-p2RrmU@U>}*lBlTKz9w2)Ts-6okfH+E
+zM$^(AE~d@f5%pFDcEGj2A#P?x;;89PSKsE2@&q2oA-ej6K5b=+(b`3dbS)ifBVEZ+
+z-TZE#h-X&dkpdkV8aWFu=jCQTtEaL_fiD!u(7A-b{)msuHVTqtHkYjv#Im{2ER)+z
+z7v8)1Sk{KO=9;u=v0RR2bwSf+DjU(b?4r<Y(~cRIATSPq$UqQV_*+w=3)M(vnPo{2
+zha2?w(D0JU?^wB5oDEw%K5Q^O$@nm5IS4zH12;{P_rV<s%X$Ud3aTABwlei?e|WW{
+zL`n<adya05R(npC{9ikJYk}_Cz_Dl1$I(syyDRS}-p*79#<#9~oY<aQ_;9s4d2?sr
+zW=Sg*K6(4<K6IeJ9zem)mCN5dd&-Fi_e!J|+Fv0L!(T#!JE6gs$<4$Ib1S$V8mxw9
+zOIpnvTo0@UDx{pRj8_sHH!8Qbdrp7$o~f&->tJ0&fv)wj)v@w?wIjSu!@H0ynvM8`
+zuhoTSmpyv(moz%vY$-KTmMv5}pEDSj6VRyn72;tj%a16$=QF0BH`qmf1deh_tuwII
+o3C8#bI{p)#uG0YSFL#$&WnyDrW%{AH6FN~xpxYe%BU!`QKaw=_?f?J)
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py
+index 74ac50e0060279d5a639cc30185e3c318345d254..4a66cdee8c8e187e69359ffd01e3c624d5056b25 100644
+--- a/src/ledger/normalize.py
++++ b/src/ledger/normalize.py
+@@ -1,2 +1,2 @@
+ def normalize_key(key: str) -> str:
+-    return key
++    return key.strip().casefold()
+diff --git a/src/ledger/report.py b/src/ledger/report.py
+index d21760296bf67b760d8c5fecb4298b97dd87f9e9..0d39ecc7722d9e960e0ce6fc3691ccafe59897ef 100644
+--- a/src/ledger/report.py
++++ b/src/ledger/report.py
+@@ -1,4 +1,16 @@
+ from .normalize import normalize_key
++from decimal import Decimal, ROUND_HALF_UP
+ 
+ def report(rows: list[tuple[str, str]]) -> str:
+-    return ""
++    totals: dict[str, Decimal] = {}
++    for key, amount in rows:
++        normalized = normalize_key(key)
++        if not normalized:
++            continue
++        totals[normalized] = totals.get(normalized, Decimal("0")) + Decimal(str(amount))
++
++    lines = []
++    for key in sorted(totals):
++        amount = totals[key].quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
++        lines.append(f"{key}={amount:.2f}")
++    return "\n".join(lines)

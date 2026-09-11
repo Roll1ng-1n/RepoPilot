@@ -1,0 +1,1 @@
+{"variant": "no-recovery", "messages_before": 3, "input_bytes_before": 9546, "profile_fact_count": 1, "instruction_sources": ["AGENTS.md"], "planning_enabled": true, "messages_after": 3, "input_bytes_after": 9546, "context_changed": false}

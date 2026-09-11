@@ -1,0 +1,1 @@
+Use a pure pipeline with no file/network side effects. Preserve every public function signature. Do not silently coerce booleans or fractional numbers into integer deltas.

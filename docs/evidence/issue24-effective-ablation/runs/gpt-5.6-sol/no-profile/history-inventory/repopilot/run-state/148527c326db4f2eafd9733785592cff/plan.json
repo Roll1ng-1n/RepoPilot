@@ -1,0 +1,112 @@
+{
+  "current": {
+    "reason": "Contract review confirms six independent stubbed stage modules plus an already-wired pipeline. Split implementation and verification into explicit stage progress while preserving the completed baseline-test requirement.",
+    "steps": [
+      {
+        "completion_condition": "parse returns a decoded top-level JSON list and [] for invalid JSON or non-list values.",
+        "description": "Implement parsing contract in src/inventory/parse.py.",
+        "id": "parse-stage",
+        "status": "IN_PROGRESS"
+      },
+      {
+        "completion_condition": "validate keeps only valid dict events, rejects bool deltas, strips SKU validity checks, returns fresh sku/delta dicts, and does not mutate input.",
+        "description": "Implement validation contract in src/inventory/validate.py.",
+        "id": "validate-stage",
+        "status": "PENDING"
+      },
+      {
+        "completion_condition": "normalize returns fresh ordered records using stripped Unicode casefolded SKUs and unchanged deltas.",
+        "description": "Implement normalization contract in src/inventory/normalize.py.",
+        "id": "normalize-stage",
+        "status": "PENDING"
+      },
+      {
+        "completion_condition": "aggregate sums all normalized SKU deltas, retains zero totals, and does not mutate records.",
+        "description": "Implement aggregation contract in src/inventory/aggregate.py.",
+        "id": "aggregate-stage",
+        "status": "PENDING"
+      },
+      {
+        "completion_condition": "select returns a fresh mapping containing all and only nonzero balances, including negatives.",
+        "description": "Implement selection contract in src/inventory/select.py.",
+        "id": "select-stage",
+        "status": "PENDING"
+      },
+      {
+        "completion_condition": "render sorts SKUs lexicographically and emits newline-joined sku=integer rows with no trailing newline.",
+        "description": "Implement rendering contract in src/inventory/render.py.",
+        "id": "render-stage",
+        "status": "PENDING"
+      },
+      {
+        "completion_condition": "Stage-focused checks and the required python -m unittest discover -s checks command pass after repair, with pipeline behavior verified end to end.",
+        "description": "Verify each stage and the complete reconciliation pipeline.",
+        "id": "verify-pipeline",
+        "status": "PENDING"
+      }
+    ],
+    "version": 2
+  },
+  "history": [
+    {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Before editing run `python -m unittest discover -s checks`; after repair rerun the same command successfully. Implement the six-stage inventory reconciliation pipeline in src/inventory according to all six docs/01-parse.md through docs/06-render.md contracts. Review each stage contract and track progress through parsing, validation, normalization, aggregation, selection and rendering; verify stages and end-to-end behavior. Preserve public signatures, docs, config, instructions and tests. If verify_task is available, use it for both test-suite runs.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    },
+    {
+      "reason": "Contract review confirms six independent stubbed stage modules plus an already-wired pipeline. Split implementation and verification into explicit stage progress while preserving the completed baseline-test requirement.",
+      "steps": [
+        {
+          "completion_condition": "parse returns a decoded top-level JSON list and [] for invalid JSON or non-list values.",
+          "description": "Implement parsing contract in src/inventory/parse.py.",
+          "id": "parse-stage",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "completion_condition": "validate keeps only valid dict events, rejects bool deltas, strips SKU validity checks, returns fresh sku/delta dicts, and does not mutate input.",
+          "description": "Implement validation contract in src/inventory/validate.py.",
+          "id": "validate-stage",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "normalize returns fresh ordered records using stripped Unicode casefolded SKUs and unchanged deltas.",
+          "description": "Implement normalization contract in src/inventory/normalize.py.",
+          "id": "normalize-stage",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "aggregate sums all normalized SKU deltas, retains zero totals, and does not mutate records.",
+          "description": "Implement aggregation contract in src/inventory/aggregate.py.",
+          "id": "aggregate-stage",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "select returns a fresh mapping containing all and only nonzero balances, including negatives.",
+          "description": "Implement selection contract in src/inventory/select.py.",
+          "id": "select-stage",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "render sorts SKUs lexicographically and emits newline-joined sku=integer rows with no trailing newline.",
+          "description": "Implement rendering contract in src/inventory/render.py.",
+          "id": "render-stage",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "Stage-focused checks and the required python -m unittest discover -s checks command pass after repair, with pipeline behavior verified end to end.",
+          "description": "Verify each stage and the complete reconciliation pipeline.",
+          "id": "verify-pipeline",
+          "status": "PENDING"
+        }
+      ],
+      "version": 2
+    }
+  ]
+}

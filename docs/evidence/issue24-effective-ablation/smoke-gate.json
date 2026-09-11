@@ -1,0 +1,20 @@
+{
+  "decision": "proceed_to_ablation",
+  "smoke_runs": 8,
+  "input_and_patch_integrity": true,
+  "native_tools_working": true,
+  "infrastructure_invalid_runs": 0,
+  "repository_pass": 6,
+  "task_pass_true": 4,
+  "task_pass_false": 4,
+  "task_pass_null": 0,
+  "full_inventory": "Both models exhausted 48 steps with repeated exploration and failed verification, zero final patch. Retain as valid failures.",
+  "actual_context_trimming": {
+    "sol_inventory": 44,
+    "luna_inventory": 45
+  },
+  "profile_facts_present": true,
+  "actual_recovery_observed": true,
+  "baseline_behavior_caveat": "Initial failing test appears in compound shell command whose final exit code is zero. Automatic recovery/task_pass false is retained; manual trajectory check will be reported separately.",
+  "replacement_runs": 0
+}

@@ -1,0 +1,111 @@
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+START gpt-5.6-luna no-recovery
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-5ffcaa9e -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-luna/no-recovery/profile-ledger/repopilot/workspace,tar
+get=/workspace --user=1000:1000                                                 
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-5ffcaa9e with ID 
+49e1897c916d6164335871de5a773d176f07ff2d293f347cb31fedbe3baaf8b3                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-de56fb72 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-luna/no-recovery/history-inventory/repopilot/workspace,
+target=/workspace --user=1000:1000                                              
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-de56fb72 with ID 
+8c0ce56ae775cd03cf136e104dd547df5b7724d61dd6f2d3b6737779c4d22446                
+{"model": "gpt-5.6-luna", "variant": "no-recovery", "task": "profile-ledger", "engine": "repopilot", "status": "SUCCEEDED", "task_pass": true, "repository_pass": true, "error": null}
+{"model": "gpt-5.6-luna", "variant": "no-recovery", "task": "history-inventory", "engine": "repopilot", "status": "FAILED", "task_pass": false, "repository_pass": false, "error": null}
+DONE gpt-5.6-luna no-recovery
+START gpt-5.6-luna no-planning
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-83e0a042 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-luna/no-planning/profile-ledger/repopilot/workspace,tar
+get=/workspace --user=1000:1000                                                 
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-83e0a042 with ID 
+b3b44c2e58b9f42f889de825e1425595fa907a7bb4ed3749c20cf91ae428a578                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-7175ff45 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-luna/no-planning/history-inventory/repopilot/workspace,
+target=/workspace --user=1000:1000                                              
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-7175ff45 with ID 
+780fc9ec997bd18efd069baa38b08bd267314e2f069efdfd5995e7b163d02f5c                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+{"model": "gpt-5.6-luna", "variant": "no-planning", "task": "profile-ledger", "engine": "repopilot", "status": "SUCCEEDED", "task_pass": true, "repository_pass": true, "error": null}
+{"model": "gpt-5.6-luna", "variant": "no-planning", "task": "history-inventory", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false, "repository_pass": false, "error": null}
+DONE gpt-5.6-luna no-planning
+START gpt-5.6-luna no-context-selection
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-87647dbc -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-luna/no-context-selection/profile-ledger/repopilot/work
+space,target=/workspace --user=1000:1000                                        
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-87647dbc with ID 
+c5dc61b92798de3a6e612adf066bcbeb813f1a30ff38aca2366512df0f4b86b4                
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-7afde885 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-luna/no-context-selection/history-inventory/repopilot/w
+orkspace,target=/workspace --user=1000:1000                                     
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-7afde885 with ID 
+51daba321df8634b3274416c35a6513a0de077dbfff1b2e65ccc10ae33bd95ab                
+{"model": "gpt-5.6-luna", "variant": "no-context-selection", "task": "profile-ledger", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": true, "repository_pass": true, "error": null}
+{"model": "gpt-5.6-luna", "variant": "no-context-selection", "task": "history-inventory", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false, "repository_pass": false, "error": null}
+DONE gpt-5.6-luna no-context-selection
+START gpt-5.6-luna no-profile
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-cec60db5 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-luna/no-profile/profile-ledger/repopilot/workspace,targ
+et=/workspace --user=1000:1000                                                  
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-cec60db5 with ID 
+fda6e693ff1da24fcc3ad6633a5ac345b0f3f0790517b0cd5e33216205b39e80                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-effe589f -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/runs/gpt-5.6-luna/no-profile/history-inventory/repopilot/workspace,t
+arget=/workspace --user=1000:1000                                               
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-effe589f with ID 
+94178d2db13218ab631e900dd4afee0447877ae55aa922bd8514b063ec2f11a6                
+{"model": "gpt-5.6-luna", "variant": "no-profile", "task": "profile-ledger", "engine": "repopilot", "status": "SUCCEEDED", "task_pass": true, "repository_pass": true, "error": null}
+{"model": "gpt-5.6-luna", "variant": "no-profile", "task": "history-inventory", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false, "repository_pass": false, "error": null}
+DONE gpt-5.6-luna no-profile

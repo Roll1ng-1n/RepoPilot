@@ -1,0 +1,6 @@
+# Disposable benchmark workspaces and process locks remain local.
+**/workspace/
+**/run.lock
+**/__pycache__/
+# Keep experiment process logs despite the repository-wide *.log rule.
+!/*.log

@@ -1,0 +1,1 @@
+Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.

@@ -1,0 +1,88 @@
+{
+  "current": {
+    "reason": "Prior responses failed to advance because they emitted no executable repository action. This plan explicitly separates inspection, source-only implementation, and configured verification.",
+    "steps": [
+      {
+        "completion_condition": "Applicable AGENTS.md files, pyproject.toml, target modules, and checks have been read.",
+        "description": "Inspect the repository contract and current implementations before editing.",
+        "id": "inspect",
+        "status": "COMPLETED"
+      },
+      {
+        "completion_condition": "Only src/ledger/normalize.py and src/ledger/report.py contain the required implementation, with signatures preserved and no configuration or check changes.",
+        "description": "Implement Unicode strip/casefold normalization and Decimal HALF_UP reporting with skipped empty keys and sorted output.",
+        "id": "implement",
+        "status": "COMPLETED"
+      },
+      {
+        "completion_condition": "python -m unittest discover -s checks passes and the final diff is limited to allowed src/ledger Python files.",
+        "description": "Run the documented test command and inspect the final diff for scope and behavior.",
+        "id": "verify",
+        "status": "COMPLETED"
+      }
+    ],
+    "version": 3
+  },
+  "history": [
+    {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    },
+    {
+      "reason": "Recovery required after prior no-progress responses; continue with explicit repository inspection, implementation, configured test execution, and verification while respecting scoped instructions.",
+      "steps": [
+        {
+          "completion_condition": "Read src/ledger scoped instructions and inspect normalize.py, report.py, and tests/configuration.",
+          "description": "Inspect implementation targets, tests, configuration contract, and applicable instructions.",
+          "id": "inspect",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "normalize_key and report are implemented only in src/ledger/*.py, preserving signatures and Decimal/string, Unicode, rendering requirements.",
+          "description": "Implement the requested normalization and reporting behavior according to pyproject.toml and AGENTS.md.",
+          "id": "implement",
+          "status": "PENDING"
+        },
+        {
+          "completion_condition": "Configured command python -m unittest discover -s checks completes successfully and final diff contains only allowed source changes.",
+          "description": "Run the documented test entry and verify the final diff and behavior.",
+          "id": "verify",
+          "status": "PENDING"
+        }
+      ],
+      "version": 2
+    },
+    {
+      "reason": "Prior responses failed to advance because they emitted no executable repository action. This plan explicitly separates inspection, source-only implementation, and configured verification.",
+      "steps": [
+        {
+          "completion_condition": "Applicable AGENTS.md files, pyproject.toml, target modules, and checks have been read.",
+          "description": "Inspect the repository contract and current implementations before editing.",
+          "id": "inspect",
+          "status": "COMPLETED"
+        },
+        {
+          "completion_condition": "Only src/ledger/normalize.py and src/ledger/report.py contain the required implementation, with signatures preserved and no configuration or check changes.",
+          "description": "Implement Unicode strip/casefold normalization and Decimal HALF_UP reporting with skipped empty keys and sorted output.",
+          "id": "implement",
+          "status": "COMPLETED"
+        },
+        {
+          "completion_condition": "python -m unittest discover -s checks passes and the final diff is limited to allowed src/ledger Python files.",
+          "description": "Run the documented test command and inspect the final diff for scope and behavior.",
+          "id": "verify",
+          "status": "COMPLETED"
+        }
+      ],
+      "version": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "archive_sha256": "9b6ecea5b90e334c394e7e832a431486818b5cd891aeb3ebafb8b033e00f31f4",
+  "variant": "no-profile",
+  "replacement_plan_sha256": "97644dbb1d4a530892bd623dbc898e7a315202e289df08339fd4899064c8548b",
+  "replaces": [
+    {
+      "model": "gpt-5.6-sol",
+      "variant": "no-profile",
+      "task": "history-inventory",
+      "original_run_id": "637275d8e7bb49409e64136fe7c9f0ea",
+      "original_result": "runs/gpt-5.6-sol/no-profile/history-inventory/repopilot/result.json",
+      "original_status": "BUDGET_EXCEEDED",
+      "model_error_count": 2,
+      "blank_response_count": 1,
+      "reason": "Explicit provider/transport errors and/or blank successful responses with no tool calls. Blank output is suspected upstream contamination, not proven provider attribution."
+    }
+  ],
+  "experiment_files_sha256": "c62aae02cb7fadbfd40a12ffcf0b2d47fe1eb89aee792227c1bed0461ba769bf"
+}

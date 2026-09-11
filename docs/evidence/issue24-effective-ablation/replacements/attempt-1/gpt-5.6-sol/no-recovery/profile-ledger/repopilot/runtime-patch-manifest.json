@@ -1,0 +1,27 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "38021d67d40f3bb3294b871b756b31fde3443c138b8db5ac81631f9055bd25e2",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/profile-ledger/repopilot/workspace",
+      "head": "87d499bd8afd8bdd889f807a950e2545e9ff789e",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/profile-ledger/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "89d373d02ddee793bea03a65f34b8cef89bc4ed1"
+  },
+  "bytes": 1152,
+  "final": {
+    "state": {
+      "diff_fingerprint": "16928297b3e21f0359a9cda00df6dc3d70d68fafe60a5a49f8e999ab9bb04566",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/profile-ledger/repopilot/workspace",
+      "head": "87d499bd8afd8bdd889f807a950e2545e9ff789e",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/profile-ledger/repopilot/workspace",
+      "status": " M src/ledger/normalize.py\n M src/ledger/report.py\n"
+    },
+    "tree": "c7d0457e20bfc732479644313ac032898c012890"
+  },
+  "patch": "runtime-patch.diff",
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then runtime-patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "28d82ca391927d846a69761d33d8e2fb9d29a878b27a06fd0ef07eb2acdfc661"
+}

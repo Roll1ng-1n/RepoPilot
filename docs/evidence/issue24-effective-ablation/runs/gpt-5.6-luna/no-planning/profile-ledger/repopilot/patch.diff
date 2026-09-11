@@ -1,0 +1,32 @@
+diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py
+index 74ac50e..0da48fc 100644
+--- a/src/ledger/normalize.py
++++ b/src/ledger/normalize.py
+@@ -1,2 +1,3 @@
+ def normalize_key(key: str) -> str:
+-    return key
++    """Return the canonical form used for grouping ledger keys."""
++    return key.strip().casefold()
+diff --git a/src/ledger/report.py b/src/ledger/report.py
+index d217602..454ff92 100644
+--- a/src/ledger/report.py
++++ b/src/ledger/report.py
+@@ -1,4 +1,17 @@
+ from .normalize import normalize_key
++from collections import defaultdict
++from decimal import Decimal, ROUND_HALF_UP
+ 
+ def report(rows: list[tuple[str, str]]) -> str:
+-    return ""
++    totals: dict[str, Decimal] = defaultdict(lambda: Decimal("0"))
++    for key, amount in rows:
++        normalized = normalize_key(key)
++        if not normalized:
++            continue
++        totals[normalized] += Decimal(amount)
++
++    lines = []
++    for key in sorted(totals):
++        total = totals[key].quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
++        lines.append(f"{key}={total:.2f}")
++    return "\n".join(lines)

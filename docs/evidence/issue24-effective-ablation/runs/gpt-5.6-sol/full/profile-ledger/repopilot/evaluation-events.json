@@ -1,0 +1,1528 @@
+[
+  {
+    "model": "openai/gpt-5.6-sol",
+    "target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-sol/full/profile-ledger/repopilot/workspace",
+    "task": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+    "type": "run_started",
+    "source_index": 0,
+    "step": 0
+  },
+  {
+    "budget": {
+      "active_seconds_used": 0.0002102250000461936,
+      "command_timeout_seconds": 60,
+      "cost_used": 0.0,
+      "max_consecutive_failures": 5,
+      "max_cost_usd": null,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48,
+      "max_tokens": null,
+      "replans_used": 0,
+      "requests_used": 0,
+      "steps_used": 0,
+      "tokens_used": 0,
+      "unknown_cost": false,
+      "unknown_tokens": false
+    },
+    "reason": "run_started",
+    "type": "budget_updated",
+    "source_index": 1,
+    "step": 0
+  },
+  {
+    "plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "PENDING"
+        }
+      ],
+      "version": 1
+    },
+    "type": "plan_created",
+    "source_index": 2,
+    "step": 0
+  },
+  {
+    "previous_status": null,
+    "status": "RUNNING",
+    "type": "status_changed",
+    "source_index": 3,
+    "step": 0
+  },
+  {
+    "budget": {
+      "active_seconds_used": 0.01475911500165239,
+      "command_timeout_seconds": 60,
+      "cost_used": 0.0,
+      "max_consecutive_failures": 5,
+      "max_cost_usd": null,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48,
+      "max_tokens": null,
+      "replans_used": 0,
+      "requests_used": 0,
+      "steps_used": 1,
+      "tokens_used": 0,
+      "unknown_cost": false,
+      "unknown_tokens": false
+    },
+    "reason": "agent_step_consumed",
+    "type": "budget_updated",
+    "source_index": 4,
+    "step": 0
+  },
+  {
+    "message_count": 3,
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "step": 1,
+    "type": "model_request",
+    "source_index": 5
+  },
+  {
+    "content": "",
+    "cost_usd": 0.013748,
+    "duration_seconds": 13.973160515000927,
+    "error": null,
+    "finish_reason": "tool_calls",
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "stream_artifact": "model-stream-0001.jsonl",
+    "tool_calls": [
+      {
+        "arguments": {
+          "max_results": 100,
+          "offset": 0,
+          "path": "."
+        },
+        "id": "call_uTKDEqkcJ2YbcI2qu11UvqEM",
+        "name": "list_files",
+        "protocol_error": null,
+        "raw_arguments": null
+      },
+      {
+        "arguments": {
+          "max_lines": 200,
+          "path": "AGENTS.md",
+          "start_line": 1
+        },
+        "id": "call_hDpUwZ4UWFn0lrLV6hkA5eU7",
+        "name": "read_file",
+        "protocol_error": null,
+        "raw_arguments": null
+      },
+      {
+        "arguments": {
+          "max_lines": 200,
+          "path": "pyproject.toml",
+          "start_line": 1
+        },
+        "id": "call_uZH8SoN0jojdWHftWIgfeXhi",
+        "name": "read_file",
+        "protocol_error": null,
+        "raw_arguments": null
+      },
+      {
+        "arguments": {
+          "max_results": 100,
+          "offset": 0,
+          "path": "src/ledger"
+        },
+        "id": "call_5SwFItojqH41mv35Vap1OBxM",
+        "name": "list_files",
+        "protocol_error": null,
+        "raw_arguments": null
+      },
+      {
+        "arguments": {
+          "max_results": 100,
+          "offset": 0,
+          "path": "checks"
+        },
+        "id": "call_hzXYZwApyhfRRuwQJdleOkxx",
+        "name": "list_files",
+        "protocol_error": null,
+        "raw_arguments": null
+      },
+      {
+        "arguments": {
+          "status": "IN_PROGRESS",
+          "step_id": "complete-task"
+        },
+        "id": "call_OX0KxsAzEcpNpUDx7YWcPbnN",
+        "name": "update_plan",
+        "protocol_error": null,
+        "raw_arguments": null
+      }
+    ],
+    "type": "model_response",
+    "usage": {
+      "cache_write_tokens": null,
+      "cached_tokens": 0,
+      "completion_tokens": 253,
+      "prompt_tokens": 2172,
+      "reasoning_tokens": 0,
+      "total_tokens": 2425
+    },
+    "source_index": 6,
+    "step": 1
+  },
+  {
+    "arguments": {
+      "max_results": 100,
+      "offset": 0,
+      "path": "."
+    },
+    "tool_call_id": "call_uTKDEqkcJ2YbcI2qu11UvqEM",
+    "tool_name": "list_files",
+    "type": "tool_call",
+    "source_index": 7,
+    "step": 1
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "duration_seconds": 0.06747730099959881,
+        "exit_code": 0,
+        "next_offset": null,
+        "stderr": "",
+        "stdout": "AGENTS.md\nchecks/test_ledger.py\npyproject.toml\nsrc/__init__.py\nsrc/ledger/AGENTS.md\nsrc/ledger/__init__.py\nsrc/ledger/normalize.py\nsrc/ledger/report.py",
+        "total_results": 8,
+        "truncated": false
+      }
+    },
+    "tool_call_id": "call_uTKDEqkcJ2YbcI2qu11UvqEM",
+    "tool_name": "list_files",
+    "type": "tool_result",
+    "source_index": 8,
+    "step": 1,
+    "failed": false
+  },
+  {
+    "arguments": {
+      "max_lines": 200,
+      "path": "AGENTS.md",
+      "start_line": 1
+    },
+    "tool_call_id": "call_hDpUwZ4UWFn0lrLV6hkA5eU7",
+    "tool_name": "read_file",
+    "type": "tool_call",
+    "source_index": 9,
+    "step": 1
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "duration_seconds": 0.07210444199881749,
+        "exit_code": 0,
+        "repository_instructions": [
+          {
+            "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+            "scope": ".",
+            "source": "AGENTS.md"
+          }
+        ],
+        "stderr": "",
+        "stdout": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+        "truncated": false
+      }
+    },
+    "tool_call_id": "call_hDpUwZ4UWFn0lrLV6hkA5eU7",
+    "tool_name": "read_file",
+    "type": "tool_result",
+    "source_index": 10,
+    "step": 1,
+    "failed": false
+  },
+  {
+    "arguments": {
+      "max_lines": 200,
+      "path": "pyproject.toml",
+      "start_line": 1
+    },
+    "tool_call_id": "call_uZH8SoN0jojdWHftWIgfeXhi",
+    "tool_name": "read_file",
+    "type": "tool_call",
+    "source_index": 11,
+    "step": 1
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "duration_seconds": 0.06489380300263292,
+        "exit_code": 0,
+        "repository_instructions": [
+          {
+            "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+            "scope": ".",
+            "source": "AGENTS.md"
+          }
+        ],
+        "stderr": "",
+        "stdout": "[project]\nname = \"ledger-fixture\"\nversion = \"0.0.1\"\n[tool.ledger]\ntest-command = \"python -m unittest discover -s checks\"\nkey-normalization = \"strip then Unicode casefold\"\nrounding = \"sum exact Decimal amounts per normalized key, then round HALF_UP to 2 places\"\nempty-key = \"skip\"\noutput-order = \"normalized key ascending\"\n",
+        "truncated": false
+      }
+    },
+    "tool_call_id": "call_uZH8SoN0jojdWHftWIgfeXhi",
+    "tool_name": "read_file",
+    "type": "tool_result",
+    "source_index": 12,
+    "step": 1,
+    "failed": false
+  },
+  {
+    "arguments": {
+      "max_results": 100,
+      "offset": 0,
+      "path": "src/ledger"
+    },
+    "tool_call_id": "call_5SwFItojqH41mv35Vap1OBxM",
+    "tool_name": "list_files",
+    "type": "tool_call",
+    "source_index": 13,
+    "step": 1
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "duration_seconds": 0.06738338899958762,
+        "exit_code": 0,
+        "next_offset": null,
+        "stderr": "",
+        "stdout": "src/ledger/AGENTS.md\nsrc/ledger/__init__.py\nsrc/ledger/normalize.py\nsrc/ledger/report.py",
+        "total_results": 4,
+        "truncated": false
+      }
+    },
+    "tool_call_id": "call_5SwFItojqH41mv35Vap1OBxM",
+    "tool_name": "list_files",
+    "type": "tool_result",
+    "source_index": 14,
+    "step": 1,
+    "failed": false
+  },
+  {
+    "arguments": {
+      "max_results": 100,
+      "offset": 0,
+      "path": "checks"
+    },
+    "tool_call_id": "call_hzXYZwApyhfRRuwQJdleOkxx",
+    "tool_name": "list_files",
+    "type": "tool_call",
+    "source_index": 15,
+    "step": 1
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "duration_seconds": 0.0635236120033369,
+        "exit_code": 0,
+        "next_offset": null,
+        "stderr": "",
+        "stdout": "checks/test_ledger.py",
+        "total_results": 1,
+        "truncated": false
+      }
+    },
+    "tool_call_id": "call_hzXYZwApyhfRRuwQJdleOkxx",
+    "tool_name": "list_files",
+    "type": "tool_result",
+    "source_index": 16,
+    "step": 1,
+    "failed": false
+  },
+  {
+    "arguments": {
+      "status": "IN_PROGRESS",
+      "step_id": "complete-task"
+    },
+    "tool_call_id": "call_OX0KxsAzEcpNpUDx7YWcPbnN",
+    "tool_name": "update_plan",
+    "type": "tool_call",
+    "source_index": 17,
+    "step": 1
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "plan": {
+          "reason": "Initial Plan for this Agent Run.",
+          "steps": [
+            {
+              "completion_condition": "The requested task is completed and Task Verification has run.",
+              "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+              "id": "complete-task",
+              "status": "IN_PROGRESS"
+            }
+          ],
+          "version": 1
+        }
+      }
+    },
+    "tool_call_id": "call_OX0KxsAzEcpNpUDx7YWcPbnN",
+    "tool_name": "update_plan",
+    "type": "tool_result",
+    "source_index": 18,
+    "step": 1,
+    "failed": false
+  },
+  {
+    "plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "version": 1
+    },
+    "type": "plan_updated",
+    "source_index": 19,
+    "step": 1
+  },
+  {
+    "budget": {
+      "active_seconds_used": 14.66102558700004,
+      "command_timeout_seconds": 60,
+      "cost_used": 0.013748,
+      "max_consecutive_failures": 5,
+      "max_cost_usd": null,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48,
+      "max_tokens": null,
+      "replans_used": 0,
+      "requests_used": 1,
+      "steps_used": 2,
+      "tokens_used": 2425,
+      "unknown_cost": false,
+      "unknown_tokens": false
+    },
+    "reason": "agent_step_consumed",
+    "type": "budget_updated",
+    "source_index": 20,
+    "step": 1
+  },
+  {
+    "message_count": 10,
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "step": 2,
+    "type": "model_request",
+    "source_index": 21
+  },
+  {
+    "content": "",
+    "cost_usd": 0.012844000000000001,
+    "duration_seconds": 16.661879319002765,
+    "error": null,
+    "finish_reason": "tool_calls",
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "stream_artifact": "model-stream-0002.jsonl",
+    "tool_calls": [
+      {
+        "arguments": {
+          "max_lines": 200,
+          "path": "src/ledger/AGENTS.md",
+          "start_line": 1
+        },
+        "id": "call_P56U3zQkISKMIqr8jLuv8xlE",
+        "name": "read_file",
+        "protocol_error": null,
+        "raw_arguments": null
+      },
+      {
+        "arguments": {
+          "max_lines": 200,
+          "path": "src/ledger/normalize.py",
+          "start_line": 1
+        },
+        "id": "call_wxPxJNaXezniaXuUKLfTyOda",
+        "name": "read_file",
+        "protocol_error": null,
+        "raw_arguments": null
+      },
+      {
+        "arguments": {
+          "max_lines": 300,
+          "path": "src/ledger/report.py",
+          "start_line": 1
+        },
+        "id": "call_zlqaCLurctPSEqEG3NFSEnbk",
+        "name": "read_file",
+        "protocol_error": null,
+        "raw_arguments": null
+      },
+      {
+        "arguments": {
+          "max_lines": 300,
+          "path": "src/ledger/__init__.py",
+          "start_line": 1
+        },
+        "id": "call_I90t4OWwuCA8sKIRDe4pjlwa",
+        "name": "read_file",
+        "protocol_error": null,
+        "raw_arguments": null
+      },
+      {
+        "arguments": {
+          "max_lines": 300,
+          "path": "checks/test_ledger.py",
+          "start_line": 1
+        },
+        "id": "call_aTXkFqdxm6NMor18cBhDsQZg",
+        "name": "read_file",
+        "protocol_error": null,
+        "raw_arguments": null
+      }
+    ],
+    "type": "model_response",
+    "usage": {
+      "cache_write_tokens": null,
+      "cached_tokens": 0,
+      "completion_tokens": 165,
+      "prompt_tokens": 2386,
+      "reasoning_tokens": 0,
+      "total_tokens": 2551
+    },
+    "source_index": 22,
+    "step": 2
+  },
+  {
+    "arguments": {
+      "max_lines": 200,
+      "path": "src/ledger/AGENTS.md",
+      "start_line": 1
+    },
+    "tool_call_id": "call_P56U3zQkISKMIqr8jLuv8xlE",
+    "tool_name": "read_file",
+    "type": "tool_call",
+    "source_index": 23,
+    "step": 2
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "duration_seconds": 0.0633009459997993,
+        "exit_code": 0,
+        "repository_instructions": [
+          {
+            "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+            "scope": ".",
+            "source": "AGENTS.md"
+          },
+          {
+            "content": "Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.",
+            "scope": "src/ledger",
+            "source": "src/ledger/AGENTS.md"
+          }
+        ],
+        "stderr": "",
+        "stdout": "Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.",
+        "truncated": false
+      }
+    },
+    "tool_call_id": "call_P56U3zQkISKMIqr8jLuv8xlE",
+    "tool_name": "read_file",
+    "type": "tool_result",
+    "source_index": 24,
+    "step": 2,
+    "failed": false
+  },
+  {
+    "arguments": {
+      "max_lines": 200,
+      "path": "src/ledger/normalize.py",
+      "start_line": 1
+    },
+    "tool_call_id": "call_wxPxJNaXezniaXuUKLfTyOda",
+    "tool_name": "read_file",
+    "type": "tool_call",
+    "source_index": 25,
+    "step": 2
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "duration_seconds": 0.06501566999941133,
+        "exit_code": 0,
+        "repository_instructions": [
+          {
+            "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+            "scope": ".",
+            "source": "AGENTS.md"
+          },
+          {
+            "content": "Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.",
+            "scope": "src/ledger",
+            "source": "src/ledger/AGENTS.md"
+          }
+        ],
+        "stderr": "",
+        "stdout": "def normalize_key(key: str) -> str:\n    return key\n",
+        "truncated": false
+      }
+    },
+    "tool_call_id": "call_wxPxJNaXezniaXuUKLfTyOda",
+    "tool_name": "read_file",
+    "type": "tool_result",
+    "source_index": 26,
+    "step": 2,
+    "failed": false
+  },
+  {
+    "arguments": {
+      "max_lines": 300,
+      "path": "src/ledger/report.py",
+      "start_line": 1
+    },
+    "tool_call_id": "call_zlqaCLurctPSEqEG3NFSEnbk",
+    "tool_name": "read_file",
+    "type": "tool_call",
+    "source_index": 27,
+    "step": 2
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "duration_seconds": 0.06432229100028053,
+        "exit_code": 0,
+        "repository_instructions": [
+          {
+            "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+            "scope": ".",
+            "source": "AGENTS.md"
+          },
+          {
+            "content": "Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.",
+            "scope": "src/ledger",
+            "source": "src/ledger/AGENTS.md"
+          }
+        ],
+        "stderr": "",
+        "stdout": "from .normalize import normalize_key\n\ndef report(rows: list[tuple[str, str]]) -> str:\n    return \"\"\n",
+        "truncated": false
+      }
+    },
+    "tool_call_id": "call_zlqaCLurctPSEqEG3NFSEnbk",
+    "tool_name": "read_file",
+    "type": "tool_result",
+    "source_index": 28,
+    "step": 2,
+    "failed": false
+  },
+  {
+    "arguments": {
+      "max_lines": 300,
+      "path": "src/ledger/__init__.py",
+      "start_line": 1
+    },
+    "tool_call_id": "call_I90t4OWwuCA8sKIRDe4pjlwa",
+    "tool_name": "read_file",
+    "type": "tool_call",
+    "source_index": 29,
+    "step": 2
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "duration_seconds": 0.06438668099872302,
+        "exit_code": 0,
+        "repository_instructions": [
+          {
+            "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+            "scope": ".",
+            "source": "AGENTS.md"
+          },
+          {
+            "content": "Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.",
+            "scope": "src/ledger",
+            "source": "src/ledger/AGENTS.md"
+          }
+        ],
+        "stderr": "",
+        "stdout": "",
+        "truncated": false
+      }
+    },
+    "tool_call_id": "call_I90t4OWwuCA8sKIRDe4pjlwa",
+    "tool_name": "read_file",
+    "type": "tool_result",
+    "source_index": 30,
+    "step": 2,
+    "failed": false
+  },
+  {
+    "arguments": {
+      "max_lines": 300,
+      "path": "checks/test_ledger.py",
+      "start_line": 1
+    },
+    "tool_call_id": "call_aTXkFqdxm6NMor18cBhDsQZg",
+    "tool_name": "read_file",
+    "type": "tool_call",
+    "source_index": 31,
+    "step": 2
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "duration_seconds": 0.0630943500000285,
+        "exit_code": 0,
+        "repository_instructions": [
+          {
+            "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+            "scope": ".",
+            "source": "AGENTS.md"
+          }
+        ],
+        "stderr": "",
+        "stdout": "import unittest\nfrom src.ledger.report import report\nclass Checks(unittest.TestCase):\n    def test_report(self):\n        self.assertEqual(report([(\" A \",\"1.005\"),(\"a\",\"1.005\"),(\"B\",\"-0.005\")]), \"a=2.01\\nb=-0.01\")\n    def test_unicode(self):\n        self.assertEqual(report([(\" Stra\u00dfe \",\"1\"),(\"STRASSE\",\"2\"),(\" \",\"99\")]), \"strasse=3.00\")\n",
+        "truncated": false
+      }
+    },
+    "tool_call_id": "call_aTXkFqdxm6NMor18cBhDsQZg",
+    "tool_name": "read_file",
+    "type": "tool_result",
+    "source_index": 32,
+    "step": 2,
+    "failed": false
+  },
+  {
+    "budget": {
+      "active_seconds_used": 31.95922814699952,
+      "command_timeout_seconds": 60,
+      "cost_used": 0.026592,
+      "max_consecutive_failures": 5,
+      "max_cost_usd": null,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48,
+      "max_tokens": null,
+      "replans_used": 0,
+      "requests_used": 2,
+      "steps_used": 3,
+      "tokens_used": 4976,
+      "unknown_cost": false,
+      "unknown_tokens": false
+    },
+    "reason": "agent_step_consumed",
+    "type": "budget_updated",
+    "source_index": 33,
+    "step": 2
+  },
+  {
+    "message_count": 16,
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "step": 3,
+    "type": "model_request",
+    "source_index": 34
+  },
+  {
+    "content": "",
+    "cost_usd": 0.0151784,
+    "duration_seconds": 32.34810457999993,
+    "error": null,
+    "finish_reason": "tool_calls",
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "stream_artifact": "model-stream-0003.jsonl",
+    "tool_calls": [
+      {
+        "arguments": {
+          "patch": "*** Begin Patch\n*** Update File: src/ledger/normalize.py\n@@\n def normalize_key(key: str) -> str:\n-    return key\n+    return key.strip().casefold()\n*** Update File: src/ledger/report.py\n@@\n from .normalize import normalize_key\n+from decimal import Decimal, ROUND_HALF_UP\n \n def report(rows: list[tuple[str, str]]) -> str:\n-    return \"\"\n+    totals: dict[str, Decimal] = {}\n+    for key, amount in rows:\n+        normalized = normalize_key(key)\n+        if not normalized:\n+            continue\n+        totals[normalized] = totals.get(normalized, Decimal(\"0\")) + Decimal(amount)\n+\n+    cents = Decimal(\"0.01\")\n+    return \"\\n\".join(\n+        f\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\"\n+        for key, total in sorted(totals.items())\n+    )\n*** End Patch"
+        },
+        "id": "call_4GGx7FkqwXYJoTTw3h6XKAKs",
+        "name": "apply_patch",
+        "protocol_error": null,
+        "raw_arguments": null
+      }
+    ],
+    "type": "model_response",
+    "usage": {
+      "cache_write_tokens": null,
+      "cached_tokens": 1536,
+      "completion_tokens": 323,
+      "prompt_tokens": 3562,
+      "reasoning_tokens": 0,
+      "total_tokens": 3885
+    },
+    "source_index": 35,
+    "step": 3
+  },
+  {
+    "arguments": {
+      "patch": "*** Begin Patch\n*** Update File: src/ledger/normalize.py\n@@\n def normalize_key(key: str) -> str:\n-    return key\n+    return key.strip().casefold()\n*** Update File: src/ledger/report.py\n@@\n from .normalize import normalize_key\n+from decimal import Decimal, ROUND_HALF_UP\n \n def report(rows: list[tuple[str, str]]) -> str:\n-    return \"\"\n+    totals: dict[str, Decimal] = {}\n+    for key, amount in rows:\n+        normalized = normalize_key(key)\n+        if not normalized:\n+            continue\n+        totals[normalized] = totals.get(normalized, Decimal(\"0\")) + Decimal(amount)\n+\n+    cents = Decimal(\"0.01\")\n+    return \"\\n\".join(\n+        f\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\"\n+        for key, total in sorted(totals.items())\n+    )\n*** End Patch"
+    },
+    "tool_call_id": "call_4GGx7FkqwXYJoTTw3h6XKAKs",
+    "tool_name": "apply_patch",
+    "type": "tool_call",
+    "source_index": 36,
+    "step": 3
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "applied": true,
+        "result": {
+          "duration_seconds": 0.14016813599664601,
+          "exit_code": 0,
+          "stderr": "",
+          "stdout": "",
+          "truncated": false
+        }
+      }
+    },
+    "tool_call_id": "call_4GGx7FkqwXYJoTTw3h6XKAKs",
+    "tool_name": "apply_patch",
+    "type": "tool_result",
+    "source_index": 37,
+    "step": 3,
+    "failed": false
+  },
+  {
+    "budget": {
+      "active_seconds_used": 64.54841730300177,
+      "command_timeout_seconds": 60,
+      "cost_used": 0.0417704,
+      "max_consecutive_failures": 5,
+      "max_cost_usd": null,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48,
+      "max_tokens": null,
+      "replans_used": 0,
+      "requests_used": 3,
+      "steps_used": 4,
+      "tokens_used": 8861,
+      "unknown_cost": false,
+      "unknown_tokens": false
+    },
+    "reason": "agent_step_consumed",
+    "type": "budget_updated",
+    "source_index": 38,
+    "step": 3
+  },
+  {
+    "message_count": 18,
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "step": 4,
+    "type": "model_request",
+    "source_index": 39
+  },
+  {
+    "content": "",
+    "cost_usd": 0.008904,
+    "duration_seconds": 45.354426576999685,
+    "error": null,
+    "finish_reason": "tool_calls",
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "stream_artifact": "model-stream-0004.jsonl",
+    "tool_calls": [
+      {
+        "arguments": {},
+        "id": "call_O60ZTNJaOIUTFZlV7lgELvpg",
+        "name": "view_diff",
+        "protocol_error": null,
+        "raw_arguments": null
+      },
+      {
+        "arguments": {
+          "check_id": "configured-unittest",
+          "command": "python -m unittest discover -s checks",
+          "reason": "Run the configured test entry from pyproject.toml after implementing normalization and reporting.",
+          "scope": "Repository checks for normalize_key/report behavior",
+          "step_ids": [
+            "complete-task"
+          ],
+          "supersedes": []
+        },
+        "id": "call_9RxCNBj7bFKVNDtttryPjwHe",
+        "name": "verify_task",
+        "protocol_error": null,
+        "raw_arguments": null
+      }
+    ],
+    "type": "model_response",
+    "usage": {
+      "cache_write_tokens": null,
+      "cached_tokens": 2560,
+      "completion_tokens": 129,
+      "prompt_tokens": 3885,
+      "reasoning_tokens": 0,
+      "total_tokens": 4014
+    },
+    "source_index": 40,
+    "step": 4
+  },
+  {
+    "arguments": {},
+    "tool_call_id": "call_O60ZTNJaOIUTFZlV7lgELvpg",
+    "tool_name": "view_diff",
+    "type": "tool_call",
+    "source_index": 41,
+    "step": 4
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "patch": "diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py\nindex 74ac50e..4a66cde 100644\n--- a/src/ledger/normalize.py\n+++ b/src/ledger/normalize.py\n@@ -1,2 +1,2 @@\n def normalize_key(key: str) -> str:\n-    return key\n+    return key.strip().casefold()\ndiff --git a/src/ledger/report.py b/src/ledger/report.py\nindex d217602..e6f194b 100644\n--- a/src/ledger/report.py\n+++ b/src/ledger/report.py\n@@ -1,4 +1,16 @@\n from .normalize import normalize_key\n+from decimal import Decimal, ROUND_HALF_UP\n \n def report(rows: list[tuple[str, str]]) -> str:\n-    return \"\"\n+    totals: dict[str, Decimal] = {}\n+    for key, amount in rows:\n+        normalized = normalize_key(key)\n+        if not normalized:\n+            continue\n+        totals[normalized] = totals.get(normalized, Decimal(\"0\")) + Decimal(amount)\n+\n+    cents = Decimal(\"0.01\")\n+    return \"\\n\".join(\n+        f\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\"\n+        for key, total in sorted(totals.items())\n+    )\n",
+        "result": {
+          "duration_seconds": 0.07873543499954394,
+          "exit_code": 0,
+          "stderr": "",
+          "stdout": "diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py\nindex 74ac50e..4a66cde 100644\n--- a/src/ledger/normalize.py\n+++ b/src/ledger/normalize.py\n@@ -1,2 +1,2 @@\n def normalize_key(key: str) -> str:\n-    return key\n+    return key.strip().casefold()\ndiff --git a/src/ledger/report.py b/src/ledger/report.py\nindex d217602..e6f194b 100644\n--- a/src/ledger/report.py\n+++ b/src/ledger/report.py\n@@ -1,4 +1,16 @@\n from .normalize import normalize_key\n+from decimal import Decimal, ROUND_HALF_UP\n \n def report(rows: list[tuple[str, str]]) -> str:\n-    return \"\"\n+    totals: dict[str, Decimal] = {}\n+    for key, amount in rows:\n+        normalized = normalize_key(key)\n+        if not normalized:\n+            continue\n+        totals[normalized] = totals.get(normalized, Decimal(\"0\")) + Decimal(amount)\n+\n+    cents = Decimal(\"0.01\")\n+    return \"\\n\".join(\n+        f\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\"\n+        for key, total in sorted(totals.items())\n+    )\n",
+          "truncated": false
+        }
+      }
+    },
+    "tool_call_id": "call_O60ZTNJaOIUTFZlV7lgELvpg",
+    "tool_name": "view_diff",
+    "type": "tool_result",
+    "source_index": 42,
+    "step": 4,
+    "failed": false
+  },
+  {
+    "arguments": {
+      "check_id": "configured-unittest",
+      "command": "python -m unittest discover -s checks",
+      "reason": "Run the configured test entry from pyproject.toml after implementing normalization and reporting.",
+      "scope": "Repository checks for normalize_key/report behavior",
+      "step_ids": [
+        "complete-task"
+      ],
+      "supersedes": []
+    },
+    "tool_call_id": "call_9RxCNBj7bFKVNDtttryPjwHe",
+    "tool_name": "verify_task",
+    "type": "tool_call",
+    "source_index": 43,
+    "step": 4
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "after_fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+        "before_fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+        "check_id": "configured-unittest",
+        "command": "python -m unittest discover -s checks",
+        "explicit_check_id": true,
+        "plan_step_ids": [
+          "complete-task"
+        ],
+        "reason": "Run the configured test entry from pyproject.toml after implementing normalization and reporting.",
+        "result": {
+          "duration_seconds": 0.26707279900074354,
+          "exit_code": 0,
+          "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+          "stdout": "",
+          "truncated": false
+        },
+        "scope": "Repository checks for normalize_key/report behavior",
+        "sequence": 1,
+        "supersedes": []
+      }
+    },
+    "tool_call_id": "call_9RxCNBj7bFKVNDtttryPjwHe",
+    "tool_name": "verify_task",
+    "type": "tool_result",
+    "source_index": 44,
+    "step": 4,
+    "failed": false
+  },
+  {
+    "command": "python -m unittest discover -s checks",
+    "reason": "Run the configured test entry from pyproject.toml after implementing normalization and reporting.",
+    "result": {
+      "duration_seconds": 0.26707279900074354,
+      "exit_code": 0,
+      "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+      "stdout": "",
+      "truncated": false
+    },
+    "scope": "Repository checks for normalize_key/report behavior",
+    "tool_call_id": "call_9RxCNBj7bFKVNDtttryPjwHe",
+    "type": "task_verification",
+    "source_index": 45,
+    "step": 4
+  },
+  {
+    "budget": {
+      "active_seconds_used": 110.39369014399927,
+      "command_timeout_seconds": 60,
+      "cost_used": 0.0506744,
+      "max_consecutive_failures": 5,
+      "max_cost_usd": null,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48,
+      "max_tokens": null,
+      "replans_used": 0,
+      "requests_used": 4,
+      "steps_used": 5,
+      "tokens_used": 12875,
+      "unknown_cost": false,
+      "unknown_tokens": false
+    },
+    "reason": "agent_step_consumed",
+    "type": "budget_updated",
+    "source_index": 46,
+    "step": 4
+  },
+  {
+    "message_count": 21,
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "step": 5,
+    "type": "model_request",
+    "source_index": 47
+  },
+  {
+    "content": "",
+    "cost_usd": 0.0110056,
+    "duration_seconds": 66.52256445600142,
+    "error": null,
+    "finish_reason": "tool_calls",
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "stream_artifact": "model-stream-0005.jsonl",
+    "tool_calls": [
+      {
+        "arguments": {
+          "command": "python - <<'PY'\nfrom src.ledger.normalize import normalize_key\nfrom src.ledger.report import report\nassert normalize_key('  Stra\u00dfe  ') == 'strasse'\nassert report([(' z ', '1.004'), ('Z', '0.001'), ('', '100'), ('A', '-1.005')]) == 'a=-1.01\\nz=1.01'\nprint('edge behavior OK')\nPY"
+        },
+        "id": "call_294k4wgQptYKTS3SiaDVXKWR",
+        "name": "run_command",
+        "protocol_error": null,
+        "raw_arguments": null
+      },
+      {
+        "arguments": {},
+        "id": "call_Bvbrl5WFRok3vbAJpuOn3Pg6",
+        "name": "view_diff",
+        "protocol_error": null,
+        "raw_arguments": null
+      }
+    ],
+    "type": "model_response",
+    "usage": {
+      "cache_write_tokens": null,
+      "cached_tokens": 3584,
+      "completion_tokens": 206,
+      "prompt_tokens": 4947,
+      "reasoning_tokens": 0,
+      "total_tokens": 5153
+    },
+    "source_index": 48,
+    "step": 5
+  },
+  {
+    "arguments": {
+      "command": "python - <<'PY'\nfrom src.ledger.normalize import normalize_key\nfrom src.ledger.report import report\nassert normalize_key('  Stra\u00dfe  ') == 'strasse'\nassert report([(' z ', '1.004'), ('Z', '0.001'), ('', '100'), ('A', '-1.005')]) == 'a=-1.01\\nz=1.01'\nprint('edge behavior OK')\nPY"
+    },
+    "tool_call_id": "call_294k4wgQptYKTS3SiaDVXKWR",
+    "tool_name": "run_command",
+    "type": "tool_call",
+    "source_index": 49,
+    "step": 5
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "duration_seconds": 0.09166518799975165,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "edge behavior OK\n",
+        "truncated": false
+      }
+    },
+    "tool_call_id": "call_294k4wgQptYKTS3SiaDVXKWR",
+    "tool_name": "run_command",
+    "type": "tool_result",
+    "source_index": 50,
+    "step": 5,
+    "failed": false
+  },
+  {
+    "arguments": {},
+    "tool_call_id": "call_Bvbrl5WFRok3vbAJpuOn3Pg6",
+    "tool_name": "view_diff",
+    "type": "tool_call",
+    "source_index": 51,
+    "step": 5
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "patch": "diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py\nindex 74ac50e..4a66cde 100644\n--- a/src/ledger/normalize.py\n+++ b/src/ledger/normalize.py\n@@ -1,2 +1,2 @@\n def normalize_key(key: str) -> str:\n-    return key\n+    return key.strip().casefold()\ndiff --git a/src/ledger/report.py b/src/ledger/report.py\nindex d217602..e6f194b 100644\n--- a/src/ledger/report.py\n+++ b/src/ledger/report.py\n@@ -1,4 +1,16 @@\n from .normalize import normalize_key\n+from decimal import Decimal, ROUND_HALF_UP\n \n def report(rows: list[tuple[str, str]]) -> str:\n-    return \"\"\n+    totals: dict[str, Decimal] = {}\n+    for key, amount in rows:\n+        normalized = normalize_key(key)\n+        if not normalized:\n+            continue\n+        totals[normalized] = totals.get(normalized, Decimal(\"0\")) + Decimal(amount)\n+\n+    cents = Decimal(\"0.01\")\n+    return \"\\n\".join(\n+        f\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\"\n+        for key, total in sorted(totals.items())\n+    )\ndiff --git a/checks/__pycache__/test_ledger.cpython-312.pyc b/checks/__pycache__/test_ledger.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..94aca550f15dbf1c8588745eb02b7b3e66f47c0e\nGIT binary patch\nliteral 946\nzcmcIiJ8#oa6h8ObPEDG$JS0ekR6MYFAde!3N~BU-Rct{t9gr8}+LxBpX~MN56pMi&\nz1OFfk5`rzt&tPPsR8`SMOiXNuz|x6x>_qLt$QjN(kMExM$6_%LNXOlGt!)PIos=0F\nzQ(>}!!Vm%oSO^ZiJY;R|a0VP6K%fmE&;_(|vybQRSj%Kb?=#!@K}y4BDknv^BV+#@\nz2!PpBnw0Pvf&hmF;P8MAz|jJZT<>ePu5z3E!as=o8J<2-X38{KLpFq$(7NbF8&N#1\nz1z-<5dC$gEOu)xHLon!rtu<`T=80ylTW3bCT&>=-xniE2Lkvk9N$yUS%*ldRUny5>\nz`Q17hY9p@Zy(khg-g@5iLP_aHOzDvbpGK6+I<qP-I`SaudcLUmX&aSTM6nx+U{A<$\nzx3A_?JsVGQHEXqe!KP!JXbIUX_+l1L&C-!sdUO4=)i_>y`03H^iRn+!3IBOIy-S$G\nzYR1z0@K#ug)o?I#&7JM_W^+ri6&jPJ`08p>h!BG_so%wkNjf!IK$eX|E}*CiX?MND\nzXMQIT$+e3uPmQ$QfA{R3m`~(ogfwhJnXY^2wT0`dyz90*K`$h^;JUPt%p(^OD{mkh\nzLHaK(L(;LQjMf%WWdr!dnGvvw&J2%bP(o1}tSqLw)s;y4<>~set)+Wc<_>x{J-miA\ny@J)(NMP@yl_p{p8<Sn$(ZA2ve)EHx5VeuQ>{>^pfvDc4Ji_1sF<v&1L8sIO*8_Nm+\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/__pycache__/__init__.cpython-312.pyc b/src/__pycache__/__init__.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..ad448597dce5600c58f1e6c989f7aeae9474c983\nGIT binary patch\nliteral 123\nzcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdC8b}UUzA;3keHmR\nwUtE-|A0MBYmst`YuUAlci^C>2KczG$)vkyYsFV?ii$RQ!%#4hTMa)1J0N}0}?EnA(\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/ledger/__pycache__/__init__.cpython-312.pyc b/src/ledger/__pycache__/__init__.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..927f20af8bb1b09e8f8ca1a41453829aa02fef4b\nGIT binary patch\nliteral 130\nzcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdrKn$?UzA;3keHmR\nzUtE-|pOc!Bo?4_IAD@|*SrQ+wS5SG2!zMRBr8Fniu80+=gAs^}L5z>gjEsy$%s>_Z\nD&<`Az\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/ledger/__pycache__/normalize.cpython-312.pyc b/src/ledger/__pycache__/normalize.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..09cfd12661bd03d8ad41fa5688e58056a5d60402\nGIT binary patch\nliteral 371\nzcmX@j%ge<81SfbGWw`<A#~=<2us|7~MSzUy3@Hq$3@MDM3~4MWOf4)?jFrrqEVr1m\nzQ!8(=6{VJx7Ud-~!gK;@CLm@8;?H(KVmd<&Ll&|uPz(fCLnwwUkV-TFlM80hWc1Ty\nzy2V;tQj}S6iz7L)I5jOlCq<L72xLbw$XJD6O8VvbMcKs#iOH$@#YM^bIjJe>sYUvE\nz`9-;jIhj?ddIgoYc;UQwpsR~GfEq!Xi^YLN1H%n&zJAM2%WmuI-0~N><u7w9USLuD\nz43uI3+0G2K9js#|LlGxXtcV>*+~Tmw%}*)KNwq8D0dm2HNdOrim>C%vKQJ*eDorT<\nOzyPFX6n_CxV4VO(Kuj(G\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/ledger/__pycache__/report.cpython-312.pyc b/src/ledger/__pycache__/report.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..a3eddae91896c6533885234a9f31723282fcd0a7\nGIT binary patch\nliteral 1210\nzcmZWoO>7fK6rS0cUH`;Z8ezAM8@q1#sSLs~<N{I%ptu1Ql%OJdunLjookTWkubEjZ\nzjkT5{fz%B|!W<w}2$8mjf>KU!;NBjPxRi!N7^td>9?H#<InbW^*6})3`lOwC^Sw83\nz-uvF$C*g1qfjka>SBfhLy>btps9mLf1e9f@BOM#4jB^+xUD1i5lu3@1X^z5~GL>n}\nz$9yx&Ab7i<uEL4x+9jIv&-+sT*BHPQmf?!Y%Xy<%XVd4|{A&PFN|C-SD-;2i;m@be\nzOlGH#A3ZrSedd&;+?*3q<IJk@O2G}`i4PP4UmM;>U#rWgh#J^NS#<UgLSI5L4W&V>\nz-VIw>?dlC`Q-PNvHZHmMw}?$GuW%^XyR!=MT-mhQ#Iw}_x3Nt}VP85-|Kp?g-n^{p\nzq~vD2MI3bo>-3V}3U~&{s?XCm_tmcIy_rQ@k<%!pPD-4q(@Z+EPvYSJ$Qpqd?Q^hP\nz$0rbmj@sz#jxJTWq1gBq^w?HPJ<2wpUnEwS0EB+T9vQlFi{2(T@G?xq(k_bT$$c`1\nzQ&i$Z&}Tn4YZbj%nXQxb{+UVWvHwCXU$LO^T!YZyr=&BIzz|5)GA-!6T3{7R2nyC@\nzGP&^2hr@FwKQF5J0vi^*Fl;b=mhoZEswTJ6)p;2hon;mFRh5s`2fOH~VHWa+7)$p|\nzVF)J<!1DGl^mYNY5Q%Dk#4?MYIpfV}i=a@yv(vfIj4mgxC05jj;bvlOVC<3j<(=_o\nz{_OKu=I>5I7kBT)DUG`mBgrhYxH~11mds*BY69|Mx>So6D+};)J1w<NQGyS24*4?B\nzVaZ@``gOhy48o-XicKbu@JPpTqYfU2gG+?4VS%*QKia-9@#4J?7W*9HeDN~+@yf_r\nz^b;reynk>#6j_gNzmxkWcQ^R(*rV|WC)eUfe?Inj;-{&n@zajx)PMEIS^@O_(3=nn\nzN178?rWQV3@9V#MaPeT<W#i9Sa^>A0hQ1y8KJhG;X{!JM9@2m+6*Q2^R6quLsc*30\nz(>H$E4ilZ0N@^5^1>LMw4JL`Oc&Cheh$kS%Mt%O#vZ>b$HpX`X=FXbf151lwjDJHr\nken-1oG=#Ngq{(iMuWY+{{F?c6U{?zPc6a2ByLE#73z<X|DF6Tf\n\nliteral 0\nHcmV?d00001\n\n",
+        "result": {
+          "duration_seconds": 0.0825272620022588,
+          "exit_code": 0,
+          "stderr": "",
+          "stdout": "diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py\nindex 74ac50e..4a66cde 100644\n--- a/src/ledger/normalize.py\n+++ b/src/ledger/normalize.py\n@@ -1,2 +1,2 @@\n def normalize_key(key: str) -> str:\n-    return key\n+    return key.strip().casefold()\ndiff --git a/src/ledger/report.py b/src/ledger/report.py\nindex d217602..e6f194b 100644\n--- a/src/ledger/report.py\n+++ b/src/ledger/report.py\n@@ -1,4 +1,16 @@\n from .normalize import normalize_key\n+from decimal import Decimal, ROUND_HALF_UP\n \n def report(rows: list[tuple[str, str]]) -> str:\n-    return \"\"\n+    totals: dict[str, Decimal] = {}\n+    for key, amount in rows:\n+        normalized = normalize_key(key)\n+        if not normalized:\n+            continue\n+        totals[normalized] = totals.get(normalized, Decimal(\"0\")) + Decimal(amount)\n+\n+    cents = Decimal(\"0.01\")\n+    return \"\\n\".join(\n+        f\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\"\n+        for key, total in sorted(totals.items())\n+    )\ndiff --git a/checks/__pycache__/test_ledger.cpython-312.pyc b/checks/__pycache__/test_ledger.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..94aca550f15dbf1c8588745eb02b7b3e66f47c0e\nGIT binary patch\nliteral 946\nzcmcIiJ8#oa6h8ObPEDG$JS0ekR6MYFAde!3N~BU-Rct{t9gr8}+LxBpX~MN56pMi&\nz1OFfk5`rzt&tPPsR8`SMOiXNuz|x6x>_qLt$QjN(kMExM$6_%LNXOlGt!)PIos=0F\nzQ(>}!!Vm%oSO^ZiJY;R|a0VP6K%fmE&;_(|vybQRSj%Kb?=#!@K}y4BDknv^BV+#@\nz2!PpBnw0Pvf&hmF;P8MAz|jJZT<>ePu5z3E!as=o8J<2-X38{KLpFq$(7NbF8&N#1\nz1z-<5dC$gEOu)xHLon!rtu<`T=80ylTW3bCT&>=-xniE2Lkvk9N$yUS%*ldRUny5>\nz`Q17hY9p@Zy(khg-g@5iLP_aHOzDvbpGK6+I<qP-I`SaudcLUmX&aSTM6nx+U{A<$\nzx3A_?JsVGQHEXqe!KP!JXbIUX_+l1L&C-!sdUO4=)i_>y`03H^iRn+!3IBOIy-S$G\nzYR1z0@K#ug)o?I#&7JM_W^+ri6&jPJ`08p>h!BG_so%wkNjf!IK$eX|E}*CiX?MND\nzXMQIT$+e3uPmQ$QfA{R3m`~(ogfwhJnXY^2wT0`dyz90*K`$h^;JUPt%p(^OD{mkh\nzLHaK(L(;LQjMf%WWdr!dnGvvw&J2%bP(o1}tSqLw)s;y4<>~set)+Wc<_>x{J-miA\ny@J)(NMP@yl_p{p8<Sn$(ZA2ve)EHx5VeuQ>{>^pfvDc4Ji_1sF<v&1L8sIO*8_Nm+\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/__pycache__/__init__.cpython-312.pyc b/src/__pycache__/__init__.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..ad448597dce5600c58f1e6c989f7aeae9474c983\nGIT binary patch\nliteral 123\nzcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdC8b}UUzA;3keHmR\nwUtE-|A0MBYmst`YuUAlci^C>2KczG$)vkyYsFV?ii$RQ!%#4hTMa)1J0N}0}?EnA(\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/ledger/__pycache__/__init__.cpython-312.pyc b/src/ledger/__pycache__/__init__.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..927f20af8bb1b09e8f8ca1a41453829aa02fef4b\nGIT binary patch\nliteral 130\nzcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdrKn$?UzA;3keHmR\nzUtE-|pOc!Bo?4_IAD@|*SrQ+wS5SG2!zMRBr8Fniu80+=gAs^}L5z>gjEsy$%s>_Z\nD&<`Az\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/ledger/__pycache__/normalize.cpython-312.pyc b/src/ledger/__pycache__/normalize.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..09cfd12661bd03d8ad41fa5688e58056a5d60402\nGIT binary patch\nliteral 371\nzcmX@j%ge<81SfbGWw`<A#~=<2us|7~MSzUy3@Hq$3@MDM3~4MWOf4)?jFrrqEVr1m\nzQ!8(=6{VJx7Ud-~!gK;@CLm@8;?H(KVmd<&Ll&|uPz(fCLnwwUkV-TFlM80hWc1Ty\nzy2V;tQj}S6iz7L)I5jOlCq<L72xLbw$XJD6O8VvbMcKs#iOH$@#YM^bIjJe>sYUvE\nz`9-;jIhj?ddIgoYc;UQwpsR~GfEq!Xi^YLN1H%n&zJAM2%WmuI-0~N><u7w9USLuD\nz43uI3+0G2K9js#|LlGxXtcV>*+~Tmw%}*)KNwq8D0dm2HNdOrim>C%vKQJ*eDorT<\nOzyPFX6n_CxV4VO(Kuj(G\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/ledger/__pycache__/report.cpython-312.pyc b/src/ledger/__pycache__/report.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..a3eddae91896c6533885234a9f31723282fcd0a7\nGIT binary patch\nliteral 1210\nzcmZWoO>7fK6rS0cUH`;Z8ezAM8@q1#sSLs~<N{I%ptu1Ql%OJdunLjookTWkubEjZ\nzjkT5{fz%B|!W<w}2$8mjf>KU!;NBjPxRi!N7^td>9?H#<InbW^*6})3`lOwC^Sw83\nz-uvF$C*g1qfjka>SBfhLy>btps9mLf1e9f@BOM#4jB^+xUD1i5lu3@1X^z5~GL>n}\nz$9yx&Ab7i<uEL4x+9jIv&-+sT*BHPQmf?!Y%Xy<%XVd4|{A&PFN|C-SD-;2i;m@be\nzOlGH#A3ZrSedd&;+?*3q<IJk@O2G}`i4PP4UmM;>U#rWgh#J^NS#<UgLSI5L4W&V>\nz-VIw>?dlC`Q-PNvHZHmMw}?$GuW%^XyR!=MT-mhQ#Iw}_x3Nt}VP85-|Kp?g-n^{p\nzq~vD2MI3bo>-3V}3U~&{s?XCm_tmcIy_rQ@k<%!pPD-4q(@Z+EPvYSJ$Qpqd?Q^hP\nz$0rbmj@sz#jxJTWq1gBq^w?HPJ<2wpUnEwS0EB+T9vQlFi{2(T@G?xq(k_bT$$c`1\nzQ&i$Z&}Tn4YZbj%nXQxb{+UVWvHwCXU$LO^T!YZyr=&BIzz|5)GA-!6T3{7R2nyC@\nzGP&^2hr@FwKQF5J0vi^*Fl;b=mhoZEswTJ6)p;2hon;mFRh5s`2fOH~VHWa+7)$p|\nzVF)J<!1DGl^mYNY5Q%Dk#4?MYIpfV}i=a@yv(vfIj4mgxC05jj;bvlOVC<3j<(=_o\nz{_OKu=I>5I7kBT)DUG`mBgrhYxH~11mds*BY69|Mx>So6D+};)J1w<NQGyS24*4?B\nzVaZ@``gOhy48o-XicKbu@JPpTqYfU2gG+?4VS%*QKia-9@#4J?7W*9HeDN~+@yf_r\nz^b;reynk>#6j_gNzmxkWcQ^R(*rV|WC)eUfe?Inj;-{&n@zajx)PMEIS^@O_(3=nn\nzN178?rWQV3@9V#MaPeT<W#i9Sa^>A0hQ1y8KJhG;X{!JM9@2m+6*Q2^R6quLsc*30\nz(>H$E4ilZ0N@^5^1>LMw4JL`Oc&Cheh$kS%Mt%O#vZ>b$HpX`X=FXbf151lwjDJHr\nken-1oG=#Ngq{(iMuWY+{{F?c6U{?zPc6a2ByLE#73z<X|DF6Tf\n\nliteral 0\nHcmV?d00001\n\n",
+          "truncated": false
+        }
+      }
+    },
+    "tool_call_id": "call_Bvbrl5WFRok3vbAJpuOn3Pg6",
+    "tool_name": "view_diff",
+    "type": "tool_result",
+    "source_index": 52,
+    "step": 5,
+    "failed": false
+  },
+  {
+    "budget": {
+      "active_seconds_used": 177.23770277900257,
+      "command_timeout_seconds": 60,
+      "cost_used": 0.06168,
+      "max_consecutive_failures": 5,
+      "max_cost_usd": null,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48,
+      "max_tokens": null,
+      "replans_used": 0,
+      "requests_used": 5,
+      "steps_used": 6,
+      "tokens_used": 18028,
+      "unknown_cost": false,
+      "unknown_tokens": false
+    },
+    "reason": "agent_step_consumed",
+    "type": "budget_updated",
+    "source_index": 53,
+    "step": 5
+  },
+  {
+    "message_count": 11,
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "step": 6,
+    "type": "model_request",
+    "source_index": 54
+  },
+  {
+    "content": "",
+    "cost_usd": 0.036428,
+    "duration_seconds": 23.383144953000738,
+    "error": null,
+    "finish_reason": "tool_calls",
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "stream_artifact": "model-stream-0006.jsonl",
+    "tool_calls": [
+      {
+        "arguments": {
+          "command": "rm -rf checks/__pycache__ src/__pycache__ src/ledger/__pycache__ && git status --short"
+        },
+        "id": "call_HOhVN4wmWU2qKJIoDFQsQf05",
+        "name": "run_command",
+        "protocol_error": null,
+        "raw_arguments": null
+      }
+    ],
+    "type": "model_response",
+    "usage": {
+      "cache_write_tokens": null,
+      "cached_tokens": 0,
+      "completion_tokens": 99,
+      "prompt_tokens": 8612,
+      "reasoning_tokens": 0,
+      "total_tokens": 8711
+    },
+    "source_index": 55,
+    "step": 6
+  },
+  {
+    "arguments": {
+      "command": "rm -rf checks/__pycache__ src/__pycache__ src/ledger/__pycache__ && git status --short"
+    },
+    "tool_call_id": "call_HOhVN4wmWU2qKJIoDFQsQf05",
+    "tool_name": "run_command",
+    "type": "tool_call",
+    "source_index": 56,
+    "step": 6
+  },
+  {
+    "reason": "Automatically approved in the explicit disposable Docker benchmark context: The command may delete Target Repository files.",
+    "tool_call": {
+      "arguments": {
+        "command": "rm -rf checks/__pycache__ src/__pycache__ src/ledger/__pycache__ && git status --short"
+      },
+      "id": "call_HOhVN4wmWU2qKJIoDFQsQf05",
+      "name": "run_command"
+    },
+    "type": "approval_auto_approved",
+    "source_index": 57,
+    "step": 6
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "duration_seconds": 0.07132345099671511,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": " M src/ledger/normalize.py\n M src/ledger/report.py\n",
+        "truncated": false
+      }
+    },
+    "tool_call_id": "call_HOhVN4wmWU2qKJIoDFQsQf05",
+    "tool_name": "run_command",
+    "type": "tool_result",
+    "source_index": 58,
+    "step": 6,
+    "failed": false
+  },
+  {
+    "budget": {
+      "active_seconds_used": 200.78685818099984,
+      "command_timeout_seconds": 60,
+      "cost_used": 0.098108,
+      "max_consecutive_failures": 5,
+      "max_cost_usd": null,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48,
+      "max_tokens": null,
+      "replans_used": 0,
+      "requests_used": 6,
+      "steps_used": 7,
+      "tokens_used": 26739,
+      "unknown_cost": false,
+      "unknown_tokens": false
+    },
+    "reason": "agent_step_consumed",
+    "type": "budget_updated",
+    "source_index": 59,
+    "step": 6
+  },
+  {
+    "message_count": 13,
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "step": 7,
+    "type": "model_request",
+    "source_index": 60
+  },
+  {
+    "content": "",
+    "cost_usd": 0.007795999999999999,
+    "duration_seconds": 15.34638709399951,
+    "error": null,
+    "finish_reason": "tool_calls",
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "stream_artifact": "model-stream-0007.jsonl",
+    "tool_calls": [
+      {
+        "arguments": {
+          "status": "COMPLETED",
+          "step_id": "complete-task"
+        },
+        "id": "call_HnUD3mkQFBz79MPrmdA754jz",
+        "name": "update_plan",
+        "protocol_error": null,
+        "raw_arguments": null
+      }
+    ],
+    "type": "model_response",
+    "usage": {
+      "cache_write_tokens": null,
+      "cached_tokens": 7680,
+      "completion_tokens": 26,
+      "prompt_tokens": 8731,
+      "reasoning_tokens": 0,
+      "total_tokens": 8757
+    },
+    "source_index": 61,
+    "step": 7
+  },
+  {
+    "arguments": {
+      "status": "COMPLETED",
+      "step_id": "complete-task"
+    },
+    "tool_call_id": "call_HnUD3mkQFBz79MPrmdA754jz",
+    "tool_name": "update_plan",
+    "type": "tool_call",
+    "source_index": 62,
+    "step": 7
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "plan": {
+          "reason": "Initial Plan for this Agent Run.",
+          "steps": [
+            {
+              "completion_condition": "The requested task is completed and Task Verification has run.",
+              "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+              "id": "complete-task",
+              "status": "COMPLETED"
+            }
+          ],
+          "version": 1
+        }
+      }
+    },
+    "tool_call_id": "call_HnUD3mkQFBz79MPrmdA754jz",
+    "tool_name": "update_plan",
+    "type": "tool_result",
+    "source_index": 63,
+    "step": 7,
+    "failed": false
+  },
+  {
+    "plan": {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "COMPLETED"
+        }
+      ],
+      "version": 1
+    },
+    "type": "plan_updated",
+    "source_index": 64,
+    "step": 7
+  },
+  {
+    "budget": {
+      "active_seconds_used": 216.2261233270001,
+      "command_timeout_seconds": 60,
+      "cost_used": 0.105904,
+      "max_consecutive_failures": 5,
+      "max_cost_usd": null,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48,
+      "max_tokens": null,
+      "replans_used": 0,
+      "requests_used": 7,
+      "steps_used": 8,
+      "tokens_used": 35496,
+      "unknown_cost": false,
+      "unknown_tokens": false
+    },
+    "reason": "agent_step_consumed",
+    "type": "budget_updated",
+    "source_index": 65,
+    "step": 7
+  },
+  {
+    "message_count": 15,
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "step": 8,
+    "type": "model_request",
+    "source_index": 66
+  },
+  {
+    "content": "",
+    "cost_usd": 0.059247999999999995,
+    "duration_seconds": 52.16144651899958,
+    "error": null,
+    "finish_reason": "tool_calls",
+    "model": "openai/gpt-5.6-sol",
+    "purpose": "main",
+    "stream_artifact": "model-stream-0008.jsonl",
+    "tool_calls": [
+      {
+        "arguments": {
+          "changes": [
+            "Implemented normalize_key using Unicode-aware strip and casefold normalization.",
+            "Implemented report with exact Decimal string parsing, normalized-key aggregation, empty-key skipping, HALF_UP rounding to two decimal places, and ascending output order.",
+            "Removed test-generated __pycache__ artifacts; only src/ledger/*.py were changed."
+          ],
+          "rationale": "The implementation follows the configuration contract and scoped AGENTS.md instructions. The configured unittest entry passed, along with additional Unicode, rounding, aggregation, ordering, and empty-key checks.",
+          "risks": [],
+          "root_cause": "normalize_key was an identity stub and report was unimplemented, so configured ledger normalization and aggregation behavior was missing."
+        },
+        "id": "call_tHDq6wDCrnym83ARkcvWu1AM",
+        "name": "finish_task",
+        "protocol_error": null,
+        "raw_arguments": null
+      }
+    ],
+    "type": "model_response",
+    "usage": {
+      "cache_write_tokens": null,
+      "cached_tokens": 0,
+      "completion_tokens": 189,
+      "prompt_tokens": 13867,
+      "reasoning_tokens": 0,
+      "total_tokens": 14056
+    },
+    "source_index": 67,
+    "step": 8
+  },
+  {
+    "arguments": {
+      "changes": [
+        "Implemented normalize_key using Unicode-aware strip and casefold normalization.",
+        "Implemented report with exact Decimal string parsing, normalized-key aggregation, empty-key skipping, HALF_UP rounding to two decimal places, and ascending output order.",
+        "Removed test-generated __pycache__ artifacts; only src/ledger/*.py were changed."
+      ],
+      "rationale": "The implementation follows the configuration contract and scoped AGENTS.md instructions. The configured unittest entry passed, along with additional Unicode, rounding, aggregation, ordering, and empty-key checks.",
+      "risks": [],
+      "root_cause": "normalize_key was an identity stub and report was unimplemented, so configured ledger normalization and aggregation behavior was missing."
+    },
+    "tool_call_id": "call_tHDq6wDCrnym83ARkcvWu1AM",
+    "tool_name": "finish_task",
+    "type": "tool_call",
+    "source_index": 68,
+    "step": 8
+  },
+  {
+    "observation": {
+      "ok": true,
+      "result": {
+        "completion_allowed": true,
+        "evidence_scope": "model_selected_checks",
+        "final_patch": "diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py\nindex 74ac50e..4a66cde 100644\n--- a/src/ledger/normalize.py\n+++ b/src/ledger/normalize.py\n@@ -1,2 +1,2 @@\n def normalize_key(key: str) -> str:\n-    return key\n+    return key.strip().casefold()\ndiff --git a/src/ledger/report.py b/src/ledger/report.py\nindex d217602..e6f194b 100644\n--- a/src/ledger/report.py\n+++ b/src/ledger/report.py\n@@ -1,4 +1,16 @@\n from .normalize import normalize_key\n+from decimal import Decimal, ROUND_HALF_UP\n \n def report(rows: list[tuple[str, str]]) -> str:\n-    return \"\"\n+    totals: dict[str, Decimal] = {}\n+    for key, amount in rows:\n+        normalized = normalize_key(key)\n+        if not normalized:\n+            continue\n+        totals[normalized] = totals.get(normalized, Decimal(\"0\")) + Decimal(amount)\n+\n+    cents = Decimal(\"0.01\")\n+    return \"\\n\".join(\n+        f\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\"\n+        for key, total in sorted(totals.items())\n+    )\n",
+        "report": {
+          "changes": [
+            "Implemented normalize_key using Unicode-aware strip and casefold normalization.",
+            "Implemented report with exact Decimal string parsing, normalized-key aggregation, empty-key skipping, HALF_UP rounding to two decimal places, and ascending output order.",
+            "Removed test-generated __pycache__ artifacts; only src/ledger/*.py were changed."
+          ],
+          "rationale": "The implementation follows the configuration contract and scoped AGENTS.md instructions. The configured unittest entry passed, along with additional Unicode, rounding, aggregation, ordering, and empty-key checks.",
+          "risks": [],
+          "root_cause": "normalize_key was an identity stub and report was unimplemented, so configured ledger normalization and aggregation behavior was missing."
+        },
+        "required_verifications": [],
+        "status": "SUCCEEDED",
+        "verifications": [
+          {
+            "after_fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+            "before_fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+            "check_id": "configured-unittest",
+            "command": "python -m unittest discover -s checks",
+            "explicit_check_id": true,
+            "plan_step_ids": [
+              "complete-task"
+            ],
+            "reason": "Run the configured test entry from pyproject.toml after implementing normalization and reporting.",
+            "result": {
+              "duration_seconds": 0.26707279900074354,
+              "exit_code": 0,
+              "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+              "stdout": "",
+              "truncated": false
+            },
+            "scope": "Repository checks for normalize_key/report behavior",
+            "sequence": 1,
+            "supersedes": []
+          }
+        ]
+      }
+    },
+    "tool_call_id": "call_tHDq6wDCrnym83ARkcvWu1AM",
+    "tool_name": "finish_task",
+    "type": "tool_result",
+    "source_index": 69,
+    "step": 8,
+    "failed": false
+  },
+  {
+    "previous_status": "RUNNING",
+    "status": "SUCCEEDED",
+    "type": "status_changed",
+    "source_index": 70,
+    "step": 8
+  },
+  {
+    "completion_decision": {
+      "completion_allowed": true,
+      "covered_plan_steps": [
+        "complete-task"
+      ],
+      "evidence_scope": "model_selected_checks",
+      "fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+      "problems": [],
+      "required_verifications": [],
+      "verification_sequences": [
+        1
+      ]
+    },
+    "pending_tool_call_ids": [],
+    "status": "SUCCEEDED",
+    "type": "termination_audit",
+    "uncertain_tool_call_ids": [],
+    "source_index": 71,
+    "step": 8
+  },
+  {
+    "budget": {
+      "active_seconds_used": 268.5467776700025,
+      "command_timeout_seconds": 60,
+      "cost_used": 0.165152,
+      "max_consecutive_failures": 5,
+      "max_cost_usd": null,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48,
+      "max_tokens": null,
+      "replans_used": 0,
+      "requests_used": 8,
+      "steps_used": 8,
+      "tokens_used": 49552,
+      "unknown_cost": false,
+      "unknown_tokens": false
+    },
+    "complete": false,
+    "reason": "Runtime dispatch is bounded; arbitrary shell actions and provider billing are not a complete external-effects audit.",
+    "scope": "runtime_request_and_tool_dispatch",
+    "type": "budget_audit",
+    "source_index": 72,
+    "step": 8
+  },
+  {
+    "status": "SUCCEEDED",
+    "type": "run_finished",
+    "source_index": 73,
+    "step": 8
+  },
+  {
+    "type": "scenario_audit",
+    "recovery": false,
+    "replan": false
+  }
+]

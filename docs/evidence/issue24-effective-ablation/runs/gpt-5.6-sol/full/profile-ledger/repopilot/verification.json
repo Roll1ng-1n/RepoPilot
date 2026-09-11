@@ -1,0 +1,25 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+      "before_fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+      "check_id": "configured-unittest",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Run the configured test entry from pyproject.toml after implementing normalization and reporting.",
+      "result": {
+        "duration_seconds": 0.26707279900074354,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "Repository checks for normalize_key/report behavior",
+      "sequence": 1,
+      "supersedes": []
+    }
+  ]
+}

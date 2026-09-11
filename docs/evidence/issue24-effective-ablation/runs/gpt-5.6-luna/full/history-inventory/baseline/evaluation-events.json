@@ -1,0 +1,7 @@
+[
+  {
+    "type": "scenario_audit",
+    "recovery": true,
+    "replan": false
+  }
+]

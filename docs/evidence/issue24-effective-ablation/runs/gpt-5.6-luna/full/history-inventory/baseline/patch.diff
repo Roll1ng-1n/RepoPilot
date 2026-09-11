@@ -1,0 +1,79 @@
+diff --git a/src/inventory/aggregate.py b/src/inventory/aggregate.py
+index 76fa4d2..2e6a9e6 100644
+--- a/src/inventory/aggregate.py
++++ b/src/inventory/aggregate.py
+@@ -1,2 +1,7 @@
+ def aggregate(events: list):
+-    return {}
++    """Sum deltas by normalized SKU, retaining keys whose total is zero."""
++    balances = {}
++    for event in events:
++        sku = event["sku"]
++        balances[sku] = balances.get(sku, 0) + event["delta"]
++    return balances
+diff --git a/src/inventory/normalize.py b/src/inventory/normalize.py
+index b8167f5..703acc4 100644
+--- a/src/inventory/normalize.py
++++ b/src/inventory/normalize.py
+@@ -1,2 +1,6 @@
+ def normalize(events: list):
+-    return []
++    """Normalize SKU spelling without changing input records or their order."""
++    return [
++        {"sku": event["sku"].strip().casefold(), "delta": event["delta"]}
++        for event in events
++    ]
+diff --git a/src/inventory/parse.py b/src/inventory/parse.py
+index 9ebd2e7..0a8d476 100644
+--- a/src/inventory/parse.py
++++ b/src/inventory/parse.py
+@@ -1,2 +1,10 @@
++import json
++
++
+ def parse(text: str):
+-    return []
++    """Decode a JSON list, returning an empty list for invalid top-level input."""
++    try:
++        value = json.loads(text)
++    except (TypeError, ValueError):
++        return []
++    return value if isinstance(value, list) else []
+diff --git a/src/inventory/render.py b/src/inventory/render.py
+index 9814798..500e98c 100644
+--- a/src/inventory/render.py
++++ b/src/inventory/render.py
+@@ -1,2 +1,3 @@
+ def render(balances: dict):
+-    return ""
++    """Render balances in sorted SKU order, one entry per line."""
++    return "\n".join(f"{sku}={balances[sku]}" for sku in sorted(balances))
+diff --git a/src/inventory/select.py b/src/inventory/select.py
+index 6f1a654..4ba2cf1 100644
+--- a/src/inventory/select.py
++++ b/src/inventory/select.py
+@@ -1,2 +1,3 @@
+ def select(balances: dict):
+-    return {}
++    """Return a fresh mapping containing only non-zero balances."""
++    return {sku: balance for sku, balance in balances.items() if balance != 0}
+diff --git a/src/inventory/validate.py b/src/inventory/validate.py
+index 3b5d2f9..d44b1f0 100644
+--- a/src/inventory/validate.py
++++ b/src/inventory/validate.py
+@@ -1,2 +1,14 @@
+ def validate(events: list):
+-    return []
++    """Keep only records with a non-empty string SKU and an integer delta."""
++    valid = []
++    for event in events:
++        if not isinstance(event, dict):
++            continue
++        sku = event.get("sku")
++        delta = event.get("delta")
++        if not isinstance(sku, str) or not sku.strip():
++            continue
++        if isinstance(delta, bool) or not isinstance(delta, int):
++            continue
++        valid.append({"sku": sku, "delta": delta})
++    return valid

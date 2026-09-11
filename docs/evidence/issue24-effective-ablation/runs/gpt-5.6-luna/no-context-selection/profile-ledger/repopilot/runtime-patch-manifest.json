@@ -1,0 +1,27 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "38021d67d40f3bb3294b871b756b31fde3443c138b8db5ac81631f9055bd25e2",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-context-selection/profile-ledger/repopilot/workspace",
+      "head": "87d499bd8afd8bdd889f807a950e2545e9ff789e",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-context-selection/profile-ledger/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "89d373d02ddee793bea03a65f34b8cef89bc4ed1"
+  },
+  "bytes": 4864,
+  "final": {
+    "state": {
+      "diff_fingerprint": "5002fb5f1f640f875232249064bc4de71a5ec2f2382bd2370adc1038fe232482",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-context-selection/profile-ledger/repopilot/workspace",
+      "head": "87d499bd8afd8bdd889f807a950e2545e9ff789e",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-context-selection/profile-ledger/repopilot/workspace",
+      "status": " M src/ledger/normalize.py\n M src/ledger/report.py\n?? checks/__pycache__/test_ledger.cpython-312.pyc\n?? src/__pycache__/__init__.cpython-312.pyc\n?? src/ledger/__pycache__/__init__.cpython-312.pyc\n?? src/ledger/__pycache__/normalize.cpython-312.pyc\n?? src/ledger/__pycache__/report.cpython-312.pyc\n"
+    },
+    "tree": "dd77c2e9c2bc607c38f692c9461e291c4598e866"
+  },
+  "patch": "runtime-patch.diff",
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then runtime-patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "7ee203f765bc39b8749cd429f96a1fc193aa6a70b7fb230c1a116f8fc869410b"
+}

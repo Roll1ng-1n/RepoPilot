@@ -1,0 +1,145 @@
+diff --git a/checks/__pycache__/test_pipeline.cpython-312.pyc b/checks/__pycache__/test_pipeline.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..12b6cd3d7c413c1f586641ba06d6b2b16e566317
+GIT binary patch
+literal 1020
+zcmahHJx>%t^v&$<xg4B^hy)VF3s#rNUNlrhOppMH#Z?w&6*tSyAb0G2FtZ2V#lnKZ
+ze?TFHBqmB|{0WvOHg_QgGl{XVx{i3#Sg3DyIpHc_GVi^4-(R0HnKU3A*7iyT0`Ogb
+zdSIP0-TTPw00Txsa1%;gf`1y)vf&y8C@cXpwt<-(N_H>689gu(-nAMeXLa<akRxh9
+z@Ss`=iXjiqYyq&47`kIfc7TIU=2Aws!8I5~Y&MLXsZ#T6JXn`O&t5wX;?v2x&k*gv
+zb10qHqD(_{S`Ko(CZUu{bmuW6j51@FGLu;`O|c7_J~a+bqxLAX4`|{^paHpoLet3J
+z%XYLZN0lMh>&jw0jC@5_I)4xpnd|&U+O+-IsoUw5*<0Aqpf4pC(ZWXE4~4E#nI&1R
+zpliKcllw%Ol838O=g$6`%x_i2x~%yD&j;}!@)4JjS1Z<dSgdfT)=-%~NpmC_nA0aU
+zF`Ar1^a8%vLr3;l+aB8;e>44dW^d*_|1j6iFMbSK?&J2-a*MCEHe~xr)N<;FH#QH)
+zw~hgtWPzRl3@p+v27$h9=;_AWm_g?M+hFA1JZaxNjY5+?T2?qqaS<cMvk}9{C9@Eh
+zkyYuqEncogjpp$APGgZ?uN+0x*XHZ#SJ&T7ezvE?6;u^+ma;vs;+MJSskG;ntE?Vs
+ze#rCmQWA|AL0h4Zb01>AIKR-%#z=Q8Gl;g~2PGB`#w3=LSZbqOO4;>FG1B#lODIsI
+zQUp%1vdJq^RWzL53X>bKAE4d5kCzc=xQY&ES(SY!De|t!qC%gByoTu5AcTB_k*{#`
+VCpC%l^5IctqMeyI0sO@7e*xGk=E?v7
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/__pycache__/__init__.cpython-312.pyc b/src/__pycache__/__init__.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..ad448597dce5600c58f1e6c989f7aeae9474c983
+GIT binary patch
+literal 123
+zcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdC8b}UUzA;3keHmR
+wUtE-|A0MBYmst`YuUAlci^C>2KczG$)vkyYsFV?ii$RQ!%#4hTMa)1J0N}0}?EnA(
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/__init__.cpython-312.pyc b/src/inventory/__pycache__/__init__.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..362a7d8c373f4e8483819268ea8d5b52725bf960
+GIT binary patch
+literal 133
+zcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdrJ`S+UzA;3keHmR
+zUtE-|pP5&dnpcuvRH+{ypP83g5+AQuP<e~PCO1E&G$+-rh!v=b5r~UHjE~HWjEqIh
+GKo$T_F&-2E
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/aggregate.cpython-312.pyc b/src/inventory/__pycache__/aggregate.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..6e2008b482eed2e1de0d62394f04e649f7ec82ae
+GIT binary patch
+literal 269
+zcmX@j%ge<81eXgIW@!WI#~=<2FhLog1%Qm{3@Hq$3~5X$j4dotjFn89%(vK5%Tn`7
+zijx^(8h|v2%?!k!*?`1!hD?TF22Do4l|Z5hWLz;wUg4LjetCXTc5y*sa;koDQL=t!
+z9>}EpqDuY5^z@?C^u&@>y@JYHoN!(d$T*PRVs;?Wz;J_`x54u>kjdbu$#jb)C$qQ&
+ztfYtqC{zSeQ^X1+ZgJS;=BJeAq}mm60=ZxV1c8hX%#4hTAD9>!`6i@%VE|HKEdWF7
+BI0pa#
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/normalize.cpython-312.pyc b/src/inventory/__pycache__/normalize.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..a707383f8006e0d27d4a958ab34ffe63ccb08e03
+GIT binary patch
+literal 269
+zcmX@j%ge<81eXgIW@!WI#~=<2FhLog1%Qm{3@Hq$3~5X$j4dotjFn89%(vK5%Tn`7
+zijx^(8h|v2%?!k!*?`1!hIEEt22Do4l|Z5hWLz;wUg4LjetCXTc5y*sa;koDQL=t!
+z9>}EpqDuX|{G!~%oXo0Jy@JYHoN!(d$T*PRVs;?Wz;J_`x54u>kjdbu$#jb)C$qQ&
+ztfYtqC{zSeQ^X1+ZgJS;=BJeAq}mm60=ZxV1c8hX%#4hTAD9>!`6i@%VE|HKEdXc{
+BI9UJy
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/parse.cpython-312.pyc b/src/inventory/__pycache__/parse.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..0d1a90f080dd4f6e2f8c25472cff4c0c6f5b8be6
+GIT binary patch
+literal 258
+zcmX@j%ge<81eXgIW~l(_#~=<2FhLog1%Qm{3@Hq$3~5X$j4dotjFn89%(qxdQY%W5
+z8DYwSG>FX%#Gl!K#B_#qhF}IwM!%Inq6lPIF-TtFm!f`oeo=ODL1J>MesNK<er8@-
+zYF<fxQKf!CVo`CbUP0w8RxqmwWDH18F*}fGV7S4}+u->b$Yk)-WV*#%Tv7y9QN#ii
+wDFP`eVg(YnIBatBQ%ZAE?TR>oT(EvYAmalwBO~JnCPqfS3Cv#@fD~8@0O2w-M*si-
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/pipeline.cpython-312.pyc b/src/inventory/__pycache__/pipeline.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..526d7ff6750b8fc3f48fba1b7e7c53cd1b65268a
+GIT binary patch
+literal 644
+zcma)&J#W-N5Qb;ZYo9O2A%%)dfg<rCxd>MyAqp;pE)5N`Xe@g;nXErF-UJR&Q1AmN
+zkU~L&L=%NBDfkaGNbXKtMMZbgQBg6o$z9FJo_%I^{m#4oJ{W8OM_Ye>F;oD*q*#T%
+zgyl1aW5^&=1`3El33rStRID6(rc-p{j$>`S!izn}zR`t_wd26}g&+IOT@11igXcQy
+zz0+}bx)Jq%^K6LJ%&!w_kRd!uOr9lHxK~zGaQWI5$z(z}x!4IBG?-dG6A+de(o9=?
+zWu>x*RHmZ3iUEVi?~*tjgI(`g>AJA~n!0Q1t*O7FH*k9S_5ZF<_;UMEKp{(zXj33b
+z=8^nn5)Y9g8P<sQ_TO8hmlYi}b&}$!p>&j&M_Ag5rlUHq(c~rGt*5gdVOo`GZjj`H
+zqTk%+^cH^hH$U9@H2iY!>(g`mwtIHa?mTR7j@#jGd+kx%-}|BWmV6NQqtH#i@ZlUe
+zZ_cIY&Ai5vQ$GQ^$_=_A-SB=<WrqeI&?cASx!K{g@RU+>xITv)bJ%vz)*QALTB*nC
+P{dfVgejNXCtCRZ&uDgQM
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/render.cpython-312.pyc b/src/inventory/__pycache__/render.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..c3c5806252c586c2b40973f01b80394185a02842
+GIT binary patch
+literal 263
+zcmX@j%ge<81eXgIW@!QG#~=<2FhLog1%Qm{3@Hq$3~5X$j4dotjFn89%(pm_5_1ys
+zl2eP58DUzWG&7L?%mUU`$*9TXcZ*>qgC=7U$iQNdT7_Rq`sMjW*~JBk$*KCqMalY^
+zd1a}2CHX~_`bDXEDXB$z1(mnhAj~3mpbn6(Vpbs0z;J_`_cM^e;HSxSizOv9xdg1B
+x2qam=0V3Fd#4Qe+-29Z%oK(9akO#rq1%ZqY%#4hTAD9>!`6h&XVE|HKEdbuiHUa<u
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/select.cpython-312.pyc b/src/inventory/__pycache__/select.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..88c7cc0c4641146741b1644ffc1a1dfbee7e8f2e
+GIT binary patch
+literal 265
+zcmX@j%ge<81eXgIW@!QG#~=<2FhLog1%Qm{3@Hq$3~5X$j4dotjFn89%(pm_5_1ys
+zl2eP58DUz0G>FX%#Gl!K#B_#ChF}IwM!%Inq6lPQF-TtFmy&*Yeo=ODL1J>MesNK<
+zer8@-YF<fxQKf!yYEEi$iC#hFEj9?V2xJgQS1~(~XkfU(&D-Gl8OUVt(`35El9HKR
+z0#;JQ0u(9&sVQOw61O;Pa`RJ4b5iY!IDuTS0fIor2WCb_#t%%4jC>P9zAykOuoeIf
+C5H>IX
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/validate.cpython-312.pyc b/src/inventory/__pycache__/validate.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..828f9dc881e46ea7f85c27a76b1bd8aaf2e0c0fa
+GIT binary patch
+literal 267
+zcmX@j%ge<81eXgIW@!QG#~=<2FhLog1%Qm{3@Hq$3~5X$j4dotjFn89%(vK5%Tn`7
+zijx^(8h|v2%?!k!*?`1!hIEEt22Do4l|Z5hWLz;wUg4LDetCXTc5y*sa;koDQL=t!
+z9>}EpqDuX;#GK5O#FA9Kg34PQFisK3Fp$n-b|BHfaD$t-!Sgea$>68Sbc-b?v$zDT
+zq=*G5R0L8}#0n&CaoFVMr<CTT+7)pExnKhXfs7B#jEsyQm>3!PCWL%p08(Hr0IcIT
+AH~;_u
+
+literal 0
+HcmV?d00001
+

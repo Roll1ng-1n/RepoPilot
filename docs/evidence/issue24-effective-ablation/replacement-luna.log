@@ -1,0 +1,40 @@
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+START gpt-5.6-luna no-planning
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-9dcf687b -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/replacements/attempt-1/gpt-5.6-luna/no-planning/history-inventory/re
+popilot/workspace,target=/workspace --user=1000:1000                            
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-9dcf687b with ID 
+a2788aa547c67d682fca4e9d73a8ed58637032ec05103272b1e25b17f9c3d89a                
+{"model": "gpt-5.6-luna", "variant": "no-planning", "task": "history-inventory", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false, "repository_pass": false, "error": null}
+DONE gpt-5.6-luna no-planning
+START gpt-5.6-luna no-context-selection
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-058a69a2 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/replacements/attempt-1/gpt-5.6-luna/no-context-selection/profile-led
+ger/repopilot/workspace,target=/workspace --user=1000:1000                      
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-058a69a2 with ID 
+433d35953fcd072d14d57c16b905290b421d8b08089a8e04b09a6a55428a7785                
+{"model": "gpt-5.6-luna", "variant": "no-context-selection", "task": "profile-ledger", "engine": "repopilot", "status": "SUCCEEDED", "task_pass": true, "repository_pass": true, "error": null}
+DONE gpt-5.6-luna no-context-selection
+START gpt-5.6-luna no-profile
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-f77f1abd -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effecti
+ve-ablation/replacements/attempt-1/gpt-5.6-luna/no-profile/history-inventory/rep
+opilot/workspace,target=/workspace --user=1000:1000                             
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-f77f1abd with ID 
+2a38588b16b32ca61250d3d769879d169890ffe9c8cefa83882a77a7737c2346                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+{"model": "gpt-5.6-luna", "variant": "no-profile", "task": "history-inventory", "engine": "repopilot", "status": "BUDGET_EXCEEDED", "task_pass": false, "repository_pass": false, "error": null}
+DONE gpt-5.6-luna no-profile

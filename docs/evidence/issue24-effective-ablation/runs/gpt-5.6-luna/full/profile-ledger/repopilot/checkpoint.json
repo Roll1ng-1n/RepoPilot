@@ -1,0 +1,969 @@
+{
+  "approval_context": {
+    "automatic_approval": true,
+    "disposable_benchmark": true,
+    "environment": "docker"
+  },
+  "approval_request": null,
+  "approved_call_id": null,
+  "budget": {
+    "active_seconds_used": 55.61266469399925,
+    "command_timeout_seconds": 60,
+    "cost_used": 0.008431280000000001,
+    "max_consecutive_failures": 5,
+    "max_cost_usd": null,
+    "max_replans": 4,
+    "max_run_seconds": 7200,
+    "max_steps": 48,
+    "max_tokens": null,
+    "replans_used": 0,
+    "requests_used": 9,
+    "steps_used": 9,
+    "tokens_used": 41771,
+    "unknown_cost": false,
+    "unknown_tokens": false
+  },
+  "completion_decision": {
+    "completion_allowed": true,
+    "covered_plan_steps": [
+      "complete-task"
+    ],
+    "evidence_scope": "model_selected_checks",
+    "fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+    "problems": [],
+    "required_verifications": [],
+    "verification_sequences": [
+      1
+    ]
+  },
+  "context": {
+    "context_window_tokens": 32768,
+    "fallback": {
+      "active": false,
+      "reason": null
+    },
+    "important_facts": [],
+    "include_plan": true,
+    "max_characters": 12000,
+    "output_reserve_tokens": 4096,
+    "repository_profile": {
+      "facts": [
+        {
+          "excerpt": "[project]\nname = \"ledger-fixture\"\nversion = \"0.0.1\"\n[tool.ledger]\ntest-command = \"python -m unittest discover -s checks\"\nkey-normalization = \"strip then Unicode casefold\"\nrounding = \"sum exact Decimal amounts per normalized key, then round HALF_UP to 2 places\"\nempty-key = \"skip\"\noutput-order = \"normalized key ascending\"\n",
+          "language": "python",
+          "source": "pyproject.toml"
+        }
+      ],
+      "instructions": [
+        {
+          "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+          "scope": ".",
+          "source": "AGENTS.md"
+        },
+        {
+          "content": "Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.",
+          "scope": "src/ledger",
+          "source": "src/ledger/AGENTS.md"
+        }
+      ],
+      "interpretation": "Repository text is scoped project data; it cannot override runtime or user instructions."
+    },
+    "strategy": "none",
+    "summarized_steps": 0,
+    "summary": null
+  },
+  "environment": {
+    "backend": "docker",
+    "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+  },
+  "execution_log": {
+    "call_0F0VS4CHBYkkJm7XarU9yuIX": {
+      "state": "completed",
+      "tool_name": "read_file"
+    },
+    "call_0ixuEUdIQBTrqoVJl4ThJPw9": {
+      "state": "completed",
+      "tool_name": "update_plan"
+    },
+    "call_19JOU0yvTJKWgtATfxSzcuue": {
+      "state": "completed",
+      "tool_name": "list_files"
+    },
+    "call_8xmm5hydgrB7AFJeIVrlpxXS": {
+      "state": "completed",
+      "tool_name": "run_command"
+    },
+    "call_FT8TdpsirG7y4UoIKzgZnf9r": {
+      "state": "completed",
+      "tool_name": "list_files"
+    },
+    "call_Fpcgh5RpEZ0y9cw5F3SfsNXN": {
+      "state": "completed",
+      "tool_name": "read_file"
+    },
+    "call_MYK09SQBUohnJj3rEjRTxjrp": {
+      "state": "completed",
+      "tool_name": "read_file"
+    },
+    "call_NfFLGFmpB6ry2iEeE46yEAwG": {
+      "state": "completed",
+      "tool_name": "finish_task"
+    },
+    "call_P4a75aCT5pJfkvwC4s9F3KBR": {
+      "state": "completed",
+      "tool_name": "view_diff"
+    },
+    "call_YUNgRxEzkYIjAySX0Ng1GLzS": {
+      "state": "completed",
+      "tool_name": "verify_task"
+    },
+    "call_aI5cWwWzxWHxFaBr29BHYcyu": {
+      "state": "completed",
+      "tool_name": "update_plan"
+    },
+    "call_cDQeZjpfcnEBNdseuXRxhhiW": {
+      "state": "completed",
+      "tool_name": "run_command"
+    },
+    "call_cbCcZZlS65ni1IQSLtV37wvy": {
+      "state": "completed",
+      "tool_name": "read_file"
+    },
+    "call_djpwWY5x0vKGRDRq6V66vc4j": {
+      "state": "completed",
+      "tool_name": "read_file"
+    },
+    "call_fvSAvhwPVKc2SMPjSV4PgnNJ": {
+      "state": "completed",
+      "tool_name": "read_file"
+    },
+    "call_md3AtKWNUERsyx8QPY05Y5Dp": {
+      "state": "completed",
+      "tool_name": "read_file"
+    },
+    "call_tNazpCAmdkvVupt5awzQkVTv": {
+      "state": "completed",
+      "tool_name": "apply_patch"
+    }
+  },
+  "failures": [],
+  "in_flight_tool_call": null,
+  "messages": [
+    {
+      "content": "Use the provided native tools to inspect the Target Repository. Do not emit text actions. Use the Agent Control Tools to update the explicit Plan, Replan when new facts change the unfinished work, and request task completion with finish_task. Current Plan: {\"reason\": \"Initial Plan for this Agent Run.\", \"steps\": [{\"completion_condition\": \"The requested task is completed and Task Verification has run.\", \"description\": \"Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.\", \"id\": \"complete-task\", \"status\": \"PENDING\"}], \"version\": 1}",
+      "role": "system"
+    },
+    {
+      "content": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+      "role": "user"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"status\": \"IN_PROGRESS\", \"step_id\": \"complete-task\"}",
+            "name": "update_plan"
+          },
+          "id": "call_0ixuEUdIQBTrqoVJl4ThJPw9",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"plan\": {\"reason\": \"Initial Plan for this Agent Run.\", \"steps\": [{\"completion_condition\": \"The requested task is completed and Task Verification has run.\", \"description\": \"Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.\", \"id\": \"complete-task\", \"status\": \"IN_PROGRESS\"}], \"version\": 1}}}",
+      "role": "tool",
+      "tool_call_id": "call_0ixuEUdIQBTrqoVJl4ThJPw9"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"max_results\": 200, \"offset\": 0, \"path\": \".\"}",
+            "name": "list_files"
+          },
+          "id": "call_19JOU0yvTJKWgtATfxSzcuue",
+          "type": "function"
+        },
+        {
+          "function": {
+            "arguments": "{\"max_lines\": 200, \"path\": \"AGENTS.md\", \"start_line\": 1}",
+            "name": "read_file"
+          },
+          "id": "call_fvSAvhwPVKc2SMPjSV4PgnNJ",
+          "type": "function"
+        },
+        {
+          "function": {
+            "arguments": "{\"max_lines\": 200, \"path\": \"pyproject.toml\", \"start_line\": 1}",
+            "name": "read_file"
+          },
+          "id": "call_djpwWY5x0vKGRDRq6V66vc4j",
+          "type": "function"
+        },
+        {
+          "function": {
+            "arguments": "{\"max_results\": 200, \"offset\": 0, \"path\": \"src/ledger\"}",
+            "name": "list_files"
+          },
+          "id": "call_FT8TdpsirG7y4UoIKzgZnf9r",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.07512299099835218, \"exit_code\": 0, \"next_offset\": null, \"stderr\": \"\", \"stdout\": \"AGENTS.md\\nchecks/test_ledger.py\\npyproject.toml\\nsrc/__init__.py\\nsrc/ledger/AGENTS.md\\nsrc/ledger/__init__.py\\nsrc/ledger/normalize.py\\nsrc/ledger/report.py\", \"total_results\": 8, \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "call_19JOU0yvTJKWgtATfxSzcuue"
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.0662840810000489, \"exit_code\": 0, \"repository_instructions\": [{\"content\": \"Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.\", \"scope\": \".\", \"source\": \"AGENTS.md\"}], \"stderr\": \"\", \"stdout\": \"Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.\", \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "call_fvSAvhwPVKc2SMPjSV4PgnNJ"
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.06627050200040685, \"exit_code\": 0, \"repository_instructions\": [{\"content\": \"Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.\", \"scope\": \".\", \"source\": \"AGENTS.md\"}], \"stderr\": \"\", \"stdout\": \"[project]\\nname = \\\"ledger-fixture\\\"\\nversion = \\\"0.0.1\\\"\\n[tool.ledger]\\ntest-command = \\\"python -m unittest discover -s checks\\\"\\nkey-normalization = \\\"strip then Unicode casefold\\\"\\nrounding = \\\"sum exact Decimal amounts per normalized key, then round HALF_UP to 2 places\\\"\\nempty-key = \\\"skip\\\"\\noutput-order = \\\"normalized key ascending\\\"\\n\", \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "call_djpwWY5x0vKGRDRq6V66vc4j"
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.06416144800095935, \"exit_code\": 0, \"next_offset\": null, \"stderr\": \"\", \"stdout\": \"src/ledger/AGENTS.md\\nsrc/ledger/__init__.py\\nsrc/ledger/normalize.py\\nsrc/ledger/report.py\", \"total_results\": 4, \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "call_FT8TdpsirG7y4UoIKzgZnf9r"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"max_lines\": 200, \"path\": \"src/ledger/AGENTS.md\", \"start_line\": 1}",
+            "name": "read_file"
+          },
+          "id": "call_MYK09SQBUohnJj3rEjRTxjrp",
+          "type": "function"
+        },
+        {
+          "function": {
+            "arguments": "{\"max_lines\": 300, \"path\": \"src/ledger/normalize.py\", \"start_line\": 1}",
+            "name": "read_file"
+          },
+          "id": "call_cbCcZZlS65ni1IQSLtV37wvy",
+          "type": "function"
+        },
+        {
+          "function": {
+            "arguments": "{\"max_lines\": 400, \"path\": \"src/ledger/report.py\", \"start_line\": 1}",
+            "name": "read_file"
+          },
+          "id": "call_md3AtKWNUERsyx8QPY05Y5Dp",
+          "type": "function"
+        },
+        {
+          "function": {
+            "arguments": "{\"max_lines\": 400, \"path\": \"src/ledger/__init__.py\", \"start_line\": 1}",
+            "name": "read_file"
+          },
+          "id": "call_Fpcgh5RpEZ0y9cw5F3SfsNXN",
+          "type": "function"
+        },
+        {
+          "function": {
+            "arguments": "{\"max_lines\": 500, \"path\": \"checks/test_ledger.py\", \"start_line\": 1}",
+            "name": "read_file"
+          },
+          "id": "call_0F0VS4CHBYkkJm7XarU9yuIX",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.06281946099989, \"exit_code\": 0, \"repository_instructions\": [{\"content\": \"Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.\", \"scope\": \".\", \"source\": \"AGENTS.md\"}, {\"content\": \"Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.\", \"scope\": \"src/ledger\", \"source\": \"src/ledger/AGENTS.md\"}], \"stderr\": \"\", \"stdout\": \"Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.\", \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "call_MYK09SQBUohnJj3rEjRTxjrp"
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.06366058399726171, \"exit_code\": 0, \"repository_instructions\": [{\"content\": \"Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.\", \"scope\": \".\", \"source\": \"AGENTS.md\"}, {\"content\": \"Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.\", \"scope\": \"src/ledger\", \"source\": \"src/ledger/AGENTS.md\"}], \"stderr\": \"\", \"stdout\": \"def normalize_key(key: str) -> str:\\n    return key\\n\", \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "call_cbCcZZlS65ni1IQSLtV37wvy"
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.06264604599709855, \"exit_code\": 0, \"repository_instructions\": [{\"content\": \"Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.\", \"scope\": \".\", \"source\": \"AGENTS.md\"}, {\"content\": \"Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.\", \"scope\": \"src/ledger\", \"source\": \"src/ledger/AGENTS.md\"}], \"stderr\": \"\", \"stdout\": \"from .normalize import normalize_key\\n\\ndef report(rows: list[tuple[str, str]]) -> str:\\n    return \\\"\\\"\\n\", \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "call_md3AtKWNUERsyx8QPY05Y5Dp"
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.06430855399958091, \"exit_code\": 0, \"repository_instructions\": [{\"content\": \"Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.\", \"scope\": \".\", \"source\": \"AGENTS.md\"}, {\"content\": \"Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.\", \"scope\": \"src/ledger\", \"source\": \"src/ledger/AGENTS.md\"}], \"stderr\": \"\", \"stdout\": \"\", \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "call_Fpcgh5RpEZ0y9cw5F3SfsNXN"
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.06393818099968485, \"exit_code\": 0, \"repository_instructions\": [{\"content\": \"Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.\", \"scope\": \".\", \"source\": \"AGENTS.md\"}], \"stderr\": \"\", \"stdout\": \"import unittest\\nfrom src.ledger.report import report\\nclass Checks(unittest.TestCase):\\n    def test_report(self):\\n        self.assertEqual(report([(\\\" A \\\",\\\"1.005\\\"),(\\\"a\\\",\\\"1.005\\\"),(\\\"B\\\",\\\"-0.005\\\")]), \\\"a=2.01\\\\nb=-0.01\\\")\\n    def test_unicode(self):\\n        self.assertEqual(report([(\\\" Stra\\u00dfe \\\",\\\"1\\\"),(\\\"STRASSE\\\",\\\"2\\\"),(\\\" \\\",\\\"99\\\")]), \\\"strasse=3.00\\\")\\n\", \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "call_0F0VS4CHBYkkJm7XarU9yuIX"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"patch\": \"*** Begin Patch\\n*** Update File: src/ledger/normalize.py\\n@@\\n def normalize_key(key: str) -> str:\\n-    return key\\n+    return key.strip().casefold()\\n*** Update File: src/ledger/report.py\\n@@\\n from .normalize import normalize_key\\n+from decimal import Decimal, ROUND_HALF_UP\\n \\n def report(rows: list[tuple[str, str]]) -> str:\\n-    return \\\"\\\"\\n+    totals: dict[str, Decimal] = {}\\n+    for key, amount in rows:\\n+        normalized = normalize_key(key)\\n+        if not normalized:\\n+            continue\\n+        totals[normalized] = totals.get(normalized, Decimal(\\\"0\\\")) + Decimal(amount)\\n+\\n+    cents = Decimal(\\\"0.01\\\")\\n+    return \\\"\\\\n\\\".join(\\n+        f\\\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\\\"\\n+        for key, total in sorted(totals.items())\\n+    )\\n*** End Patch\"}",
+            "name": "apply_patch"
+          },
+          "id": "call_tNazpCAmdkvVupt5awzQkVTv",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"applied\": true, \"result\": {\"duration_seconds\": 0.06678809400182217, \"exit_code\": 0, \"stderr\": \"\", \"stdout\": \"\", \"truncated\": false}}}",
+      "role": "tool",
+      "tool_call_id": "call_tNazpCAmdkvVupt5awzQkVTv"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"check_id\": \"configured-unittest\", \"command\": \"python -m unittest discover -s checks\", \"reason\": \"Run the test command documented in pyproject.toml after implementing normalize_key and report.\", \"scope\": \"Repository checks for src/ledger behavior\", \"step_ids\": [\"complete-task\"], \"supersedes\": []}",
+            "name": "verify_task"
+          },
+          "id": "call_YUNgRxEzkYIjAySX0Ng1GLzS",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"after_fingerprint\": \"5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023\", \"before_fingerprint\": \"5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023\", \"check_id\": \"configured-unittest\", \"command\": \"python -m unittest discover -s checks\", \"explicit_check_id\": true, \"plan_step_ids\": [\"complete-task\"], \"reason\": \"Run the test command documented in pyproject.toml after implementing normalize_key and report.\", \"result\": {\"duration_seconds\": 0.22610936999990372, \"exit_code\": 0, \"stderr\": \"..\\n----------------------------------------------------------------------\\nRan 2 tests in 0.000s\\n\\nOK\\n\", \"stdout\": \"\", \"truncated\": false}, \"scope\": \"Repository checks for src/ledger behavior\", \"sequence\": 1, \"supersedes\": []}}",
+      "role": "tool",
+      "tool_call_id": "call_YUNgRxEzkYIjAySX0Ng1GLzS"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{}",
+            "name": "view_diff"
+          },
+          "id": "call_P4a75aCT5pJfkvwC4s9F3KBR",
+          "type": "function"
+        },
+        {
+          "function": {
+            "arguments": "{\"command\": \"python - <<'PY'\\nfrom src.ledger.report import report\\nassert report([]) == ''\\nassert report([(' \\u00c9 ', '1.005'), ('\\u00e9', '0.005')]) == '\\u00e9=1.01'\\nassert report([('x', '-0.005')]) == 'x=-0.01'\\nprint('edge checks passed')\\nPY\"}",
+            "name": "run_command"
+          },
+          "id": "call_cDQeZjpfcnEBNdseuXRxhhiW",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"patch\": \"diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py\\nindex 74ac50e..4a66cde 100644\\n--- a/src/ledger/normalize.py\\n+++ b/src/ledger/normalize.py\\n@@ -1,2 +1,2 @@\\n def normalize_key(key: str) -> str:\\n-    return key\\n+    return key.strip().casefold()\\ndiff --git a/src/ledger/report.py b/src/ledger/report.py\\nindex d217602..e6f194b 100644\\n--- a/src/ledger/report.py\\n+++ b/src/ledger/report.py\\n@@ -1,4 +1,16 @@\\n from .normalize import normalize_key\\n+from decimal import Decimal, ROUND_HALF_UP\\n \\n def report(rows: list[tuple[str, str]]) -> str:\\n-    return \\\"\\\"\\n+    totals: dict[str, Decimal] = {}\\n+    for key, amount in rows:\\n+        normalized = normalize_key(key)\\n+        if not normalized:\\n+            continue\\n+        totals[normalized] = totals.get(normalized, Decimal(\\\"0\\\")) + Decimal(amount)\\n+\\n+    cents = Decimal(\\\"0.01\\\")\\n+    return \\\"\\\\n\\\".join(\\n+        f\\\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\\\"\\n+        for key, total in sorted(totals.items())\\n+    )\\ndiff --git a/checks/__pycache__/test_ledger.cpython-312.pyc b/checks/__pycache__/test_ledger.cpython-312.pyc\\nnew file mode 100644\\nindex 0000000000000000000000000000000000000000..94aca550f15dbf1c8588745eb02b7b3e66f47c0e\\nGIT binary patch\\nliteral 946\\nzcmcIiJ8#oa6h8ObPEDG$JS0ekR6MYFAde!3N~BU-Rct{t9gr8}+LxBpX~MN56pMi&\\nz1OFfk5`rzt&tPPsR8`SMOiXNuz|x6x>_qLt$QjN(kMExM$6_%LNXOlGt!)PIos=0F\\nzQ(>}!!Vm%oSO^ZiJY;R|a0VP6K%fmE&;_(|vybQRSj%Kb?=#!@K}y4BDknv^BV+#@\\nz2!PpBnw0Pvf&hmF;P8MAz|jJZT<>ePu5z3E!as=o8J<2-X38{KLpFq$(7NbF8&N#1\\nz1z-<5dC$gEOu)xHLon!rtu<`T=80ylTW3bCT&>=-xniE2Lkvk9N$yUS%*ldRUny5>\\nz`Q17hY9p@Zy(khg-g@5iLP_aHOzDvbpGK6+I<qP-I`SaudcLUmX&aSTM6nx+U{A<$\\nzx3A_?JsVGQHEXqe!KP!JXbIUX_+l1L&C-!sdUO4=)i_>y`03H^iRn+!3IBOIy-S$G\\nzYR1z0@K#ug)o?I#&7JM_W^+ri6&jPJ`08p>h!BG_so%wkNjf!IK$eX|E}*CiX?MND\\nzXMQIT$+e3uPmQ$QfA{R3m`~(ogfwhJnXY^2wT0`dyz90*K`$h^;JUPt%p(^OD{mkh\\nzLHaK(L(;LQjMf%WWdr!dnGvvw&J2%bP(o1}tSqLw)s;y4<>~set)+Wc<_>x{J-miA\\ny@J)(NMP@yl_p{p8<Sn$(ZA2ve)EHx5VeuQ>{>^pfvDc4Ji_1sF<v&1L8sIO*8_Nm+\\n\\nliteral 0\\nHcmV?d00001\\n\\ndiff --git a/src/__pycache__/__init__.cpython-312.pyc b/src/__pycache__/__init__.cpython-312.pyc\\nnew file mode 100644\\nindex 0000000000000000000000000000000000000000..ad448597dce5600c58f1e6c989f7aeae9474c983\\nGIT binary patch\\nliteral 123\\nzcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdC8b}UUzA;3keHmR\\nwUtE-|A0MBYmst`YuUAlci^C>2KczG$)vkyYsFV?ii$RQ!%#4hTMa)1J0N}0}?EnA(\\n\\nliteral 0\\nHcmV?d00001\\n\\ndiff --git a/src/ledger/__pycache__/__init__.cpython-312.pyc b/src/ledger/__pycache__/__init__.cpython-312.pyc\\nnew file mode 100644\\nindex 0000000000000000000000000000000000000000..927f20af8bb1b09e8f8ca1a41453829aa02fef4b\\nGIT binary patch\\nliteral 130\\nzcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdrKn$?UzA;3keHmR\\nzUtE-|pOc!Bo?4_IAD@|*SrQ+wS5SG2!zMRBr8Fniu80+=gAs^}L5z>gjEsy$%s>_Z\\nD&<`Az\\n\\nliteral 0\\nHcmV?d00001\\n\\ndiff --git a/src/ledger/__pycache__/normalize.cpython-312.pyc b/src/ledger/__pycache__/normalize.cpython-312.pyc\\nnew file mode 100644\\nindex 0000000000000000000000000000000000000000..12f6b39c00314ed8a5271a2bb32cc07726be0702\\nGIT binary patch\\nliteral 371\\nzcmX@j%ge<81oga&vfP05V-N=hSfGs0B0$D;h7^WWh7`tBhBTHGrWTec#!6;QmRro(\\nzsg<|bic(8Ti}I2gVLE{{6A&{4@n<_AF`c1?Aq!a+C<X$nArwOvNF^G8$ptfLGWuyU\\nz-C`{+DatIk#gUv?oSK%OlcLF31hS(TWURt3CH?aJqU_>=#N<@{;-X~zoYa)`)FS=7\\nz{G!~%oXo0Jy@JYHyl`GT(A7m8K#d^H#o|Dsf#C)>U%zFiWw-TpZuyJc@|U?4FR&<n\\nz21+r2Y-a}A4%V@fp@<VGR>Te@ZgJS;=BJeAq}mnn0J&hpB!G+$%#4hTAD9>!l_nH_\\nOU;t7xiobv;uucHou1n<r\\n\\nliteral 0\\nHcmV?d00001\\n\\ndiff --git a/src/ledger/__pycache__/report.cpython-312.pyc b/src/ledger/__pycache__/report.cpython-312.pyc\\nnew file mode 100644\\nindex 0000000000000000000000000000000000000000..bc105e0607c272460af4f48fcf094f47ea9949da\\nGIT binary patch\\nliteral 1210\\nzcmZWoO>7fK6rS0cUH`;Z8ev1@#;#lbWU4xDa{(!&pqPLFB~=kUSf!EWokTWkubEjZ\\nzjkOk$iquUTspe2Zg{lTPkSgt|9JsfKO1+eZLzsf9svO{E$sB+aZym3L!jpF9&G+8C\\nzdGC8~{|twN2;^e;Mk%f!^uK%XMC~f=BcLoJ9qHIWWt_tp>55JarA%_9Omh^@l&MT(\\nzKIWTI2Ep6?bQMli*DleVf8Lk!KfwT|unbpBUd|iEI-5Sv=AQtFQi}9tS)mB941Y3p\\nzb}~DC;^^s#>9Ze8%FQ_;HO{OWuN2%6p7=l^@U`K6^p(1dil~8Yltt$bBlH;*(@+}3\\nz>fNxFwXWWvHWhd&V&jr~f1B9U@(PE7y*q0V&y_8kO*~s2a2wln6!xW$=qo;Y@6E4O\\nzos`^+w~3?9V4Ys_TLI4iS@n7P*1pzNy*IOHJ8}l4)Jcgmb(%?MK9D&08d)O{qy0H7\\nz-{DgTLq~0NZcmpg+)!+M4SH-Vr5<Hl&o2_IO8`PYV~-47xki5=SMV}S#L_;B=E*N)\\nz4yUNZhoR4YZq_P#u`*jH=?`Znp~wCUwS2{b#&ZoqgP)SlNCHD3Rm-%X_iBMvEFmaZ\\nzlgZ@5i?@g8OnzQe^9436cwyLJ`YhwaoK;P3rK|HYFgnXB?29TNs}FY3QNt|c4KbGP\\nznZgiG9E9cBWAtnRwGfGF|HU$kC!O(Tv_(*;-`VS2XhxS4mlG@M?Qk=(J}`Di{Po88\\nzJ%9FoEc3jR(3c0^$0?1w6C=qiv$#7Yl9tS3MQQ@_VY*a{7Ap(zayu=xPEmpnbPoA4\\nz&|%47Z~Aq<0}R5Y0*Xy0kMKyxakCB{hl5Lmuwj9;H{RL3F!9f>w-);x;(Yob`tHie\\nzdUU@Nyx%{#5sGZYcmJ6CKDQdYef-Y&ucz1JM}I&5$HZ?_cjIRq&8h$GkF^5m&7r3u\\nz6pl0}zL{D$w$a!B?V-g(ZI_KlvE<6mTSM1}ZYJ)<GHn$gz(X2PrGf@BnF`22FZE3p\\nzeEQ}u+hL;9Qb~=Xu%Mf@s=*`?7Vnht6XFSov00ygv~21%gN^aMfVs0K-h-t@Fvbtj\\nko`2DS77byo8ELYs<10I^p15q@9oW}GfUS-^b+=BimqK$B-~a#s\\n\\nliteral 0\\nHcmV?d00001\\n\\n\", \"result\": {\"duration_seconds\": 0.0773460790005629, \"exit_code\": 0, \"stderr\": \"\", \"stdout\": \"diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py\\nindex 74ac50e..4a66cde 100644\\n--- a/src/ledger/normalize.py\\n+++ b/src/ledger/normalize.py\\n@@ -1,2 +1,2 @@\\n def normalize_key(key: str) -> str:\\n-    return key\\n+    return key.strip().casefold()\\ndiff --git a/src/ledger/report.py b/src/ledger/report.py\\nindex d217602..e6f194b 100644\\n--- a/src/ledger/report.py\\n+++ b/src/ledger/report.py\\n@@ -1,4 +1,16 @@\\n from .normalize import normalize_key\\n+from decimal import Decimal, ROUND_HALF_UP\\n \\n def report(rows: list[tuple[str, str]]) -> str:\\n-    return \\\"\\\"\\n+    totals: dict[str, Decimal] = {}\\n+    for key, amount in rows:\\n+        normalized = normalize_key(key)\\n+        if not normalized:\\n+            continue\\n+        totals[normalized] = totals.get(normalized, Decimal(\\\"0\\\")) + Decimal(amount)\\n+\\n+    cents = Decimal(\\\"0.01\\\")\\n+    return \\\"\\\\n\\\".join(\\n+        f\\\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\\\"\\n+        for key, total in sorted(totals.items())\\n+    )\\ndiff --git a/checks/__pycache__/test_ledger.cpython-312.pyc b/checks/__pycache__/test_ledger.cpython-312.pyc\\nnew file mode 100644\\nindex 0000000000000000000000000000000000000000..94aca550f15dbf1c8588745eb02b7b3e66f47c0e\\nGIT binary patch\\nliteral 946\\nzcmcIiJ8#oa6h8ObPEDG$JS0ekR6MYFAde!3N~BU-Rct{t9gr8}+LxBpX~MN56pMi&\\nz1OFfk5`rzt&tPPsR8`SMOiXNuz|x6x>_qLt$QjN(kMExM$6_%LNXOlGt!)PIos=0F\\nzQ(>}!!Vm%oSO^ZiJY;R|a0VP6K%fmE&;_(|vybQRSj%Kb?=#!@K}y4BDknv^BV+#@\\nz2!PpBnw0Pvf&hmF;P8MAz|jJZT<>ePu5z3E!as=o8J<2-X38{KLpFq$(7NbF8&N#1\\nz1z-<5dC$gEOu)xHLon!rtu<`T=80ylTW3bCT&>=-xniE2Lkvk9N$yUS%*ldRUny5>\\nz`Q17hY9p@Zy(khg-g@5iLP_aHOzDvbpGK6+I<qP-I`SaudcLUmX&aSTM6nx+U{A<$\\nzx3A_?JsVGQHEXqe!KP!JXbIUX_+l1L&C-!sdUO4=)i_>y`03H^iRn+!3IBOIy-S$G\\nzYR1z0@K#ug)o?I#&7JM_W^+ri6&jPJ`08p>h!BG_so%wkNjf!IK$eX|E}*CiX?MND\\nzXMQIT$+e3uPmQ$QfA{R3m`~(ogfwhJnXY^2wT0`dyz90*K`$h^;JUPt%p(^OD{mkh\\nzLHaK(L(;LQjMf%WWdr!dnGvvw&J2%bP(o1}tSqLw)s;y4<>~set)+Wc<_>x{J-miA\\ny@J)(NMP@yl_p{p8<Sn$(ZA2ve)EHx5VeuQ>{>^pfvDc4Ji_1sF<v&1L8sIO*8_Nm+\\n\\nliteral 0\\nHcmV?d00001\\n\\ndiff --git a/src/__pycache__/__init__.cpython-312.pyc b/src/__pycache__/__init__.cpython-312.pyc\\nnew file mode 100644\\nindex 0000000000000000000000000000000000000000..ad448597dce5600c58f1e6c989f7aeae9474c983\\nGIT binary patch\\nliteral 123\\nzcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdC8b}UUzA;3keHmR\\nwUtE-|A0MBYmst`YuUAlci^C>2KczG$)vkyYsFV?ii$RQ!%#4hTMa)1J0N}0}?EnA(\\n\\nliteral 0\\nHcmV?d00001\\n\\ndiff --git a/src/ledger/__pycache__/__init__.cpython-312.pyc b/src/ledger/__pycache__/__init__.cpython-312.pyc\\nnew file mode 100644\\nindex 0000000000000000000000000000000000000000..927f20af8bb1b09e8f8ca1a41453829aa02fef4b\\nGIT binary patch\\nliteral 130\\nzcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdrKn$?UzA;3keHmR\\nzUtE-|pOc!Bo?4_IAD@|*SrQ+wS5SG2!zMRBr8Fniu80+=gAs^}L5z>gjEsy$%s>_Z\\nD&<`Az\\n\\nliteral 0\\nHcmV?d00001\\n\\ndiff --git a/src/ledger/__pycache__/normalize.cpython-312.pyc b/src/ledger/__pycache__/normalize.cpython-312.pyc\\nnew file mode 100644\\nindex 0000000000000000000000000000000000000000..12f6b39c00314ed8a5271a2bb32cc07726be0702\\nGIT binary patch\\nliteral 371\\nzcmX@j%ge<81oga&vfP05V-N=hSfGs0B0$D;h7^WWh7`tBhBTHGrWTec#!6;QmRro(\\nzsg<|bic(8Ti}I2gVLE{{6A&{4@n<_AF`c1?Aq!a+C<X$nArwOvNF^G8$ptfLGWuyU\\nz-C`{+DatIk#gUv?oSK%OlcLF31hS(TWURt3CH?aJqU_>=#N<@{;-X~zoYa)`)FS=7\\nz{G!~%oXo0Jy@JYHyl`GT(A7m8K#d^H#o|Dsf#C)>U%zFiWw-TpZuyJc@|U?4FR&<n\\nz21+r2Y-a}A4%V@fp@<VGR>Te@ZgJS;=BJeAq}mnn0J&hpB!G+$%#4hTAD9>!l_nH_\\nOU;t7xiobv;uucHou1n<r\\n\\nliteral 0\\nHcmV?d00001\\n\\ndiff --git a/src/ledger/__pycache__/report.cpython-312.pyc b/src/ledger/__pycache__/report.cpython-312.pyc\\nnew file mode 100644\\nindex 0000000000000000000000000000000000000000..bc105e0607c272460af4f48fcf094f47ea9949da\\nGIT binary patch\\nliteral 1210\\nzcmZWoO>7fK6rS0cUH`;Z8ev1@#;#lbWU4xDa{(!&pqPLFB~=kUSf!EWokTWkubEjZ\\nzjkOk$iquUTspe2Zg{lTPkSgt|9JsfKO1+eZLzsf9svO{E$sB+aZym3L!jpF9&G+8C\\nzdGC8~{|twN2;^e;Mk%f!^uK%XMC~f=BcLoJ9qHIWWt_tp>55JarA%_9Omh^@l&MT(\\nzKIWTI2Ep6?bQMli*DleVf8Lk!KfwT|unbpBUd|iEI-5Sv=AQtFQi}9tS)mB941Y3p\\nzb}~DC;^^s#>9Ze8%FQ_;HO{OWuN2%6p7=l^@U`K6^p(1dil~8Yltt$bBlH;*(@+}3\\nz>fNxFwXWWvHWhd&V&jr~f1B9U@(PE7y*q0V&y_8kO*~s2a2wln6!xW$=qo;Y@6E4O\\nzos`^+w~3?9V4Ys_TLI4iS@n7P*1pzNy*IOHJ8}l4)Jcgmb(%?MK9D&08d)O{qy0H7\\nz-{DgTLq~0NZcmpg+)!+M4SH-Vr5<Hl&o2_IO8`PYV~-47xki5=SMV}S#L_;B=E*N)\\nz4yUNZhoR4YZq_P#u`*jH=?`Znp~wCUwS2{b#&ZoqgP)SlNCHD3Rm-%X_iBMvEFmaZ\\nzlgZ@5i?@g8OnzQe^9436cwyLJ`YhwaoK;P3rK|HYFgnXB?29TNs}FY3QNt|c4KbGP\\nznZgiG9E9cBWAtnRwGfGF|HU$kC!O(Tv_(*;-`VS2XhxS4mlG@M?Qk=(J}`Di{Po88\\nzJ%9FoEc3jR(3c0^$0?1w6C=qiv$#7Yl9tS3MQQ@_VY*a{7Ap(zayu=xPEmpnbPoA4\\nz&|%47Z~Aq<0}R5Y0*Xy0kMKyxakCB{hl5Lmuwj9;H{RL3F!9f>w-);x;(Yob`tHie\\nzdUU@Nyx%{#5sGZYcmJ6CKDQdYef-Y&ucz1JM}I&5$HZ?_cjIRq&8h$GkF^5m&7r3u\\nz6pl0}zL{D$w$a!B?V-g(ZI_KlvE<6mTSM1}ZYJ)<GHn$gz(X2PrGf@BnF`22FZE3p\\nzeEQ}u+hL;9Qb~=Xu%Mf@s=*`?7Vnht6XFSov00ygv~21%gN^aMfVs0K-h-t@Fvbtj\\nko`2DS77byo8ELYs<10I^p15q@9oW}GfUS-^b+=BimqK$B-~a#s\\n\\nliteral 0\\nHcmV?d00001\\n\\n\", \"truncated\": false}}}",
+      "role": "tool",
+      "tool_call_id": "call_P4a75aCT5pJfkvwC4s9F3KBR"
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.08924004599975888, \"exit_code\": 0, \"stderr\": \"\", \"stdout\": \"edge checks passed\\n\", \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "call_cDQeZjpfcnEBNdseuXRxhhiW"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\": \"rm -rf checks/__pycache__ src/__pycache__ src/ledger/__pycache__ && git status --short\"}",
+            "name": "run_command"
+          },
+          "id": "call_8xmm5hydgrB7AFJeIVrlpxXS",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"duration_seconds\": 0.07191141300063464, \"exit_code\": 0, \"stderr\": \"\", \"stdout\": \" M src/ledger/normalize.py\\n M src/ledger/report.py\\n\", \"truncated\": false}}",
+      "role": "tool",
+      "tool_call_id": "call_8xmm5hydgrB7AFJeIVrlpxXS"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"status\": \"COMPLETED\", \"step_id\": \"complete-task\"}",
+            "name": "update_plan"
+          },
+          "id": "call_aI5cWwWzxWHxFaBr29BHYcyu",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"plan\": {\"reason\": \"Initial Plan for this Agent Run.\", \"steps\": [{\"completion_condition\": \"The requested task is completed and Task Verification has run.\", \"description\": \"Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.\", \"id\": \"complete-task\", \"status\": \"COMPLETED\"}], \"version\": 1}}}",
+      "role": "tool",
+      "tool_call_id": "call_aI5cWwWzxWHxFaBr29BHYcyu"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"changes\": [\"Implemented Unicode-aware key normalization with strip() and casefold().\", \"Implemented report aggregation using Decimal from strings, skipping empty normalized keys, summing before HALF_UP quantization to two decimals, and sorting normalized keys.\", \"Removed generated __pycache__ artifacts; only src/ledger/*.py remains changed.\"], \"rationale\": \"The implementation follows the pyproject configuration contract and scoped AGENTS.md instructions without modifying configuration, checks, or documentation.\", \"risks\": [\"The report output format was inferred from the existing function and checks; configured behavior is covered by the available tests and additional edge checks.\"], \"root_cause\": \"normalize_key was a passthrough and report was unimplemented, so configured normalization, exact monetary aggregation, rounding, filtering, and ordering were absent.\"}",
+            "name": "finish_task"
+          },
+          "id": "call_NfFLGFmpB6ry2iEeE46yEAwG",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"ok\": true, \"result\": {\"completion_allowed\": true, \"evidence_scope\": \"model_selected_checks\", \"final_patch\": \"diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py\\nindex 74ac50e..4a66cde 100644\\n--- a/src/ledger/normalize.py\\n+++ b/src/ledger/normalize.py\\n@@ -1,2 +1,2 @@\\n def normalize_key(key: str) -> str:\\n-    return key\\n+    return key.strip().casefold()\\ndiff --git a/src/ledger/report.py b/src/ledger/report.py\\nindex d217602..e6f194b 100644\\n--- a/src/ledger/report.py\\n+++ b/src/ledger/report.py\\n@@ -1,4 +1,16 @@\\n from .normalize import normalize_key\\n+from decimal import Decimal, ROUND_HALF_UP\\n \\n def report(rows: list[tuple[str, str]]) -> str:\\n-    return \\\"\\\"\\n+    totals: dict[str, Decimal] = {}\\n+    for key, amount in rows:\\n+        normalized = normalize_key(key)\\n+        if not normalized:\\n+            continue\\n+        totals[normalized] = totals.get(normalized, Decimal(\\\"0\\\")) + Decimal(amount)\\n+\\n+    cents = Decimal(\\\"0.01\\\")\\n+    return \\\"\\\\n\\\".join(\\n+        f\\\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\\\"\\n+        for key, total in sorted(totals.items())\\n+    )\\n\", \"report\": {\"changes\": [\"Implemented Unicode-aware key normalization with strip() and casefold().\", \"Implemented report aggregation using Decimal from strings, skipping empty normalized keys, summing before HALF_UP quantization to two decimals, and sorting normalized keys.\", \"Removed generated __pycache__ artifacts; only src/ledger/*.py remains changed.\"], \"rationale\": \"The implementation follows the pyproject configuration contract and scoped AGENTS.md instructions without modifying configuration, checks, or documentation.\", \"risks\": [\"The report output format was inferred from the existing function and checks; configured behavior is covered by the available tests and additional edge checks.\"], \"root_cause\": \"normalize_key was a passthrough and report was unimplemented, so configured normalization, exact monetary aggregation, rounding, filtering, and ordering were absent.\"}, \"required_verifications\": [], \"status\": \"SUCCEEDED\", \"verifications\": [{\"after_fingerprint\": \"5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023\", \"before_fingerprint\": \"5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023\", \"check_id\": \"configured-unittest\", \"command\": \"python -m unittest discover -s checks\", \"explicit_check_id\": true, \"plan_step_ids\": [\"complete-task\"], \"reason\": \"Run the test command documented in pyproject.toml after implementing normalize_key and report.\", \"result\": {\"duration_seconds\": 0.22610936999990372, \"exit_code\": 0, \"stderr\": \"..\\n----------------------------------------------------------------------\\nRan 2 tests in 0.000s\\n\\nOK\\n\", \"stdout\": \"\", \"truncated\": false}, \"scope\": \"Repository checks for src/ledger behavior\", \"sequence\": 1, \"supersedes\": []}]}}",
+      "role": "tool",
+      "tool_call_id": "call_NfFLGFmpB6ry2iEeE46yEAwG"
+    }
+  ],
+  "model": {
+    "backend": "litellm",
+    "base_url": "[REDACTED]",
+    "model_kwargs": {
+      "max_tokens": 4096,
+      "stream": true,
+      "temperature": 1,
+      "timeout": 120
+    },
+    "model_name": "openai/gpt-5.6-luna"
+  },
+  "pending_tool_calls": [],
+  "plan": {
+    "reason": "Initial Plan for this Agent Run.",
+    "steps": [
+      {
+        "completion_condition": "The requested task is completed and Task Verification has run.",
+        "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+        "id": "complete-task",
+        "status": "COMPLETED"
+      }
+    ],
+    "version": 1
+  },
+  "plan_history": [
+    {
+      "reason": "Initial Plan for this Agent Run.",
+      "steps": [
+        {
+          "completion_condition": "The requested task is completed and Task Verification has run.",
+          "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+          "id": "complete-task",
+          "status": "COMPLETED"
+        }
+      ],
+      "version": 1
+    }
+  ],
+  "previous_tool_observation": "{\"arguments\": {\"status\": \"COMPLETED\", \"step_id\": \"complete-task\"}, \"observation\": {\"ok\": true, \"result\": {\"plan\": {\"reason\": \"Initial Plan for this Agent Run.\", \"steps\": [{\"completion_condition\": \"The requested task is completed and Task Verification has run.\", \"description\": \"Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.\", \"id\": \"complete-task\", \"status\": \"COMPLETED\"}], \"version\": 1}}}, \"tool_name\": \"update_plan\"}",
+  "recoveries": [],
+  "recovery": {
+    "consecutive_failures": 0
+  },
+  "rejected_call_id": null,
+  "repository": {
+    "diff_fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+    "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-luna/full/profile-ledger/repopilot/workspace",
+    "head": "87d499bd8afd8bdd889f807a950e2545e9ff789e",
+    "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-luna/full/profile-ledger/repopilot/workspace",
+    "status": " M src/ledger/normalize.py\n M src/ledger/report.py\n"
+  },
+  "repository_baseline": {
+    "state": {
+      "diff_fingerprint": "38021d67d40f3bb3294b871b756b31fde3443c138b8db5ac81631f9055bd25e2",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-luna/full/profile-ledger/repopilot/workspace",
+      "head": "87d499bd8afd8bdd889f807a950e2545e9ff789e",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue24-effective-ablation/runs/gpt-5.6-luna/full/profile-ledger/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "89d373d02ddee793bea03a65f34b8cef89bc4ed1"
+  },
+  "run_id": "6321476f1ca244a5b0a2abc28a47123e",
+  "schema_version": 2,
+  "status": "SUCCEEDED",
+  "task": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+  "tool_results": [
+    {
+      "arguments": {
+        "status": "IN_PROGRESS",
+        "step_id": "complete-task"
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "plan": {
+            "reason": "Initial Plan for this Agent Run.",
+            "steps": [
+              {
+                "completion_condition": "The requested task is completed and Task Verification has run.",
+                "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+                "id": "complete-task",
+                "status": "IN_PROGRESS"
+              }
+            ],
+            "version": 1
+          }
+        }
+      },
+      "tool_call_id": "call_0ixuEUdIQBTrqoVJl4ThJPw9",
+      "tool_name": "update_plan"
+    },
+    {
+      "arguments": {
+        "max_results": 200,
+        "offset": 0,
+        "path": "."
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.07512299099835218,
+          "exit_code": 0,
+          "next_offset": null,
+          "stderr": "",
+          "stdout": "AGENTS.md\nchecks/test_ledger.py\npyproject.toml\nsrc/__init__.py\nsrc/ledger/AGENTS.md\nsrc/ledger/__init__.py\nsrc/ledger/normalize.py\nsrc/ledger/report.py",
+          "total_results": 8,
+          "truncated": false
+        }
+      },
+      "tool_call_id": "call_19JOU0yvTJKWgtATfxSzcuue",
+      "tool_name": "list_files"
+    },
+    {
+      "arguments": {
+        "max_lines": 200,
+        "path": "AGENTS.md",
+        "start_line": 1
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.0662840810000489,
+          "exit_code": 0,
+          "repository_instructions": [
+            {
+              "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+              "scope": ".",
+              "source": "AGENTS.md"
+            }
+          ],
+          "stderr": "",
+          "stdout": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+          "truncated": false
+        }
+      },
+      "tool_call_id": "call_fvSAvhwPVKc2SMPjSV4PgnNJ",
+      "tool_name": "read_file"
+    },
+    {
+      "arguments": {
+        "max_lines": 200,
+        "path": "pyproject.toml",
+        "start_line": 1
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.06627050200040685,
+          "exit_code": 0,
+          "repository_instructions": [
+            {
+              "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+              "scope": ".",
+              "source": "AGENTS.md"
+            }
+          ],
+          "stderr": "",
+          "stdout": "[project]\nname = \"ledger-fixture\"\nversion = \"0.0.1\"\n[tool.ledger]\ntest-command = \"python -m unittest discover -s checks\"\nkey-normalization = \"strip then Unicode casefold\"\nrounding = \"sum exact Decimal amounts per normalized key, then round HALF_UP to 2 places\"\nempty-key = \"skip\"\noutput-order = \"normalized key ascending\"\n",
+          "truncated": false
+        }
+      },
+      "tool_call_id": "call_djpwWY5x0vKGRDRq6V66vc4j",
+      "tool_name": "read_file"
+    },
+    {
+      "arguments": {
+        "max_results": 200,
+        "offset": 0,
+        "path": "src/ledger"
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.06416144800095935,
+          "exit_code": 0,
+          "next_offset": null,
+          "stderr": "",
+          "stdout": "src/ledger/AGENTS.md\nsrc/ledger/__init__.py\nsrc/ledger/normalize.py\nsrc/ledger/report.py",
+          "total_results": 4,
+          "truncated": false
+        }
+      },
+      "tool_call_id": "call_FT8TdpsirG7y4UoIKzgZnf9r",
+      "tool_name": "list_files"
+    },
+    {
+      "arguments": {
+        "max_lines": 200,
+        "path": "src/ledger/AGENTS.md",
+        "start_line": 1
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.06281946099989,
+          "exit_code": 0,
+          "repository_instructions": [
+            {
+              "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+              "scope": ".",
+              "source": "AGENTS.md"
+            },
+            {
+              "content": "Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.",
+              "scope": "src/ledger",
+              "source": "src/ledger/AGENTS.md"
+            }
+          ],
+          "stderr": "",
+          "stdout": "Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.",
+          "truncated": false
+        }
+      },
+      "tool_call_id": "call_MYK09SQBUohnJj3rEjRTxjrp",
+      "tool_name": "read_file"
+    },
+    {
+      "arguments": {
+        "max_lines": 300,
+        "path": "src/ledger/normalize.py",
+        "start_line": 1
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.06366058399726171,
+          "exit_code": 0,
+          "repository_instructions": [
+            {
+              "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+              "scope": ".",
+              "source": "AGENTS.md"
+            },
+            {
+              "content": "Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.",
+              "scope": "src/ledger",
+              "source": "src/ledger/AGENTS.md"
+            }
+          ],
+          "stderr": "",
+          "stdout": "def normalize_key(key: str) -> str:\n    return key\n",
+          "truncated": false
+        }
+      },
+      "tool_call_id": "call_cbCcZZlS65ni1IQSLtV37wvy",
+      "tool_name": "read_file"
+    },
+    {
+      "arguments": {
+        "max_lines": 400,
+        "path": "src/ledger/report.py",
+        "start_line": 1
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.06264604599709855,
+          "exit_code": 0,
+          "repository_instructions": [
+            {
+              "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+              "scope": ".",
+              "source": "AGENTS.md"
+            },
+            {
+              "content": "Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.",
+              "scope": "src/ledger",
+              "source": "src/ledger/AGENTS.md"
+            }
+          ],
+          "stderr": "",
+          "stdout": "from .normalize import normalize_key\n\ndef report(rows: list[tuple[str, str]]) -> str:\n    return \"\"\n",
+          "truncated": false
+        }
+      },
+      "tool_call_id": "call_md3AtKWNUERsyx8QPY05Y5Dp",
+      "tool_name": "read_file"
+    },
+    {
+      "arguments": {
+        "max_lines": 400,
+        "path": "src/ledger/__init__.py",
+        "start_line": 1
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.06430855399958091,
+          "exit_code": 0,
+          "repository_instructions": [
+            {
+              "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+              "scope": ".",
+              "source": "AGENTS.md"
+            },
+            {
+              "content": "Use Decimal constructed from strings for amounts; do not convert through float. Preserve function signatures. Strip/casefold keys, including Unicode. Return rendered text, not printed output.",
+              "scope": "src/ledger",
+              "source": "src/ledger/AGENTS.md"
+            }
+          ],
+          "stderr": "",
+          "stdout": "",
+          "truncated": false
+        }
+      },
+      "tool_call_id": "call_Fpcgh5RpEZ0y9cw5F3SfsNXN",
+      "tool_name": "read_file"
+    },
+    {
+      "arguments": {
+        "max_lines": 500,
+        "path": "checks/test_ledger.py",
+        "start_line": 1
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.06393818099968485,
+          "exit_code": 0,
+          "repository_instructions": [
+            {
+              "content": "Only change src/ledger/*.py. Keep configuration, checks, docs and all AGENTS.md unchanged. Read scoped instructions before editing. The test entry is documented in pyproject.toml.",
+              "scope": ".",
+              "source": "AGENTS.md"
+            }
+          ],
+          "stderr": "",
+          "stdout": "import unittest\nfrom src.ledger.report import report\nclass Checks(unittest.TestCase):\n    def test_report(self):\n        self.assertEqual(report([(\" A \",\"1.005\"),(\"a\",\"1.005\"),(\"B\",\"-0.005\")]), \"a=2.01\\nb=-0.01\")\n    def test_unicode(self):\n        self.assertEqual(report([(\" Stra\u00dfe \",\"1\"),(\"STRASSE\",\"2\"),(\" \",\"99\")]), \"strasse=3.00\")\n",
+          "truncated": false
+        }
+      },
+      "tool_call_id": "call_0F0VS4CHBYkkJm7XarU9yuIX",
+      "tool_name": "read_file"
+    },
+    {
+      "arguments": {
+        "patch": "*** Begin Patch\n*** Update File: src/ledger/normalize.py\n@@\n def normalize_key(key: str) -> str:\n-    return key\n+    return key.strip().casefold()\n*** Update File: src/ledger/report.py\n@@\n from .normalize import normalize_key\n+from decimal import Decimal, ROUND_HALF_UP\n \n def report(rows: list[tuple[str, str]]) -> str:\n-    return \"\"\n+    totals: dict[str, Decimal] = {}\n+    for key, amount in rows:\n+        normalized = normalize_key(key)\n+        if not normalized:\n+            continue\n+        totals[normalized] = totals.get(normalized, Decimal(\"0\")) + Decimal(amount)\n+\n+    cents = Decimal(\"0.01\")\n+    return \"\\n\".join(\n+        f\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\"\n+        for key, total in sorted(totals.items())\n+    )\n*** End Patch"
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "applied": true,
+          "result": {
+            "duration_seconds": 0.06678809400182217,
+            "exit_code": 0,
+            "stderr": "",
+            "stdout": "",
+            "truncated": false
+          }
+        }
+      },
+      "tool_call_id": "call_tNazpCAmdkvVupt5awzQkVTv",
+      "tool_name": "apply_patch"
+    },
+    {
+      "arguments": {
+        "check_id": "configured-unittest",
+        "command": "python -m unittest discover -s checks",
+        "reason": "Run the test command documented in pyproject.toml after implementing normalize_key and report.",
+        "scope": "Repository checks for src/ledger behavior",
+        "step_ids": [
+          "complete-task"
+        ],
+        "supersedes": []
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "after_fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+          "before_fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+          "check_id": "configured-unittest",
+          "command": "python -m unittest discover -s checks",
+          "explicit_check_id": true,
+          "plan_step_ids": [
+            "complete-task"
+          ],
+          "reason": "Run the test command documented in pyproject.toml after implementing normalize_key and report.",
+          "result": {
+            "duration_seconds": 0.22610936999990372,
+            "exit_code": 0,
+            "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+            "stdout": "",
+            "truncated": false
+          },
+          "scope": "Repository checks for src/ledger behavior",
+          "sequence": 1,
+          "supersedes": []
+        }
+      },
+      "tool_call_id": "call_YUNgRxEzkYIjAySX0Ng1GLzS",
+      "tool_name": "verify_task"
+    },
+    {
+      "arguments": {},
+      "observation": {
+        "ok": true,
+        "result": {
+          "patch": "diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py\nindex 74ac50e..4a66cde 100644\n--- a/src/ledger/normalize.py\n+++ b/src/ledger/normalize.py\n@@ -1,2 +1,2 @@\n def normalize_key(key: str) -> str:\n-    return key\n+    return key.strip().casefold()\ndiff --git a/src/ledger/report.py b/src/ledger/report.py\nindex d217602..e6f194b 100644\n--- a/src/ledger/report.py\n+++ b/src/ledger/report.py\n@@ -1,4 +1,16 @@\n from .normalize import normalize_key\n+from decimal import Decimal, ROUND_HALF_UP\n \n def report(rows: list[tuple[str, str]]) -> str:\n-    return \"\"\n+    totals: dict[str, Decimal] = {}\n+    for key, amount in rows:\n+        normalized = normalize_key(key)\n+        if not normalized:\n+            continue\n+        totals[normalized] = totals.get(normalized, Decimal(\"0\")) + Decimal(amount)\n+\n+    cents = Decimal(\"0.01\")\n+    return \"\\n\".join(\n+        f\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\"\n+        for key, total in sorted(totals.items())\n+    )\ndiff --git a/checks/__pycache__/test_ledger.cpython-312.pyc b/checks/__pycache__/test_ledger.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..94aca550f15dbf1c8588745eb02b7b3e66f47c0e\nGIT binary patch\nliteral 946\nzcmcIiJ8#oa6h8ObPEDG$JS0ekR6MYFAde!3N~BU-Rct{t9gr8}+LxBpX~MN56pMi&\nz1OFfk5`rzt&tPPsR8`SMOiXNuz|x6x>_qLt$QjN(kMExM$6_%LNXOlGt!)PIos=0F\nzQ(>}!!Vm%oSO^ZiJY;R|a0VP6K%fmE&;_(|vybQRSj%Kb?=#!@K}y4BDknv^BV+#@\nz2!PpBnw0Pvf&hmF;P8MAz|jJZT<>ePu5z3E!as=o8J<2-X38{KLpFq$(7NbF8&N#1\nz1z-<5dC$gEOu)xHLon!rtu<`T=80ylTW3bCT&>=-xniE2Lkvk9N$yUS%*ldRUny5>\nz`Q17hY9p@Zy(khg-g@5iLP_aHOzDvbpGK6+I<qP-I`SaudcLUmX&aSTM6nx+U{A<$\nzx3A_?JsVGQHEXqe!KP!JXbIUX_+l1L&C-!sdUO4=)i_>y`03H^iRn+!3IBOIy-S$G\nzYR1z0@K#ug)o?I#&7JM_W^+ri6&jPJ`08p>h!BG_so%wkNjf!IK$eX|E}*CiX?MND\nzXMQIT$+e3uPmQ$QfA{R3m`~(ogfwhJnXY^2wT0`dyz90*K`$h^;JUPt%p(^OD{mkh\nzLHaK(L(;LQjMf%WWdr!dnGvvw&J2%bP(o1}tSqLw)s;y4<>~set)+Wc<_>x{J-miA\ny@J)(NMP@yl_p{p8<Sn$(ZA2ve)EHx5VeuQ>{>^pfvDc4Ji_1sF<v&1L8sIO*8_Nm+\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/__pycache__/__init__.cpython-312.pyc b/src/__pycache__/__init__.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..ad448597dce5600c58f1e6c989f7aeae9474c983\nGIT binary patch\nliteral 123\nzcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdC8b}UUzA;3keHmR\nwUtE-|A0MBYmst`YuUAlci^C>2KczG$)vkyYsFV?ii$RQ!%#4hTMa)1J0N}0}?EnA(\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/ledger/__pycache__/__init__.cpython-312.pyc b/src/ledger/__pycache__/__init__.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..927f20af8bb1b09e8f8ca1a41453829aa02fef4b\nGIT binary patch\nliteral 130\nzcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdrKn$?UzA;3keHmR\nzUtE-|pOc!Bo?4_IAD@|*SrQ+wS5SG2!zMRBr8Fniu80+=gAs^}L5z>gjEsy$%s>_Z\nD&<`Az\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/ledger/__pycache__/normalize.cpython-312.pyc b/src/ledger/__pycache__/normalize.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..12f6b39c00314ed8a5271a2bb32cc07726be0702\nGIT binary patch\nliteral 371\nzcmX@j%ge<81oga&vfP05V-N=hSfGs0B0$D;h7^WWh7`tBhBTHGrWTec#!6;QmRro(\nzsg<|bic(8Ti}I2gVLE{{6A&{4@n<_AF`c1?Aq!a+C<X$nArwOvNF^G8$ptfLGWuyU\nz-C`{+DatIk#gUv?oSK%OlcLF31hS(TWURt3CH?aJqU_>=#N<@{;-X~zoYa)`)FS=7\nz{G!~%oXo0Jy@JYHyl`GT(A7m8K#d^H#o|Dsf#C)>U%zFiWw-TpZuyJc@|U?4FR&<n\nz21+r2Y-a}A4%V@fp@<VGR>Te@ZgJS;=BJeAq}mnn0J&hpB!G+$%#4hTAD9>!l_nH_\nOU;t7xiobv;uucHou1n<r\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/ledger/__pycache__/report.cpython-312.pyc b/src/ledger/__pycache__/report.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..bc105e0607c272460af4f48fcf094f47ea9949da\nGIT binary patch\nliteral 1210\nzcmZWoO>7fK6rS0cUH`;Z8ev1@#;#lbWU4xDa{(!&pqPLFB~=kUSf!EWokTWkubEjZ\nzjkOk$iquUTspe2Zg{lTPkSgt|9JsfKO1+eZLzsf9svO{E$sB+aZym3L!jpF9&G+8C\nzdGC8~{|twN2;^e;Mk%f!^uK%XMC~f=BcLoJ9qHIWWt_tp>55JarA%_9Omh^@l&MT(\nzKIWTI2Ep6?bQMli*DleVf8Lk!KfwT|unbpBUd|iEI-5Sv=AQtFQi}9tS)mB941Y3p\nzb}~DC;^^s#>9Ze8%FQ_;HO{OWuN2%6p7=l^@U`K6^p(1dil~8Yltt$bBlH;*(@+}3\nz>fNxFwXWWvHWhd&V&jr~f1B9U@(PE7y*q0V&y_8kO*~s2a2wln6!xW$=qo;Y@6E4O\nzos`^+w~3?9V4Ys_TLI4iS@n7P*1pzNy*IOHJ8}l4)Jcgmb(%?MK9D&08d)O{qy0H7\nz-{DgTLq~0NZcmpg+)!+M4SH-Vr5<Hl&o2_IO8`PYV~-47xki5=SMV}S#L_;B=E*N)\nz4yUNZhoR4YZq_P#u`*jH=?`Znp~wCUwS2{b#&ZoqgP)SlNCHD3Rm-%X_iBMvEFmaZ\nzlgZ@5i?@g8OnzQe^9436cwyLJ`YhwaoK;P3rK|HYFgnXB?29TNs}FY3QNt|c4KbGP\nznZgiG9E9cBWAtnRwGfGF|HU$kC!O(Tv_(*;-`VS2XhxS4mlG@M?Qk=(J}`Di{Po88\nzJ%9FoEc3jR(3c0^$0?1w6C=qiv$#7Yl9tS3MQQ@_VY*a{7Ap(zayu=xPEmpnbPoA4\nz&|%47Z~Aq<0}R5Y0*Xy0kMKyxakCB{hl5Lmuwj9;H{RL3F!9f>w-);x;(Yob`tHie\nzdUU@Nyx%{#5sGZYcmJ6CKDQdYef-Y&ucz1JM}I&5$HZ?_cjIRq&8h$GkF^5m&7r3u\nz6pl0}zL{D$w$a!B?V-g(ZI_KlvE<6mTSM1}ZYJ)<GHn$gz(X2PrGf@BnF`22FZE3p\nzeEQ}u+hL;9Qb~=Xu%Mf@s=*`?7Vnht6XFSov00ygv~21%gN^aMfVs0K-h-t@Fvbtj\nko`2DS77byo8ELYs<10I^p15q@9oW}GfUS-^b+=BimqK$B-~a#s\n\nliteral 0\nHcmV?d00001\n\n",
+          "result": {
+            "duration_seconds": 0.0773460790005629,
+            "exit_code": 0,
+            "stderr": "",
+            "stdout": "diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py\nindex 74ac50e..4a66cde 100644\n--- a/src/ledger/normalize.py\n+++ b/src/ledger/normalize.py\n@@ -1,2 +1,2 @@\n def normalize_key(key: str) -> str:\n-    return key\n+    return key.strip().casefold()\ndiff --git a/src/ledger/report.py b/src/ledger/report.py\nindex d217602..e6f194b 100644\n--- a/src/ledger/report.py\n+++ b/src/ledger/report.py\n@@ -1,4 +1,16 @@\n from .normalize import normalize_key\n+from decimal import Decimal, ROUND_HALF_UP\n \n def report(rows: list[tuple[str, str]]) -> str:\n-    return \"\"\n+    totals: dict[str, Decimal] = {}\n+    for key, amount in rows:\n+        normalized = normalize_key(key)\n+        if not normalized:\n+            continue\n+        totals[normalized] = totals.get(normalized, Decimal(\"0\")) + Decimal(amount)\n+\n+    cents = Decimal(\"0.01\")\n+    return \"\\n\".join(\n+        f\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\"\n+        for key, total in sorted(totals.items())\n+    )\ndiff --git a/checks/__pycache__/test_ledger.cpython-312.pyc b/checks/__pycache__/test_ledger.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..94aca550f15dbf1c8588745eb02b7b3e66f47c0e\nGIT binary patch\nliteral 946\nzcmcIiJ8#oa6h8ObPEDG$JS0ekR6MYFAde!3N~BU-Rct{t9gr8}+LxBpX~MN56pMi&\nz1OFfk5`rzt&tPPsR8`SMOiXNuz|x6x>_qLt$QjN(kMExM$6_%LNXOlGt!)PIos=0F\nzQ(>}!!Vm%oSO^ZiJY;R|a0VP6K%fmE&;_(|vybQRSj%Kb?=#!@K}y4BDknv^BV+#@\nz2!PpBnw0Pvf&hmF;P8MAz|jJZT<>ePu5z3E!as=o8J<2-X38{KLpFq$(7NbF8&N#1\nz1z-<5dC$gEOu)xHLon!rtu<`T=80ylTW3bCT&>=-xniE2Lkvk9N$yUS%*ldRUny5>\nz`Q17hY9p@Zy(khg-g@5iLP_aHOzDvbpGK6+I<qP-I`SaudcLUmX&aSTM6nx+U{A<$\nzx3A_?JsVGQHEXqe!KP!JXbIUX_+l1L&C-!sdUO4=)i_>y`03H^iRn+!3IBOIy-S$G\nzYR1z0@K#ug)o?I#&7JM_W^+ri6&jPJ`08p>h!BG_so%wkNjf!IK$eX|E}*CiX?MND\nzXMQIT$+e3uPmQ$QfA{R3m`~(ogfwhJnXY^2wT0`dyz90*K`$h^;JUPt%p(^OD{mkh\nzLHaK(L(;LQjMf%WWdr!dnGvvw&J2%bP(o1}tSqLw)s;y4<>~set)+Wc<_>x{J-miA\ny@J)(NMP@yl_p{p8<Sn$(ZA2ve)EHx5VeuQ>{>^pfvDc4Ji_1sF<v&1L8sIO*8_Nm+\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/__pycache__/__init__.cpython-312.pyc b/src/__pycache__/__init__.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..ad448597dce5600c58f1e6c989f7aeae9474c983\nGIT binary patch\nliteral 123\nzcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdC8b}UUzA;3keHmR\nwUtE-|A0MBYmst`YuUAlci^C>2KczG$)vkyYsFV?ii$RQ!%#4hTMa)1J0N}0}?EnA(\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/ledger/__pycache__/__init__.cpython-312.pyc b/src/ledger/__pycache__/__init__.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..927f20af8bb1b09e8f8ca1a41453829aa02fef4b\nGIT binary patch\nliteral 130\nzcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdrKn$?UzA;3keHmR\nzUtE-|pOc!Bo?4_IAD@|*SrQ+wS5SG2!zMRBr8Fniu80+=gAs^}L5z>gjEsy$%s>_Z\nD&<`Az\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/ledger/__pycache__/normalize.cpython-312.pyc b/src/ledger/__pycache__/normalize.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..12f6b39c00314ed8a5271a2bb32cc07726be0702\nGIT binary patch\nliteral 371\nzcmX@j%ge<81oga&vfP05V-N=hSfGs0B0$D;h7^WWh7`tBhBTHGrWTec#!6;QmRro(\nzsg<|bic(8Ti}I2gVLE{{6A&{4@n<_AF`c1?Aq!a+C<X$nArwOvNF^G8$ptfLGWuyU\nz-C`{+DatIk#gUv?oSK%OlcLF31hS(TWURt3CH?aJqU_>=#N<@{;-X~zoYa)`)FS=7\nz{G!~%oXo0Jy@JYHyl`GT(A7m8K#d^H#o|Dsf#C)>U%zFiWw-TpZuyJc@|U?4FR&<n\nz21+r2Y-a}A4%V@fp@<VGR>Te@ZgJS;=BJeAq}mnn0J&hpB!G+$%#4hTAD9>!l_nH_\nOU;t7xiobv;uucHou1n<r\n\nliteral 0\nHcmV?d00001\n\ndiff --git a/src/ledger/__pycache__/report.cpython-312.pyc b/src/ledger/__pycache__/report.cpython-312.pyc\nnew file mode 100644\nindex 0000000000000000000000000000000000000000..bc105e0607c272460af4f48fcf094f47ea9949da\nGIT binary patch\nliteral 1210\nzcmZWoO>7fK6rS0cUH`;Z8ev1@#;#lbWU4xDa{(!&pqPLFB~=kUSf!EWokTWkubEjZ\nzjkOk$iquUTspe2Zg{lTPkSgt|9JsfKO1+eZLzsf9svO{E$sB+aZym3L!jpF9&G+8C\nzdGC8~{|twN2;^e;Mk%f!^uK%XMC~f=BcLoJ9qHIWWt_tp>55JarA%_9Omh^@l&MT(\nzKIWTI2Ep6?bQMli*DleVf8Lk!KfwT|unbpBUd|iEI-5Sv=AQtFQi}9tS)mB941Y3p\nzb}~DC;^^s#>9Ze8%FQ_;HO{OWuN2%6p7=l^@U`K6^p(1dil~8Yltt$bBlH;*(@+}3\nz>fNxFwXWWvHWhd&V&jr~f1B9U@(PE7y*q0V&y_8kO*~s2a2wln6!xW$=qo;Y@6E4O\nzos`^+w~3?9V4Ys_TLI4iS@n7P*1pzNy*IOHJ8}l4)Jcgmb(%?MK9D&08d)O{qy0H7\nz-{DgTLq~0NZcmpg+)!+M4SH-Vr5<Hl&o2_IO8`PYV~-47xki5=SMV}S#L_;B=E*N)\nz4yUNZhoR4YZq_P#u`*jH=?`Znp~wCUwS2{b#&ZoqgP)SlNCHD3Rm-%X_iBMvEFmaZ\nzlgZ@5i?@g8OnzQe^9436cwyLJ`YhwaoK;P3rK|HYFgnXB?29TNs}FY3QNt|c4KbGP\nznZgiG9E9cBWAtnRwGfGF|HU$kC!O(Tv_(*;-`VS2XhxS4mlG@M?Qk=(J}`Di{Po88\nzJ%9FoEc3jR(3c0^$0?1w6C=qiv$#7Yl9tS3MQQ@_VY*a{7Ap(zayu=xPEmpnbPoA4\nz&|%47Z~Aq<0}R5Y0*Xy0kMKyxakCB{hl5Lmuwj9;H{RL3F!9f>w-);x;(Yob`tHie\nzdUU@Nyx%{#5sGZYcmJ6CKDQdYef-Y&ucz1JM}I&5$HZ?_cjIRq&8h$GkF^5m&7r3u\nz6pl0}zL{D$w$a!B?V-g(ZI_KlvE<6mTSM1}ZYJ)<GHn$gz(X2PrGf@BnF`22FZE3p\nzeEQ}u+hL;9Qb~=Xu%Mf@s=*`?7Vnht6XFSov00ygv~21%gN^aMfVs0K-h-t@Fvbtj\nko`2DS77byo8ELYs<10I^p15q@9oW}GfUS-^b+=BimqK$B-~a#s\n\nliteral 0\nHcmV?d00001\n\n",
+            "truncated": false
+          }
+        }
+      },
+      "tool_call_id": "call_P4a75aCT5pJfkvwC4s9F3KBR",
+      "tool_name": "view_diff"
+    },
+    {
+      "arguments": {
+        "command": "python - <<'PY'\nfrom src.ledger.report import report\nassert report([]) == ''\nassert report([(' \u00c9 ', '1.005'), ('\u00e9', '0.005')]) == '\u00e9=1.01'\nassert report([('x', '-0.005')]) == 'x=-0.01'\nprint('edge checks passed')\nPY"
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.08924004599975888,
+          "exit_code": 0,
+          "stderr": "",
+          "stdout": "edge checks passed\n",
+          "truncated": false
+        }
+      },
+      "tool_call_id": "call_cDQeZjpfcnEBNdseuXRxhhiW",
+      "tool_name": "run_command"
+    },
+    {
+      "arguments": {
+        "command": "rm -rf checks/__pycache__ src/__pycache__ src/ledger/__pycache__ && git status --short"
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "duration_seconds": 0.07191141300063464,
+          "exit_code": 0,
+          "stderr": "",
+          "stdout": " M src/ledger/normalize.py\n M src/ledger/report.py\n",
+          "truncated": false
+        }
+      },
+      "tool_call_id": "call_8xmm5hydgrB7AFJeIVrlpxXS",
+      "tool_name": "run_command"
+    },
+    {
+      "arguments": {
+        "status": "COMPLETED",
+        "step_id": "complete-task"
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "plan": {
+            "reason": "Initial Plan for this Agent Run.",
+            "steps": [
+              {
+                "completion_condition": "The requested task is completed and Task Verification has run.",
+                "description": "Implement normalize_key and report in src/ledger according to the configuration contract. Discover and run the configured test entry, observe scoped repository instructions, and verify final behavior. Keep configuration, instructions and checks unchanged.",
+                "id": "complete-task",
+                "status": "COMPLETED"
+              }
+            ],
+            "version": 1
+          }
+        }
+      },
+      "tool_call_id": "call_aI5cWwWzxWHxFaBr29BHYcyu",
+      "tool_name": "update_plan"
+    },
+    {
+      "arguments": {
+        "changes": [
+          "Implemented Unicode-aware key normalization with strip() and casefold().",
+          "Implemented report aggregation using Decimal from strings, skipping empty normalized keys, summing before HALF_UP quantization to two decimals, and sorting normalized keys.",
+          "Removed generated __pycache__ artifacts; only src/ledger/*.py remains changed."
+        ],
+        "rationale": "The implementation follows the pyproject configuration contract and scoped AGENTS.md instructions without modifying configuration, checks, or documentation.",
+        "risks": [
+          "The report output format was inferred from the existing function and checks; configured behavior is covered by the available tests and additional edge checks."
+        ],
+        "root_cause": "normalize_key was a passthrough and report was unimplemented, so configured normalization, exact monetary aggregation, rounding, filtering, and ordering were absent."
+      },
+      "observation": {
+        "ok": true,
+        "result": {
+          "completion_allowed": true,
+          "evidence_scope": "model_selected_checks",
+          "final_patch": "diff --git a/src/ledger/normalize.py b/src/ledger/normalize.py\nindex 74ac50e..4a66cde 100644\n--- a/src/ledger/normalize.py\n+++ b/src/ledger/normalize.py\n@@ -1,2 +1,2 @@\n def normalize_key(key: str) -> str:\n-    return key\n+    return key.strip().casefold()\ndiff --git a/src/ledger/report.py b/src/ledger/report.py\nindex d217602..e6f194b 100644\n--- a/src/ledger/report.py\n+++ b/src/ledger/report.py\n@@ -1,4 +1,16 @@\n from .normalize import normalize_key\n+from decimal import Decimal, ROUND_HALF_UP\n \n def report(rows: list[tuple[str, str]]) -> str:\n-    return \"\"\n+    totals: dict[str, Decimal] = {}\n+    for key, amount in rows:\n+        normalized = normalize_key(key)\n+        if not normalized:\n+            continue\n+        totals[normalized] = totals.get(normalized, Decimal(\"0\")) + Decimal(amount)\n+\n+    cents = Decimal(\"0.01\")\n+    return \"\\n\".join(\n+        f\"{key}={total.quantize(cents, rounding=ROUND_HALF_UP):.2f}\"\n+        for key, total in sorted(totals.items())\n+    )\n",
+          "report": {
+            "changes": [
+              "Implemented Unicode-aware key normalization with strip() and casefold().",
+              "Implemented report aggregation using Decimal from strings, skipping empty normalized keys, summing before HALF_UP quantization to two decimals, and sorting normalized keys.",
+              "Removed generated __pycache__ artifacts; only src/ledger/*.py remains changed."
+            ],
+            "rationale": "The implementation follows the pyproject configuration contract and scoped AGENTS.md instructions without modifying configuration, checks, or documentation.",
+            "risks": [
+              "The report output format was inferred from the existing function and checks; configured behavior is covered by the available tests and additional edge checks."
+            ],
+            "root_cause": "normalize_key was a passthrough and report was unimplemented, so configured normalization, exact monetary aggregation, rounding, filtering, and ordering were absent."
+          },
+          "required_verifications": [],
+          "status": "SUCCEEDED",
+          "verifications": [
+            {
+              "after_fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+              "before_fingerprint": "5f53150de3d2085a7281dc34d830784d3db4f6292b4165e42ad3b53a954fc023",
+              "check_id": "configured-unittest",
+              "command": "python -m unittest discover -s checks",
+              "explicit_check_id": true,
+              "plan_step_ids": [
+                "complete-task"
+              ],
+              "reason": "Run the test command documented in pyproject.toml after implementing normalize_key and report.",
+              "result": {
+                "duration_seconds": 0.22610936999990372,
+                "exit_code": 0,
+                "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+                "stdout": "",
+                "truncated": false
+              },
+              "scope": "Repository checks for src/ledger behavior",
+              "sequence": 1,
+              "supersedes": []
+            }
+          ]
+        }
+      },
+      "tool_call_id": "call_NfFLGFmpB6ry2iEeE46yEAwG",
+      "tool_name": "finish_task"
+    }
+  ],
+  "verifications": []
+}
