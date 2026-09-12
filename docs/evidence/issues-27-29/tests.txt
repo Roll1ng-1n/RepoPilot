@@ -1,0 +1,9 @@
+........................................................................ [ 25%]
+.................s............................s......................... [ 51%]
+........................................................................ [ 76%]
+.......................s..........................................       [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/repopilot/test_cli_run.py:483: Docker is unavailable
+SKIPPED [1] tests/repopilot/test_environment.py:63: Docker is unavailable
+SKIPPED [1] tests/repopilot/test_reliability_v2.py:244: Docker is unavailable
+279 passed, 3 skipped in 26.83s

@@ -220,9 +220,9 @@ class AgentRuntime:
             recovery_data = checkpoint.get("recovery", {})
             if not isinstance(recovery_data, dict):
                 raise ValueError("Checkpoint has invalid Recovery state.")
-            recovery.restore_consecutive_failures(int(recovery_data.get("consecutive_failures", 0)))
             messages = self._checkpoint_list(checkpoint, "messages")
             failures = self._checkpoint_list(checkpoint, "failures")
+            recovery.restore(recovery_data, failures)
             recoveries = self._checkpoint_list(checkpoint, "recoveries")
             tool_results = self._checkpoint_list(checkpoint, "tool_results")
             approval_request = self._checkpoint_approval_request(checkpoint)
@@ -369,6 +369,7 @@ class AgentRuntime:
                             pending_tool_calls,
                         )
                         continue
+                    recovery.record_model_success()
                     if not turn.tool_calls:
                         messages.append(self._assistant_message(turn))
                         terminal_status = self._handle_failure(
@@ -776,7 +777,7 @@ class AgentRuntime:
                 "context": self._context.to_checkpoint(),
                 "messages": messages,
                 "budget": budget.snapshot(),
-                "recovery": {"consecutive_failures": recovery.consecutive_failures},
+                "recovery": recovery.to_checkpoint(),
                 "failures": failures,
                 "recoveries": recoveries,
                 "previous_tool_observation": previous_tool_observation,

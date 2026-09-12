@@ -62,35 +62,65 @@ class RecoveryController:
         self._max_consecutive_failures = max_consecutive_failures
         self._initial_retry_delay_seconds = initial_retry_delay_seconds
         self.consecutive_failures = 0
+        self.consecutive_model_failures = 0
 
     def record_success(self) -> None:
         self.consecutive_failures = 0
 
+    def record_model_success(self) -> None:
+        self.consecutive_model_failures = 0
+
+    def to_checkpoint(self) -> dict[str, int]:
+        return {
+            "consecutive_failures": self.consecutive_failures,
+            "consecutive_model_failures": self.consecutive_model_failures,
+        }
+
+    def restore(self, state: dict, failures: list[dict]) -> None:
+        task_count = state.get("consecutive_failures", 0)
+        model_count = state.get("consecutive_model_failures")
+        if type(task_count) is not int or task_count < 0:
+            raise ValueError("Checkpoint has an invalid consecutive failure counter.")
+        if "consecutive_model_failures" not in state:
+            # Legacy checkpoints mixed both counters. Only a trailing model-error
+            # streak bounded by the saved counter can consume transport retries.
+            model_count = 0
+            for failure in reversed(failures):
+                if model_count >= task_count or failure.get("category") != FailureCategory.MODEL_ERROR.value:
+                    break
+                model_count += 1
+            task_count -= model_count
+        if type(model_count) is not int or model_count < 0:
+            raise ValueError("Checkpoint has an invalid model failure counter.")
+        self.consecutive_failures = task_count
+        self.consecutive_model_failures = model_count
+
     def restore_consecutive_failures(self, value: int) -> None:
         """Restore the bounded recovery counter from a Checkpoint."""
 
-        if value < 0:
+        if type(value) is not int or value < 0:
             raise ValueError("Checkpoint has an invalid consecutive failure counter.")
         self.consecutive_failures = value
 
     def recover(self, failure: Failure, *, transient_model_error: bool = False) -> RecoveryDecision:
-        self.consecutive_failures += 1
         if failure.category is FailureCategory.MODEL_ERROR and not transient_model_error:
             return RecoveryDecision(RecoveryAction.STOP, f"The model error is not transient: {failure.reason}")
+        if failure.category is FailureCategory.MODEL_ERROR and transient_model_error:
+            self.consecutive_model_failures += 1
+            if self.consecutive_model_failures >= self._max_consecutive_failures:
+                return RecoveryDecision(RecoveryAction.STOP, f"Model request retries exhausted: {failure.reason}")
+            delay = self._initial_retry_delay_seconds * (2 ** (self.consecutive_model_failures - 1))
+            return RecoveryDecision(
+                RecoveryAction.RETRY_MODEL,
+                f"Retrying a transient model error after {delay:g} seconds: {failure.reason}",
+                delay,
+            )
+        self.consecutive_failures += 1
         if failure.category is FailureCategory.PROTOCOL_ERROR:
             if self.consecutive_failures >= self._max_consecutive_failures:
                 return RecoveryDecision(RecoveryAction.STOP, f"Repeated invalid Tool Calls: {failure.reason}")
             return RecoveryDecision(
                 RecoveryAction.RETURN_OBSERVATION, f"Correct the Tool Call arguments: {failure.reason}"
-            )
-        if failure.category is FailureCategory.MODEL_ERROR and transient_model_error:
-            if self.consecutive_failures >= self._max_consecutive_failures:
-                return RecoveryDecision(RecoveryAction.STOP, f"Model request retries exhausted: {failure.reason}")
-            delay = self._initial_retry_delay_seconds * (2 ** (self.consecutive_failures - 1))
-            return RecoveryDecision(
-                RecoveryAction.RETRY_MODEL,
-                f"Retrying a transient model error after {delay:g} seconds: {failure.reason}",
-                delay,
             )
         if self.consecutive_failures >= self._max_consecutive_failures:
             return RecoveryDecision(

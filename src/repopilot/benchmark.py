@@ -39,7 +39,6 @@ from repopilot.evaluation import (
     evaluate,
     markdown,
     normalize_trace,
-    scenario_audit,
 )
 from repopilot.model import AssistantTurn, LiteLLMToolCallingModel, stream_chunk_record
 from repopilot.plan import PlanHistory
@@ -1087,7 +1086,7 @@ def _run_baseline(request: EngineRequest) -> EngineRun:
         duration_seconds=time.monotonic() - started,
         trajectory=trajectory,
         model_stats=_baseline_model_stats(trajectory),
-        evaluation_events=environment.events + [scenario_audit(request.task.behavior_spec)],
+        evaluation_events=environment.events + [environment.audit()],
         error=_redact_benchmark_value(error, _benchmark_secret_values(config)),
     )
 
@@ -1238,7 +1237,7 @@ def _run_repopilot(request: EngineRequest) -> EngineRun:
         duration_seconds=time.monotonic() - started,
         run_result=result,
         model_stats=model.stats(),
-        evaluation_events=environment.events + [scenario_audit(request.task.behavior_spec)],
+        evaluation_events=environment.events + [environment.audit()],
         error=_redact_benchmark_value(error, _benchmark_secret_values(config)),
     )
 

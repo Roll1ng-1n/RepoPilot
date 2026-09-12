@@ -1,0 +1,15 @@
+{
+  "base_commit": "066672fe3015fdaeaabf074b3f4cf2d657efe4f6",
+  "sha256": {
+    "src/repopilot/benchmark.py": "0de1a0f4a2980abc929b84655b40a2bd42208f64b8dd53d8da6ecbb47c033383",
+    "src/repopilot/context.py": "5b612223727f40157ab1eda9ce84e5bc81e53d2a65996988d92db97c38901bf7",
+    "src/repopilot/context_memory.py": "b3745d8fd8a11e165666a8933c86302dc824338c0cec3329e7e074b065e277ac",
+    "src/repopilot/evaluation.py": "5175938d4cb199caf219e9494cf093be929ba5d5164eeb75939c88118736800e",
+    "src/repopilot/recovery.py": "c2f34b703b5595eba2ee7cdc15a601dfc053fc58da6dd6519a9b7c069890a211",
+    "src/repopilot/runtime.py": "f16935737f22743c83b929e670e0fa122ce82a164b1db3fd7d3bb30ba59d9c11",
+    "tests/repopilot/test_context_progress.py": "47d6c36598b1d54f0fb90702c8775fcd14d7a705a8fa0f705d876b60ee9b1992",
+    "tests/repopilot/test_evaluation.py": "2f1963fc22042b9666b578640a0dfbdeb9c9d597a738aef18fba30cd2ccdd945",
+    "tests/repopilot/test_recovery.py": "b0d7f4b97018fdea5b5ca231d211c9dc15c4769f05d3460e0ded903303164a60",
+    "tests/repopilot/test_reliability_v2.py": "32f5d9cec535eb498f06efa98b7cd607910f33f296a42cb2f154ffc598610011"
+  }
+}

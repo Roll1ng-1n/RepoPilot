@@ -58,7 +58,9 @@ def test_observer_requires_ordered_public_failure_and_actual_strategy_change(tmp
     assert result["task_pass"] is True
     assert result["recovery"]["attempt_count"] == 1
     assert result["replan"]["valid_count"] == 1
-    assert evaluate(True, "Submitted", {}, [scenario_audit(spec)], ["recovery"])["task_pass"] is False
+    assert evaluate(True, "Submitted", {}, [scenario_audit(spec)], ["recovery"])["task_pass"] is None
+    empty_observer = ScenarioObserver(Environment(), tmp_path, spec)
+    assert evaluate(True, "Submitted", {}, [empty_observer.audit()], ["recovery"])["task_pass"] is False
 
 
 def test_tool_exit_failure_inside_successful_tool_envelope():
@@ -226,3 +228,58 @@ def test_triggered_but_ineffective_replan_is_separate_from_success():
     assert result["replan"]["trigger_rate"] == 1
     assert result["replan"]["success_rate"] == 0
     assert result["task_pass"] is False
+
+
+@pytest.mark.parametrize(
+    ("first", "last"),
+    [
+        ("python test.py; echo done", "python test.py"),
+        ("python test.py", "python test.py && echo done"),
+        ("bash -c 'python test.py'", "python test.py"),
+        ("python wrapper.py", "python wrapper.py"),
+        ("rg --pre 'python test.py' pattern .", "python test.py"),
+    ],
+)
+def test_ambiguous_commands_do_not_turn_unknown_recovery_into_failure(tmp_path, first, last):
+    class Environment:
+        code = 1
+
+        def execute(self, action):
+            return {"returncode": self.code, "output": "FAILED or OK is not trusted evidence"}
+
+    env = Environment()
+    observer = ScenarioObserver(env, tmp_path, {"recovery_command": "python test.py"})
+    observer.execute({"command": first})
+    env.code = 0
+    observer.execute({"command": last})
+    result = evaluate(True, "Submitted", {}, observer.events + [observer.audit()], ["recovery"])
+    assert result["task_pass"] is None
+    assert "incomplete" in result["behavior_verifier"]["recovery"]["reason"]
+
+
+def test_observer_distinguishes_proven_recovery_tampering_and_absence(tmp_path):
+    class Environment:
+        code = 1
+
+        def execute(self, action):
+            return {"returncode": self.code, "output": ""}
+
+    test = tmp_path / "test.py"
+    test.write_text("assert False")
+    env = Environment()
+    spec = {"recovery_command": "python test.py", "recovery_files": ["test.py"]}
+    absent = ScenarioObserver(env, tmp_path, spec)
+    absent.execute({"command": "echo done"})
+    assert evaluate(True, "Submitted", {}, absent.events + [absent.audit()], ["recovery"])["task_pass"] is False
+    for tamper in [False, True]:
+        test.write_text("assert False")
+        observer = ScenarioObserver(env, tmp_path, spec)
+        env.code = 1
+        observer.execute({"command": "python test.py"})
+        observer.execute({"command": "python edit_implementation.py"})
+        if tamper:
+            test.write_text("pass")
+        env.code = 0
+        observer.execute({"command": "python test.py"})
+        result = evaluate(True, "Submitted", {}, observer.events + [observer.audit()], ["recovery"])
+        assert result["task_pass"] is (not tamper)

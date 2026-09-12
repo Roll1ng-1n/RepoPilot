@@ -235,6 +235,13 @@ def test_context_bound_keeps_tool_pairs_and_rejects_oversized_constraints():
 
 
 def test_docker_timeout_kills_container_descendants(target):
+    # WSL may expose a docker shim even when Desktop integration is unavailable.
+    try:
+        version = subprocess.run(["docker", "version"], capture_output=True, timeout=5)
+    except (OSError, subprocess.TimeoutExpired):
+        pytest.skip("Docker is unavailable")
+    if version.returncode != 0:
+        pytest.skip("Docker is unavailable")
     environment = DockerExecutionEnvironment(
         target, image=os.environ.get("REPOPILOT_DOCKER_TEST_IMAGE", "python:3.12-bookworm")
     )

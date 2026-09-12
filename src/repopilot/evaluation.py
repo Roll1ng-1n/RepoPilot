@@ -7,6 +7,7 @@ are harness-owned observations, never JSON extracted from assistant prose.
 from __future__ import annotations
 
 import hashlib
+import shlex
 from collections import Counter, defaultdict
 from itertools import combinations
 from statistics import mean, median, stdev
@@ -100,7 +101,14 @@ def evaluate(
         passed = None
         reason = "unsupported: missing linked scenario or complete policy instrumentation"
         audit = by_type["scenario_audit"][-1] if by_type["scenario_audit"] else {}
-        if (
+        incomplete = requirement in audit.get("incomplete", {})
+        disproven_recovery = any(e.get("verified") is False for e in by_type["scenario_resolved"])
+        if incomplete and (
+            (requirement == "recovery" and not disproven_recovery and (not recovery or recovered != len(recovery)))
+            or (requirement == "replan" and (not evidence or len(valid_replans) != len(evidence)))
+        ):
+            reason = "unsupported: command observation is incomplete; missing behavior cannot be inferred."
+        elif (
             requirement in {"recovery", "replan"}
             and audit.get(requirement)
             and not (recovery if requirement == "recovery" else evidence)
@@ -173,7 +181,7 @@ def evaluate(
         for e in evidence
     )
     return {
-        "schema_version": 4,
+        "schema_version": 5,
         "repository_pass": repository_pass,
         "behavior_pass": behavior,
         "task_pass": task_pass,
@@ -295,9 +303,7 @@ def aggregate(records: list[dict]) -> dict:
             r["evaluation"]["replan"] for r in rows if r.get("evaluation", {}).get("replan", {}).get("evidence_count")
         ]
         evidence_count = sum(r["evidence_count"] for r in replan_rows)
-        churn_available = any(
-            r.get("evaluation", {}).get("churn", {}).get("status") == "supported" for r in rows
-        )
+        churn_available = any(r.get("evaluation", {}).get("churn", {}).get("status") == "supported" for r in rows)
         output.append(
             dict(
                 model=model,
@@ -362,7 +368,7 @@ def aggregate(records: list[dict]) -> dict:
             for category in ("all", (a or b).get("category", "unclassified")):
                 pairs[(key[0], left, right, category)][outcome] += 1
     return {
-        "schema_version": 4,
+        "schema_version": 5,
         "groups": output,
         "paired": [
             dict(
@@ -455,6 +461,7 @@ class ScenarioObserver:
         self.spec = spec
         self.events = []
         self.sequence = 0
+        self.incomplete = {}
         self.pending_recovery = False
         self.recovery_number = 0
         self.protected = {name: self._fingerprint(name) for name in spec.get("recovery_files", [])}
@@ -462,6 +469,26 @@ class ScenarioObserver:
         self.old_plan = None
         self.last_plan = None
         self.replanned = False
+
+    def audit(self):
+        audit = scenario_audit(self.spec, complete=True)
+        audit["incomplete"] = dict(self.incomplete)
+        for capability in self.incomplete:
+            audit[capability] = False
+        return audit
+
+    @staticmethod
+    def _observation_only(command):
+        # A small set of simple observations can establish absence. Arbitrary
+        # programs, wrappers and compound shell commands cannot; never infer
+        # subcommand exit codes from their output or aggregate shell status.
+        if not command or any(c in command for c in "\n;&|<>$`()"):
+            return False
+        try:
+            words = shlex.split(command)
+        except ValueError:
+            return False
+        return bool(words) and (words[0] in {"pwd", "echo", "printf", "true", "false"})
 
     def __getattr__(self, name):
         return getattr(self.environment, name)
@@ -492,13 +519,26 @@ class ScenarioObserver:
             command = action.get("command", "")
         else:
             argv = action.argv
-            command = argv[-1] if len(argv) == 3 and argv[0] in {"bash", "sh"} and argv[1] in {"-lc", "-c"} else None
+            command = (
+                argv[-1]
+                if len(argv) == 3 and argv[0] in {"bash", "sh"} and argv[1] in {"-lc", "-c"}
+                else shlex.join(argv)
+            )
         before = self._plan()
         result = self.environment.execute(action, *args, **kwargs)
         data = result if isinstance(result, dict) else result.to_dict()
         code = data.get("returncode", data.get("exit_code"))
         stdout = data.get("output", data.get("stdout", ""))
         self.sequence += 1
+        for capability, key in [("recovery", "recovery_command"), ("replan", "evidence_command")]:
+            if self.spec.get(key) and (
+                (command == self.spec[key] and code is None)
+                or (command != self.spec[key] and not self._observation_only(command))
+            ):
+                self.incomplete.setdefault(
+                    capability,
+                    {"observation_index": self.sequence, "reason": "Unclassified command or unavailable exit status."},
+                )
 
         def emit(kind, **values):
             self.events.append(dict(type=kind, observation_index=self.sequence, source="environment", **values))
@@ -565,11 +605,13 @@ class ScenarioObserver:
         return result
 
 
-def scenario_audit(spec: dict) -> dict:
+def scenario_audit(spec: dict, *, complete: bool = False) -> dict:
+    """Configuration alone cannot certify coverage; observers supply completeness."""
     return {
         "type": "scenario_audit",
-        "recovery": bool(spec.get("recovery_command")),
-        "replan": all(
+        "recovery": complete and bool(spec.get("recovery_command")),
+        "replan": complete
+        and all(
             spec.get(k)
             for k in ("evidence_command", "evidence_marker", "plan_path", "before_strategy", "after_strategy")
         ),

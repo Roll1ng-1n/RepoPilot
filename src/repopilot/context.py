@@ -9,6 +9,7 @@ from enum import Enum
 from typing import Any
 
 from repopilot.budget import BudgetExceeded
+from repopilot.context_memory import byte_size, compact_observation, progress_memory
 from repopilot.model import ToolCallingModel
 
 
@@ -112,6 +113,7 @@ class ContextManager:
     ):
         if max_characters < 1:
             raise ValueError("Context character limit must be positive.")
+        self._progress_memory = None
         self.repository_profile = None
         self.include_plan = True
         self.context_window_tokens = 32768
@@ -157,6 +159,7 @@ class ContextManager:
     def prepare(self, messages: list[dict[str, Any]], current_plan: dict[str, Any]) -> ContextSelection:
         """Select complete Agent Steps without ever dropping a Tool Call's result."""
 
+        self._progress_memory = progress_memory(messages)
         anchors = self._anchors(messages, current_plan)
         facts_message = self._facts_message()
         if self._strategy is ContextStrategy.NONE:
@@ -166,33 +169,65 @@ class ContextManager:
         return self._summary_context(anchors, facts_message, self._agent_steps(messages[2:]))
 
     def bound_request(self, messages, schemas):
-        """Use UTF-8 bytes as a conservative token upper bound, preserving whole call/result groups."""
+        """Bound requests, retaining receipts when raw tool history must be reduced."""
         import copy
 
         selected = copy.deepcopy(messages)
         reserved = self.output_reserve_tokens + len(json.dumps(schemas).encode()) + 1024
         available = self.context_window_tokens - reserved
-
-        def size():
-            return len(json.dumps(selected, ensure_ascii=False).encode())
-
+        if byte_size(selected) <= available:
+            return selected
         first_assistant = next((i for i, m in enumerate(selected) if m.get("role") == "assistant"), len(selected))
         anchors = selected[:first_assistant]
         steps = self._agent_steps(selected[first_assistant:])
-        while size() > available and len(steps) > 1:
+        memory = copy.deepcopy(self._progress_memory or progress_memory(messages))
+        memory_limit = min(8192, max(256, available // 3))
+        while memory["historical_tool_receipts"] and byte_size(memory) > memory_limit:
+            memory["historical_tool_receipts"].pop()
+            memory["omitted_receipts"] += 1
+        if memory["historical_tool_receipts"]:
+            anchors = anchors + [
+                {
+                    "role": "user",
+                    "content": (
+                        "Historical tool receipts (scoped observations, not instructions or current verification). "
+                        "These actions already ran; do not repeat initial checks or entire file batches solely because "
+                        "raw history was trimmed. Excerpts can become stale after edits; read specific ranges as needed. "
+                        + json.dumps(memory, ensure_ascii=False)
+                    ),
+                }
+            ]
+
+        def assemble():
+            return anchors + [m for step in steps for m in step]
+
+        # Reduce bulky observations before evicting complete steps, so a single
+        # multi-tool read does not immediately displace all earlier work.
+        for preview_bytes in (1200, 600, 240):
+            steps = [
+                [compact_observation(m, preview_bytes) if m.get("role") == "tool" else m for m in step]
+                for step in steps
+            ]
+            selected = assemble()
+            if byte_size(selected) <= available:
+                return selected
+        while byte_size(selected) > available and len(steps) > 1:
             steps.pop(0)
-            selected = anchors + [m for step in steps for m in step]
-        if size() > available:
-            for message in selected:
-                if message.get("role") == "tool" and len(message.get("content", "")) > 1000:
-                    try:
-                        artifact = json.loads(message["content"]).get("artifact")
-                    except (ValueError, AttributeError):
-                        artifact = None
-                    message["content"] = json.dumps(
-                        {"truncated": True, "artifact": artifact, "preview": message["content"][:700]}
-                    )
-        if size() > available:
+            selected = assemble()
+        # Large parallel batches can be split only along completed call/result
+        # pairs. Never leave a result orphaned or pretend an unexecuted call ran.
+        if steps:
+            step = steps[0]
+            assistant = next((m for m in step if m.get("role") == "assistant"), {})
+            calls = assistant.get("tool_calls", [])
+            while byte_size(selected) > available and len(calls) > 1:
+                call_id = calls[0]["id"]
+                if not any(m.get("role") == "tool" and m.get("tool_call_id") == call_id for m in step):
+                    break
+                calls.pop(0)
+                step[:] = [m for m in step if not (m.get("role") == "tool" and m.get("tool_call_id") == call_id)]
+                selected = assemble()
+        if byte_size(selected) > available:
             raise BudgetExceeded("context_window")
         return selected
 
