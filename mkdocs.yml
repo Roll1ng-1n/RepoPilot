@@ -63,10 +63,13 @@ nav:
     - Overview: index.md
     - Capabilities: repopilot-capabilities.md
     - Inspection: repopilot-inspect.md
+    - Context: repopilot-context.md
+    - Approval: repopilot-approval.md
     - Benchmark: repopilot-benchmark.md
     - Release: repopilot-release.md
-  - Getting Started:
-    - "Overview": index.md
+    - Evidence: evidence/next-stage/report.md
+  - mini-SWE-agent guides:
+    - "Overview": upstream-overview.md
     - "Quick start": quickstart.md
     - "Command line usage":
       - "<code>mini</code>": usage/mini.md
@@ -90,7 +93,7 @@ nav:
       - "v2 migration guide": advanced/v2_migration.md
     - "FAQ": faq.md
     - "Contributing": contributing.md
-  - API Reference:
+  - mini-SWE-agent API Reference:
     - "reference/index.md"
     - Agents:
       - "DefaultAgent": "reference/agents/default.md"

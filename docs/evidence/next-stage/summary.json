@@ -14,17 +14,17 @@
       "repository_pass": {
         "true": 0,
         "false": 1,
-        "none": 0
+        "null": 0
       },
       "task_pass": {
         "true": 0,
         "false": 1,
-        "none": 0
+        "null": 0
       },
       "successful_termination": {
         "true": 0,
         "false": 1,
-        "none": 0
+        "null": 0
       },
       "status_counts": {
         "FAILED": 1
@@ -185,17 +185,17 @@
       "repository_pass": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "task_pass": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "successful_termination": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "status_counts": {
         "Submitted": 1
@@ -356,17 +356,17 @@
       "repository_pass": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "task_pass": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "successful_termination": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "status_counts": {
         "SUCCEEDED": 1
@@ -527,17 +527,17 @@
       "repository_pass": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "task_pass": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "successful_termination": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "status_counts": {
         "SUCCEEDED": 1
@@ -698,17 +698,17 @@
       "repository_pass": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "task_pass": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "successful_termination": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "status_counts": {
         "SUCCEEDED": 1
@@ -869,17 +869,17 @@
       "repository_pass": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "task_pass": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "successful_termination": {
         "true": 1,
         "false": 0,
-        "none": 0
+        "null": 0
       },
       "status_counts": {
         "Submitted": 1
@@ -1040,17 +1040,17 @@
       "repository_pass": {
         "true": 0,
         "false": 1,
-        "none": 0
+        "null": 0
       },
       "task_pass": {
         "true": 0,
         "false": 1,
-        "none": 0
+        "null": 0
       },
       "successful_termination": {
         "true": 0,
         "false": 1,
-        "none": 0
+        "null": 0
       },
       "status_counts": {
         "BUDGET_EXCEEDED": 1
@@ -1200,6 +1200,177 @@
           "known_total": 0.0
         }
       }
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "task": "real-more-chunked",
+      "variant": "loop-on",
+      "stage": "formal",
+      "replacement": true,
+      "n": 1,
+      "repository_pass": {
+        "true": 0,
+        "false": 1,
+        "null": 0
+      },
+      "task_pass": {
+        "true": 0,
+        "false": 1,
+        "null": 0
+      },
+      "successful_termination": {
+        "true": 0,
+        "false": 1,
+        "null": 0
+      },
+      "status_counts": {
+        "BUDGET_EXCEEDED": 1
+      },
+      "metrics": {
+        "steps": {
+          "values": [
+            48
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 48,
+          "min": 48,
+          "max": 48,
+          "known_total": 48
+        },
+        "tokens": {
+          "values": [
+            484637
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 484637,
+          "min": 484637,
+          "max": 484637,
+          "known_total": 484637
+        },
+        "cost": {
+          "values": [
+            0.5484596000000002
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.5484596000000002,
+          "min": 0.5484596000000002,
+          "max": 0.5484596000000002,
+          "known_total": 0.5484596000000002
+        },
+        "read_file": {
+          "values": [
+            80
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 80,
+          "min": 80,
+          "max": 80,
+          "known_total": 80
+        },
+        "loop_events": {
+          "values": [
+            0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "known_total": 0
+        },
+        "window_repeated_exploration": {
+          "values": [
+            1
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "known_total": 1
+        },
+        "first_effective_source_change_step": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "wall_clock_seconds": {
+          "values": [
+            1212.1397308349997
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 1212.1397308349997,
+          "min": 1212.1397308349997,
+          "max": 1212.1397308349997,
+          "known_total": 1212.1397308349997
+        },
+        "llm_seconds": {
+          "values": [
+            1184.2991823150005
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 1184.2991823150005,
+          "min": 1184.2991823150005,
+          "max": 1184.2991823150005,
+          "known_total": 1184.2991823150005
+        },
+        "tool_seconds": {
+          "values": [
+            11.900976341999922
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 11.900976341999922,
+          "min": 11.900976341999922,
+          "max": 11.900976341999922,
+          "known_total": 11.900976341999922
+        },
+        "orchestration_seconds": {
+          "values": [
+            15.643207692001852
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 15.643207692001852,
+          "min": 15.643207692001852,
+          "max": 15.643207692001852,
+          "known_total": 15.643207692001852
+        },
+        "active_seconds": {
+          "values": [
+            1211.862732224
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 1211.862732224,
+          "min": 1211.862732224,
+          "max": 1211.862732224,
+          "known_total": 1211.862732224
+        },
+        "idle_seconds": {
+          "values": [
+            0.0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "known_total": 0.0
+        }
+      }
     }
   ],
   "samples": [
@@ -1217,6 +1388,8 @@
       "task_pass": false,
       "successful_termination": false,
       "provider_failure": false,
+      "terminal_budget_limits": [],
+      "model_errors": 1,
       "steps": 1,
       "tokens": null,
       "cost": null,
@@ -1246,6 +1419,8 @@
       "task_pass": true,
       "successful_termination": true,
       "provider_failure": false,
+      "terminal_budget_limits": null,
+      "model_errors": null,
       "steps": 7,
       "tokens": 63181,
       "cost": 0.0623172,
@@ -1275,6 +1450,8 @@
       "task_pass": true,
       "successful_termination": true,
       "provider_failure": true,
+      "terminal_budget_limits": [],
+      "model_errors": 1,
       "steps": 9,
       "tokens": 69994,
       "cost": 0.04497999999999999,
@@ -1304,6 +1481,8 @@
       "task_pass": true,
       "successful_termination": true,
       "provider_failure": false,
+      "terminal_budget_limits": [],
+      "model_errors": 0,
       "steps": 7,
       "tokens": 60278,
       "cost": 0.0403848,
@@ -1333,6 +1512,8 @@
       "task_pass": true,
       "successful_termination": true,
       "provider_failure": false,
+      "terminal_budget_limits": null,
+      "model_errors": null,
       "steps": 11,
       "tokens": 139061,
       "cost": 0.093322,
@@ -1362,6 +1543,10 @@
       "task_pass": false,
       "successful_termination": false,
       "provider_failure": true,
+      "terminal_budget_limits": [
+        "context_window"
+      ],
+      "model_errors": 1,
       "steps": 26,
       "tokens": 252373,
       "cost": 0.35061479999999995,
@@ -1378,6 +1563,39 @@
       "idle_seconds": 0.0
     },
     {
+      "path": "runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on-replacement/trial.json",
+      "model": "gpt-6.1-sol",
+      "stage": "formal",
+      "repeat": 1,
+      "replacement": true,
+      "variant": "loop-on",
+      "task": "real-more-chunked",
+      "status": "BUDGET_EXCEEDED",
+      "source_matches": true,
+      "repository_pass": false,
+      "task_pass": false,
+      "successful_termination": false,
+      "provider_failure": true,
+      "terminal_budget_limits": [
+        "steps"
+      ],
+      "model_errors": 2,
+      "steps": 48,
+      "tokens": 484637,
+      "cost": 0.5484596000000002,
+      "read_file": 80,
+      "loop_events": 0,
+      "window_repeated_exploration": 1,
+      "first_effective_source_change_step": null,
+      "timing_coverage": "complete",
+      "wall_clock_seconds": 1212.1397308349997,
+      "llm_seconds": 1184.2991823150005,
+      "tool_seconds": 11.900976341999922,
+      "orchestration_seconds": 15.643207692001852,
+      "active_seconds": 1211.862732224,
+      "idle_seconds": 0.0
+    },
+    {
       "path": "runs/gpt-6.1-sol/smoke-00-real-boltons-slug-loop-on/trial.json",
       "model": "gpt-6.1-sol",
       "stage": "smoke",
@@ -1391,6 +1609,8 @@
       "task_pass": true,
       "successful_termination": true,
       "provider_failure": true,
+      "terminal_budget_limits": [],
+      "model_errors": 2,
       "steps": 9,
       "tokens": 60142,
       "cost": 0.077556,
