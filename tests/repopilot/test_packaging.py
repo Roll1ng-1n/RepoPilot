@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import tomllib
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib
 
 
 def test_swebench_evaluator_is_a_pinned_optional_dependency() -> None:

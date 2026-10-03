@@ -45,7 +45,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = ["pytest", "pytest-cov", "pytest-asyncio", "pytest-xdist", "ruff"]
+test = ["pytest", "pytest-cov", "pytest-asyncio", "pytest-xdist", "ruff", "tomli; python_version < '3.11'"]
 docs = ["mkdocs-include-markdown-plugin", "mkdocstrings[python]>=0.18", "mike", "mkdocs-material", "mkdocs-glightbox", "mkdocs-redirects"]
 evaluation = ["datasets", "repopilot-runtime[swebench]"]
 full = [
@@ -66,6 +66,7 @@ modal = [
 ]
 
 dev = [
+    "tomli; python_version < '3.11'",
     "pytest",
     "pytest-cov",
     "pytest-asyncio",
