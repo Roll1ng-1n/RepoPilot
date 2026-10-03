@@ -15,37 +15,55 @@ import subprocess
 import sys
 import time
 import uuid
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass, field, replace
 from enum import Enum
 from pathlib import Path
 from typing import Any, Protocol
 
 from minisweagent.agents import get_agent
-from minisweagent.config import builtin_config_dir, get_config_from_spec
+from minisweagent.config import get_config_from_spec
 from minisweagent.environments import get_environment
 from minisweagent.models import get_model
-from minisweagent.utils.serialize import recursive_merge
-from repopilot.approval import ApprovalContext
-from repopilot.artifacts import RunArtifacts
+from repopilot.benchmark_engines import _BenchmarkToolCallingModel as _BenchmarkToolCallingModel
+from repopilot.benchmark_engines import _cleanup_baseline_environment as _cleanup_baseline_environment
+from repopilot.benchmark_engines import _copy_runtime_artifacts as _copy_runtime_artifacts
+from repopilot.benchmark_engines import _host_identity as _host_identity
+from repopilot.benchmark_preflight import BenchmarkPreflight as BenchmarkPreflight
+from repopilot.benchmark_preflight import _parse_image_inspection as _parse_image_inspection
+from repopilot.benchmark_preflight import _redact_preflight_result as _redact_preflight_result
+from repopilot.benchmark_preflight import _run_benchmark_command as _run_benchmark_command
+from repopilot.benchmark_preflight import _run_preflight_check as _run_preflight_check
+from repopilot.benchmark_preflight import preflight_benchmark_image as preflight_benchmark_image
+from repopilot.benchmark_reporting import _baseline_model_stats as _baseline_model_stats
+from repopilot.benchmark_reporting import _benchmark_secret_values as _benchmark_secret_values
+from repopilot.benchmark_reporting import _estimated_standard_cost as _estimated_standard_cost
+from repopilot.benchmark_reporting import _legacy_summary_markdown as _legacy_summary_markdown
+from repopilot.benchmark_reporting import _metrics_for_run as _metrics_for_run
+from repopilot.benchmark_reporting import _patch_metric as _patch_metric
+from repopilot.benchmark_reporting import _read_json as _read_json
+from repopilot.benchmark_reporting import _read_trace as _read_trace
+from repopilot.benchmark_reporting import _redact_benchmark_artifacts as _redact_benchmark_artifacts
+from repopilot.benchmark_reporting import _redact_benchmark_value as _redact_benchmark_value
+from repopilot.benchmark_reporting import _sum_usage as _sum_usage
+from repopilot.benchmark_reporting import _summary_markdown as _summary_markdown
+from repopilot.benchmark_reporting import _text as _text
+from repopilot.benchmark_reporting import _trajectory_status as _trajectory_status
+from repopilot.benchmark_reporting import _usage_dict as _usage_dict
+from repopilot.benchmark_reporting import _usage_token as _usage_token
 from repopilot.budget import RunBudget
 from repopilot.context import ContextManager
 from repopilot.environment import DockerExecutionEnvironment, DockerProxyMode, docker_proxy_run_args
 from repopilot.evaluation import (
     CATEGORIES,
     REQUIREMENTS,
-    ScenarioObserver,
     aggregate,
     evaluate,
-    markdown,
     normalize_trace,
 )
-from repopilot.model import AssistantTurn, LiteLLMToolCallingModel, stream_chunk_record
-from repopilot.plan import PlanHistory
 from repopilot.pricing import (
     OPENAI_STANDARD_PRICING_AS_OF,
     OPENAI_STANDARD_PRICING_SOURCE,
-    estimate_openai_standard_cost,
 )
 from repopilot.runtime import AgentRunResult, AgentRuntime
 from repopilot.tools import create_tool_registry
@@ -355,188 +373,7 @@ class BenchmarkConfig:
         return self.image_id or self.image_digest or self.image
 
 
-@dataclass(frozen=True)
-class BenchmarkPreflight:
-    """No-model Docker checks for one paired benchmark invocation."""
-
-    status: str
-    image: str
-    resolved_image: str | None
-    image_id: str | None
-    image_digest: str | None
-    checks: tuple[dict[str, Any], ...]
-    error: str | None = None
-
-    @property
-    def ready(self) -> bool:
-        return self.status == "READY"
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "status": self.status,
-            "image": self.image,
-            "resolved_image": self.resolved_image,
-            "image_id": self.image_id,
-            "image_digest": self.image_digest,
-            "checks": list(self.checks),
-            "error": self.error,
-        }
-
-
 BenchmarkPreflightRunner = Callable[[BenchmarkConfig], BenchmarkPreflight]
-
-
-def preflight_benchmark_image(
-    config: BenchmarkConfig,
-    *,
-    command_runner: Callable[[list[str], float], subprocess.CompletedProcess[str]] | None = None,
-) -> BenchmarkPreflight:
-    """Resolve and validate the Docker image before any model is created.
-
-    ``docker image inspect`` supplies a content-addressed local image ID.  The
-    ID is used for both engines so a mutable tag cannot change between the
-    baseline and RepoPilot attempts.  A registry RepoDigest is retained when
-    Docker reports one, but locally built images need not have one.
-    """
-
-    run_command = command_runner or _run_benchmark_command
-    docker = os.environ.get("MSWEA_DOCKER_EXECUTABLE", "docker")
-    checks: list[dict[str, Any]] = []
-    proxy_args: list[str]
-    try:
-        proxy_args = docker_proxy_run_args(config.proxy_mode, config.proxy_url)
-    except (TypeError, ValueError) as error:
-        return BenchmarkPreflight("ENVIRONMENT_UNAVAILABLE", config.image, None, None, None, (), str(error))
-    proxy_secrets = _benchmark_secret_values(config)
-
-    # Restrict inspect output to identity fields. Full image metadata may
-    # contain build environment details and is not useful benchmark evidence.
-    inspect_argv = [
-        docker,
-        "image",
-        "inspect",
-        '--format={"Id":{{json .Id}},"RepoDigests":{{json .RepoDigests}}}',
-        config.image,
-    ]
-    inspected, inspect_error = _run_preflight_check(
-        "image_inspect", inspect_argv, config.budget.command_timeout_seconds, run_command, proxy_secrets
-    )
-    checks.append(inspected)
-    if inspect_error is not None or inspected["exit_code"] != 0:
-        detail = inspect_error or inspected.get("stderr") or "Docker image is not available locally."
-        return BenchmarkPreflight(
-            "ENVIRONMENT_UNAVAILABLE",
-            config.image,
-            None,
-            None,
-            None,
-            tuple(checks),
-            _redact_benchmark_value(str(detail), proxy_secrets),
-        )
-
-    try:
-        image_id, image_digest = _parse_image_inspection(inspected.get("stdout", ""))
-    except ValueError as error:
-        return BenchmarkPreflight("ENVIRONMENT_UNAVAILABLE", config.image, None, None, None, tuple(checks), str(error))
-
-    for command_name, command in (
-        ("python", "python --version"),
-        ("git", "git --version"),
-    ):
-        argv = [docker, "run", "--rm", "--pull=never", *proxy_args, image_id, *command.split()]
-        check, check_error = _run_preflight_check(
-            command_name, argv, config.budget.command_timeout_seconds, run_command, proxy_secrets
-        )
-        checks.append(check)
-        if check_error is not None or check["exit_code"] != 0:
-            detail = check_error or check.get("stderr") or f"Docker image does not provide {command.split()[0]}."
-            return BenchmarkPreflight(
-                "ENVIRONMENT_UNAVAILABLE",
-                config.image,
-                image_id,
-                image_id,
-                image_digest,
-                tuple(checks),
-                _redact_benchmark_value(str(detail), proxy_secrets),
-            )
-
-    return BenchmarkPreflight("READY", config.image, image_id, image_id, image_digest, tuple(checks))
-
-
-def _run_benchmark_command(argv: list[str], timeout: float) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(argv, capture_output=True, check=False, text=True, timeout=timeout)
-
-
-def _run_preflight_check(
-    name: str,
-    argv: list[str],
-    timeout: float,
-    command_runner: Callable[[list[str], float], subprocess.CompletedProcess[str]],
-    secrets: Sequence[str],
-) -> tuple[dict[str, Any], str | None]:
-    started = time.monotonic()
-    error: str | None = None
-    try:
-        completed = command_runner(argv, timeout)
-        stdout = _text(completed.stdout)
-        stderr = _text(completed.stderr)
-        exit_code = completed.returncode
-    except subprocess.TimeoutExpired as exception:
-        stdout = _text(exception.stdout)
-        stderr = _text(exception.stderr)
-        exit_code = -1
-        error = f"Command timed out after {timeout} seconds."
-    except (OSError, subprocess.SubprocessError) as exception:
-        stdout = ""
-        stderr = str(exception)
-        exit_code = -1
-        error = str(exception) or type(exception).__name__
-    check = {
-        "name": name,
-        "command": _redact_benchmark_value(argv, secrets),
-        "exit_code": exit_code,
-        "stdout": _redact_benchmark_value(stdout, secrets),
-        "stderr": _redact_benchmark_value(stderr, secrets),
-        "duration_seconds": time.monotonic() - started,
-    }
-    return check, error
-
-
-def _redact_preflight_result(preflight: BenchmarkPreflight, config: BenchmarkConfig) -> BenchmarkPreflight:
-    try:
-        secrets = _benchmark_secret_values(config)
-    except (TypeError, ValueError):
-        secrets = []
-    return replace(
-        preflight,
-        checks=tuple(_redact_benchmark_value(check, secrets) for check in preflight.checks),
-        error=_redact_benchmark_value(preflight.error, secrets),
-    )
-
-
-def _parse_image_inspection(output: str) -> tuple[str, str | None]:
-    try:
-        payload = json.loads(output)
-    except (TypeError, json.JSONDecodeError) as error:
-        raise ValueError("Docker image inspection returned invalid JSON.") from error
-    if isinstance(payload, list):
-        payload = payload[0] if payload else None
-    if not isinstance(payload, Mapping):
-        raise ValueError("Docker image inspection returned no image metadata.")
-    image_id = payload.get("Id", payload.get("ID"))
-    if not isinstance(image_id, str) or not image_id.strip():
-        raise ValueError("Docker image inspection returned no immutable image ID.")
-    image_id = image_id.strip()
-    repo_digests = payload.get("RepoDigests")
-    image_digest = (
-        next(
-            (value.strip() for value in repo_digests if isinstance(value, str) and value.strip()),
-            None,
-        )
-        if isinstance(repo_digests, list)
-        else None
-    )
-    return image_id, image_digest
 
 
 @dataclass(frozen=True)
@@ -1005,316 +842,6 @@ def _effective_budget(config: BenchmarkConfig, task: BenchmarkTask) -> Benchmark
     )
 
 
-def _run_baseline(request: EngineRequest) -> EngineRun:
-    config = request.config
-    benchmark_budget = request.effective_budget
-    run_budget = benchmark_budget.to_run_budget()
-    trajectory_path = request.artifact_directory / "trajectory.json"
-    model_kwargs = dict(config.model.model_kwargs)
-    if config.model.api_key is not None:
-        model_kwargs["api_key"] = config.model.api_key
-    if config.model.base_url is not None:
-        model_kwargs["api_base"] = config.model.base_url
-    model_config: dict[str, Any] = {
-        "model_name": config.model.model_name,
-        "model_kwargs": model_kwargs,
-        "cost_tracking": "ignore_errors",
-    }
-    if model_kwargs.get("stream"):
-        # Some OpenAI-compatible intermediaries restrict an account to
-        # streaming-only requests.  Point the baseline at RepoPilot's streaming
-        # subclass instead of the vendored non-streaming LitellmModel.
-        model_config["model_class"] = "repopilot.litellm_streaming.StreamingLitellmModel"
-    model = get_model(config=model_config)
-    if model_kwargs.get("stream") and hasattr(model, "_query"):
-        stream_number = 0
-
-        def observe_stream(sequence, chunk):
-            nonlocal stream_number
-            if sequence == 0:
-                stream_number += 1
-            record = _redact_benchmark_value(stream_chunk_record(sequence, chunk), _benchmark_secret_values(config))
-            path = request.artifact_directory / f"model-stream-{stream_number:04d}.jsonl"
-            with path.open("a") as stream:
-                stream.write(json.dumps(record) + "\n")
-
-        model.stream_observer = observe_stream
-    run_args = [
-        "--rm",
-        "--mount",
-        f"type=bind,source={request.workspace.resolve()},target=/workspace",
-    ]
-    if host_identity := _host_identity():
-        run_args.append(f"--user={host_identity}")
-    environment_config = {
-        "environment_class": "docker",
-        "image": config.resolved_image,
-        "cwd": "/workspace",
-        "run_args": run_args + docker_proxy_run_args(config.proxy_mode, config.proxy_url),
-        "timeout": max(1, int(run_budget.command_timeout_seconds)),
-    }
-    environment = ScenarioObserver(
-        get_environment(environment_config, default_type="docker"), request.workspace, request.task.behavior_spec
-    )
-    agent_config = recursive_merge(
-        get_config_from_spec(builtin_config_dir / "mini.yaml").get("agent", {}),
-        {
-            "step_limit": run_budget.max_steps,
-            "wall_time_limit_seconds": max(1, int(run_budget.max_run_seconds)),
-            "cost_limit": 0,
-            # Upstream saves on every step.  Keep that intermediate serialization
-            # in memory so the benchmark seam can redact it before persistence.
-            "output_path": None,
-        },
-    )
-    agent = get_agent(model, environment, agent_config, default_type="default")
-    started = time.monotonic()
-    info: dict[str, Any] = {}
-    error: str | None = None
-    try:
-        value = agent.run(request.task.task)
-        if isinstance(value, dict):
-            info = value
-    except Exception as exception:
-        error = str(exception) or type(exception).__name__
-    finally:
-        raw_trajectory = agent.save(None, {"benchmark": {"engine": BenchmarkEngine.BASELINE.value}})
-        trajectory = _redact_benchmark_value(raw_trajectory, _benchmark_secret_values(config))
-        trajectory_path.parent.mkdir(parents=True, exist_ok=True)
-        trajectory_path.write_text(json.dumps(trajectory, indent=2), encoding="utf-8")
-        _cleanup_baseline_environment(environment)
-    return EngineRun(
-        status=info.get("exit_status") or _trajectory_status(trajectory),
-        duration_seconds=time.monotonic() - started,
-        trajectory=trajectory,
-        model_stats=_baseline_model_stats(trajectory),
-        evaluation_events=environment.events + [environment.audit()],
-        error=_redact_benchmark_value(error, _benchmark_secret_values(config)),
-    )
-
-
-class _BenchmarkToolCallingModel(LiteLLMToolCallingModel):
-    """RepoPilot's model adapter with benchmark-only parameter/stat accounting."""
-
-    def __init__(self, *, model: BenchmarkModel):
-        super().__init__(
-            model_name=model.model_name,
-            api_key=model.api_key,
-            base_url=model.base_url,
-            model_kwargs=model.model_kwargs,
-        )
-        self.calls = 0
-        self.prompt_tokens: int | None = None
-        self.completion_tokens: int | None = None
-        self.total_tokens: int | None = None
-        self.cached_tokens: int | None = None
-        self.cache_write_tokens: int | None = None
-        self.reasoning_tokens: int | None = None
-        self.cost: float | None = None
-        self._saw_usage = False
-        self._usage_missing: dict[str, bool] = {
-            "prompt_tokens": False,
-            "completion_tokens": False,
-            "total_tokens": False,
-            "cached_tokens": False,
-            "cache_write_tokens": False,
-            "reasoning_tokens": False,
-        }
-        self._saw_cost = False
-
-    def complete(
-        self, messages: list[dict[str, Any]], tools: list[dict[str, Any]], *, timeout_seconds=None
-    ) -> AssistantTurn:
-        turn = super().complete(messages, tools, timeout_seconds=timeout_seconds)
-        self.calls += 1
-        usage = turn.usage
-        self._saw_usage = True
-        for attribute, key in (
-            ("prompt_tokens", "prompt_tokens"),
-            ("completion_tokens", "completion_tokens"),
-            ("total_tokens", "total_tokens"),
-            ("cached_tokens", "cached_tokens"),
-            ("cache_write_tokens", "cache_write_tokens"),
-            ("reasoning_tokens", "reasoning_tokens"),
-        ):
-            value = usage.get(key) if usage is not None else None
-            if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
-                if not self._usage_missing[key]:
-                    setattr(self, attribute, (getattr(self, attribute) or 0) + value)
-            else:
-                # A partial provider usage response cannot be safely summed;
-                # preserve null for that aggregate instead of implying a
-                # complete count.
-                self._usage_missing[key] = True
-        cost_value = turn.cost
-        if isinstance(cost_value, (float, int)) and not isinstance(cost_value, bool):
-            self._saw_cost = True
-            self.cost = (self.cost or 0.0) + float(cost_value)
-        return turn
-
-    def stats(self) -> dict[str, Any]:
-        return {
-            "steps": self.calls,
-            "tokens": {
-                "prompt": self.prompt_tokens if self._saw_usage and not self._usage_missing["prompt_tokens"] else None,
-                "completion": self.completion_tokens
-                if self._saw_usage and not self._usage_missing["completion_tokens"]
-                else None,
-                "total": self.total_tokens if self._saw_usage and not self._usage_missing["total_tokens"] else None,
-                "cached": self.cached_tokens if self._saw_usage and not self._usage_missing["cached_tokens"] else None,
-                "cache_write": self.cache_write_tokens
-                if self._saw_usage and not self._usage_missing["cache_write_tokens"]
-                else None,
-                "reasoning": self.reasoning_tokens
-                if self._saw_usage and not self._usage_missing["reasoning_tokens"]
-                else None,
-            },
-            "cost": self.cost if self._saw_cost else None,
-        }
-
-
-def _run_repopilot(request: EngineRequest) -> EngineRun:
-    config = request.config
-    model = _BenchmarkToolCallingModel(model=config.model)
-    environment = DockerExecutionEnvironment(
-        request.workspace,
-        image=config.resolved_image,
-        proxy_mode=config.proxy_mode,
-        proxy_url=config.proxy_url,
-    )
-    environment = ScenarioObserver(environment, request.workspace, request.task.behavior_spec)
-    state_directory = request.artifact_directory / "run-state"
-    artifacts = RunArtifacts(state_directory, secrets=_benchmark_secret_values(config))
-    plan_history = PlanHistory.for_task(request.task.task)
-    budget = request.effective_budget.to_run_budget()
-    runtime = AgentRuntime(
-        model,
-        create_tool_registry(
-            environment,
-            request.workspace,
-            plan_history,
-            command_timeout_seconds=budget.command_timeout_seconds,
-        ),
-        artifacts,
-        plan_history,
-        budget,
-        checkpoint_model={
-            "backend": "litellm",
-            "model_name": config.model.model_name,
-            "model_kwargs": {key: value for key, value in config.model.model_kwargs.items() if key != "api_key"},
-            "base_url": config.model.base_url,
-        },
-        checkpoint_environment={"backend": "docker", "image": config.resolved_image},
-        context=ContextManager(),
-        progress_detection_enabled=config.progress_detection_enabled,
-        approval_context=ApprovalContext(
-            environment="docker", disposable_benchmark=True, automatic_approval=request.task.category != "hitl"
-        ),
-    )
-    started = time.monotonic()
-    result: AgentRunResult | None = None
-    error: str | None = None
-    try:
-        result = runtime.run(request.task.task, request.workspace)
-        approvals = 0
-        while (
-            result.status == "WAITING_FOR_APPROVAL"
-            and approvals < budget.max_steps
-            and time.monotonic() - started < budget.max_run_seconds
-        ):
-            approvals += 1
-            result = runtime.run(
-                request.task.task,
-                request.workspace,
-                checkpoint=artifacts.read_checkpoint(),
-                approval_granted=request.task.approval_policy == "approve",
-            )
-    except Exception as exception:
-        error = str(exception) or type(exception).__name__
-    finally:
-        environment.close()
-    if artifacts.path.is_dir():
-        _copy_runtime_artifacts(artifacts.path, request.artifact_directory)
-    return EngineRun(
-        status=result.status if result is not None else None,
-        duration_seconds=time.monotonic() - started,
-        run_result=result,
-        model_stats=model.stats(),
-        evaluation_events=environment.events + [environment.audit()],
-        error=_redact_benchmark_value(error, _benchmark_secret_values(config)),
-    )
-
-
-def _copy_runtime_artifacts(source: Path, destination: Path) -> None:
-    for path in source.iterdir():
-        if path.name == "result.json":
-            continue
-        name = {"patch.diff": "runtime-patch.diff", "patch-manifest.json": "runtime-patch-manifest.json"}.get(
-            path.name, path.name
-        )
-        target = destination / name
-        if path.is_file():
-            shutil.copy2(path, target)
-            if path.name == "patch-manifest.json":
-                manifest = json.loads(target.read_text())
-                manifest["patch"] = "runtime-patch.diff"
-                manifest["replay"] = "Apply initial-worktree.diff to baseline HEAD, then runtime-patch.diff."
-                target.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
-
-
-def _benchmark_secret_values(config: BenchmarkConfig) -> list[str]:
-    model = config.model
-    values: list[str] = []
-    for candidate in (
-        model.api_key,
-        model.base_url,
-        model.model_kwargs.get("api_key"),
-        model.model_kwargs.get("api_base"),
-        model.model_kwargs.get("base_url"),
-    ):
-        if isinstance(candidate, str) and candidate and candidate not in values:
-            values.append(candidate)
-    if config.proxy_url and config.proxy_url not in values:
-        values.append(config.proxy_url)
-    for argument in docker_proxy_run_args(config.proxy_mode, config.proxy_url):
-        name, separator, value = argument.partition("=")
-        if separator and name.upper() in {"HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY"} and value not in values:
-            values.append(value)
-    return values
-
-
-def _redact_benchmark_value(value: Any, secrets: Sequence[str]) -> Any:
-    if isinstance(value, str):
-        redacted = value
-        for secret in secrets:
-            redacted = redacted.replace(secret, "[REDACTED]")
-        return redacted
-    if isinstance(value, dict):
-        return {
-            _redact_benchmark_value(key, secrets): _redact_benchmark_value(item, secrets) for key, item in value.items()
-        }
-    if isinstance(value, list):
-        return [_redact_benchmark_value(item, secrets) for item in value]
-    if isinstance(value, tuple):
-        return tuple(_redact_benchmark_value(item, secrets) for item in value)
-    return value
-
-
-def _redact_benchmark_artifacts(directory: Path, secrets: Sequence[str]) -> None:
-    if not secrets:
-        return
-    for path in directory.rglob("*"):
-        if not path.is_file() or "workspace" in path.relative_to(directory).parts:
-            continue
-        try:
-            content = path.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError):
-            continue
-        redacted = _redact_benchmark_value(content, secrets)
-        if redacted != content:
-            path.write_text(redacted, encoding="utf-8")
-
-
 def run_hidden_verifier(task: BenchmarkTask, workspace: Path) -> dict[str, Any] | None:
     """Run the manifest verifier on the host after the engine has stopped."""
 
@@ -1415,57 +942,6 @@ def capture_commits(workspace: Path, initial_head: str | None) -> list[dict[str,
     return commits
 
 
-def _metrics_for_run(
-    engine: BenchmarkEngine,
-    run: EngineRun,
-    artifact_directory: Path,
-    patch: str | None,
-    commits: list[dict[str, str]] | None,
-    verifier: dict[str, Any] | None,
-    *,
-    model_name: str | None = None,
-) -> dict[str, Any]:
-    if engine is not BenchmarkEngine.REPOPILOT:
-        trajectory = run.trajectory or {}
-        tokens = run.model_stats.get("tokens")
-        return {
-            "steps": run.model_stats.get("steps"),
-            "tokens": tokens,
-            "cost": run.model_stats.get("cost"),
-            "openai_standard_estimated_cost_usd": _estimated_standard_cost(model_name, tokens),
-            "tool_calls": run.model_stats.get("tool_calls"),
-            "errors": run.model_stats.get("errors"),
-            "retries": None,
-            "replans": None,
-            "duration_seconds": run.duration_seconds,
-            "patch": _patch_metric(artifact_directory / "patch.diff", patch),
-            "commits": commits,
-            "trajectory_status": _trajectory_status(trajectory),
-        }
-    metadata = _read_json(artifact_directory / "metadata.json")
-    trace = _read_trace(artifact_directory / "trace.jsonl")
-    recoveries = metadata.get("recoveries", []) if isinstance(metadata.get("recoveries"), list) else []
-    failures = metadata.get("failures", []) if isinstance(metadata.get("failures"), list) else []
-    retries = sum(1 for item in recoveries if isinstance(item, dict) and item.get("action") == "RETRY_MODEL")
-    budget = metadata.get("budget", {}) if isinstance(metadata.get("budget"), dict) else {}
-    tokens = run.model_stats.get("tokens")
-    return {
-        "steps": budget.get("steps_used"),
-        "tokens": tokens,
-        "cost": run.model_stats.get("cost"),
-        "openai_standard_estimated_cost_usd": _estimated_standard_cost(model_name, tokens),
-        "tool_calls": sum(1 for event in trace if event.get("type") == "tool_call"),
-        "errors": failures,
-        "retries": retries,
-        "replans": budget.get("replans_used"),
-        "duration_seconds": run.duration_seconds,
-        "patch": _patch_metric(artifact_directory / "patch.diff", patch),
-        "commits": commits,
-        "trajectory_status": run.status,
-        "verifier_success": None if verifier is None else verifier.get("exit_code") == 0,
-    }
-
-
 def _run_behavior_verifier(task, directory, evaluation, secrets):
     """Run a trusted host-only checker against retained normalized evidence."""
     context_path = directory / "evaluation-context.json"
@@ -1507,221 +983,6 @@ def _run_behavior_verifier(task, directory, evaluation, secrets):
     return _redact_benchmark_value(evaluation, secrets)
 
 
-def _estimated_standard_cost(model_name: str | None, tokens: Any) -> float | None:
-    """Return a labelled OpenAI Standard estimate for aggregated benchmark usage."""
-
-    if not isinstance(model_name, str) or not isinstance(tokens, Mapping):
-        return None
-    # ``tokens`` is the benchmark's stable public shape.  Adapt it to the
-    # pricing seam's provider-shaped usage mapping without changing the
-    # existing ``metrics.cost`` provider/LiteLLM meaning.
-    usage = {
-        "prompt_tokens": tokens.get("prompt"),
-        "completion_tokens": tokens.get("completion"),
-        "cached_tokens": tokens.get("cached"),
-        "cache_write_tokens": tokens.get("cache_write"),
-    }
-    try:
-        value = estimate_openai_standard_cost(model_name, usage)
-    except (KeyError, TypeError, ValueError):
-        # Custom relay model IDs are expected.  An unavailable catalog price
-        # should not make a benchmark run fail or turn into a fake invoice.
-        return None
-    if isinstance(value, (int, float)) and not isinstance(value, bool):
-        return float(value)
-    return None
-
-
-def _baseline_model_stats(trajectory: dict[str, Any]) -> dict[str, Any]:
-    info = trajectory.get("info", {}) if isinstance(trajectory, dict) else {}
-    stats = info.get("model_stats", {}) if isinstance(info, dict) else {}
-    messages = trajectory.get("messages", []) if isinstance(trajectory, dict) else []
-    if not isinstance(messages, list):
-        messages = []
-    usages: list[dict[str, int | None]] = []
-    costs: list[float] = []
-    actions = 0
-    errors: list[dict[str, Any]] = []
-    for message in messages:
-        if not isinstance(message, dict):
-            continue
-        extra = message.get("extra")
-        if not isinstance(extra, dict):
-            continue
-        action_value = extra.get("actions")
-        if isinstance(action_value, list):
-            actions += len(action_value)
-        cost = extra.get("cost")
-        if isinstance(cost, (int, float)):
-            costs.append(float(cost))
-        usage = extra.get("response")
-        usage_dict = _usage_dict(usage)
-        if usage_dict is not None:
-            usages.append(usage_dict)
-        returncode = extra.get("returncode")
-        if isinstance(returncode, int) and returncode != 0:
-            errors.append({"type": "command", "returncode": returncode})
-        if extra.get("interrupt_type") == "FormatError":
-            errors.append({"type": "format", "reason": message.get("content")})
-        if extra.get("exception_info"):
-            errors.append({"type": "environment", "reason": extra.get("exception_info")})
-        if extra.get("exception_str"):
-            errors.append({"type": "exception", "reason": extra.get("exception_str")})
-    model_stats: dict[str, Any] = {
-        "steps": stats.get("api_calls") if isinstance(stats, dict) else None,
-        "tokens": _sum_usage(usages),
-        "cost": float(stats["instance_cost"])
-        if (
-            isinstance(stats, dict)
-            and isinstance(stats.get("instance_cost"), (int, float))
-            and any(cost > 0.0 for cost in costs)
-        )
-        else None,
-        "tool_calls": actions,
-        "errors": errors,
-    }
-    return model_stats
-
-
-def _sum_usage(usages: Sequence[Mapping[str, int | None]]) -> dict[str, int | None] | None:
-    if not usages:
-        return {
-            "prompt": None,
-            "completion": None,
-            "total": None,
-            "cached": None,
-            "cache_write": None,
-            "reasoning": None,
-        }
-    result: dict[str, int | None] = {"prompt": 0, "completion": 0, "total": 0}
-    result.update({"cached": 0, "cache_write": 0, "reasoning": 0})
-    for usage in usages:
-        for destination, source in (
-            ("prompt", "prompt_tokens"),
-            ("completion", "completion_tokens"),
-            ("total", "total_tokens"),
-            ("cached", "cached_tokens"),
-            ("cache_write", "cache_write_tokens"),
-            ("reasoning", "reasoning_tokens"),
-        ):
-            if result[destination] is None:
-                continue
-            value = usage.get(source)
-            if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
-                result[destination] = (result[destination] or 0) + value
-            else:
-                result[destination] = None
-    return result
-
-
-def _usage_dict(response: Any) -> dict[str, int | None] | None:
-    if response is None:
-        return None
-    if isinstance(response, dict):
-        usage = response.get("usage", response)
-    else:
-        usage = getattr(response, "usage", None)
-        if usage is None and hasattr(response, "model_dump"):
-            try:
-                dumped = response.model_dump()
-            except Exception:
-                dumped = None
-            usage = dumped.get("usage") if isinstance(dumped, dict) else None
-    if hasattr(usage, "model_dump"):
-        usage = usage.model_dump()
-    if not isinstance(usage, Mapping):
-        return None
-    result: dict[str, int | None] = {
-        "prompt_tokens": _usage_token(usage, ("prompt_tokens", "input_tokens")),
-        "completion_tokens": _usage_token(usage, ("completion_tokens", "output_tokens")),
-        "total_tokens": _usage_token(usage, ("total_tokens",)),
-        "cached_tokens": _usage_token(
-            usage,
-            ("cached_tokens", "cache_read_tokens", "cache_read_input_tokens", "cached_input_tokens"),
-        ),
-        "cache_write_tokens": _usage_token(
-            usage,
-            ("cache_write_tokens", "cache_write_input_tokens", "cache_creation_input_tokens", "cache_creation_tokens"),
-        ),
-        "reasoning_tokens": _usage_token(usage, ("reasoning_tokens", "reasoning")),
-    }
-    return result
-
-
-def _usage_token(usage: Mapping[str, Any], aliases: Sequence[str]) -> int | None:
-    """Read one token count from top-level usage or a provider detail object."""
-
-    for alias in aliases:
-        value = usage.get(alias)
-        if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
-            return value
-    for details_key in (
-        "prompt_tokens_details",
-        "input_tokens_details",
-        "prompt_token_details",
-        "input_token_details",
-        "completion_tokens_details",
-        "output_tokens_details",
-        "completion_token_details",
-        "output_token_details",
-    ):
-        details = usage.get(details_key)
-        if not isinstance(details, Mapping):
-            continue
-        for alias in aliases:
-            value = details.get(alias)
-            if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
-                return value
-    return None
-
-
-def _patch_metric(path: Path, patch: str | None) -> dict[str, Any] | None:
-    if patch is None:
-        return None
-    return {
-        "path": str(path),
-        "changed": bool(patch),
-        "sha256": hashlib.sha256(patch.encode()).hexdigest(),
-    }
-
-
-def _trajectory_status(trajectory: dict[str, Any]) -> str | None:
-    info = trajectory.get("info") if isinstance(trajectory, dict) else None
-    return info.get("exit_status") if isinstance(info, dict) and isinstance(info.get("exit_status"), str) else None
-
-
-def _cleanup_baseline_environment(environment: Any) -> None:
-    cleanup = getattr(environment, "cleanup", None)
-    if callable(cleanup):
-        cleanup()
-    else:
-        close = getattr(environment, "close", None)
-        if callable(close):
-            close()
-
-
-def _read_json(path: Path) -> dict[str, Any]:
-    try:
-        value = json.loads(path.read_text(encoding="utf-8"))
-    except (FileNotFoundError, json.JSONDecodeError, UnicodeDecodeError):
-        return {}
-    return value if isinstance(value, dict) else {}
-
-
-def _read_trace(path: Path) -> list[dict[str, Any]]:
-    if not path.is_file():
-        return []
-    events: list[dict[str, Any]] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        try:
-            value = json.loads(line)
-        except json.JSONDecodeError:
-            continue
-        if isinstance(value, dict):
-            events.append(value)
-    return events
-
-
 def _run_git(
     workspace: Path,
     arguments: list[str],
@@ -1755,13 +1016,6 @@ def _first_string(value: Mapping[str, Any], *names: str) -> str | None:
     return None
 
 
-def _host_identity() -> str:
-    try:
-        return f"{os.getuid()}:{os.getgid()}"
-    except AttributeError:
-        return ""
-
-
 def _coerce_engine(value: BenchmarkEngine | str) -> BenchmarkEngine:
     if isinstance(value, BenchmarkEngine):
         return value
@@ -1771,12 +1025,6 @@ def _coerce_engine(value: BenchmarkEngine | str) -> BenchmarkEngine:
         if not value or any(c not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_" for c in value):
             raise ValueError("Engine variant must be a nonempty safe identifier") from None
         return EngineVariant(value)
-
-
-def _text(value: str | bytes | None) -> str:
-    if isinstance(value, bytes):
-        return value.decode(errors="replace")
-    return value or ""
 
 
 def _task_public_dict(task: BenchmarkTask) -> dict[str, Any]:
@@ -1802,41 +1050,28 @@ def _task_public_dict(task: BenchmarkTask) -> dict[str, Any]:
     }
 
 
-def _summary_markdown(benchmark_run: BenchmarkRun) -> str:
-    return (
-        markdown(aggregate([result.to_dict() for result in benchmark_run.results]))
-        + "\n"
-        + _legacy_summary_markdown(benchmark_run)
+def _run_baseline(request: EngineRequest) -> EngineRun:
+    from repopilot.benchmark_engines import run_baseline
+
+    return run_baseline(
+        request,
+        model_factory=get_model,
+        environment_factory=get_environment,
+        agent_factory=get_agent,
+        config_factory=get_config_from_spec,
     )
 
 
-def _legacy_summary_markdown(benchmark_run: BenchmarkRun) -> str:
-    revisions = {task.task_id: task.snapshot_revision for task in benchmark_run.tasks}
-    lines = [
-        "# Agent Benchmark Summary",
-        "",
-        "| Task | Snapshot Revision | Engine | Status | Success | Steps | Total tokens | Provider/LiteLLM cost | OpenAI Standard estimate | Duration (s) |",
-        "| --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |",
-    ]
-    for result in benchmark_run.results:
-        metrics = result.metrics
-        tokens = metrics.get("tokens")
-        total_tokens = tokens.get("total") if isinstance(tokens, Mapping) else None
-        cost = metrics.get("cost")
-        cost_text = "null" if cost is None else str(cost)
-        estimate = metrics.get("openai_standard_estimated_cost_usd")
-        estimate_text = "null" if estimate is None else str(estimate)
-        duration = metrics.get("duration_seconds")
-        duration_text = "null" if duration is None else str(duration)
-        lines.append(
-            f"| {result.task_id} | {revisions.get(result.task_id) or 'null'} | {result.engine.value} | "
-            f"{result.status or 'null'} | "
-            f"{str(result.success).lower() if result.success is not None else 'null'} | "
-            f"{metrics.get('steps', 'null')} | {total_tokens if total_tokens is not None else 'null'} | "
-            f"{cost_text} | {estimate_text} | {duration_text} |"
-        )
-    lines.extend(["", "Results are raw development evidence; no performance numbers are prefilled.", ""])
-    return "\n".join(lines)
+def _run_repopilot(request: EngineRequest) -> EngineRun:
+    from repopilot.benchmark_engines import run_repopilot
+
+    return run_repopilot(
+        request,
+        runtime_factory=AgentRuntime,
+        context_factory=ContextManager,
+        registry_factory=create_tool_registry,
+        environment_factory=DockerExecutionEnvironment,
+    )
 
 
 __all__ = [
