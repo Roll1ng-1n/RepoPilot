@@ -1,6 +1,12 @@
 {
   "ignorePatterns": [
     {
+      "pattern": "^https://jojocode\\.com/v1$"
+    },
+    {
+      "pattern": "^https://HOST:PORT$"
+    },
+    {
       "pattern": "https://github.com/?.*"
     },
     {
