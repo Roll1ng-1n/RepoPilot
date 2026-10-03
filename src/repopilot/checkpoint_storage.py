@@ -64,7 +64,10 @@ class CheckpointStorage:
             or size < 0
         ):
             raise ValueError("Checkpoint has an invalid content object reference.")
-        path = self.artifacts.path / "objects" / (digest + ".utf8")
+        directory = self.artifacts.path / "objects"
+        if directory.is_symlink():
+            raise ValueError("Checkpoint object directory must not be a symlink.")
+        path = directory / (digest + ".utf8")
         if path.is_symlink() or not path.is_file():
             raise ValueError(f"Checkpoint content object is missing: {digest}.")
         actual = hashlib.sha256()

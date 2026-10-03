@@ -113,3 +113,19 @@ def test_modified_manifest_cannot_replace_existing_fields_or_escape_object_direc
     path.write_text(json.dumps(value))
     with pytest.raises(ValueError, match="reference"):
         artifacts.read_checkpoint()
+
+
+def test_replaced_object_directory_is_rejected_for_reads_and_cached_writes(tmp_path):
+    artifacts = RunArtifacts(tmp_path, secrets=[])
+    value = checkpoint("x" * 20000)
+    artifacts.write_checkpoint(value)
+    current = (artifacts.path / "checkpoint.json").read_bytes()
+    objects = artifacts.path / "objects"
+    moved = artifacts.path / "moved-objects"
+    objects.rename(moved)
+    objects.symlink_to(moved, target_is_directory=True)
+    with pytest.raises(ValueError, match="symlink"):
+        artifacts.read_checkpoint()
+    with pytest.raises(ValueError, match="symlink"):
+        artifacts.write_checkpoint(value)
+    assert (artifacts.path / "checkpoint.json").read_bytes() == current
