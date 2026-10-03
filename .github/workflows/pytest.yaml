@@ -17,6 +17,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
+      - run: sudo apt-get update && sudo apt-get install -y ripgrep
       - run: python -m pip install '.[test]'
       - run: ruff check src/repopilot tests/repopilot scripts/packaging
       - run: pytest tests/repopilot -m 'not docker and not external' -q -rs
