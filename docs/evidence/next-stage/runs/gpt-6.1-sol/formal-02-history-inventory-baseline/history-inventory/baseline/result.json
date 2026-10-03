@@ -1,0 +1,206 @@
+{
+  "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-02-history-inventory-baseline/history-inventory/baseline",
+  "behavior_pass": true,
+  "capabilities": [
+    "recovery"
+  ],
+  "category": "recovery",
+  "engine": "baseline",
+  "error": null,
+  "evaluation": {
+    "approval_events": [],
+    "behavior_pass": true,
+    "behavior_verifier": {
+      "recovery": {
+        "pass": true,
+        "reason": "Every triggered recoverable scenario must have an objective resolution."
+      }
+    },
+    "budget_usage": {
+      "complete_audit": false,
+      "limits": {
+        "command_timeout_seconds": 60,
+        "max_consecutive_failures": 5,
+        "max_replans": 4,
+        "max_run_seconds": 7200,
+        "max_steps": 48
+      },
+      "replans_used": null,
+      "steps_used": 9
+    },
+    "churn": {
+      "final_step": 9,
+      "first_solved_step": null,
+      "post_solution_steps": null,
+      "reason": "Missing immutable repository states at every step boundary.",
+      "status": "unsupported"
+    },
+    "duration": {
+      "active_seconds": null,
+      "coverage": "unavailable",
+      "idle_seconds": null,
+      "llm_seconds": null,
+      "measured_orchestration_seconds": null,
+      "operations": {},
+      "orchestration_seconds": null,
+      "tool_seconds": null,
+      "wall_clock_seconds": 73.38428755399946
+    },
+    "progress": {
+      "first_effective_source_change_step": null,
+      "source_changes": []
+    },
+    "recovery": {
+      "attempt_count": 1,
+      "failure_types": [
+        "test_failure"
+      ],
+      "post_recovery_repository_pass": true,
+      "resolved_count": 1,
+      "success_rate": 1.0,
+      "trigger_count": 1
+    },
+    "replan": {
+      "evidence_count": null,
+      "missed_scenarios": null,
+      "post_replan_repository_pass": null,
+      "success_rate": null,
+      "trigger_rate": null,
+      "triggered_count": 0,
+      "triggered_scenarios": null,
+      "unnecessary_replans": null,
+      "valid_count": null
+    },
+    "repository_pass": true,
+    "schema_version": 6,
+    "task_pass": true,
+    "termination": "correct_success",
+    "tool_quality": {
+      "failure_count": 2,
+      "failure_rate": 0.14285714285714285,
+      "recovery_rate": 1.0,
+      "recovery_scope": "manifest-declared public-command failures only",
+      "redundant_calls": null,
+      "window_repeated_exploration": null
+    }
+  },
+  "metrics": {
+    "commits": [],
+    "cost": 0.0822296,
+    "duration_seconds": 73.38428755399946,
+    "errors": [
+      {
+        "returncode": 1,
+        "type": "command"
+      },
+      {
+        "returncode": 127,
+        "type": "command"
+      }
+    ],
+    "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "llm_calls": 9,
+    "openai_standard_estimated_cost_usd": null,
+    "patch": {
+      "changed": true,
+      "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-02-history-inventory-baseline/history-inventory/baseline/patch.diff",
+      "sha256": "9ecb1018183bcfba0794b5ee366fc5915810d12da1c777f40be087a051c3b83e"
+    },
+    "preflight": {
+      "checks": [
+        {
+          "command": [
+            "docker",
+            "image",
+            "inspect",
+            "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+          ],
+          "duration_seconds": 0.039621279000130016,
+          "exit_code": 0,
+          "name": "image_inspect",
+          "stderr": "",
+          "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "python",
+            "--version"
+          ],
+          "duration_seconds": 0.4785930100006226,
+          "exit_code": 0,
+          "name": "python",
+          "stderr": "",
+          "stdout": "Python 3.12.14\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "git",
+            "--version"
+          ],
+          "duration_seconds": 0.39569903799929307,
+          "exit_code": 0,
+          "name": "git",
+          "stderr": "",
+          "stdout": "git version 2.47.3\n"
+        }
+      ],
+      "error": null,
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "status": "READY"
+    },
+    "replans": null,
+    "retries": null,
+    "run_budget": {
+      "command_timeout_seconds": 60,
+      "max_consecutive_failures": 5,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48
+    },
+    "steps": 9,
+    "tokens": {
+      "cache_write": null,
+      "cached": null,
+      "completion": 2332,
+      "prompt": 125762,
+      "reasoning": null,
+      "total": 128094
+    },
+    "tool_calls": 14,
+    "tool_failures": 2,
+    "trajectory_status": "Submitted"
+  },
+  "model": "openai/gpt-6.1-sol",
+  "repeat": 1,
+  "repository_pass": true,
+  "run_id": "eb02dc3b151d403eb4393c6545d62bbf",
+  "status": "Submitted",
+  "success": true,
+  "task_id": "history-inventory",
+  "task_pass": true,
+  "verifier": {
+    "duration_seconds": 0.038309905998175964,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "hidden checks passed\n",
+    "success_condition": {
+      "verifier_exit_code": 0
+    }
+  }
+}

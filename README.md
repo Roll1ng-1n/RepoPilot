@@ -66,7 +66,7 @@ repopilot resume RUN_ID --state-dir ./agent-runs --env-file .env
 
 - [能力来源矩阵](docs/repopilot-capabilities.md)：上游复用、RepoPilot 扩展和新增职责。
 - [评测操作](docs/repopilot-benchmark.md)与[指标定义](docs/evidence/next-stage/metrics.md)：耗时、循环、首次实际源码修改与兼容语义。
-- [下一阶段证据索引](docs/evidence/next-stage/report.md)：固定真实仓库方案、原始失败和模型对照进度。
+- [下一阶段证据索引](docs/evidence/next-stage/report.md)：45 个正式真实对照已完成，原始失败、替换和未知结果均保留；本轮未证明循环检测的任务收益。
 - [上下文进度复测](docs/evidence/issue27-real-models/report.md)：保留成功、预算耗尽和服务错误，历史模型不同的结果只作描述比较。
 - [历史 SWE-bench smoke](docs/repopilot-swebench-smoke.md)：预算耗尽、无最终验证的负面记录，不能视为 SWE-bench 分数。
 

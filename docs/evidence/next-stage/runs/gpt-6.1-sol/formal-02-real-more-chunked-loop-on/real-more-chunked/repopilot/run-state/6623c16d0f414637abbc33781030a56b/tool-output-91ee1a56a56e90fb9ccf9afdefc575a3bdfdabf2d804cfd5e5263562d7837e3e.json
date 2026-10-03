@@ -1,0 +1,1 @@
+{"duration_seconds": 0.12069821900149691, "exit_code": 0, "stderr": "", "stdout": "more_itertools/more.pyi:178:def chunked(\nmore_itertools/more.pyi:787:def chunked_even(iterable: Iterable[_T], n: int) -> Iterator[list[_T]]: ...\nmore_itertools/more.py:209:def chunked(iterable, n, strict=False):\nmore_itertools/more.py:4532:def chunked_even(iterable, n):\n", "truncated": false}

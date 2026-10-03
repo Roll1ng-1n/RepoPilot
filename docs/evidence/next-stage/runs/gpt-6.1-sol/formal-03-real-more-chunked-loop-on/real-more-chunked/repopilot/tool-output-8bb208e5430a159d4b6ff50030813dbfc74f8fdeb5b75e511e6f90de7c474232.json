@@ -1,0 +1,1 @@
+{"duration_seconds": 0.06643451000127243, "exit_code": 0, "stderr": "", "stdout": "209:def chunked(iterable, n, strict=False):\n4532:def chunked_even(iterable, n):\n", "truncated": false}

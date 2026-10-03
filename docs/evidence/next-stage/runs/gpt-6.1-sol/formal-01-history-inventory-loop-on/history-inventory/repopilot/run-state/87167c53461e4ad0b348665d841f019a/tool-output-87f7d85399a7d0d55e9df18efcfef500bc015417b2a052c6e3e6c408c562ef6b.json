@@ -1,0 +1,1 @@
+{"duration_seconds": 0.08323883199955162, "exit_code": 0, "stderr": "", "stdout": "checks/test_pipeline.py:2:from src.inventory.pipeline import reconcile\n", "truncated": false}

@@ -1,0 +1,56 @@
+{
+  "checks": [
+    {
+      "command": [
+        "docker",
+        "image",
+        "inspect",
+        "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+        "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+      ],
+      "duration_seconds": 0.03985269900113053,
+      "exit_code": 0,
+      "name": "image_inspect",
+      "stderr": "",
+      "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n"
+    },
+    {
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "--pull=never",
+        "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "python",
+        "--version"
+      ],
+      "duration_seconds": 0.49158535199967446,
+      "exit_code": 0,
+      "name": "python",
+      "stderr": "",
+      "stdout": "Python 3.12.14\n"
+    },
+    {
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "--pull=never",
+        "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "git",
+        "--version"
+      ],
+      "duration_seconds": 0.5158015859997249,
+      "exit_code": 0,
+      "name": "git",
+      "stderr": "",
+      "stdout": "git version 2.47.3\n"
+    }
+  ],
+  "error": null,
+  "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "status": "READY"
+}

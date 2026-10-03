@@ -36,11 +36,8 @@ INFO    -  The following pages exist in the docs directory, but are not included
   - SECURITY.md
   - _footer.md
   - model-comparison-test-plan.md
-  - repopilot-approval.md
-  - repopilot-context.md
   - repopilot-design-validation-record.md
   - repopilot-swebench-smoke.md
-  - upstream-overview.md
   - adr/0001-develop-from-pinned-mini-swe-agent-source.md
   - adr/0002-separate-upstream-base-from-repopilot-engineering.md
   - adr/0003-use-replaceable-execution-environments.md
@@ -194,7 +191,6 @@ INFO    -  The following pages exist in the docs directory, but are not included
   - evidence/next-stage/architecture.md
   - evidence/next-stage/metrics.md
   - evidence/next-stage/model-report.md
-  - evidence/next-stage/report.md
   - evidence/next-stage/packaging/report.md
   - evidence/next-stage/performance/report.md
   - evidence/next-stage/runs/gpt-6-luna/smoke-00-real-boltons-slug-loop-on/summary.md
@@ -207,6 +203,8 @@ INFO    -  The following pages exist in the docs directory, but are not included
   - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-baseline/summary.md
   - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on/summary.md
   - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on/real-more-chunked/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on-replacement/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on-replacement/real-more-chunked/repopilot/task_report.md
   - evidence/next-stage/runs/gpt-6.1-sol/smoke-00-real-boltons-slug-loop-on/summary.md
   - evidence/next-stage/runs/gpt-6.1-sol/smoke-00-real-boltons-slug-loop-on/real-boltons-slug/repopilot/task_report.md
   - evidence/stage4-24tasks-luna-sol-v1/recomputed.md
@@ -217,4 +215,4 @@ INFO    -  The following pages exist in the docs directory, but are not included
 INFO    -  Doc file 'evidence/issues-19-24/round2/external/summary.md' contains an unrecognized relative link 'smoke-sol/', it was left as is.
 INFO    -  Doc file 'evidence/issues-19-24/round2/external/summary.md' contains an unrecognized relative link 'smoke-luna/', it was left as is.
 INFO    -  Doc file 'evidence/luna-git-image-smoke-v1/summary.md' contains an unrecognized relative link 'artifacts/gpt-5.6-luna/round-001/workflow-human-approval-git/repopilot/run-state/2a0266238abb4d9088218cbf9a630496/', it was left as is.
-INFO    -  Documentation built in 5.61 seconds
+INFO    -  Documentation built in 6.78 seconds

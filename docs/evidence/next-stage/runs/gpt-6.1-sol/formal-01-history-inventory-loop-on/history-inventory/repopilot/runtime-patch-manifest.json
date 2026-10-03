@@ -1,0 +1,27 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "a7e51a889c1a69bb21cdd4c38f1cbd45a84f603e453a48cf1814fc863d5eeea9",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-history-inventory-loop-on/history-inventory/repopilot/workspace",
+      "head": "35640d8ea2aaee0afbaaba1c0268a5e5579facbb",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-history-inventory-loop-on/history-inventory/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "4800819275fc12bfdb77af400bff6f2f15fc240f"
+  },
+  "bytes": 10296,
+  "final": {
+    "state": {
+      "diff_fingerprint": "98c6a5a639e52d8f7d94c2acee0458636d429578c41cca65d7ce8f9656ac5f0b",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-history-inventory-loop-on/history-inventory/repopilot/workspace",
+      "head": "35640d8ea2aaee0afbaaba1c0268a5e5579facbb",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-history-inventory-loop-on/history-inventory/repopilot/workspace",
+      "status": " M src/inventory/aggregate.py\n M src/inventory/normalize.py\n M src/inventory/parse.py\n M src/inventory/render.py\n M src/inventory/select.py\n M src/inventory/validate.py\n?? checks/__pycache__/test_pipeline.cpython-312.pyc\n?? src/__pycache__/__init__.cpython-312.pyc\n?? src/inventory/__pycache__/__init__.cpython-312.pyc\n?? src/inventory/__pycache__/aggregate.cpython-312.pyc\n?? src/inventory/__pycache__/normalize.cpython-312.pyc\n?? src/inventory/__pycache__/parse.cpython-312.pyc\n?? src/inventory/__pycache__/pipeline.cpython-312.pyc\n?? src/inventory/__pycache__/render.cpython-312.pyc\n?? src/inventory/__pycache__/select.cpython-312.pyc\n?? src/inventory/__pycache__/validate.cpython-312.pyc\n"
+    },
+    "tree": "8b7340b81e3d3d90962b1555f2db0041398a7915"
+  },
+  "patch": "runtime-patch.diff",
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then runtime-patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "0f42fc8221b0262dbac1b110173c9b72d02aab7d2b680aa42139edaa850bdf84"
+}

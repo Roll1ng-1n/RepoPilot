@@ -1,0 +1,268 @@
+{
+  "stage": "formal",
+  "repeat": 3,
+  "replacement": false,
+  "variant": "loop-on",
+  "source_sha256": "a929d146476d00f798ed609ab75b2863134ddef2f8f2eb143d11a55d7552fd62",
+  "result": {
+    "run_id": "36a5b1df03334f3eb4fa7a7ecff95e56",
+    "repeat": 1,
+    "model": "openai/gpt-6.1-sol",
+    "category": "recovery",
+    "capabilities": [
+      "recovery"
+    ],
+    "evaluation": {
+      "schema_version": 6,
+      "repository_pass": true,
+      "behavior_pass": true,
+      "task_pass": true,
+      "behavior_verifier": {
+        "recovery": {
+          "pass": true,
+          "reason": "Every triggered recoverable scenario must have an objective resolution."
+        }
+      },
+      "termination": "correct_success",
+      "recovery": {
+        "trigger_count": 1,
+        "attempt_count": 2,
+        "resolved_count": 1,
+        "success_rate": 1.0,
+        "post_recovery_repository_pass": true,
+        "failure_types": [
+          "test_failure"
+        ]
+      },
+      "replan": {
+        "evidence_count": null,
+        "triggered_count": 1,
+        "valid_count": null,
+        "trigger_rate": null,
+        "triggered_scenarios": null,
+        "missed_scenarios": null,
+        "unnecessary_replans": null,
+        "success_rate": null,
+        "post_replan_repository_pass": null
+      },
+      "tool_quality": {
+        "failure_count": 5,
+        "failure_rate": 0.1,
+        "recovery_rate": 1.0,
+        "recovery_scope": "manifest-declared public-command failures only",
+        "redundant_calls": 0,
+        "window_repeated_exploration": 0
+      },
+      "budget_usage": {
+        "limits": {
+          "max_steps": 48,
+          "max_replans": 4,
+          "max_consecutive_failures": 5,
+          "command_timeout_seconds": 60,
+          "max_run_seconds": 7200
+        },
+        "steps_used": 16,
+        "replans_used": 1,
+        "complete_audit": false
+      },
+      "approval_events": [],
+      "progress": {
+        "first_effective_source_change_step": 12,
+        "source_changes": [
+          {
+            "after": {
+              "checks/test_pipeline.py": "ed498ab5c14fbeb8c12788845ac07289e53d36f55d992fe398b1e4ddc81807c8",
+              "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "src/inventory/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "src/inventory/aggregate.py": "fac938e6b7b601b2bad2b26fa4398f1c4fe7487b6a99d0fb5d607463dbd73587",
+              "src/inventory/normalize.py": "5e29798b08d1b3242192534aa6b262cc39a4d8e7a9f4035ae2c686659a021abb",
+              "src/inventory/parse.py": "b00a36809d712d89d959c8f9c5a352d819b4bb837c8e0b8636ac94eb2bfa4203",
+              "src/inventory/pipeline.py": "d50c5ad37cb59dd338c0d8fadaf955e5b4ed0f8dcaea7263e8e9958f4ae0c7c9",
+              "src/inventory/render.py": "3082723015bd62c5847a359e722074d7fd04618df6751b2a08ecb0de807b031a",
+              "src/inventory/select.py": "356560636833828b13ae56cab2f8d527beb455b447f336e3576390dc0d9c41f9",
+              "src/inventory/validate.py": "2d58dd32c3e2913e9c86ce9e3d3c49c93c9081d638676b83b9e0181d782ceba7"
+            },
+            "before": {
+              "checks/test_pipeline.py": "ed498ab5c14fbeb8c12788845ac07289e53d36f55d992fe398b1e4ddc81807c8",
+              "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "src/inventory/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "src/inventory/aggregate.py": "e1c95e21955dcaffd70bf735ebe074de6c82d325d1bc754b1777d6c1063b4cf4",
+              "src/inventory/normalize.py": "608539965db913c8914cacc5ad66410c5cecae78fc46220f14de50a62fea4490",
+              "src/inventory/parse.py": "913374d908c19863ea398fdaff82da5946bb79ded9e5af1350cab153742f1b1f",
+              "src/inventory/pipeline.py": "d50c5ad37cb59dd338c0d8fadaf955e5b4ed0f8dcaea7263e8e9958f4ae0c7c9",
+              "src/inventory/render.py": "6d4bcc5d99a064dbcc24b466296fce60022aeb30741ab400f9ecc5ce826016f8",
+              "src/inventory/select.py": "49f683917e42b7b8792c0d1fca6bc6cae2cb3d199caac2fd5417d1ab5b63a103",
+              "src/inventory/validate.py": "d9c1ccd32b0946cb6db98805d573deb05468696b4e4925b6b7b03be0956b7a42"
+            },
+            "paths": [
+              "src/inventory/aggregate.py",
+              "src/inventory/normalize.py",
+              "src/inventory/parse.py",
+              "src/inventory/render.py",
+              "src/inventory/select.py",
+              "src/inventory/validate.py"
+            ],
+            "step": 12,
+            "tool_call_id": "call_8QLgGjsdbQRb0FHYT9uATrgv",
+            "tool_name": "apply_patch",
+            "type": "source_changed",
+            "source_index": 1300
+          }
+        ]
+      },
+      "churn": {
+        "status": "unsupported",
+        "reason": "Missing immutable repository states at every step boundary.",
+        "first_solved_step": null,
+        "final_step": 16,
+        "post_solution_steps": null
+      },
+      "duration": {
+        "wall_clock_seconds": 495.201215776,
+        "llm_seconds": 486.429098883993,
+        "coverage": "complete",
+        "active_seconds": 494.93445717899885,
+        "idle_seconds": 0.0,
+        "tool_seconds": 4.238508036007261,
+        "orchestration_seconds": 4.260887193991948,
+        "measured_orchestration_seconds": 4.260887193991948,
+        "operations": {
+          "active_run": 494.93445717899885,
+          "approval_assessment": 0.0020775830089405645,
+          "checkpoint_serialization": 0.3500349899986759,
+          "checkpoint_write_sync": 2.0035412030192674,
+          "context_prepare": 0.015933666993078077,
+          "model_complete": 486.43506194899965,
+          "repository_scan": 1.4808720049659314,
+          "source_scan": 0.030134055003145477,
+          "tool_execute": 4.238508036007261,
+          "tool_prepare": 0.0403174969869724
+        }
+      }
+    },
+    "repository_pass": true,
+    "behavior_pass": true,
+    "task_pass": true,
+    "task_id": "history-inventory",
+    "engine": "repopilot",
+    "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-loop-on/history-inventory/repopilot",
+    "status": "SUCCEEDED",
+    "success": true,
+    "metrics": {
+      "steps": 16,
+      "tokens": {
+        "prompt": 148259,
+        "completion": 3399,
+        "total": 151658,
+        "cached": null,
+        "cache_write": null,
+        "reasoning": null
+      },
+      "cost": 0.189452,
+      "openai_standard_estimated_cost_usd": null,
+      "tool_calls": 50,
+      "errors": [
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "retries": 0,
+      "replans": 1,
+      "duration_seconds": 495.201215776,
+      "patch": {
+        "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-loop-on/history-inventory/repopilot/patch.diff",
+        "changed": true,
+        "sha256": "c8a66cd63173ad22c0dc3998ad1a82b8df10b18b4ee5c834e6225e4d1503c38f"
+      },
+      "commits": [],
+      "trajectory_status": "SUCCEEDED",
+      "verifier_success": true,
+      "run_budget": {
+        "max_steps": 48,
+        "max_replans": 4,
+        "max_consecutive_failures": 5,
+        "command_timeout_seconds": 60,
+        "max_run_seconds": 7200
+      },
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "preflight": {
+        "status": "READY",
+        "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "checks": [
+          {
+            "name": "image_inspect",
+            "command": [
+              "docker",
+              "image",
+              "inspect",
+              "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+            ],
+            "exit_code": 0,
+            "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n",
+            "stderr": "",
+            "duration_seconds": 0.04095199600124033
+          },
+          {
+            "name": "python",
+            "command": [
+              "docker",
+              "run",
+              "--rm",
+              "--pull=never",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+              "python",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stdout": "Python 3.12.14\n",
+            "stderr": "",
+            "duration_seconds": 0.4215169999988575
+          },
+          {
+            "name": "git",
+            "command": [
+              "docker",
+              "run",
+              "--rm",
+              "--pull=never",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+              "git",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stdout": "git version 2.47.3\n",
+            "stderr": "",
+            "duration_seconds": 0.4854923660022905
+          }
+        ],
+        "error": null
+      },
+      "llm_calls": 16,
+      "tool_failures": 5
+    },
+    "verifier": {
+      "exit_code": 0,
+      "stdout": "hidden checks passed\n",
+      "stderr": "",
+      "duration_seconds": 0.030368942996574333,
+      "success_condition": {
+        "verifier_exit_code": 0
+      }
+    },
+    "error": null
+  },
+  "provider_failure": false
+}

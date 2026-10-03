@@ -1,0 +1,217 @@
+{
+  "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on-replacement/real-more-chunked/repopilot",
+  "behavior_pass": true,
+  "capabilities": [],
+  "category": "cross-file",
+  "engine": "repopilot",
+  "error": null,
+  "evaluation": {
+    "approval_events": [],
+    "behavior_pass": true,
+    "behavior_verifier": {},
+    "budget_usage": {
+      "complete_audit": false,
+      "limits": {
+        "command_timeout_seconds": 60,
+        "max_consecutive_failures": 5,
+        "max_replans": 4,
+        "max_run_seconds": 7200,
+        "max_steps": 48
+      },
+      "replans_used": 0,
+      "steps_used": 48
+    },
+    "churn": {
+      "final_step": 48,
+      "first_solved_step": null,
+      "post_solution_steps": null,
+      "reason": "Missing immutable repository states at every step boundary.",
+      "status": "unsupported"
+    },
+    "duration": {
+      "active_seconds": 1211.862732224,
+      "coverage": "complete",
+      "idle_seconds": 0.0,
+      "llm_seconds": 1184.2991823150005,
+      "measured_orchestration_seconds": 15.643207692001852,
+      "operations": {
+        "active_run": 1211.862732224,
+        "approval_assessment": 0.0058819169953494566,
+        "checkpoint_serialization": 2.025358220999806,
+        "checkpoint_write_sync": 6.550238661015101,
+        "context_prepare": 0.15922812999997404,
+        "model_complete": 1184.3185481899982,
+        "repository_scan": 4.273269392010661,
+        "source_scan": 0.1427002550008183,
+        "tool_execute": 11.900976341999922,
+        "tool_prepare": 0.09304517199507245
+      },
+      "orchestration_seconds": 15.643207692001852,
+      "tool_seconds": 11.900976341999922,
+      "wall_clock_seconds": 1212.1397308349997
+    },
+    "progress": {
+      "first_effective_source_change_step": null,
+      "source_changes": []
+    },
+    "recovery": {
+      "attempt_count": null,
+      "failure_types": [],
+      "post_recovery_repository_pass": null,
+      "resolved_count": null,
+      "success_rate": null,
+      "trigger_count": null
+    },
+    "replan": {
+      "evidence_count": null,
+      "missed_scenarios": null,
+      "post_replan_repository_pass": null,
+      "success_rate": null,
+      "trigger_rate": null,
+      "triggered_count": 0,
+      "triggered_scenarios": null,
+      "unnecessary_replans": null,
+      "valid_count": null
+    },
+    "repository_pass": false,
+    "schema_version": 6,
+    "task_pass": false,
+    "termination": "correct_failure",
+    "tool_quality": {
+      "failure_count": 6,
+      "failure_rate": 0.04411764705882353,
+      "recovery_rate": null,
+      "recovery_scope": "manifest-declared public-command failures only",
+      "redundant_calls": 0,
+      "window_repeated_exploration": 1
+    }
+  },
+  "metrics": {
+    "commits": [],
+    "cost": 0.5484596000000002,
+    "duration_seconds": 1212.1397308349997,
+    "errors": [
+      {
+        "category": "TOOL_ERROR",
+        "reason": "Unknown artifact reference.",
+        "tool_name": "read_artifact"
+      },
+      {
+        "category": "MODEL_ERROR",
+        "reason": "litellm.InternalServerError: InternalServerError: OpenAIException - Connection error."
+      },
+      {
+        "category": "MODEL_ERROR",
+        "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out"
+      },
+      {
+        "category": "TOOL_ERROR",
+        "reason": "Unknown artifact reference.",
+        "tool_name": "read_artifact"
+      }
+    ],
+    "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "llm_calls": 48,
+    "openai_standard_estimated_cost_usd": null,
+    "patch": {
+      "changed": false,
+      "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on-replacement/real-more-chunked/repopilot/patch.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "preflight": {
+      "checks": [
+        {
+          "command": [
+            "docker",
+            "image",
+            "inspect",
+            "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+          ],
+          "duration_seconds": 0.041330646999995224,
+          "exit_code": 0,
+          "name": "image_inspect",
+          "stderr": "",
+          "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "python",
+            "--version"
+          ],
+          "duration_seconds": 0.5232687710004029,
+          "exit_code": 0,
+          "name": "python",
+          "stderr": "",
+          "stdout": "Python 3.12.14\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "git",
+            "--version"
+          ],
+          "duration_seconds": 0.5962819820006189,
+          "exit_code": 0,
+          "name": "git",
+          "stderr": "",
+          "stdout": "git version 2.47.3\n"
+        }
+      ],
+      "error": null,
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "status": "READY"
+    },
+    "replans": 0,
+    "retries": 2,
+    "run_budget": {
+      "command_timeout_seconds": 60,
+      "max_consecutive_failures": 5,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48
+    },
+    "steps": 48,
+    "tokens": {
+      "cache_write": null,
+      "cached": null,
+      "completion": 6739,
+      "prompt": 477898,
+      "reasoning": null,
+      "total": 484637
+    },
+    "tool_calls": 136,
+    "tool_failures": 6,
+    "trajectory_status": "BUDGET_EXCEEDED",
+    "verifier_success": false
+  },
+  "model": "openai/gpt-6.1-sol",
+  "repeat": 1,
+  "repository_pass": false,
+  "run_id": "3ba9dbb5c5d74cd3a362467d8c00a00d",
+  "status": "BUDGET_EXCEEDED",
+  "success": false,
+  "task_id": "real-more-chunked",
+  "task_pass": false,
+  "verifier": {
+    "duration_seconds": 0.05081746099949669,
+    "exit_code": 1,
+    "stderr": "Traceback (most recent call last):\n  File \"/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/tasks/real-more-chunked/verify.py\", line 7, in <module>\n    from more_itertools import chunked\nImportError: cannot import name 'chunked' from 'more_itertools' (/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on-replacement/real-more-chunked/repopilot/workspace/more_itertools/__init__.py). Did you mean: 'ichunked'?\n",
+    "stdout": "",
+    "success_condition": "The hidden verifier exits with code 0."
+  }
+}

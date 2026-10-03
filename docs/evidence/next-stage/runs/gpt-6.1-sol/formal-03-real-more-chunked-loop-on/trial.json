@@ -1,0 +1,254 @@
+{
+  "stage": "formal",
+  "repeat": 3,
+  "replacement": false,
+  "variant": "loop-on",
+  "source_sha256": "a929d146476d00f798ed609ab75b2863134ddef2f8f2eb143d11a55d7552fd62",
+  "result": {
+    "run_id": "cd0669ae4f64494ead2f4d0621330c17",
+    "repeat": 1,
+    "model": "openai/gpt-6.1-sol",
+    "category": "cross-file",
+    "capabilities": [],
+    "evaluation": {
+      "schema_version": 6,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "task_pass": false,
+      "behavior_verifier": {},
+      "termination": "correct_failure",
+      "recovery": {
+        "trigger_count": null,
+        "attempt_count": null,
+        "resolved_count": null,
+        "success_rate": null,
+        "post_recovery_repository_pass": null,
+        "failure_types": []
+      },
+      "replan": {
+        "evidence_count": null,
+        "triggered_count": 0,
+        "valid_count": null,
+        "trigger_rate": null,
+        "triggered_scenarios": null,
+        "missed_scenarios": null,
+        "unnecessary_replans": null,
+        "success_rate": null,
+        "post_replan_repository_pass": null
+      },
+      "tool_quality": {
+        "failure_count": 11,
+        "failure_rate": 0.07482993197278912,
+        "recovery_rate": null,
+        "recovery_scope": "manifest-declared public-command failures only",
+        "redundant_calls": 0,
+        "window_repeated_exploration": 2
+      },
+      "budget_usage": {
+        "limits": {
+          "max_steps": 48,
+          "max_replans": 4,
+          "max_consecutive_failures": 5,
+          "command_timeout_seconds": 60,
+          "max_run_seconds": 7200
+        },
+        "steps_used": 48,
+        "replans_used": 0,
+        "complete_audit": false
+      },
+      "approval_events": [],
+      "progress": {
+        "first_effective_source_change_step": 34,
+        "source_changes": [
+          {
+            "after": {
+              "checks/test_regression.py": "970b5c9301b605d060aee1ad363c1422662aaeb7718b6733c8488e151c38d5a5",
+              "docs/conf.py": "444752faacd682231c2ed158f7baad7bc2746101fd367961e84d78369fdddc19",
+              "more_itertools/__init__.py": "e45ec4ff3a6819c1015bf4ffdd613459862df23fa0268748ba205c389c6b3aff",
+              "more_itertools/__init__.pyi": "e41dde4f338dd4106e38ba1bd6f09f97211bda549deaeb17410f82bfe85791e0",
+              "more_itertools/more.py": "98d3ca2aee5423b9512f8eb4be09b441309616218c542328b123f15527626e8b",
+              "more_itertools/more.pyi": "7e9120357dceebac18e5c9d3face5560328d52901c682c94de23fce08b7738e3",
+              "more_itertools/recipes.py": "da42907b60e52437d772157899b5fa53bc3e1a38e391654d6a2fadccf5a36ecd",
+              "more_itertools/recipes.pyi": "2cd47037e38bde790c7d002ac7e3cf7357c169eb5439b6ff67a99d78fcb38757",
+              "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "tests/test_more.py": "94e6d550496b452546d5dadb520d256c51aacc98b82ff4c2461301c67bb826b9",
+              "tests/test_recipes.py": "666e57a60fd93cdc8b1ae6030967f32365d8990586f00e2b7a2468f3cfe9e072"
+            },
+            "before": {
+              "checks/test_regression.py": "970b5c9301b605d060aee1ad363c1422662aaeb7718b6733c8488e151c38d5a5",
+              "docs/conf.py": "444752faacd682231c2ed158f7baad7bc2746101fd367961e84d78369fdddc19",
+              "more_itertools/__init__.py": "e45ec4ff3a6819c1015bf4ffdd613459862df23fa0268748ba205c389c6b3aff",
+              "more_itertools/__init__.pyi": "e41dde4f338dd4106e38ba1bd6f09f97211bda549deaeb17410f82bfe85791e0",
+              "more_itertools/more.py": "c7686b62596dda7e54321885d60ac57aa416d575a5f91b79883b79a2be28ded1",
+              "more_itertools/more.pyi": "7e9120357dceebac18e5c9d3face5560328d52901c682c94de23fce08b7738e3",
+              "more_itertools/recipes.py": "da42907b60e52437d772157899b5fa53bc3e1a38e391654d6a2fadccf5a36ecd",
+              "more_itertools/recipes.pyi": "2cd47037e38bde790c7d002ac7e3cf7357c169eb5439b6ff67a99d78fcb38757",
+              "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "tests/test_more.py": "94e6d550496b452546d5dadb520d256c51aacc98b82ff4c2461301c67bb826b9",
+              "tests/test_recipes.py": "666e57a60fd93cdc8b1ae6030967f32365d8990586f00e2b7a2468f3cfe9e072"
+            },
+            "paths": [
+              "more_itertools/more.py"
+            ],
+            "step": 34,
+            "tool_call_id": "call_zO1aW35VXeHnZ79Vq5ZJKeR8",
+            "tool_name": "apply_patch",
+            "type": "source_changed",
+            "source_index": 4203
+          }
+        ]
+      },
+      "churn": {
+        "status": "unsupported",
+        "reason": "Missing immutable repository states at every step boundary.",
+        "first_solved_step": null,
+        "final_step": 48,
+        "post_solution_steps": null
+      },
+      "duration": {
+        "wall_clock_seconds": 584.1533579560019,
+        "llm_seconds": 559.6334090490018,
+        "coverage": "complete",
+        "active_seconds": 583.856016695001,
+        "idle_seconds": 0.0,
+        "tool_seconds": 10.500517893022334,
+        "orchestration_seconds": 13.707968247985264,
+        "measured_orchestration_seconds": 13.707968247985264,
+        "operations": {
+          "active_run": 583.856016695001,
+          "approval_assessment": 0.0055078870136640035,
+          "checkpoint_serialization": 1.8185612080160354,
+          "checkpoint_write_sync": 6.420948099999805,
+          "context_prepare": 0.0996158829984779,
+          "model_complete": 559.6475305539934,
+          "repository_scan": 3.7334264339733636,
+          "source_scan": 0.165406938027445,
+          "tool_execute": 10.500517893022334,
+          "tool_prepare": 0.09173729004760389
+        }
+      }
+    },
+    "repository_pass": false,
+    "behavior_pass": true,
+    "task_pass": false,
+    "task_id": "real-more-chunked",
+    "engine": "repopilot",
+    "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-more-chunked-loop-on/real-more-chunked/repopilot",
+    "status": "BUDGET_EXCEEDED",
+    "success": false,
+    "metrics": {
+      "steps": 48,
+      "tokens": {
+        "prompt": 500091,
+        "completion": 7458,
+        "total": 507549,
+        "cached": null,
+        "cache_write": null,
+        "reasoning": null
+      },
+      "cost": 0.6048996000000002,
+      "openai_standard_estimated_cost_usd": null,
+      "tool_calls": 147,
+      "errors": [
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Unknown artifact reference.",
+          "tool_name": "read_artifact"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "retries": 0,
+      "replans": 0,
+      "duration_seconds": 584.1533579560019,
+      "patch": {
+        "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-more-chunked-loop-on/real-more-chunked/repopilot/patch.diff",
+        "changed": true,
+        "sha256": "68f9f4600800e532842922861d765dbfa925c39c910a37d7c194ef96fcae4739"
+      },
+      "commits": [],
+      "trajectory_status": "BUDGET_EXCEEDED",
+      "verifier_success": false,
+      "run_budget": {
+        "max_steps": 48,
+        "max_replans": 4,
+        "max_consecutive_failures": 5,
+        "command_timeout_seconds": 60,
+        "max_run_seconds": 7200
+      },
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "preflight": {
+        "status": "READY",
+        "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "checks": [
+          {
+            "name": "image_inspect",
+            "command": [
+              "docker",
+              "image",
+              "inspect",
+              "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+            ],
+            "exit_code": 0,
+            "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n",
+            "stderr": "",
+            "duration_seconds": 0.04540739599906374
+          },
+          {
+            "name": "python",
+            "command": [
+              "docker",
+              "run",
+              "--rm",
+              "--pull=never",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+              "python",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stdout": "Python 3.12.14\n",
+            "stderr": "",
+            "duration_seconds": 0.4947239499997522
+          },
+          {
+            "name": "git",
+            "command": [
+              "docker",
+              "run",
+              "--rm",
+              "--pull=never",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+              "git",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stdout": "git version 2.47.3\n",
+            "stderr": "",
+            "duration_seconds": 0.41159405399957905
+          }
+        ],
+        "error": null
+      },
+      "llm_calls": 48,
+      "tool_failures": 11
+    },
+    "verifier": {
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/tasks/real-more-chunked/verify.py\", line 9, in <module>\n    assert take(2, range(4)) == [0, 1]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "duration_seconds": 0.030124262000754243,
+      "success_condition": "The hidden verifier exits with code 0."
+    },
+    "error": null
+  },
+  "provider_failure": false
+}

@@ -1,0 +1,1 @@
+{"duration_seconds": 0.06963075900057447, "exit_code": 0, "stderr": "", "stdout": "1004:    def batched(iterable, n, *, strict=False):\n", "truncated": false}

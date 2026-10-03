@@ -1,0 +1,77 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "a7e51a889c1a69bb21cdd4c38f1cbd45a84f603e453a48cf1814fc863d5eeea9",
+      "before_fingerprint": "a7e51a889c1a69bb21cdd4c38f1cbd45a84f603e453a48cf1814fc863d5eeea9",
+      "check_id": "inventory-tests",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Required pre-edit baseline before implementing the inventory pipeline.",
+      "result": {
+        "duration_seconds": 0.38267398400057573,
+        "exit_code": 1,
+        "stderr": ".F\n======================================================================\nFAIL: test_pipeline (test_pipeline.Checks.test_pipeline)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/checks/test_pipeline.py\", line 5, in test_pipeline\n    self.assertEqual(reconcile(json.dumps([{\"sku\":\" B \",\"delta\":2},{\"sku\":\"b\",\"delta\":-1},{\"sku\":\"A\",\"delta\":-2}])), \"a=-2\\nb=1\")\nAssertionError: '' != 'a=-2\\nb=1'\n+ a=-2\n+ b=1\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (failures=1)\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "Existing inventory checks before any source edits.",
+      "sequence": 1,
+      "supersedes": []
+    },
+    {
+      "after_fingerprint": "a7e51a889c1a69bb21cdd4c38f1cbd45a84f603e453a48cf1814fc863d5eeea9",
+      "before_fingerprint": "a7e51a889c1a69bb21cdd4c38f1cbd45a84f603e453a48cf1814fc863d5eeea9",
+      "check_id": "inventory-tests",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "aggregate",
+        "normalize",
+        "parse",
+        "select-render",
+        "validate",
+        "verify"
+      ],
+      "reason": "Required baseline run before editing, as requested by the user, to capture the current failing behavior.",
+      "result": {
+        "duration_seconds": 0.25084942299872637,
+        "exit_code": 1,
+        "stderr": ".F\n======================================================================\nFAIL: test_pipeline (test_pipeline.Checks.test_pipeline)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/checks/test_pipeline.py\", line 5, in test_pipeline\n    self.assertEqual(reconcile(json.dumps([{\"sku\":\" B \",\"delta\":2},{\"sku\":\"b\",\"delta\":-1},{\"sku\":\"A\",\"delta\":-2}])), \"a=-2\\nb=1\")\nAssertionError: '' != 'a=-2\\nb=1'\n+ a=-2\n+ b=1\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nFAILED (failures=1)\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "Full inventory unittest suite before source changes.",
+      "sequence": 2,
+      "supersedes": []
+    },
+    {
+      "after_fingerprint": "61a8e31333a7a865ef05e41dae704961c919c5fee14779a08a9dc64fb229f1ba",
+      "before_fingerprint": "61a8e31333a7a865ef05e41dae704961c919c5fee14779a08a9dc64fb229f1ba",
+      "check_id": "inventory-tests",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "aggregate",
+        "normalize",
+        "parse",
+        "select-render",
+        "validate",
+        "verify"
+      ],
+      "reason": "Verify the repaired six-stage inventory pipeline and its end-to-end behavior using the repository-mandated test command.",
+      "result": {
+        "duration_seconds": 0.26014255300106015,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "Full checks suite after implementing parse, validate, normalize, aggregate, select, and render.",
+      "sequence": 3,
+      "supersedes": []
+    }
+  ]
+}

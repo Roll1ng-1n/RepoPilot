@@ -1,0 +1,34 @@
+[
+  {
+    "type": "scenario_triggered",
+    "observation_index": 1,
+    "source": "environment",
+    "scenario_id": "public-command-1",
+    "capability": "recovery",
+    "failure_type": "test_failure"
+  },
+  {
+    "type": "recovery_attempt",
+    "observation_index": 11,
+    "source": "environment",
+    "scenario_id": "public-command-1"
+  },
+  {
+    "type": "scenario_resolved",
+    "observation_index": 11,
+    "source": "environment",
+    "scenario_id": "public-command-1",
+    "verified": true
+  },
+  {
+    "type": "scenario_audit",
+    "recovery": false,
+    "replan": false,
+    "incomplete": {
+      "recovery": {
+        "observation_index": 2,
+        "reason": "Unclassified command or unavailable exit status."
+      }
+    }
+  }
+]

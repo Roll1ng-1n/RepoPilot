@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "a7e51a889c1a69bb21cdd4c38f1cbd45a84f603e453a48cf1814fc863d5eeea9",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-02-history-inventory-loop-on/history-inventory/repopilot/workspace",
+      "head": "35640d8ea2aaee0afbaaba1c0268a5e5579facbb",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-02-history-inventory-loop-on/history-inventory/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "4800819275fc12bfdb77af400bff6f2f15fc240f"
+  },
+  "bytes": 2767,
+  "final": {
+    "state": {
+      "diff_fingerprint": "82cc2396fe9873526cc527b01c19b6f54299ac1b4087b7b0cbc067b5abce8e3c",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-02-history-inventory-loop-on/history-inventory/repopilot/workspace",
+      "head": "35640d8ea2aaee0afbaaba1c0268a5e5579facbb",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-02-history-inventory-loop-on/history-inventory/repopilot/workspace",
+      "status": " M src/inventory/aggregate.py\n M src/inventory/normalize.py\n M src/inventory/parse.py\n M src/inventory/render.py\n M src/inventory/select.py\n M src/inventory/validate.py\n"
+    },
+    "tree": "df2aff7ee1cc7e4f74016a5078ff66068825b6af"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "b3737dedfd07cf9de53fc551936e8c93a6b17e12b17fe8925f8123ac76005922"
+}

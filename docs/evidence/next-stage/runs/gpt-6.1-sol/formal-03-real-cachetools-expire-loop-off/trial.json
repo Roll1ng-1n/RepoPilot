@@ -1,0 +1,221 @@
+{
+  "stage": "formal",
+  "repeat": 3,
+  "replacement": false,
+  "variant": "loop-off",
+  "source_sha256": "a929d146476d00f798ed609ab75b2863134ddef2f8f2eb143d11a55d7552fd62",
+  "result": {
+    "run_id": "c306bf96dedc42bcbb7920d9e7e12f0d",
+    "repeat": 1,
+    "model": "openai/gpt-6.1-sol",
+    "category": "recovery",
+    "capabilities": [
+      "recovery"
+    ],
+    "evaluation": {
+      "schema_version": 6,
+      "repository_pass": false,
+      "behavior_pass": null,
+      "task_pass": false,
+      "behavior_verifier": {
+        "recovery": {
+          "pass": null,
+          "reason": "unsupported: command observation is incomplete; missing behavior cannot be inferred."
+        }
+      },
+      "termination": "correct_failure",
+      "recovery": {
+        "trigger_count": 1,
+        "attempt_count": 0,
+        "resolved_count": 0,
+        "success_rate": 0.0,
+        "post_recovery_repository_pass": false,
+        "failure_types": [
+          "test_failure"
+        ]
+      },
+      "replan": {
+        "evidence_count": null,
+        "triggered_count": 0,
+        "valid_count": null,
+        "trigger_rate": null,
+        "triggered_scenarios": null,
+        "missed_scenarios": null,
+        "unnecessary_replans": null,
+        "success_rate": null,
+        "post_replan_repository_pass": null
+      },
+      "tool_quality": {
+        "failure_count": 1,
+        "failure_rate": 0.0625,
+        "recovery_rate": 0.0,
+        "recovery_scope": "manifest-declared public-command failures only",
+        "redundant_calls": 0,
+        "window_repeated_exploration": 0
+      },
+      "budget_usage": {
+        "limits": {
+          "max_steps": 48,
+          "max_replans": 4,
+          "max_consecutive_failures": 5,
+          "command_timeout_seconds": 60,
+          "max_run_seconds": 7200
+        },
+        "steps_used": 11,
+        "replans_used": 0,
+        "complete_audit": false
+      },
+      "approval_events": [],
+      "progress": {
+        "first_effective_source_change_step": null,
+        "source_changes": []
+      },
+      "churn": {
+        "status": "unsupported",
+        "reason": "Missing immutable repository states at every step boundary.",
+        "first_solved_step": null,
+        "final_step": 11,
+        "post_solution_steps": null
+      },
+      "duration": {
+        "wall_clock_seconds": 143.40437307700267,
+        "llm_seconds": 140.36582900600115,
+        "coverage": "complete",
+        "active_seconds": 143.1618564900018,
+        "idle_seconds": 0.0,
+        "tool_seconds": 1.2661108930005867,
+        "orchestration_seconds": 1.5270623530013836,
+        "measured_orchestration_seconds": 1.5270623530013836,
+        "operations": {
+          "active_run": 143.1618564900018,
+          "approval_assessment": 0.0005684289972123224,
+          "checkpoint_serialization": 0.05326740600867197,
+          "checkpoint_write_sync": 0.7601175039999362,
+          "context_prepare": 0.004736823997518513,
+          "model_complete": 140.36868324399984,
+          "repository_scan": 0.4616983600171807,
+          "source_scan": 0.005740597000112757,
+          "tool_execute": 1.2661108930005867,
+          "tool_prepare": 0.00897491599971545
+        }
+      }
+    },
+    "repository_pass": false,
+    "behavior_pass": null,
+    "task_pass": false,
+    "task_id": "real-cachetools-expire",
+    "engine": "repopilot",
+    "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-cachetools-expire-loop-off/real-cachetools-expire/repopilot",
+    "status": "BUDGET_EXCEEDED",
+    "success": false,
+    "metrics": {
+      "steps": 11,
+      "tokens": {
+        "prompt": 90891,
+        "completion": 755,
+        "total": 91646,
+        "cached": null,
+        "cache_write": null,
+        "reasoning": null
+      },
+      "cost": 0.12804559999999998,
+      "openai_standard_estimated_cost_usd": null,
+      "tool_calls": 16,
+      "errors": [
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "retries": 0,
+      "replans": 0,
+      "duration_seconds": 143.40437307700267,
+      "patch": {
+        "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-cachetools-expire-loop-off/real-cachetools-expire/repopilot/patch.diff",
+        "changed": false,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "commits": [],
+      "trajectory_status": "BUDGET_EXCEEDED",
+      "verifier_success": false,
+      "run_budget": {
+        "max_steps": 48,
+        "max_replans": 4,
+        "max_consecutive_failures": 5,
+        "command_timeout_seconds": 60,
+        "max_run_seconds": 7200
+      },
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "preflight": {
+        "status": "READY",
+        "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "checks": [
+          {
+            "name": "image_inspect",
+            "command": [
+              "docker",
+              "image",
+              "inspect",
+              "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+            ],
+            "exit_code": 0,
+            "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n",
+            "stderr": "",
+            "duration_seconds": 0.034918131001177244
+          },
+          {
+            "name": "python",
+            "command": [
+              "docker",
+              "run",
+              "--rm",
+              "--pull=never",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+              "python",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stdout": "Python 3.12.14\n",
+            "stderr": "",
+            "duration_seconds": 0.42512640800123336
+          },
+          {
+            "name": "git",
+            "command": [
+              "docker",
+              "run",
+              "--rm",
+              "--pull=never",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+              "git",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stdout": "git version 2.47.3\n",
+            "stderr": "",
+            "duration_seconds": 0.41594363100011833
+          }
+        ],
+        "error": null
+      },
+      "llm_calls": 10,
+      "tool_failures": 1
+    },
+    "verifier": {
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/tasks/real-cachetools-expire/verify.py\", line 15, in <module>\n    assert list(cache.expire()) == [('first', 1)]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "duration_seconds": 0.025188954001350794,
+      "success_condition": "The hidden verifier exits with code 0."
+    },
+    "error": null
+  },
+  "provider_failure": false
+}

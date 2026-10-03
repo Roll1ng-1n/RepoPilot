@@ -1,0 +1,71 @@
+diff --git a/src/inventory/aggregate.py b/src/inventory/aggregate.py
+index 76fa4d2..3a51c61 100644
+--- a/src/inventory/aggregate.py
++++ b/src/inventory/aggregate.py
+@@ -1,2 +1,6 @@
+ def aggregate(events: list):
+-    return {}
++    balances = {}
++    for event in events:
++        sku = event["sku"]
++        balances[sku] = balances.get(sku, 0) + event["delta"]
++    return balances
+diff --git a/src/inventory/normalize.py b/src/inventory/normalize.py
+index b8167f5..aa73f10 100644
+--- a/src/inventory/normalize.py
++++ b/src/inventory/normalize.py
+@@ -1,2 +1,3 @@
+ def normalize(events: list):
+-    return []
++    return [{"sku": event["sku"].strip().casefold(),
++             "delta": event["delta"]} for event in events]
+diff --git a/src/inventory/parse.py b/src/inventory/parse.py
+index 9ebd2e7..f07c08b 100644
+--- a/src/inventory/parse.py
++++ b/src/inventory/parse.py
+@@ -1,2 +1,9 @@
++import json
++
++
+ def parse(text: str):
+-    return []
++    try:
++        value = json.loads(text)
++    except (TypeError, ValueError):
++        return []
++    return value if isinstance(value, list) else []
+diff --git a/src/inventory/render.py b/src/inventory/render.py
+index 9814798..8475be1 100644
+--- a/src/inventory/render.py
++++ b/src/inventory/render.py
+@@ -1,2 +1,4 @@
+ def render(balances: dict):
+-    return ""
++    return "\n".join(
++        f"{sku}={balances[sku]}" for sku in sorted(balances)
++    )
+diff --git a/src/inventory/select.py b/src/inventory/select.py
+index 6f1a654..098c09f 100644
+--- a/src/inventory/select.py
++++ b/src/inventory/select.py
+@@ -1,2 +1,2 @@
+ def select(balances: dict):
+-    return {}
++    return {sku: balance for sku, balance in balances.items() if balance != 0}
+diff --git a/src/inventory/validate.py b/src/inventory/validate.py
+index 3b5d2f9..0bd80b1 100644
+--- a/src/inventory/validate.py
++++ b/src/inventory/validate.py
+@@ -1,2 +1,11 @@
+ def validate(events: list):
+-    return []
++    valid = []
++    for event in events:
++        if not isinstance(event, dict):
++            continue
++        sku = event.get("sku")
++        delta = event.get("delta")
++        if (isinstance(sku, str) and sku.strip()
++                and isinstance(delta, int) and not isinstance(delta, bool)):
++            valid.append({"sku": sku, "delta": delta})
++    return valid

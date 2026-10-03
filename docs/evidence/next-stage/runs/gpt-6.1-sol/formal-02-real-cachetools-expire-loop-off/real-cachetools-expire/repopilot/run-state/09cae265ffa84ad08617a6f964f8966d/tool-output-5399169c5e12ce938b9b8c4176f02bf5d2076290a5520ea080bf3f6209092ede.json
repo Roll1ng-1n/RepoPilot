@@ -1,0 +1,1 @@
+{"duration_seconds": 0.07497380399945541, "exit_code": 0, "stderr": "", "stdout": "src/cachetools/__init__.py:491:    def expire(self, time=None):\nsrc/cachetools/__init__.py:611:    def expire(self, time=None):\n", "truncated": false}

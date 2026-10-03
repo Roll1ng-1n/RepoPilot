@@ -1,0 +1,217 @@
+{
+  "stage": "formal",
+  "repeat": 1,
+  "replacement": true,
+  "variant": "loop-off",
+  "source_sha256": "a929d146476d00f798ed609ab75b2863134ddef2f8f2eb143d11a55d7552fd62",
+  "result": {
+    "run_id": "854d99cf4a7c4fe8a00f579ace7feff4",
+    "repeat": 1,
+    "model": "openai/gpt-6.1-sol",
+    "category": "cross-file",
+    "capabilities": [],
+    "evaluation": {
+      "schema_version": 6,
+      "repository_pass": false,
+      "behavior_pass": true,
+      "task_pass": false,
+      "behavior_verifier": {},
+      "termination": "correct_failure",
+      "recovery": {
+        "trigger_count": null,
+        "attempt_count": null,
+        "resolved_count": null,
+        "success_rate": null,
+        "post_recovery_repository_pass": null,
+        "failure_types": []
+      },
+      "replan": {
+        "evidence_count": null,
+        "triggered_count": 0,
+        "valid_count": null,
+        "trigger_rate": null,
+        "triggered_scenarios": null,
+        "missed_scenarios": null,
+        "unnecessary_replans": null,
+        "success_rate": null,
+        "post_replan_repository_pass": null
+      },
+      "tool_quality": {
+        "failure_count": 10,
+        "failure_rate": 0.06493506493506493,
+        "recovery_rate": null,
+        "recovery_scope": "manifest-declared public-command failures only",
+        "redundant_calls": 0,
+        "window_repeated_exploration": 3
+      },
+      "budget_usage": {
+        "limits": {
+          "max_steps": 48,
+          "max_replans": 4,
+          "max_consecutive_failures": 5,
+          "command_timeout_seconds": 60,
+          "max_run_seconds": 7200
+        },
+        "steps_used": 40,
+        "replans_used": 0,
+        "complete_audit": false
+      },
+      "approval_events": [],
+      "progress": {
+        "first_effective_source_change_step": null,
+        "source_changes": []
+      },
+      "churn": {
+        "status": "unsupported",
+        "reason": "Missing immutable repository states at every step boundary.",
+        "first_solved_step": null,
+        "final_step": 40,
+        "post_solution_steps": null
+      },
+      "duration": {
+        "wall_clock_seconds": 1410.5158466380008,
+        "llm_seconds": 1384.4703638959973,
+        "coverage": "complete",
+        "active_seconds": 1410.2731132479994,
+        "idle_seconds": 0.0,
+        "tool_seconds": 11.851148209998428,
+        "orchestration_seconds": 13.93324626300091,
+        "measured_orchestration_seconds": 13.93324626300091,
+        "operations": {
+          "active_run": 1410.2731132479994,
+          "approval_assessment": 0.005929517006734386,
+          "checkpoint_serialization": 1.894900853026229,
+          "checkpoint_write_sync": 6.357038848981574,
+          "context_prepare": 0.08991965099266963,
+          "model_complete": 1384.488718775,
+          "repository_scan": 4.023213878989736,
+          "source_scan": 0.18234784400556237,
+          "tool_execute": 11.851148209998428,
+          "tool_prepare": 0.09300068800166628
+        }
+      }
+    },
+    "repository_pass": false,
+    "behavior_pass": true,
+    "task_pass": false,
+    "task_id": "real-more-chunked",
+    "engine": "repopilot",
+    "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-off-replacement/real-more-chunked/repopilot",
+    "status": "BUDGET_EXCEEDED",
+    "success": false,
+    "metrics": {
+      "steps": 40,
+      "tokens": {
+        "prompt": 400698,
+        "completion": 7151,
+        "total": 407849,
+        "cached": 201216,
+        "cache_write": null,
+        "reasoning": null
+      },
+      "cost": 0.49059559999999985,
+      "openai_standard_estimated_cost_usd": null,
+      "tool_calls": 154,
+      "errors": [
+        {
+          "category": "PROTOCOL_ERROR",
+          "reason": "[{'type': 'extra_forbidden', 'loc': ('timeout',), 'msg': 'Extra inputs are not permitted', 'input': 120, 'url': 'https://errors.pydantic.dev/2.13/v/extra_forbidden'}]",
+          "tool_name": "run_command"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Unknown artifact reference.",
+          "tool_name": "read_artifact"
+        }
+      ],
+      "retries": 0,
+      "replans": 0,
+      "duration_seconds": 1410.5158466380008,
+      "patch": {
+        "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-off-replacement/real-more-chunked/repopilot/patch.diff",
+        "changed": false,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "commits": [],
+      "trajectory_status": "BUDGET_EXCEEDED",
+      "verifier_success": false,
+      "run_budget": {
+        "max_steps": 48,
+        "max_replans": 4,
+        "max_consecutive_failures": 5,
+        "command_timeout_seconds": 60,
+        "max_run_seconds": 7200
+      },
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "preflight": {
+        "status": "READY",
+        "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "checks": [
+          {
+            "name": "image_inspect",
+            "command": [
+              "docker",
+              "image",
+              "inspect",
+              "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+            ],
+            "exit_code": 0,
+            "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n",
+            "stderr": "",
+            "duration_seconds": 0.044548950000717014
+          },
+          {
+            "name": "python",
+            "command": [
+              "docker",
+              "run",
+              "--rm",
+              "--pull=never",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+              "python",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stdout": "Python 3.12.14\n",
+            "stderr": "",
+            "duration_seconds": 0.46964038999976765
+          },
+          {
+            "name": "git",
+            "command": [
+              "docker",
+              "run",
+              "--rm",
+              "--pull=never",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+              "git",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stdout": "git version 2.47.3\n",
+            "stderr": "",
+            "duration_seconds": 0.4528581849999682
+          }
+        ],
+        "error": null
+      },
+      "llm_calls": 39,
+      "tool_failures": 10
+    },
+    "verifier": {
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/tasks/real-more-chunked/verify.py\", line 7, in <module>\n    from more_itertools import chunked\nImportError: cannot import name 'chunked' from 'more_itertools' (/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-off-replacement/real-more-chunked/repopilot/workspace/more_itertools/__init__.py). Did you mean: 'ichunked'?\n",
+      "duration_seconds": 0.026245433999065426,
+      "success_condition": "The hidden verifier exits with code 0."
+    },
+    "error": null
+  },
+  "provider_failure": false
+}

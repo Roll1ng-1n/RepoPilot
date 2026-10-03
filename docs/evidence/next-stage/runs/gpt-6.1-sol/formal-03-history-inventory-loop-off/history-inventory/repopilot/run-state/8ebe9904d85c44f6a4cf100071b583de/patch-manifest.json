@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "a7e51a889c1a69bb21cdd4c38f1cbd45a84f603e453a48cf1814fc863d5eeea9",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-loop-off/history-inventory/repopilot/workspace",
+      "head": "35640d8ea2aaee0afbaaba1c0268a5e5579facbb",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-loop-off/history-inventory/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "4800819275fc12bfdb77af400bff6f2f15fc240f"
+  },
+  "bytes": 10358,
+  "final": {
+    "state": {
+      "diff_fingerprint": "423f1bd1a54a8330af7e8a290482518191e567c38711ab8caac9afa66002623d",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-loop-off/history-inventory/repopilot/workspace",
+      "head": "35640d8ea2aaee0afbaaba1c0268a5e5579facbb",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-loop-off/history-inventory/repopilot/workspace",
+      "status": " M src/inventory/aggregate.py\n M src/inventory/normalize.py\n M src/inventory/parse.py\n M src/inventory/render.py\n M src/inventory/select.py\n M src/inventory/validate.py\n?? checks/__pycache__/test_pipeline.cpython-312.pyc\n?? src/__pycache__/__init__.cpython-312.pyc\n?? src/inventory/__pycache__/__init__.cpython-312.pyc\n?? src/inventory/__pycache__/aggregate.cpython-312.pyc\n?? src/inventory/__pycache__/normalize.cpython-312.pyc\n?? src/inventory/__pycache__/parse.cpython-312.pyc\n?? src/inventory/__pycache__/pipeline.cpython-312.pyc\n?? src/inventory/__pycache__/render.cpython-312.pyc\n?? src/inventory/__pycache__/select.cpython-312.pyc\n?? src/inventory/__pycache__/validate.cpython-312.pyc\n"
+    },
+    "tree": "8fdf36494d73061c9a6e533abe344b3e4e4caffd"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "2cbff51b6b83f145a8ced4762d04cf2d637bcccdbb3ca52ee714719c81fc319b"
+}

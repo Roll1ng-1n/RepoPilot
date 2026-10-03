@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "f09c39de510f491a9605caece6e69ac4d0dffd237d2e722f6741b8a0bcc48253",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on/real-more-chunked/repopilot/workspace",
+      "head": "21d500854219f359b68a6e07f814bba44034810e",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on/real-more-chunked/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "14b2bf6aae73e02903cc0e0015dfe5683ae65a62"
+  },
+  "bytes": 375,
+  "final": {
+    "state": {
+      "diff_fingerprint": "3f3cd93e2b4513f53221e7fe971e98364fb56405f41076a6515090c41b21672d",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on/real-more-chunked/repopilot/workspace",
+      "head": "21d500854219f359b68a6e07f814bba44034810e",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on/real-more-chunked/repopilot/workspace",
+      "status": " M more_itertools/more.py\n"
+    },
+    "tree": "47da1eef758843993df0d985a3e4a6b4628e1f9a"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "b20d94572afca6e73f34e06f94c2c59189ef9cade07825cfe71d5dbcf10eb7ab"
+}

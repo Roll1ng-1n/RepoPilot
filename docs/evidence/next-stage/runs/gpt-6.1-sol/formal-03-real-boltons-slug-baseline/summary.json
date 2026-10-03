@@ -1,0 +1,1239 @@
+{
+  "config": {
+    "budget": {
+      "command_timeout_seconds": 60,
+      "max_consecutive_failures": 5,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48
+    },
+    "engines": [
+      "baseline"
+    ],
+    "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "model": {
+      "model_kwargs": {
+        "max_tokens": 4096,
+        "stream": true,
+        "temperature": 1,
+        "timeout": 120
+      },
+      "model_name": "openai/gpt-6.1-sol"
+    },
+    "output_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-slug-baseline",
+    "progress_detection_enabled": true,
+    "proxy_mode": "none",
+    "repeats": 1,
+    "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "task_ids": [
+      "real-boltons-slug"
+    ],
+    "tasks_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/tasks"
+  },
+  "evaluation_summary": {
+    "groups": [
+      {
+        "behavior_evaluated": 1,
+        "behavior_pass_count": 1,
+        "churn_available": false,
+        "completion_precision": 1.0,
+        "completion_recall": 1.0,
+        "dimension": "category",
+        "engine": "baseline",
+        "evaluated": 1,
+        "false_failure_rate": 0.0,
+        "false_success_rate": 0.0,
+        "model": "openai/gpt-6.1-sol",
+        "numeric": {
+          "active_seconds": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "duration_seconds": {
+            "max": 183.40015691900044,
+            "mean": 183.40015691900044,
+            "median": 183.40015691900044,
+            "min": 183.40015691900044,
+            "n": 1,
+            "per_solved": 183.40015691900044,
+            "solved_distribution": {
+              "max": 183.40015691900044,
+              "mean": 183.40015691900044,
+              "median": 183.40015691900044,
+              "min": 183.40015691900044,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 183.40015691900044
+          },
+          "first_effective_source_change_step": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "input_tokens": {
+            "max": 72639,
+            "mean": 72639,
+            "median": 72639,
+            "min": 72639,
+            "n": 1,
+            "per_solved": 72639.0,
+            "solved_distribution": {
+              "max": 72639,
+              "mean": 72639,
+              "median": 72639,
+              "min": 72639,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 72639
+          },
+          "llm_calls": {
+            "max": 8,
+            "mean": 8,
+            "median": 8,
+            "min": 8,
+            "n": 1,
+            "per_solved": 8.0,
+            "solved_distribution": {
+              "max": 8,
+              "mean": 8,
+              "median": 8,
+              "min": 8,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 8
+          },
+          "orchestration_seconds": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "output_tokens": {
+            "max": 1736,
+            "mean": 1736,
+            "median": 1736,
+            "min": 1736,
+            "n": 1,
+            "per_solved": 1736.0,
+            "solved_distribution": {
+              "max": 1736,
+              "mean": 1736,
+              "median": 1736,
+              "min": 1736,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 1736
+          },
+          "redundant_calls": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "replans": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "retries": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "steps": {
+            "max": 8,
+            "mean": 8,
+            "median": 8,
+            "min": 8,
+            "n": 1,
+            "per_solved": 8.0,
+            "solved_distribution": {
+              "max": 8,
+              "mean": 8,
+              "median": 8,
+              "min": 8,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 8
+          },
+          "tool_calls": {
+            "max": 14,
+            "mean": 14,
+            "median": 14,
+            "min": 14,
+            "n": 1,
+            "per_solved": 14.0,
+            "solved_distribution": {
+              "max": 14,
+              "mean": 14,
+              "median": 14,
+              "min": 14,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 14
+          },
+          "tool_failures": {
+            "max": 3,
+            "mean": 3,
+            "median": 3,
+            "min": 3,
+            "n": 1,
+            "per_solved": 3.0,
+            "solved_distribution": {
+              "max": 3,
+              "mean": 3,
+              "median": 3,
+              "min": 3,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 3
+          },
+          "tool_seconds": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "total_tokens": {
+            "max": 74375,
+            "mean": 74375,
+            "median": 74375,
+            "min": 74375,
+            "n": 1,
+            "per_solved": 74375.0,
+            "solved_distribution": {
+              "max": 74375,
+              "mean": 74375,
+              "median": 74375,
+              "min": 74375,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 74375
+          },
+          "window_repeated_exploration": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          }
+        },
+        "pass_count": 1,
+        "pass_rate": 1.0,
+        "post_recovery_task_success_rate": null,
+        "post_replan_task_success_rate": null,
+        "recovery_rate": null,
+        "replan_success_rate": null,
+        "replan_trigger_rate": null,
+        "repository_evaluated": 1,
+        "repository_pass_count": 1,
+        "successful_termination_rate": 1.0,
+        "termination_counts": {
+          "correct_success": 1
+        },
+        "trials": 1,
+        "unsupported": 0,
+        "value": "simple"
+      },
+      {
+        "behavior_evaluated": 1,
+        "behavior_pass_count": 1,
+        "churn_available": false,
+        "completion_precision": 1.0,
+        "completion_recall": 1.0,
+        "dimension": "overall",
+        "engine": "baseline",
+        "evaluated": 1,
+        "false_failure_rate": 0.0,
+        "false_success_rate": 0.0,
+        "model": "openai/gpt-6.1-sol",
+        "numeric": {
+          "active_seconds": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "duration_seconds": {
+            "max": 183.40015691900044,
+            "mean": 183.40015691900044,
+            "median": 183.40015691900044,
+            "min": 183.40015691900044,
+            "n": 1,
+            "per_solved": 183.40015691900044,
+            "solved_distribution": {
+              "max": 183.40015691900044,
+              "mean": 183.40015691900044,
+              "median": 183.40015691900044,
+              "min": 183.40015691900044,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 183.40015691900044
+          },
+          "first_effective_source_change_step": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "input_tokens": {
+            "max": 72639,
+            "mean": 72639,
+            "median": 72639,
+            "min": 72639,
+            "n": 1,
+            "per_solved": 72639.0,
+            "solved_distribution": {
+              "max": 72639,
+              "mean": 72639,
+              "median": 72639,
+              "min": 72639,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 72639
+          },
+          "llm_calls": {
+            "max": 8,
+            "mean": 8,
+            "median": 8,
+            "min": 8,
+            "n": 1,
+            "per_solved": 8.0,
+            "solved_distribution": {
+              "max": 8,
+              "mean": 8,
+              "median": 8,
+              "min": 8,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 8
+          },
+          "orchestration_seconds": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "output_tokens": {
+            "max": 1736,
+            "mean": 1736,
+            "median": 1736,
+            "min": 1736,
+            "n": 1,
+            "per_solved": 1736.0,
+            "solved_distribution": {
+              "max": 1736,
+              "mean": 1736,
+              "median": 1736,
+              "min": 1736,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 1736
+          },
+          "redundant_calls": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "replans": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "retries": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "steps": {
+            "max": 8,
+            "mean": 8,
+            "median": 8,
+            "min": 8,
+            "n": 1,
+            "per_solved": 8.0,
+            "solved_distribution": {
+              "max": 8,
+              "mean": 8,
+              "median": 8,
+              "min": 8,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 8
+          },
+          "tool_calls": {
+            "max": 14,
+            "mean": 14,
+            "median": 14,
+            "min": 14,
+            "n": 1,
+            "per_solved": 14.0,
+            "solved_distribution": {
+              "max": 14,
+              "mean": 14,
+              "median": 14,
+              "min": 14,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 14
+          },
+          "tool_failures": {
+            "max": 3,
+            "mean": 3,
+            "median": 3,
+            "min": 3,
+            "n": 1,
+            "per_solved": 3.0,
+            "solved_distribution": {
+              "max": 3,
+              "mean": 3,
+              "median": 3,
+              "min": 3,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 3
+          },
+          "tool_seconds": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "total_tokens": {
+            "max": 74375,
+            "mean": 74375,
+            "median": 74375,
+            "min": 74375,
+            "n": 1,
+            "per_solved": 74375.0,
+            "solved_distribution": {
+              "max": 74375,
+              "mean": 74375,
+              "median": 74375,
+              "min": 74375,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 74375
+          },
+          "window_repeated_exploration": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          }
+        },
+        "pass_count": 1,
+        "pass_rate": 1.0,
+        "post_recovery_task_success_rate": null,
+        "post_replan_task_success_rate": null,
+        "recovery_rate": null,
+        "replan_success_rate": null,
+        "replan_trigger_rate": null,
+        "repository_evaluated": 1,
+        "repository_pass_count": 1,
+        "successful_termination_rate": 1.0,
+        "termination_counts": {
+          "correct_success": 1
+        },
+        "trials": 1,
+        "unsupported": 0,
+        "value": "all"
+      },
+      {
+        "behavior_evaluated": 1,
+        "behavior_pass_count": 1,
+        "churn_available": false,
+        "completion_precision": 1.0,
+        "completion_recall": 1.0,
+        "dimension": "task",
+        "engine": "baseline",
+        "evaluated": 1,
+        "false_failure_rate": 0.0,
+        "false_success_rate": 0.0,
+        "model": "openai/gpt-6.1-sol",
+        "numeric": {
+          "active_seconds": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "duration_seconds": {
+            "max": 183.40015691900044,
+            "mean": 183.40015691900044,
+            "median": 183.40015691900044,
+            "min": 183.40015691900044,
+            "n": 1,
+            "per_solved": 183.40015691900044,
+            "solved_distribution": {
+              "max": 183.40015691900044,
+              "mean": 183.40015691900044,
+              "median": 183.40015691900044,
+              "min": 183.40015691900044,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 183.40015691900044
+          },
+          "first_effective_source_change_step": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "input_tokens": {
+            "max": 72639,
+            "mean": 72639,
+            "median": 72639,
+            "min": 72639,
+            "n": 1,
+            "per_solved": 72639.0,
+            "solved_distribution": {
+              "max": 72639,
+              "mean": 72639,
+              "median": 72639,
+              "min": 72639,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 72639
+          },
+          "llm_calls": {
+            "max": 8,
+            "mean": 8,
+            "median": 8,
+            "min": 8,
+            "n": 1,
+            "per_solved": 8.0,
+            "solved_distribution": {
+              "max": 8,
+              "mean": 8,
+              "median": 8,
+              "min": 8,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 8
+          },
+          "orchestration_seconds": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "output_tokens": {
+            "max": 1736,
+            "mean": 1736,
+            "median": 1736,
+            "min": 1736,
+            "n": 1,
+            "per_solved": 1736.0,
+            "solved_distribution": {
+              "max": 1736,
+              "mean": 1736,
+              "median": 1736,
+              "min": 1736,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 1736
+          },
+          "redundant_calls": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "replans": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "retries": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "steps": {
+            "max": 8,
+            "mean": 8,
+            "median": 8,
+            "min": 8,
+            "n": 1,
+            "per_solved": 8.0,
+            "solved_distribution": {
+              "max": 8,
+              "mean": 8,
+              "median": 8,
+              "min": 8,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 8
+          },
+          "tool_calls": {
+            "max": 14,
+            "mean": 14,
+            "median": 14,
+            "min": 14,
+            "n": 1,
+            "per_solved": 14.0,
+            "solved_distribution": {
+              "max": 14,
+              "mean": 14,
+              "median": 14,
+              "min": 14,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 14
+          },
+          "tool_failures": {
+            "max": 3,
+            "mean": 3,
+            "median": 3,
+            "min": 3,
+            "n": 1,
+            "per_solved": 3.0,
+            "solved_distribution": {
+              "max": 3,
+              "mean": 3,
+              "median": 3,
+              "min": 3,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 3
+          },
+          "tool_seconds": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          },
+          "total_tokens": {
+            "max": 74375,
+            "mean": 74375,
+            "median": 74375,
+            "min": 74375,
+            "n": 1,
+            "per_solved": 74375.0,
+            "solved_distribution": {
+              "max": 74375,
+              "mean": 74375,
+              "median": 74375,
+              "min": 74375,
+              "n": 1,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": 74375
+          },
+          "window_repeated_exploration": {
+            "max": null,
+            "mean": null,
+            "median": null,
+            "min": null,
+            "n": 0,
+            "per_solved": null,
+            "solved_distribution": {
+              "max": null,
+              "mean": null,
+              "median": null,
+              "min": null,
+              "n": 0,
+              "stddev": null
+            },
+            "stddev": null,
+            "total": null
+          }
+        },
+        "pass_count": 1,
+        "pass_rate": 1.0,
+        "post_recovery_task_success_rate": null,
+        "post_replan_task_success_rate": null,
+        "recovery_rate": null,
+        "replan_success_rate": null,
+        "replan_trigger_rate": null,
+        "repository_evaluated": 1,
+        "repository_pass_count": 1,
+        "successful_termination_rate": 1.0,
+        "termination_counts": {
+          "correct_success": 1
+        },
+        "trials": 1,
+        "unsupported": 0,
+        "value": "real-boltons-slug"
+      }
+    ],
+    "paired": [],
+    "schema_version": 5
+  },
+  "pricing_basis": {
+    "as_of": "2026-09-04",
+    "note": "Estimate only; not provider or intermediary invoice data.",
+    "source": "https://developers.openai.com/api/docs/pricing",
+    "tier": "standard"
+  },
+  "results": [
+    {
+      "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-slug-baseline/real-boltons-slug/baseline",
+      "behavior_pass": true,
+      "capabilities": [],
+      "category": "simple",
+      "engine": "baseline",
+      "error": null,
+      "evaluation": {
+        "approval_events": [],
+        "behavior_pass": true,
+        "behavior_verifier": {},
+        "budget_usage": {
+          "complete_audit": false,
+          "limits": {
+            "command_timeout_seconds": 60,
+            "max_consecutive_failures": 5,
+            "max_replans": 4,
+            "max_run_seconds": 7200,
+            "max_steps": 48
+          },
+          "replans_used": null,
+          "steps_used": 8
+        },
+        "churn": {
+          "final_step": 8,
+          "first_solved_step": null,
+          "post_solution_steps": null,
+          "reason": "Missing immutable repository states at every step boundary.",
+          "status": "unsupported"
+        },
+        "duration": {
+          "active_seconds": null,
+          "coverage": "unavailable",
+          "idle_seconds": null,
+          "llm_seconds": null,
+          "measured_orchestration_seconds": null,
+          "operations": {},
+          "orchestration_seconds": null,
+          "tool_seconds": null,
+          "wall_clock_seconds": 183.40015691900044
+        },
+        "progress": {
+          "first_effective_source_change_step": null,
+          "source_changes": []
+        },
+        "recovery": {
+          "attempt_count": null,
+          "failure_types": [],
+          "post_recovery_repository_pass": null,
+          "resolved_count": null,
+          "success_rate": null,
+          "trigger_count": null
+        },
+        "replan": {
+          "evidence_count": null,
+          "missed_scenarios": null,
+          "post_replan_repository_pass": null,
+          "success_rate": null,
+          "trigger_rate": null,
+          "triggered_count": 0,
+          "triggered_scenarios": null,
+          "unnecessary_replans": null,
+          "valid_count": null
+        },
+        "repository_pass": true,
+        "schema_version": 6,
+        "task_pass": true,
+        "termination": "correct_success",
+        "tool_quality": {
+          "failure_count": 3,
+          "failure_rate": 0.21428571428571427,
+          "recovery_rate": null,
+          "recovery_scope": "manifest-declared public-command failures only",
+          "redundant_calls": null,
+          "window_repeated_exploration": null
+        }
+      },
+      "metrics": {
+        "commits": [],
+        "cost": 0.08286840000000001,
+        "duration_seconds": 183.40015691900044,
+        "errors": [
+          {
+            "returncode": 1,
+            "type": "command"
+          },
+          {
+            "returncode": 1,
+            "type": "command"
+          },
+          {
+            "returncode": 1,
+            "type": "command"
+          }
+        ],
+        "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "llm_calls": 8,
+        "openai_standard_estimated_cost_usd": null,
+        "patch": {
+          "changed": true,
+          "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-slug-baseline/real-boltons-slug/baseline/patch.diff",
+          "sha256": "c40f0b7baf42b74c1f6f8f52377d010c408e1d5720e79ef667ef98e57b3208d0"
+        },
+        "preflight": {
+          "checks": [
+            {
+              "command": [
+                "docker",
+                "image",
+                "inspect",
+                "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+                "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+              ],
+              "duration_seconds": 0.03661564199865097,
+              "exit_code": 0,
+              "name": "image_inspect",
+              "stderr": "",
+              "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n"
+            },
+            {
+              "command": [
+                "docker",
+                "run",
+                "--rm",
+                "--pull=never",
+                "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+                "python",
+                "--version"
+              ],
+              "duration_seconds": 0.4293074400011392,
+              "exit_code": 0,
+              "name": "python",
+              "stderr": "",
+              "stdout": "Python 3.12.14\n"
+            },
+            {
+              "command": [
+                "docker",
+                "run",
+                "--rm",
+                "--pull=never",
+                "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+                "git",
+                "--version"
+              ],
+              "duration_seconds": 0.4148774949971994,
+              "exit_code": 0,
+              "name": "git",
+              "stderr": "",
+              "stdout": "git version 2.47.3\n"
+            }
+          ],
+          "error": null,
+          "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+          "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+          "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+          "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+          "status": "READY"
+        },
+        "replans": null,
+        "retries": null,
+        "run_budget": {
+          "command_timeout_seconds": 60,
+          "max_consecutive_failures": 5,
+          "max_replans": 4,
+          "max_run_seconds": 7200,
+          "max_steps": 48
+        },
+        "steps": 8,
+        "tokens": {
+          "cache_write": null,
+          "cached": null,
+          "completion": 1736,
+          "prompt": 72639,
+          "reasoning": 300,
+          "total": 74375
+        },
+        "tool_calls": 14,
+        "tool_failures": 3,
+        "trajectory_status": "Submitted"
+      },
+      "model": "openai/gpt-6.1-sol",
+      "repeat": 1,
+      "repository_pass": true,
+      "run_id": "fa357bde47414b6aaa3c4020b9b05d00",
+      "status": "Submitted",
+      "success": true,
+      "task_id": "real-boltons-slug",
+      "task_pass": true,
+      "verifier": {
+        "duration_seconds": 0.07857127900206251,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "",
+        "success_condition": "The hidden verifier exits with code 0."
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "approval_policy": "approve",
+      "behavior_requirements": [],
+      "behavior_spec": {},
+      "behavior_verifier_path": null,
+      "capabilities": [],
+      "category": "simple",
+      "experimental": false,
+      "run_budget": {
+        "command_timeout_seconds": 60,
+        "max_consecutive_failures": 5,
+        "max_replans": 4,
+        "max_run_seconds": 7200,
+        "max_steps": 48
+      },
+      "run_budget_declared": [
+        "command_timeout_seconds",
+        "max_consecutive_failures",
+        "max_replans",
+        "max_run_seconds",
+        "max_steps"
+      ],
+      "snapshot": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/tasks/real-boltons-slug/snapshot",
+      "snapshot_revision": "c23dbdadb6fecdf505eb4231559561913b84c13f",
+      "snapshot_sha256": "8c6b0ee376aeaef44d7c45c62e15f3f0617804689ddb53b0db2df5ce3d082487",
+      "success_condition": "The hidden verifier exits with code 0.",
+      "task": "Repair boltons.strutils.slugify so a caller-provided delimiter is honored while lower, ascii and empty-input behavior remain compatible. Preserve public signatures and tests. Verify with `python -m unittest discover -s checks`.",
+      "task_id": "real-boltons-slug",
+      "timeout_seconds": 7200.0,
+      "verifier_path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/tasks/real-boltons-slug/verify.py",
+      "verifier_timeout_seconds": 30.0
+    }
+  ]
+}

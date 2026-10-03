@@ -1,0 +1,25 @@
+diff --git a/more_itertools/more.py b/more_itertools/more.py
+index 7391da2..bf50195 100755
+--- a/more_itertools/more.py
++++ b/more_itertools/more.py
+@@ -69,6 +69,7 @@ __all__ = [
+     'argmin',
+     'bucket',
+     'callback_iter',
++    'chunked',
+     'chunked_even',
+     'circular_shifts',
+     'collapse',
+diff --git a/more_itertools/recipes.py b/more_itertools/recipes.py
+index b26ce0d..dacf614 100644
+--- a/more_itertools/recipes.py
++++ b/more_itertools/recipes.py
+@@ -130,7 +130,7 @@ def take(n, iterable):
+         [0, 1, 2]
+ 
+     """
+-    return list(islice(iterable, n + 1))
++    return list(islice(iterable, n))
+ 
+ 
+ def tabulate(function, start=0):

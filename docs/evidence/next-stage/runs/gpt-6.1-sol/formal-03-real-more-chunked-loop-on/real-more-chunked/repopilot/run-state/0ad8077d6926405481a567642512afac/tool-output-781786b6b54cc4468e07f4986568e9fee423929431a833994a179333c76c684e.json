@@ -1,0 +1,1 @@
+{"duration_seconds": 0.06428460700044525, "exit_code": 0, "stderr": "", "stdout": "16:from functools import lru_cache, partial, reduce\n", "truncated": false}

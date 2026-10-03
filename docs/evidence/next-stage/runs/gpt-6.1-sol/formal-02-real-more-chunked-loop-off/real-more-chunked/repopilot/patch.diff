@@ -1,0 +1,12 @@
+diff --git a/more_itertools/more.py b/more_itertools/more.py
+index 7391da2..bf50195 100755
+--- a/more_itertools/more.py
++++ b/more_itertools/more.py
+@@ -69,6 +69,7 @@ __all__ = [
+     'argmin',
+     'bucket',
+     'callback_iter',
++    'chunked',
+     'chunked_even',
+     'circular_shifts',
+     'collapse',

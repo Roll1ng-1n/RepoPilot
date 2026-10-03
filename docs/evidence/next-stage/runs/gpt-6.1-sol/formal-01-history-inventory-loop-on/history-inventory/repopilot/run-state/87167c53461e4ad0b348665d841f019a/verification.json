@@ -1,0 +1,69 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "a7e51a889c1a69bb21cdd4c38f1cbd45a84f603e453a48cf1814fc863d5eeea9",
+      "before_fingerprint": "a7e51a889c1a69bb21cdd4c38f1cbd45a84f603e453a48cf1814fc863d5eeea9",
+      "check_id": "inventory-tests-baseline",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Required baseline test run before editing the implementation.",
+      "result": {
+        "duration_seconds": 0.33684584200091194,
+        "exit_code": 1,
+        "stderr": ".F\n======================================================================\nFAIL: test_pipeline (test_pipeline.Checks.test_pipeline)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/checks/test_pipeline.py\", line 5, in test_pipeline\n    self.assertEqual(reconcile(json.dumps([{\"sku\":\" B \",\"delta\":2},{\"sku\":\"b\",\"delta\":-1},{\"sku\":\"A\",\"delta\":-2}])), \"a=-2\\nb=1\")\nAssertionError: '' != 'a=-2\\nb=1'\n+ a=-2\n+ b=1\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nFAILED (failures=1)\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "Repository test suite before any source edits",
+      "sequence": 1,
+      "supersedes": []
+    },
+    {
+      "after_fingerprint": "2594c233faca631d2ea00a33240514f73030fd61e9778b3bffac7c96bd63c65e",
+      "before_fingerprint": "2594c233faca631d2ea00a33240514f73030fd61e9778b3bffac7c96bd63c65e",
+      "check_id": "inventory-tests-after-repair",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Verify all six inventory stages and the end-to-end pipeline after implementation.",
+      "result": {
+        "duration_seconds": 0.23724815999958082,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "Repository test suite covering src/inventory contracts and integration behavior.",
+      "sequence": 2,
+      "supersedes": []
+    },
+    {
+      "after_fingerprint": "2594c233faca631d2ea00a33240514f73030fd61e9778b3bffac7c96bd63c65e",
+      "before_fingerprint": "2594c233faca631d2ea00a33240514f73030fd61e9778b3bffac7c96bd63c65e",
+      "check_id": "inventory-tests-final",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Final correction verification after recovery; confirms the implemented six-stage inventory pipeline still passes the mandated test suite.",
+      "result": {
+        "duration_seconds": 0.29208579400074086,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "All repository checks for the inventory pipeline.",
+      "sequence": 3,
+      "supersedes": [
+        1
+      ]
+    }
+  ]
+}

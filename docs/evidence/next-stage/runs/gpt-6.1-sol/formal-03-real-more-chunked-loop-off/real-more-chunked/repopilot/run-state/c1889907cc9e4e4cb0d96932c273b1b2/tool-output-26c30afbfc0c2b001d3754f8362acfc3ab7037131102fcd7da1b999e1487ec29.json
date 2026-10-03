@@ -1,0 +1,1 @@
+{"duration_seconds": 0.06716121099816519, "exit_code": 0, "stderr": "", "stdout": "72:    'chunked_even',\n4532:def chunked_even(iterable, n):\n4539:    >>> list(chunked_even(iterable, n))  # List lengths: 3, 2, 2\n", "truncated": false}

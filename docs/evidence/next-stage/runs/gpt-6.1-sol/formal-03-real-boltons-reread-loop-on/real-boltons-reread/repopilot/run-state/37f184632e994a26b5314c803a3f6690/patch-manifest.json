@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "960c35e7090d13f93df2f738159682fcb04899084d06654bd1978174861078bd",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-reread-loop-on/real-boltons-reread/repopilot/workspace",
+      "head": "0522535bdfa69617ed239917c30b0ff32860cfd7",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-reread-loop-on/real-boltons-reread/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "7254587105ab39eb294d8230e5b7b44ca15b21d8"
+  },
+  "bytes": 493,
+  "final": {
+    "state": {
+      "diff_fingerprint": "1391b089909ea14a1192c9116a75eb5b8e7f02fdf9819edcd8fc3cbc4c645d67",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-reread-loop-on/real-boltons-reread/repopilot/workspace",
+      "head": "0522535bdfa69617ed239917c30b0ff32860cfd7",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-reread-loop-on/real-boltons-reread/repopilot/workspace",
+      "status": " M boltons/strutils.py\n"
+    },
+    "tree": "7cad3820ff17878e600d24e92cf6c76b7ec9fcfc"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "ee58999b329c7b6098e0b0674cc7b3a4d861d8aa3a0cb65703366bacb5a5eb3d"
+}

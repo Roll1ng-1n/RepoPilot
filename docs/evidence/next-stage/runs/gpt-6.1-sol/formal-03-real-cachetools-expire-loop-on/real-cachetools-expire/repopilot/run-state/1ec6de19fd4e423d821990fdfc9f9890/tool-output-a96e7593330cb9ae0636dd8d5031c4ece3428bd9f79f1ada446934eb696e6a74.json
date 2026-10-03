@@ -1,0 +1,1 @@
+{"duration_seconds": 0.06649620300231618, "exit_code": 0, "stderr": "", "stdout": "469:        while curr is not root:\n504:        while curr is not root and time > curr.expires:\n", "truncated": false}

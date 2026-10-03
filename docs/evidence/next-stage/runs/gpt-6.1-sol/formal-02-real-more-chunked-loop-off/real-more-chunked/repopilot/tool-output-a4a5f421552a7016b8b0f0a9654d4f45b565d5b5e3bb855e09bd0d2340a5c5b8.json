@@ -1,0 +1,1 @@
+{"duration_seconds": 0.06879616799960786, "exit_code": 0, "stderr": "", "stdout": "more_itertools/recipes.py:1009:    batched = _batched\nmore_itertools/recipes.pyi:179:batched = _batched\n", "truncated": false}

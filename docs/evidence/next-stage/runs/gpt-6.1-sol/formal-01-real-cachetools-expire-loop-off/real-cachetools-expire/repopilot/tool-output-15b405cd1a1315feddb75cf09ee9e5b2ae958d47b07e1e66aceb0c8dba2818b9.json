@@ -1,0 +1,1 @@
+{"duration_seconds": 0.10295132200008084, "exit_code": 0, "stderr": "", "stdout": "./tests/test_ttl.py:28:class TTLCacheTest(unittest.TestCase, CacheTestMixin):\n./src/cachetools/__init__.py:398:class TTLCache(_TimedCache):\n", "truncated": false}

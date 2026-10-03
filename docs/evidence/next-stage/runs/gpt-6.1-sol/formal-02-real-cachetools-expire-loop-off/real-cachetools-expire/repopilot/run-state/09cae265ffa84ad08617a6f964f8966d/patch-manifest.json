@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "33be120d8721a115367edf5841376196aa8157f497249e17cbd3bd6b8b055cbd",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-cachetools-expire-loop-off/real-cachetools-expire/repopilot/workspace",
+      "head": "3688b55c55f064ef5fdcee8e2a843584cbac7e07",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-cachetools-expire-loop-off/real-cachetools-expire/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "65c79c547eb2723d46d6b78f27b8302c15063abb"
+  },
+  "bytes": 650,
+  "final": {
+    "state": {
+      "diff_fingerprint": "ad915ccd6bc1d66db997e063bf2d4676d117a46d248556ced06b5944a85254b4",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-cachetools-expire-loop-off/real-cachetools-expire/repopilot/workspace",
+      "head": "3688b55c55f064ef5fdcee8e2a843584cbac7e07",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-cachetools-expire-loop-off/real-cachetools-expire/repopilot/workspace",
+      "status": " M src/cachetools/__init__.py\n"
+    },
+    "tree": "9279c6f25b81e9a7218f4a4080a9758532810a8c"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "c1182302e3409b824e9286bf3682d966e13d9dc153ce0ce5a638866ea33a87b7"
+}

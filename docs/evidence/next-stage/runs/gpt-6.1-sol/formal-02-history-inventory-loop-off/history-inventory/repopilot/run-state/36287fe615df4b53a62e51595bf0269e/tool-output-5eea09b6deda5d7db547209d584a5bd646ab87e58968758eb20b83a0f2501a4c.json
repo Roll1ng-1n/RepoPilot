@@ -1,0 +1,1 @@
+{"duration_seconds": 0.07111210100265453, "exit_code": 0, "stderr": "", "stdout": "checks/test_pipeline.py:4:    def test_pipeline(self):\nchecks/test_pipeline.py:6:    def test_empty(self):\n", "truncated": false}

@@ -1,0 +1,1 @@
+{"duration_seconds": 0.07268877900060033, "exit_code": 0, "stderr": "", "stdout": "505:            expired.append((curr.key, cache_getitem(self, curr.key)))\n630:                expired.append((item.key, cache_getitem(self, item.key)))\n", "truncated": false}

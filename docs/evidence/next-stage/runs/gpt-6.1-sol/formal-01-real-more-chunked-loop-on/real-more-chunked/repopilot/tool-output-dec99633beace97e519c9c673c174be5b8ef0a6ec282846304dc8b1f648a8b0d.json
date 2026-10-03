@@ -1,0 +1,1 @@
+{"duration_seconds": 0.08133833800002321, "exit_code": 0, "stderr": "", "stdout": "more_itertools/recipes.py:120:def take(n, iterable):\nmore_itertools/more.pyi:911:def takewhile_inclusive(\nmore_itertools/recipes.pyi:75:def take(n: int, iterable: Iterable[_T]) -> list[_T]: ...\nmore_itertools/more.py:4958:def takewhile_inclusive(predicate, iterable):\n", "truncated": false}

@@ -1,0 +1,1 @@
+{"duration_seconds": 0.06881630800126004, "exit_code": 0, "stderr": "", "stdout": "more_itertools/recipes.py:1084:    reshaped = reduce(batched, reversed(dims), scalar_stream)\nmore_itertools/more.py:57:    batched,\n", "truncated": false}

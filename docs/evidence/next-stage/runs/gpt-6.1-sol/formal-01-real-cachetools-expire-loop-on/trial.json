@@ -1,0 +1,280 @@
+{
+  "stage": "formal",
+  "repeat": 1,
+  "replacement": false,
+  "variant": "loop-on",
+  "source_sha256": "a929d146476d00f798ed609ab75b2863134ddef2f8f2eb143d11a55d7552fd62",
+  "result": {
+    "run_id": "13bc51eec3704da1b3a39576edb3a14d",
+    "repeat": 1,
+    "model": "openai/gpt-6.1-sol",
+    "category": "recovery",
+    "capabilities": [
+      "recovery"
+    ],
+    "evaluation": {
+      "schema_version": 6,
+      "repository_pass": true,
+      "behavior_pass": true,
+      "task_pass": true,
+      "behavior_verifier": {
+        "recovery": {
+          "pass": true,
+          "reason": "Every triggered recoverable scenario must have an objective resolution."
+        }
+      },
+      "termination": "correct_success",
+      "recovery": {
+        "trigger_count": 1,
+        "attempt_count": 1,
+        "resolved_count": 1,
+        "success_rate": 1.0,
+        "post_recovery_repository_pass": true,
+        "failure_types": [
+          "test_failure"
+        ]
+      },
+      "replan": {
+        "evidence_count": null,
+        "triggered_count": 0,
+        "valid_count": null,
+        "trigger_rate": null,
+        "triggered_scenarios": null,
+        "missed_scenarios": null,
+        "unnecessary_replans": null,
+        "success_rate": null,
+        "post_replan_repository_pass": null
+      },
+      "tool_quality": {
+        "failure_count": 1,
+        "failure_rate": 0.03125,
+        "recovery_rate": 1.0,
+        "recovery_scope": "manifest-declared public-command failures only",
+        "redundant_calls": 0,
+        "window_repeated_exploration": 0
+      },
+      "budget_usage": {
+        "limits": {
+          "max_steps": 48,
+          "max_replans": 4,
+          "max_consecutive_failures": 5,
+          "command_timeout_seconds": 60,
+          "max_run_seconds": 7200
+        },
+        "steps_used": 23,
+        "replans_used": 0,
+        "complete_audit": false
+      },
+      "approval_events": [],
+      "progress": {
+        "first_effective_source_change_step": 19,
+        "source_changes": [
+          {
+            "after": {
+              "checks/test_regression.py": "dde6b7876faba5ec28c79e8a55c1a71759d3bcab99e2f8d3f7d7caef93f0b26c",
+              "docs/conf.py": "25ea6f6d3c884a05fe6068b1025fc88102d8cfa86a51cefad4421cc94dc95c8f",
+              "setup.py": "843ac26c38a41abae578250bc0f9419194b320a0f67327d941037a4268f6cfe7",
+              "src/cachetools/__init__.py": "255c7c56bacdce0600827dab3643ded2a8a7ba21a793aa794cb19e3754f41f5c",
+              "src/cachetools/_cached.py": "fa2a504c2c705fe98d33f72a3cfe2b1833a83d7d51a4cccc59ac216a99857bb3",
+              "src/cachetools/_cachedmethod.py": "464d8cd78c823543646613a2bef6171907a788ebbddf14fc7f7ed93b32a5c7d9",
+              "src/cachetools/func.py": "701da00430910e864c7a291ecee1af683c51859e0fe3852609af2bfb75038531",
+              "src/cachetools/keys.py": "00e81fa22fa88a804e9c4124d75e7ff6ab341ca212ad89db715e05d21c99d729",
+              "tests/__init__.py": "ed63a356aff7d2a4555651ee0f40124a1dd3cb58ae5da18c3462f4bb018a1ff6",
+              "tests/test_cache.py": "dbdf81b02f344a0e62a5dcf2364be7e135e2511e765e93b43864aeb7aa3b115c",
+              "tests/test_cached.py": "4cb1c6efe2cdc2310bd3a03416b8a8bac4b7a580d7b59ce95d9c9909757dfabd",
+              "tests/test_cachedmethod.py": "15664dd1669dcd2fefab5b84334e033dc93206a4db8d855b19ac24131bfe3d6b",
+              "tests/test_fifo.py": "248285e997b30e1aeda5637c20fa7b1afd0b1f116d7b91b0312d7dd688a4a0d0",
+              "tests/test_func.py": "5cb8e71caf3eb848a0655af15343ea0da97d3f1b41b477f22f94c557466ee7e4",
+              "tests/test_keys.py": "0708d2eb7bdc2db2ca3b07bb2691ca81deab5f66d63fd584889c8739183c9f2b",
+              "tests/test_lfu.py": "5025edfd7e63e61cc5034947ca8f805a7b92bdde45d19b3f9d2bddec9ac8927a",
+              "tests/test_lru.py": "bc25bf7b0b02727d37479758db1bdad6dc0ab4293c381d2c6895fba2adb94a1b",
+              "tests/test_rr.py": "5a5a87263fbd1bc2230b31985cc5e4738090a9870ab8253135e3afb4d26b2ab7",
+              "tests/test_tlru.py": "d6040e6b043bc277899208c14272f1bd230b73cdd4fc80eda08d79f18fec7936",
+              "tests/test_ttl.py": "9c437b3bd2365a32ae6e775266f35932b248d028e7465d955f60e0aec96d0477"
+            },
+            "before": {
+              "checks/test_regression.py": "dde6b7876faba5ec28c79e8a55c1a71759d3bcab99e2f8d3f7d7caef93f0b26c",
+              "docs/conf.py": "25ea6f6d3c884a05fe6068b1025fc88102d8cfa86a51cefad4421cc94dc95c8f",
+              "setup.py": "843ac26c38a41abae578250bc0f9419194b320a0f67327d941037a4268f6cfe7",
+              "src/cachetools/__init__.py": "122de0ec30e690665046b122c61d25e7157cebe022a2059b6f62288dde041e8d",
+              "src/cachetools/_cached.py": "fa2a504c2c705fe98d33f72a3cfe2b1833a83d7d51a4cccc59ac216a99857bb3",
+              "src/cachetools/_cachedmethod.py": "464d8cd78c823543646613a2bef6171907a788ebbddf14fc7f7ed93b32a5c7d9",
+              "src/cachetools/func.py": "701da00430910e864c7a291ecee1af683c51859e0fe3852609af2bfb75038531",
+              "src/cachetools/keys.py": "00e81fa22fa88a804e9c4124d75e7ff6ab341ca212ad89db715e05d21c99d729",
+              "tests/__init__.py": "ed63a356aff7d2a4555651ee0f40124a1dd3cb58ae5da18c3462f4bb018a1ff6",
+              "tests/test_cache.py": "dbdf81b02f344a0e62a5dcf2364be7e135e2511e765e93b43864aeb7aa3b115c",
+              "tests/test_cached.py": "4cb1c6efe2cdc2310bd3a03416b8a8bac4b7a580d7b59ce95d9c9909757dfabd",
+              "tests/test_cachedmethod.py": "15664dd1669dcd2fefab5b84334e033dc93206a4db8d855b19ac24131bfe3d6b",
+              "tests/test_fifo.py": "248285e997b30e1aeda5637c20fa7b1afd0b1f116d7b91b0312d7dd688a4a0d0",
+              "tests/test_func.py": "5cb8e71caf3eb848a0655af15343ea0da97d3f1b41b477f22f94c557466ee7e4",
+              "tests/test_keys.py": "0708d2eb7bdc2db2ca3b07bb2691ca81deab5f66d63fd584889c8739183c9f2b",
+              "tests/test_lfu.py": "5025edfd7e63e61cc5034947ca8f805a7b92bdde45d19b3f9d2bddec9ac8927a",
+              "tests/test_lru.py": "bc25bf7b0b02727d37479758db1bdad6dc0ab4293c381d2c6895fba2adb94a1b",
+              "tests/test_rr.py": "5a5a87263fbd1bc2230b31985cc5e4738090a9870ab8253135e3afb4d26b2ab7",
+              "tests/test_tlru.py": "d6040e6b043bc277899208c14272f1bd230b73cdd4fc80eda08d79f18fec7936",
+              "tests/test_ttl.py": "9c437b3bd2365a32ae6e775266f35932b248d028e7465d955f60e0aec96d0477"
+            },
+            "paths": [
+              "src/cachetools/__init__.py"
+            ],
+            "step": 19,
+            "tool_call_id": "call_b1jN9SpkZNFQydo22FNRm1NB",
+            "tool_name": "apply_patch",
+            "type": "source_changed",
+            "source_index": 1171
+          }
+        ]
+      },
+      "churn": {
+        "status": "unsupported",
+        "reason": "Missing immutable repository states at every step boundary.",
+        "first_solved_step": null,
+        "final_step": 23,
+        "post_solution_steps": null
+      },
+      "duration": {
+        "wall_clock_seconds": 442.70014135600104,
+        "llm_seconds": 435.6940710589988,
+        "coverage": "complete",
+        "active_seconds": 442.452761737999,
+        "idle_seconds": 0.0,
+        "tool_seconds": 3.0453409789952275,
+        "orchestration_seconds": 3.698888203005481,
+        "measured_orchestration_seconds": 3.698888203005481,
+        "operations": {
+          "active_run": 442.452761737999,
+          "approval_assessment": 0.0013871120008843718,
+          "checkpoint_serialization": 0.18378923000273062,
+          "checkpoint_write_sync": 1.7059531149971008,
+          "context_prepare": 0.014077852003538283,
+          "model_complete": 435.7085325559983,
+          "repository_scan": 1.119867740013433,
+          "source_scan": 0.07886483599577332,
+          "tool_execute": 3.0453409789952275,
+          "tool_prepare": 0.022243881998292636
+        }
+      }
+    },
+    "repository_pass": true,
+    "behavior_pass": true,
+    "task_pass": true,
+    "task_id": "real-cachetools-expire",
+    "engine": "repopilot",
+    "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-cachetools-expire-loop-on/real-cachetools-expire/repopilot",
+    "status": "SUCCEEDED",
+    "success": true,
+    "metrics": {
+      "steps": 23,
+      "tokens": {
+        "prompt": 212836,
+        "completion": 2277,
+        "total": 215113,
+        "cached": null,
+        "cache_write": null,
+        "reasoning": null
+      },
+      "cost": 0.2713924,
+      "openai_standard_estimated_cost_usd": null,
+      "tool_calls": 32,
+      "errors": [
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.InternalServerError: InternalServerError: OpenAIException - Connection error."
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "retries": 1,
+      "replans": 0,
+      "duration_seconds": 442.70014135600104,
+      "patch": {
+        "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-cachetools-expire-loop-on/real-cachetools-expire/repopilot/patch.diff",
+        "changed": true,
+        "sha256": "22c2248786fdd676cffeb6e2b724fa4ac129009148612db698338a61bd61cb0d"
+      },
+      "commits": [],
+      "trajectory_status": "SUCCEEDED",
+      "verifier_success": true,
+      "run_budget": {
+        "max_steps": 48,
+        "max_replans": 4,
+        "max_consecutive_failures": 5,
+        "command_timeout_seconds": 60,
+        "max_run_seconds": 7200
+      },
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "preflight": {
+        "status": "READY",
+        "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "checks": [
+          {
+            "name": "image_inspect",
+            "command": [
+              "docker",
+              "image",
+              "inspect",
+              "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+            ],
+            "exit_code": 0,
+            "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n",
+            "stderr": "",
+            "duration_seconds": 0.039524110999991535
+          },
+          {
+            "name": "python",
+            "command": [
+              "docker",
+              "run",
+              "--rm",
+              "--pull=never",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+              "python",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stdout": "Python 3.12.14\n",
+            "stderr": "",
+            "duration_seconds": 0.41969584800062876
+          },
+          {
+            "name": "git",
+            "command": [
+              "docker",
+              "run",
+              "--rm",
+              "--pull=never",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+              "git",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stdout": "git version 2.47.3\n",
+            "stderr": "",
+            "duration_seconds": 0.411793809998926
+          }
+        ],
+        "error": null
+      },
+      "llm_calls": 23,
+      "tool_failures": 1
+    },
+    "verifier": {
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "duration_seconds": 0.025247490000765538,
+      "success_condition": "The hidden verifier exits with code 0."
+    },
+    "error": null
+  },
+  "provider_failure": true
+}

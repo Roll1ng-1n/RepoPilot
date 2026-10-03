@@ -1,0 +1,1 @@
+{"duration_seconds": 0.06979485900046711, "exit_code": 0, "stderr": "", "stdout": "472:                if time < curr.expires:\n504:        while curr is not root and time > curr.expires:\n603:                if time < curr.expires and not curr.removed:\n", "truncated": false}

@@ -1,0 +1,1 @@
+{"duration_seconds": 0.07840971699988586, "exit_code": 0, "stderr": "", "stdout": "42:    'chunked_even',\n787:def chunked_even(iterable: Iterable[_T], n: int) -> Iterator[list[_T]]: ...\n", "truncated": false}

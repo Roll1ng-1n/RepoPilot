@@ -1,0 +1,25 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "cb4dd8da192317ca3d3d6200c58083a456e1f93dafafe2d4fbc545795da295c2",
+      "before_fingerprint": "cb4dd8da192317ca3d3d6200c58083a456e1f93dafafe2d4fbc545795da295c2",
+      "check_id": "unittest-checks",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Required repository verification for the slugify repair.",
+      "result": {
+        "duration_seconds": 0.3749676699999327,
+        "exit_code": 0,
+        "stderr": ".\n----------------------------------------------------------------------\nRan 1 test in 0.040s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "All checks under checks",
+      "sequence": 1,
+      "supersedes": []
+    }
+  ]
+}

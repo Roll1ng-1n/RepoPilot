@@ -1,0 +1,13 @@
+[
+  {
+    "type": "scenario_audit",
+    "recovery": false,
+    "replan": false,
+    "incomplete": {
+      "recovery": {
+        "observation_index": 1,
+        "reason": "Unclassified command or unavailable exit status."
+      }
+    }
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "1391b089909ea14a1192c9116a75eb5b8e7f02fdf9819edcd8fc3cbc4c645d67",
+      "before_fingerprint": "1391b089909ea14a1192c9116a75eb5b8e7f02fdf9819edcd8fc3cbc4c645d67",
+      "check_id": "slugify-regression",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Verify the delimiter fix and preserve slugify lower, ASCII, and empty-input compatibility across the repository checks.",
+      "result": {
+        "duration_seconds": 0.3173213260015473,
+        "exit_code": 0,
+        "stderr": ".\n----------------------------------------------------------------------\nRan 1 test in 0.034s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "checks unittest suite",
+      "sequence": 1,
+      "supersedes": []
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"duration_seconds": 0.09868137299963564, "exit_code": 0, "stderr": "", "stdout": "981:def _batched(iterable, n, *, strict=False):  # pragma: no cover\n", "truncated": false}

@@ -1,0 +1,22 @@
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-e266458e -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6-luna/smoke-00-real-boltons-slug-loop-on/real-boltons-slug/repopilot/works
+pace,target=/workspace --user=1000:1000                                         
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-e266458e with ID 
+93571ee81351348f56e455ec692fde02d583701d83fc821891b2c39c205545a7                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6-luna smoke-00-real-boltons-slug-loop-on FAILED False False
+Traceback (most recent call last):
+  File "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/run_models.py", line 154, in <module>
+    main()
+  File "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/run_models.py", line 137, in main
+    raise RuntimeError(
+RuntimeError: Smoke did not establish functional execution; trials preserved, formal campaign not started.

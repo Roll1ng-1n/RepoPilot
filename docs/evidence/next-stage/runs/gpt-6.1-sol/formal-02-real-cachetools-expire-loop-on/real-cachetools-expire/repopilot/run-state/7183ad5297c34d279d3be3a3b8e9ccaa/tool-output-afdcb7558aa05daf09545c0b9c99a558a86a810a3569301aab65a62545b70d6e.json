@@ -1,0 +1,1 @@
+{"duration_seconds": 0.08243850000144448, "exit_code": 0, "stderr": "", "stdout": "502:        cache_delitem = Cache.__delitem__\n625:        cache_delitem = Cache.__delitem__\n", "truncated": false}

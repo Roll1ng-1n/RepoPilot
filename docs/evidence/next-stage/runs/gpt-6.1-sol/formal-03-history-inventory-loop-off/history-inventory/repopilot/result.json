@@ -1,0 +1,302 @@
+{
+  "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-loop-off/history-inventory/repopilot",
+  "behavior_pass": true,
+  "capabilities": [
+    "recovery"
+  ],
+  "category": "recovery",
+  "engine": "repopilot",
+  "error": null,
+  "evaluation": {
+    "approval_events": [
+      {
+        "reason": "Automatically approved in the explicit disposable Docker benchmark context: The command may delete Target Repository files.",
+        "source_index": 2130,
+        "step": 25,
+        "tool_call": {
+          "arguments": {
+            "command": "rm -rf checks/__pycache__ src/__pycache__ src/inventory/__pycache__ && git status --short"
+          },
+          "id": "call_hje9CNqYRo7Qn0BOBb0YwQqX",
+          "name": "run_command"
+        },
+        "type": "approval_auto_approved"
+      }
+    ],
+    "behavior_pass": true,
+    "behavior_verifier": {
+      "recovery": {
+        "pass": true,
+        "reason": "Every triggered recoverable scenario must have an objective resolution."
+      }
+    },
+    "budget_usage": {
+      "complete_audit": false,
+      "limits": {
+        "command_timeout_seconds": 60,
+        "max_consecutive_failures": 5,
+        "max_replans": 4,
+        "max_run_seconds": 7200,
+        "max_steps": 48
+      },
+      "replans_used": 1,
+      "steps_used": 39
+    },
+    "churn": {
+      "final_step": 39,
+      "first_solved_step": null,
+      "post_solution_steps": null,
+      "reason": "Missing immutable repository states at every step boundary.",
+      "status": "unsupported"
+    },
+    "duration": {
+      "active_seconds": 1967.5942492430004,
+      "coverage": "complete",
+      "idle_seconds": 0.0,
+      "llm_seconds": 1953.971048790001,
+      "measured_orchestration_seconds": 7.587090418976004,
+      "operations": {
+        "active_run": 1967.5942492430004,
+        "approval_assessment": 0.0027525649857125245,
+        "checkpoint_serialization": 0.704017957985343,
+        "checkpoint_write_sync": 3.373491412978183,
+        "context_prepare": 0.04844114500883734,
+        "model_complete": 1953.976175399017,
+        "repository_scan": 2.115953264059499,
+        "source_scan": 0.09822437202819856,
+        "tool_execute": 6.030983425007435,
+        "tool_prepare": 0.051590881990705384
+      },
+      "orchestration_seconds": 7.587090418976004,
+      "tool_seconds": 6.030983425007435,
+      "wall_clock_seconds": 1967.835771566999
+    },
+    "progress": {
+      "first_effective_source_change_step": 10,
+      "source_changes": [
+        {
+          "after": {
+            "checks/test_pipeline.py": "ed498ab5c14fbeb8c12788845ac07289e53d36f55d992fe398b1e4ddc81807c8",
+            "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "src/inventory/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "src/inventory/aggregate.py": "fac938e6b7b601b2bad2b26fa4398f1c4fe7487b6a99d0fb5d607463dbd73587",
+            "src/inventory/normalize.py": "9f6fb0273f2cb1e9058b97143dc4483a194470fcecc1d568a9df5e25681658f7",
+            "src/inventory/parse.py": "b00a36809d712d89d959c8f9c5a352d819b4bb837c8e0b8636ac94eb2bfa4203",
+            "src/inventory/pipeline.py": "d50c5ad37cb59dd338c0d8fadaf955e5b4ed0f8dcaea7263e8e9958f4ae0c7c9",
+            "src/inventory/render.py": "3082723015bd62c5847a359e722074d7fd04618df6751b2a08ecb0de807b031a",
+            "src/inventory/select.py": "356560636833828b13ae56cab2f8d527beb455b447f336e3576390dc0d9c41f9",
+            "src/inventory/validate.py": "db15114136d0fab2adbe04ebc3882f5cf91b1b60a0d0bdf2d391907b31efcc02"
+          },
+          "before": {
+            "checks/test_pipeline.py": "ed498ab5c14fbeb8c12788845ac07289e53d36f55d992fe398b1e4ddc81807c8",
+            "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "src/inventory/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "src/inventory/aggregate.py": "e1c95e21955dcaffd70bf735ebe074de6c82d325d1bc754b1777d6c1063b4cf4",
+            "src/inventory/normalize.py": "608539965db913c8914cacc5ad66410c5cecae78fc46220f14de50a62fea4490",
+            "src/inventory/parse.py": "913374d908c19863ea398fdaff82da5946bb79ded9e5af1350cab153742f1b1f",
+            "src/inventory/pipeline.py": "d50c5ad37cb59dd338c0d8fadaf955e5b4ed0f8dcaea7263e8e9958f4ae0c7c9",
+            "src/inventory/render.py": "6d4bcc5d99a064dbcc24b466296fce60022aeb30741ab400f9ecc5ce826016f8",
+            "src/inventory/select.py": "49f683917e42b7b8792c0d1fca6bc6cae2cb3d199caac2fd5417d1ab5b63a103",
+            "src/inventory/validate.py": "d9c1ccd32b0946cb6db98805d573deb05468696b4e4925b6b7b03be0956b7a42"
+          },
+          "paths": [
+            "src/inventory/aggregate.py",
+            "src/inventory/normalize.py",
+            "src/inventory/parse.py",
+            "src/inventory/render.py",
+            "src/inventory/select.py",
+            "src/inventory/validate.py"
+          ],
+          "source_index": 1203,
+          "step": 10,
+          "tool_call_id": "call_DLvpaBu8KtPs8khaKsKDsd2r",
+          "tool_name": "apply_patch",
+          "type": "source_changed"
+        }
+      ]
+    },
+    "recovery": {
+      "attempt_count": 2,
+      "failure_types": [
+        "test_failure"
+      ],
+      "post_recovery_repository_pass": true,
+      "resolved_count": 1,
+      "success_rate": 1.0,
+      "trigger_count": 1
+    },
+    "replan": {
+      "evidence_count": null,
+      "missed_scenarios": null,
+      "post_replan_repository_pass": null,
+      "success_rate": null,
+      "trigger_rate": null,
+      "triggered_count": 1,
+      "triggered_scenarios": null,
+      "unnecessary_replans": null,
+      "valid_count": null
+    },
+    "repository_pass": true,
+    "schema_version": 6,
+    "task_pass": true,
+    "termination": "correct_success",
+    "tool_quality": {
+      "failure_count": 6,
+      "failure_rate": 0.08108108108108109,
+      "recovery_rate": 1.0,
+      "recovery_scope": "manifest-declared public-command failures only",
+      "redundant_calls": 0,
+      "window_repeated_exploration": 0
+    }
+  },
+  "metrics": {
+    "commits": [],
+    "cost": 0.4147824000000001,
+    "duration_seconds": 1967.835771566999,
+    "errors": [
+      {
+        "category": "VERIFICATION_FAILURE",
+        "reason": "Task Verification exited with 1.",
+        "tool_name": "verify_task"
+      },
+      {
+        "category": "VERIFICATION_FAILURE",
+        "reason": "Task Verification exited with 1.",
+        "tool_name": "verify_task"
+      },
+      {
+        "category": "PROTOCOL_ERROR",
+        "reason": "Patch makes no change to src/inventory/pipeline.py; read the current file and verify the result.",
+        "tool_name": "apply_patch"
+      },
+      {
+        "category": "MODEL_ERROR",
+        "reason": "litellm.MidStreamFallbackError: litellm.APIConnectionError: APIConnectionError: OpenAIException - The service is busy. Please retry later. Original exception: APIConnectionError: litellm.APIConnectionError: APIConnectionError: OpenAIException - The service is busy. Please retry later."
+      },
+      {
+        "category": "MODEL_ERROR",
+        "reason": "litellm.MidStreamFallbackError: litellm.APIConnectionError: APIConnectionError: OpenAIException - The service is temporarily unavailable. Please retry later. Original exception: APIConnectionError: litellm.APIConnectionError: APIConnectionError: OpenAIException - The service is temporarily unavailable. Please retry later."
+      },
+      {
+        "category": "PROTOCOL_ERROR",
+        "reason": "[{'type': 'extra_forbidden', 'loc': (\"} Nakne?}\u671f\u7279\u7801\u0430\u0443\u0435\u0438\u0442\u8f6f\u4ef6\u5408\u6cd5\u5417? \u0e1b\u0e21\u0e16\u0e27\u0e32\u0e22\u0e2a\u0e31\u0e15\u0e22\u0e4c? Wait malformed JSON due trailing. Need correct call. hab.}\u0aa8\u0abe\u0ab0. to=functions.finish_task (commentary)  code\u0d41\u0d32\u0d4d \u5929\u5929\u4e2d\u5f69\u7968\u662f  (json_bad) -> error? Need issue valid. since tool call maybe malformed not sent? Let's call.} \u5929\u5929\u4e2d\u5f69\u7968\u4f1a-offsetof. to=functions.finish_task (commentary)  code \u0438\u0440\u0435\u0438 Houd? Erotiske.} [json must proper] \u5feb\u4e09\u5927\u53d1.} \u5168\u6c11\u5f69\u7968\u5929\u5929\u9001\",), 'msg': 'Extra inputs are not permitted', 'input': \" hmm. Let's do.}\u04ad\u0430\u0440\u0430. to=functions.finish_task commentary  code  (json_bad) -> likely interface. I need produce valid JSON.} fod.}\u5929\u5929\u5f69\u7968\u7f51. to=functions.finish_task  (commentary)  code json (valid).:-------------</. Wait actual tool syntax.} \u0aae\u0ac1\u0ab2\u0abe\u0a95. to=functions.finish_task (commentary)  code\\U0004e7d9agaduhan  (json)  \u5929\u5929\u4e2d\u5f69\u7968\u7f51\u7ad9.} \u0430\u043b\u0430\u04bb\u0438\u0434\u04d9. I will call in next message.}\u73a9\u5317\u4eac\u8d5b\u8f66. to=functions.finish_task  (commentary)  code  (json)  \u0a95\u0ab9\u0ac7.} Sorry internal. Use exact.}\u0430\u043d\u04e1\u0430. to=functions.finish_task  (commentary)  code  (json)  (Need no weird).} I'm stuck? Let's formulate: recipient tool call with JSON.} matimba. to=functions.finish_task (commentary)  code: {\", 'url': 'https://errors.pydantic.dev/2.13/v/extra_forbidden'}]",
+        "tool_name": "finish_task"
+      },
+      {
+        "category": "TOOL_ERROR",
+        "reason": "supersedes references an unknown verification sequence.",
+        "tool_name": "verify_task"
+      },
+      {
+        "category": "TOOL_ERROR",
+        "reason": "supersedes references an unknown verification sequence.",
+        "tool_name": "verify_task"
+      }
+    ],
+    "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+    "llm_calls": 39,
+    "openai_standard_estimated_cost_usd": null,
+    "patch": {
+      "changed": true,
+      "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-loop-off/history-inventory/repopilot/patch.diff",
+      "sha256": "bc2f1391d497b0858c9848a3901436cd223f072708609ce9b6dcfc58480a011d"
+    },
+    "preflight": {
+      "checks": [
+        {
+          "command": [
+            "docker",
+            "image",
+            "inspect",
+            "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+          ],
+          "duration_seconds": 0.03509650299747591,
+          "exit_code": 0,
+          "name": "image_inspect",
+          "stderr": "",
+          "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "python",
+            "--version"
+          ],
+          "duration_seconds": 0.42422421000082977,
+          "exit_code": 0,
+          "name": "python",
+          "stderr": "",
+          "stdout": "Python 3.12.14\n"
+        },
+        {
+          "command": [
+            "docker",
+            "run",
+            "--rm",
+            "--pull=never",
+            "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+            "git",
+            "--version"
+          ],
+          "duration_seconds": 0.433684166000603,
+          "exit_code": 0,
+          "name": "git",
+          "stderr": "",
+          "stdout": "git version 2.47.3\n"
+        }
+      ],
+      "error": null,
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "status": "READY"
+    },
+    "replans": 1,
+    "retries": 2,
+    "run_budget": {
+      "command_timeout_seconds": 60,
+      "max_consecutive_failures": 5,
+      "max_replans": 4,
+      "max_run_seconds": 7200,
+      "max_steps": 48
+    },
+    "steps": 39,
+    "tokens": {
+      "cache_write": null,
+      "cached": null,
+      "completion": 7943,
+      "prompt": 353481,
+      "reasoning": null,
+      "total": 361424
+    },
+    "tool_calls": 74,
+    "tool_failures": 6,
+    "trajectory_status": "SUCCEEDED",
+    "verifier_success": true
+  },
+  "model": "openai/gpt-6.1-sol",
+  "repeat": 1,
+  "repository_pass": true,
+  "run_id": "1914ef1969cb479c859ffc6e29008d77",
+  "status": "SUCCEEDED",
+  "success": true,
+  "task_id": "history-inventory",
+  "task_pass": true,
+  "verifier": {
+    "duration_seconds": 0.02973804800058133,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "hidden checks passed\n",
+    "success_condition": {
+      "verifier_exit_code": 0
+    }
+  }
+}

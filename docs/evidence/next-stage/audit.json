@@ -1,0 +1,14 @@
+{
+  "complete": true,
+  "formal_originals": 45,
+  "expected_formal_originals": 45,
+  "missing": [],
+  "trial_records": 50,
+  "replacements": 3,
+  "archive_sha256": "a929d146476d00f798ed609ab75b2863134ddef2f8f2eb143d11a55d7552fd62",
+  "source_files_verified": 308,
+  "experiment_files_verified": 337,
+  "scope": "No model calls. Checks input hashes, identities, image/model/budgets, raw terminal results, and replacement eligibility. Does not establish causal effects of provider errors.",
+  "raw_evidence_files": 3440,
+  "raw_evidence_manifest_sha256": "93f749bb6eac9ce082f538d79d5df2867dd6bab9b4f99aa004fc0b385ddb652e"
+}

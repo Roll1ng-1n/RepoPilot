@@ -1,0 +1,1 @@
+{"duration_seconds": 0.07675552799992147, "exit_code": 0, "stderr": "", "stdout": "more_itertools/more.pyi:686:def ichunked(iterable: Iterable[_T], n: int) -> Iterator[Iterator[_T]]: ...\nmore_itertools/more.py:3612:def ichunked(iterable, n):\n", "truncated": false}

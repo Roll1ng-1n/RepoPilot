@@ -1,0 +1,27 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "960c35e7090d13f93df2f738159682fcb04899084d06654bd1978174861078bd",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6-luna/smoke-00-real-boltons-slug-loop-on/real-boltons-slug/repopilot/workspace",
+      "head": "0522535bdfa69617ed239917c30b0ff32860cfd7",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6-luna/smoke-00-real-boltons-slug-loop-on/real-boltons-slug/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "7254587105ab39eb294d8230e5b7b44ca15b21d8"
+  },
+  "bytes": 0,
+  "final": {
+    "state": {
+      "diff_fingerprint": "960c35e7090d13f93df2f738159682fcb04899084d06654bd1978174861078bd",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6-luna/smoke-00-real-boltons-slug-loop-on/real-boltons-slug/repopilot/workspace",
+      "head": "0522535bdfa69617ed239917c30b0ff32860cfd7",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6-luna/smoke-00-real-boltons-slug-loop-on/real-boltons-slug/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "7254587105ab39eb294d8230e5b7b44ca15b21d8"
+  },
+  "patch": "runtime-patch.diff",
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then runtime-patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

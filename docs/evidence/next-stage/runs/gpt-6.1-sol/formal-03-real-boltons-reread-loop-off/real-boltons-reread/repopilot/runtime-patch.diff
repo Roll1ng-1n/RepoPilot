@@ -1,0 +1,13 @@
+diff --git a/boltons/strutils.py b/boltons/strutils.py
+index e056c8e74d89c485cc8155e8abda9f1f9a726302..1d43f2b0a1441a487a42e1885545a9fe531d5764 100644
+--- a/boltons/strutils.py
++++ b/boltons/strutils.py
+@@ -103,7 +103,7 @@ def slugify(text, delim='_', lower=True, ascii=False):
+     True
+ 
+     """
+-    ret = '_'.join(split_punct_ws(text)) or delim if text else ''
++    ret = delim.join(split_punct_ws(text)) or delim if text else ''
+     if ascii:
+         ret = asciify(ret)
+     if lower:

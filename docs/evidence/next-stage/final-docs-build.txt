@@ -1,0 +1,290 @@
+
+[31m │  ⚠  Warning from the Material for MkDocs team[0m
+[31m │[0m
+[31m │[0m  MkDocs 2.0, the underlying framework of Material for MkDocs,
+[31m │[0m  will introduce backward-incompatible changes, including:
+[31m │[0m
+[31m │  × [0mAll plugins will stop working – the plugin system has been removed
+[31m │  × [0mAll theme overrides will break – the theming system has been rewritten
+[31m │  × [0mNo migration path exists – existing projects cannot be upgraded
+[31m │  × [0mClosed contribution model – community members can't report bugs
+[31m │  × [0mCurrently unlicensed – unsuitable for production use
+[31m │[0m
+[31m │[0m  Our full analysis:
+[31m │[0m
+[31m │[0m  [4mhttps://squidfunk.github.io/mkdocs-material/blog/2026/02/18/mkdocs-2.0/[0m
+[0m
+----------------------------------------------------------------
+
+[31m[1mWARNING[0m: MkDocs may break support for all existing plugins and themes soon!
+
+The owner of MkDocs has completely abandoned maintenance of the project, and instead is planning to publish a "version 2" which will not support any existing themes, plugins or even your configuration files. This v2 may eventually replace what you download with [33m[1m`pip install mkdocs`[0m, suddenly breaking the build of your existing site.
+
+To avoid these risks, switch to [1mProperDocs[0m, a continuation of MkDocs 1.x and a drop-in replacement that supports your current MkDocs setup.
+Simply install it with [33m[1m`pip install properdocs`[0m and build your site with [33m[1m`properdocs build`[0m instead of the MkDocs equivalents.
+
+Alternatively, to just skip this warning in the future, you can set the environment variable [33m[1m`DISABLE_MKDOCS_2_WARNING=true`[0m.
+
+For more info visit [1mhttps://github.com/ProperDocs/properdocs/discussions/33[0m and [1mhttps://properdocs.org/[0m
+
+(This warning was initiated by one of the plugins that you depend on.)
+
+----------------------------------------------------------------
+INFO    -  Cleaning site directory
+INFO    -  Building documentation to directory: /home/waaaaa/vibecoding/RepoPilot/site
+INFO    -  The following pages exist in the docs directory, but are not included in the "nav" configuration:
+  - SECURITY.md
+  - _footer.md
+  - model-comparison-test-plan.md
+  - repopilot-design-validation-record.md
+  - repopilot-swebench-smoke.md
+  - adr/0001-develop-from-pinned-mini-swe-agent-source.md
+  - adr/0002-separate-upstream-base-from-repopilot-engineering.md
+  - adr/0003-use-replaceable-execution-environments.md
+  - adr/0004-require-native-tool-calling.md
+  - adr/0005-use-bounded-autonomy-for-repository-actions.md
+  - agents/domain.md
+  - agents/issue-tracker.md
+  - agents/triage-labels.md
+  - evidence/remaining-issues-review.md
+  - evidence/current-priority-review/report.md
+  - evidence/four-model-api-probe-v1/summary.md
+  - evidence/four-model-stage3-v1/summary.md
+  - evidence/issue24-effective-ablation/PROGRESS.md
+  - evidence/issue24-effective-ablation/followup-context.md
+  - evidence/issue24-effective-ablation/followup-observer.md
+  - evidence/issue24-effective-ablation/followup-retry.md
+  - evidence/issue24-effective-ablation/initial-report.md
+  - evidence/issue24-effective-ablation/report.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-luna/no-context-selection/summary.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-luna/no-context-selection/profile-ledger/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-luna/no-planning/summary.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-luna/no-planning/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-luna/no-profile/summary.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-luna/no-profile/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-context-selection/summary.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-context-selection/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-context-selection/profile-ledger/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-planning/summary.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-planning/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-profile/summary.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-profile/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/summary.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/replacements/attempt-1/gpt-5.6-sol/no-recovery/profile-ledger/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/full/summary.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/full/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/full/profile-ledger/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-context-selection/summary.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-context-selection/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-context-selection/profile-ledger/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-planning/summary.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-planning/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-planning/profile-ledger/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-profile/summary.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-profile/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-profile/profile-ledger/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-recovery/summary.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-recovery/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-luna/no-recovery/profile-ledger/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/full/summary.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/full/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/full/profile-ledger/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-context-selection/summary.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-context-selection/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-context-selection/profile-ledger/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-planning/summary.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-planning/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-planning/profile-ledger/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-profile/summary.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-profile/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-profile/profile-ledger/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-recovery/summary.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-recovery/history-inventory/repopilot/task_report.md
+  - evidence/issue24-effective-ablation/runs/gpt-5.6-sol/no-recovery/profile-ledger/repopilot/task_report.md
+  - evidence/issue27-real-models/report.md
+  - evidence/issue27-real-models/round1/runs/gpt-5.6-luna/summary.md
+  - evidence/issue27-real-models/round1/runs/gpt-5.6-luna/history-inventory/repopilot/task_report.md
+  - evidence/issue27-real-models/round1/runs/gpt-5.6-sol/summary.md
+  - evidence/issue27-real-models/round1/runs/gpt-5.6-sol/history-inventory/repopilot/task_report.md
+  - evidence/issue27-real-models/round2/runs/gpt-5.6-luna/summary.md
+  - evidence/issue27-real-models/round2/runs/gpt-5.6-luna/history-inventory/repopilot/task_report.md
+  - evidence/issue27-real-models/round2/runs/gpt-5.6-sol/summary.md
+  - evidence/issue27-real-models/round2/runs/gpt-5.6-sol/history-inventory/repopilot/task_report.md
+  - evidence/issue27-real-models/round3/runs/gpt-6.1-sol/summary.md
+  - evidence/issue27-real-models/round3/runs/gpt-6.1-sol/history-inventory/repopilot/task_report.md
+  - evidence/issue27-real-models/round4/runs/gpt-6.1-sol/summary.md
+  - evidence/issue27-real-models/round4/runs/gpt-6.1-sol/history-inventory/repopilot/task_report.md
+  - evidence/issues-19-24/summary.md
+  - evidence/issues-19-24/round2/summary.md
+  - evidence/issues-19-24/round2/external/diagnosis.md
+  - evidence/issues-19-24/round2/external/summary.md
+  - evidence/issues-19-24/round2/external/ablation/gpt-5.6-luna/no-recovery/summary.md
+  - evidence/issues-19-24/round2/external/ablation/gpt-5.6-luna/no-recovery/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/ablation/gpt-5.6-luna/no-recovery/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/ablation/gpt-5.6-sol/no-profile/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-luna/no-context-selection/recovery-public-failure/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-luna/no-context-selection/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-luna/no-context-selection/seed-single-file/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-luna/no-context-selection/seed-single-file/attempt-001/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-luna/no-planning/recovery-public-failure/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-luna/no-planning/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-luna/no-planning/seed-single-file/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-luna/no-planning/seed-single-file/attempt-001/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-luna/no-profile/recovery-public-failure/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-luna/no-profile/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-luna/no-profile/seed-single-file/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-luna/no-profile/seed-single-file/attempt-001/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-context-selection/recovery-public-failure/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-context-selection/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-context-selection/seed-single-file/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-context-selection/seed-single-file/attempt-001/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-planning/recovery-public-failure/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-planning/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-planning/seed-single-file/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-planning/seed-single-file/attempt-001/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-profile/recovery-public-failure/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-profile/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-recovery/recovery-public-failure/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-recovery/recovery-public-failure/attempt-001/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-recovery/seed-single-file/attempt-001/summary.md
+  - evidence/issues-19-24/round2/external/continuation/gpt-5.6-sol/no-recovery/seed-single-file/attempt-001/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/smoke/gpt-5.6-luna/full/summary.md
+  - evidence/issues-19-24/round2/external/smoke/gpt-5.6-luna/full/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/smoke/gpt-5.6-luna/full/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/smoke/gpt-5.6-sol/full/summary.md
+  - evidence/issues-19-24/round2/external/smoke/gpt-5.6-sol/full/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/smoke/gpt-5.6-sol/full/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/smoke-luna/b370227e7dcb4fbcbca82152a7bda193/summary.md
+  - evidence/issues-19-24/round2/external/smoke-luna/b370227e7dcb4fbcbca82152a7bda193/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/smoke-luna/b370227e7dcb4fbcbca82152a7bda193/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/smoke-sol/3ad30c8b847c426b81f12a94f8c8d2e1/summary.md
+  - evidence/issues-19-24/round2/external/smoke-sol/3ad30c8b847c426b81f12a94f8c8d2e1/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round2/external/smoke-sol/3ad30c8b847c426b81f12a94f8c8d2e1/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round2/scenarios/approval-interruption/task_report.md
+  - evidence/issues-19-24/round2/scenarios/crash-recovery/task_report.md
+  - evidence/issues-19-24/round2/scenarios/streaming-resume/task_report.md
+  - evidence/issues-19-24/round2/scenarios/summary-accounting/task_report.md
+  - evidence/issues-19-24/round3/summary.md
+  - evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/summary.md
+  - evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round3/no-planning/gpt-5.6-luna/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round3/no-planning/gpt-5.6-sol/summary.md
+  - evidence/issues-19-24/round3/no-planning/gpt-5.6-sol/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round3/no-planning/gpt-5.6-sol/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round3/smoke/gpt-5.6-luna/summary.md
+  - evidence/issues-19-24/round3/smoke/gpt-5.6-luna/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round3/smoke/gpt-5.6-luna/seed-single-file/repopilot/task_report.md
+  - evidence/issues-19-24/round3/smoke/gpt-5.6-sol/summary.md
+  - evidence/issues-19-24/round3/smoke/gpt-5.6-sol/recovery-public-failure/repopilot/task_report.md
+  - evidence/issues-19-24/round3/smoke/gpt-5.6-sol/seed-single-file/repopilot/task_report.md
+  - evidence/issues-25-26/summary.md
+  - evidence/issues-27-29/report.md
+  - evidence/luna-git-image-smoke-v1/summary.md
+  - evidence/luna-git-image-smoke-v1/artifacts/summary.md
+  - evidence/luna-git-image-smoke-v1/artifacts/gpt-5.6-luna/round-001/summary.md
+  - evidence/luna-git-image-smoke-v1/artifacts/gpt-5.6-luna/round-001/workflow-human-approval-git/repopilot/task_report.md
+  - evidence/luna-paired-smoke-v1/summary.md
+  - evidence/micro-benchmark-v1/summary.md
+  - evidence/model-backed-smoke-v1/summary.md
+  - evidence/model-backed-smoke-v1/seed-single-file/repopilot/task_report.md
+  - evidence/next-stage/architecture.md
+  - evidence/next-stage/interpretation.md
+  - evidence/next-stage/metrics.md
+  - evidence/next-stage/model-report.md
+  - evidence/next-stage/packaging/report.md
+  - evidence/next-stage/performance/report.md
+  - evidence/next-stage/runs/gpt-6-luna/smoke-00-real-boltons-slug-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6-luna/smoke-00-real-boltons-slug-loop-on/real-boltons-slug/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-history-inventory-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-history-inventory-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-history-inventory-loop-off/history-inventory/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-history-inventory-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-history-inventory-loop-on/history-inventory/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-boltons-reread-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-boltons-reread-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-boltons-reread-loop-off/real-boltons-reread/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-boltons-reread-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-boltons-reread-loop-on/real-boltons-reread/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-boltons-slug-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-boltons-slug-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-boltons-slug-loop-off/real-boltons-slug/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-boltons-slug-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-boltons-slug-loop-on/real-boltons-slug/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-cachetools-expire-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-cachetools-expire-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-cachetools-expire-loop-off/real-cachetools-expire/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-cachetools-expire-loop-off-replacement/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-cachetools-expire-loop-off-replacement/real-cachetools-expire/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-cachetools-expire-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-cachetools-expire-loop-on/real-cachetools-expire/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-off/real-more-chunked/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-off-replacement/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-off-replacement/real-more-chunked/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on/real-more-chunked/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on-replacement/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on-replacement/real-more-chunked/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-history-inventory-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-history-inventory-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-history-inventory-loop-off/history-inventory/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-history-inventory-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-history-inventory-loop-on/history-inventory/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-boltons-reread-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-boltons-reread-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-boltons-reread-loop-off/real-boltons-reread/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-boltons-reread-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-boltons-reread-loop-on/real-boltons-reread/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-boltons-slug-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-boltons-slug-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-boltons-slug-loop-off/real-boltons-slug/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-boltons-slug-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-boltons-slug-loop-on/real-boltons-slug/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-cachetools-expire-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-cachetools-expire-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-cachetools-expire-loop-off/real-cachetools-expire/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-cachetools-expire-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-cachetools-expire-loop-on/real-cachetools-expire/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-more-chunked-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-more-chunked-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-more-chunked-loop-off/real-more-chunked/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-more-chunked-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-more-chunked-loop-on/real-more-chunked/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-loop-off/history-inventory/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-history-inventory-loop-on/history-inventory/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-reread-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-reread-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-reread-loop-off/real-boltons-reread/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-reread-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-reread-loop-on/real-boltons-reread/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-slug-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-slug-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-slug-loop-off/real-boltons-slug/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-slug-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-boltons-slug-loop-on/real-boltons-slug/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-cachetools-expire-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-cachetools-expire-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-cachetools-expire-loop-off/real-cachetools-expire/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-cachetools-expire-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-cachetools-expire-loop-on/real-cachetools-expire/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-more-chunked-baseline/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-more-chunked-loop-off/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-more-chunked-loop-off/real-more-chunked/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-more-chunked-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/formal-03-real-more-chunked-loop-on/real-more-chunked/repopilot/task_report.md
+  - evidence/next-stage/runs/gpt-6.1-sol/smoke-00-real-boltons-slug-loop-on/summary.md
+  - evidence/next-stage/runs/gpt-6.1-sol/smoke-00-real-boltons-slug-loop-on/real-boltons-slug/repopilot/task_report.md
+  - evidence/stage4-24tasks-luna-sol-v1/recomputed.md
+  - evidence/stage4-24tasks-luna-sol-v1/summary.md
+  - evidence/stage4-seed6-luna-sol-v1/recomputed.md
+  - evidence/stage4-seed6-luna-sol-v1/summary.md
+  - evidence/swebench-lite-smoke-v1/sqlfluff__sqlfluff-1625/task_report.md
+INFO    -  Doc file 'evidence/issues-19-24/round2/external/summary.md' contains an unrecognized relative link 'smoke-sol/', it was left as is.
+INFO    -  Doc file 'evidence/issues-19-24/round2/external/summary.md' contains an unrecognized relative link 'smoke-luna/', it was left as is.
+INFO    -  Doc file 'evidence/luna-git-image-smoke-v1/summary.md' contains an unrecognized relative link 'artifacts/gpt-5.6-luna/round-001/workflow-human-approval-git/repopilot/run-state/2a0266238abb4d9088218cbf9a630496/', it was left as is.
+INFO    -  Documentation built in 8.32 seconds

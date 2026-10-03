@@ -1,0 +1,237 @@
+diff --git a/checks/__pycache__/test_pipeline.cpython-312.pyc b/checks/__pycache__/test_pipeline.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..12b6cd3d7c413c1f586641ba06d6b2b16e566317
+GIT binary patch
+literal 1020
+zcmahHJx>%t^v&$<xg4B^hy)VF3s#rNUNlrhOppMH#Z?w&6*tSyAb0G2FtZ2V#lnKZ
+ze?TFHBqmB|{0WvOHg_QgGl{XVx{i3#Sg3DyIpHc_GVi^4-(R0HnKU3A*7iyT0`Ogb
+zdSIP0-TTPw00Txsa1%;gf`1y)vf&y8C@cXpwt<-(N_H>689gu(-nAMeXLa<akRxh9
+z@Ss`=iXjiqYyq&47`kIfc7TIU=2Aws!8I5~Y&MLXsZ#T6JXn`O&t5wX;?v2x&k*gv
+zb10qHqD(_{S`Ko(CZUu{bmuW6j51@FGLu;`O|c7_J~a+bqxLAX4`|{^paHpoLet3J
+z%XYLZN0lMh>&jw0jC@5_I)4xpnd|&U+O+-IsoUw5*<0Aqpf4pC(ZWXE4~4E#nI&1R
+zpliKcllw%Ol838O=g$6`%x_i2x~%yD&j;}!@)4JjS1Z<dSgdfT)=-%~NpmC_nA0aU
+zF`Ar1^a8%vLr3;l+aB8;e>44dW^d*_|1j6iFMbSK?&J2-a*MCEHe~xr)N<;FH#QH)
+zw~hgtWPzRl3@p+v27$h9=;_AWm_g?M+hFA1JZaxNjY5+?T2?qqaS<cMvk}9{C9@Eh
+zkyYuqEncogjpp$APGgZ?uN+0x*XHZ#SJ&T7ezvE?6;u^+ma;vs;+MJSskG;ntE?Vs
+ze#rCmQWA|AL0h4Zb01>AIKR-%#z=Q8Gl;g~2PGB`#w3=LSZbqOO4;>FG1B#lODIsI
+zQUp%1vdJq^RWzL53X>bKAE4d5kCzc=xQY&ES(SY!De|t!qC%gByoTu5AcTB_k*{#`
+VCpC%l^5IctqMeyI0sO@7e*xGk=E?v7
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/__pycache__/__init__.cpython-312.pyc b/src/__pycache__/__init__.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..ad448597dce5600c58f1e6c989f7aeae9474c983
+GIT binary patch
+literal 123
+zcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdC8b}UUzA;3keHmR
+wUtE-|A0MBYmst`YuUAlci^C>2KczG$)vkyYsFV?ii$RQ!%#4hTMa)1J0N}0}?EnA(
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/__init__.cpython-312.pyc b/src/inventory/__pycache__/__init__.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..362a7d8c373f4e8483819268ea8d5b52725bf960
+GIT binary patch
+literal 133
+zcmX@j%ge<81eXgIW`XF(AOanHW&w&!XQ*V*Wb|9fP{ah}eFmxdrJ`S+UzA;3keHmR
+zUtE-|pP5&dnpcuvRH+{ypP83g5+AQuP<e~PCO1E&G$+-rh!v=b5r~UHjE~HWjEqIh
+GKo$T_F&-2E
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/aggregate.cpython-312.pyc b/src/inventory/__pycache__/aggregate.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..c66e8c15b3d912bdd12f30b6206f58a991544967
+GIT binary patch
+literal 450
+zcmYjOF;Bu!5Wd&f5>yZo66=OWhbG4U0c6s|2?qv^i9>Cl2vi`iMT04Z!2yi}8*$PR
+z;^N}&;O1mp$a8dZBf-hZdjyP^+<kXn?z_8}_Zp2(1KRP+bMXoBQx+3b#>sFFlMXn*
+z;7D=ErMge*ia|w)owBm;*<>O>)X*vVa1TQV3eX?{Y{J1ZKtl;oy@-5+2Bi33g`Bj2
+zI?BU%EA~>^doFnr&@|%Bii&v-3^gmLSE_v>2SRh0>stm9G|zlP<#K=sA6l+ewwWii
+z(Un|9){`NH_Ooi9Rd~s(S~fF1ZkvU&d`gAaO)H=0EN}U2y;>Jje-)oWsXW=sU}!==
+z7H@8U#1~pxe>TzHx^i2zucz)Jw~_l?cj;YU>((B3dlzr|Ml0M-Tt^2Q%<F>?M3T*&
+zAx?m-p$OG2c>ZW|4|oJgE<Zzr(<c?D=CTZrVL4hF$7DbWAp=Dt$+q(i2qVca<|}5A
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/normalize.cpython-312.pyc b/src/inventory/__pycache__/normalize.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..8e42d34dd17bd706b1bb2769659bbc7e76e79b4c
+GIT binary patch
+literal 494
+zcmZ8dJx>Bb5S`t-Gho1Iau(PC1;mR9gqT<vE2E9l*qK;d?iM{bII_n_FpyYiM<P^M
+z_y>%CKsyRMD?))@XZ!=`*=Xe~h%rtwZ{F<eo1NLmaCjcjP9FOCHpW+x%#8jJe-TL!
+zOkj|sCOMZ6NrP&VH^*wMRB;V56JVS}m(cwhLJyj-4VT2A$6(MS4WLDu#3T`{<^QTM
+z7j`=hkQW{P*{p_oD)gpwO}n(cCS&IoIY1;6RtHVadXihHdWy;Himp*E<9)6mXw*~O
+z3b)E$z|dWmb8HjKVoy(*E+cp>_LWH29bRzDy1~*eH_}!~tm^Pay5#VpZd<1;Rc?5}
+z-;9fI6f3zq2xssTiTV-=#h)Y5jxv^DdF3k6-5aUNftnnut0OftP%}ey{f_l_?@Pnb
+z{!=9SCIn+3O8oO3kh)^-i`0gk#kpnM!pX%eH{c@z4<dMh&7xygZMMZ1Fr5srgk&rc
+QLdKMmc*pzz3_Ogd-*hW%PXGV_
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/parse.cpython-312.pyc b/src/inventory/__pycache__/parse.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..7dfe6fb8330a93c554b6f9272d9532d4dc19fa65
+GIT binary patch
+literal 532
+zcmZ8eJ4*vW5T4z=izXUOLbNqLnnN&!+KE;cHa3c&-Entn;&~T#H;Iu579wJ$Am|UU
+zku>&#SlHPJTF6>j*#(nAteib^jRQ0D&CWM3_BowS0m{zPWBDHarw(GFJ<!P@xB?eE
+z*rF~uHa1CvT1*+z+m{ZB>F5nqhT1tsgB8RD9}Y<pnxw4X|49>Cz3M|MlX0?1Wweuy
+zTfH4PZPHcPhE<pVsi#CD6EWJNlfX@a42NzYs}B2Y1M0-0D_@#pC6rMXVW3Puv|XW+
+zYmJJx#Cgb7YTfp$F)oQxAfz2Qo-+KBkQU>518$;GW=%7NKBQ16{EijtA>S1h+wqEm
+zJH=8^^8y+2MzLaZ;Z0W>%8U?CV}(9cETcJs4`ZlpFf;d_$zP=|QrEMunZl{rO~CNz
+zb@j%5%TJxoy%;lhIW#|A6VfA>2QLHT-$1ZtD0`M{Geo~)5WAgZr=XQxWDjJKtyoks
+rA$c_K7CM*)u1TtYelK*ZzPG@$7)GmTfPDyQ(>^kL&bok(>!1Du7^8K1
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/pipeline.cpython-312.pyc b/src/inventory/__pycache__/pipeline.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..526d7ff6750b8fc3f48fba1b7e7c53cd1b65268a
+GIT binary patch
+literal 644
+zcma)&J#W-N5Qb;ZYo9O2A%%)dfg<rCxd>MyAqp;pE)5N`Xe@g;nXErF-UJR&Q1AmN
+zkU~L&L=%NBDfkaGNbXKtMMZbgQBg6o$z9FJo_%I^{m#4oJ{W8OM_Ye>F;oD*q*#T%
+zgyl1aW5^&=1`3El33rStRID6(rc-p{j$>`S!izn}zR`t_wd26}g&+IOT@11igXcQy
+zz0+}bx)Jq%^K6LJ%&!w_kRd!uOr9lHxK~zGaQWI5$z(z}x!4IBG?-dG6A+de(o9=?
+zWu>x*RHmZ3iUEVi?~*tjgI(`g>AJA~n!0Q1t*O7FH*k9S_5ZF<_;UMEKp{(zXj33b
+z=8^nn5)Y9g8P<sQ_TO8hmlYi}b&}$!p>&j&M_Ag5rlUHq(c~rGt*5gdVOo`GZjj`H
+zqTk%+^cH^hH$U9@H2iY!>(g`mwtIHa?mTR7j@#jGd+kx%-}|BWmV6NQqtH#i@ZlUe
+zZ_cIY&Ai5vQ$GQ^$_=_A-SB=<WrqeI&?cASx!K{g@RU+>xITv)bJ%vz)*QALTB*nC
+P{dfVgejNXCtCRZ&uDgQM
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/render.cpython-312.pyc b/src/inventory/__pycache__/render.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..6608513035503c221a666f062c9646252abde64b
+GIT binary patch
+literal 578
+zcmY*W&o2W}5T4mxRRk4993;Z22d!{wQcWZ-R?-V6iBP)_t=etgYf-7Bi6%6Wa6v^R
+zt|AhDfP;gZ3*jJpb#au`0VnfTD@-y!_M4e+X7=4RH#Y*w((O%hk^GDNsEJYyDn1I1
+zzyt;hiit&S8goiOb-eTORNOL{FtFA_-b1RAR&+AkvJaDg^Mp#-fdw>`qBkRJT`9pu
+zwQdY9s#pz~gn$}zu<_rdIw~3_tqhSlzzIN_mWP=ZfKANf32j_b^4Lw;6F5~5@dy!i
+zeH!HOQeDG<;^0W^oR}RYIOwQiIm_kALT=RCTlne=t=W88q~it)32uZE)+)0yHqV7P
+zvrNW=>73ILS!5PlPxI(TcNLAKY$Ki$(co{&W$h={k5~98z`b982#;U&m(~4jd9=KA
+zCXQFivrioZgnkN*>bCq{ay>0+CoIP!Y@T6e0DrcV|7ecOS93f+6FD7Bx6|f5WN5&1
+zQ|n&16n^yU*PS=sr|>vMk4^f$rdOx{Vv^cS7#X*b*Av8BrEy8Ukrms_rdX7>5$4ji
+UQ}CuD;+ujvf%{YMAidl44M=5y_W%F@
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/select.cpython-312.pyc b/src/inventory/__pycache__/select.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..dd83d81755b1569ec7874499ce2561e24cc5b1e6
+GIT binary patch
+literal 434
+zcmX@j%ge<81Q|yTWMu>C#~=<2FhLog1%Qm{3@Hq$3~5X$j4dotjFn89%(pm_5_1ys
+zl2eP58DUz0G#d~z1M%l1ATgbxh9L`C7AOV+t05GF3qwC+KT|SuCPOk)EFS|y4A9P6
+z##*Ktpgq~<3=GALJv=pxHB6J4dIVS)l9_9nY8iupY8j#Iat2K%zn37xG#PKPW|pMp
+z7HcvWfgFB|xj4J@7CX#|AQvepDEv~=FV8Q^E-pw+PSr0iO4iTJD@)BQ$uFwZFHX%#
+zO)k+ZsJz7nVHR-$^?=-7YzQP87;fmAu8&(8cSYCs3b)@yUE7&4GlCbW9}qv`cvz;x
+zd4hPS&jnrEOWb}JSp0ro=JqS*0P32;tIf8ERh!LElj#;qN@j8i*wB>>pMi1=MIaTo
+rIBatBQ%ZAE?TUDTT(Et@K*k4VMn=XDOpJ{Fj1xk>Fo5VH9-ue?+2><|
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/__pycache__/validate.cpython-312.pyc b/src/inventory/__pycache__/validate.cpython-312.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..8e7a6293eeff4aa93e53749adbb215c4212c623e
+GIT binary patch
+literal 780
+zcmZ`%&1(}u6o0d`8#e9ct4&ZZBCQ{64hAb8iXwt~lU`a81P^O=Y&VUYFf(lpY#;{@
+zEk;^T$stD%Eh*?9;K748Ptpis?9G255Ko?*S+kpZ@WH<C_nRN@?blRl2Bd6!`CREE
+zfS)ReM4LF{taLiy0)ZEri(czbQA4w_NRVyfb5@pfu_UC2<u@+MYzNk%i2`^4&)xtu
+zH6C{c8jsMSKk*o9=L4-`#8|Q8BE?Nf6aS|}i#zl)uVAkDgc7|%vjMIoqwLi7C$41i
+z<P3t&!~LjYgut@@)U603uA}y=097(kerf|8=q~QXToJV2>JXq+u=N#z+2)ooTvFwZ
+ztx;W$QMC)(6f++4e8wHWOoZ-wWiIeKk&1CD45_@j(4W_8Re?R9i-c3J6W_HBsunAZ
+zZKvwF!U&Hwg=Gr+l9Jz-OFK2X$?8s-lo&0SJYU_lMjNGY)ZyfMy&=pfpgB3I?!lT;
+zwP0waTMvKa&g~kfnG4-3@AHGq)uELirswy)J+Et=q%ZE`VYbjozDstmon#mOHZJzq
+zAhURQ^TYDd^6_msa5`H!AicH0?80&J<Ks{F2gQ2|#!T&7dscV#@Yc7&jqm2tXddRy
+zkMdyUT93w(0Ib-W(5s%@gCceWbWR$o{#jw(d0BI}s^l&$$S~xrdPW!_G}0`TJ6QV#
+I(u5;_09^l~{{R30
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/inventory/aggregate.py b/src/inventory/aggregate.py
+index 76fa4d2fbef258122abd769e3568c1c86be7b9c0..3a51c61b5cdcc345ce2e3fe3c944dd9d119af9f0 100644
+--- a/src/inventory/aggregate.py
++++ b/src/inventory/aggregate.py
+@@ -1,2 +1,6 @@
+ def aggregate(events: list):
+-    return {}
++    balances = {}
++    for event in events:
++        sku = event["sku"]
++        balances[sku] = balances.get(sku, 0) + event["delta"]
++    return balances
+diff --git a/src/inventory/normalize.py b/src/inventory/normalize.py
+index b8167f5dfcb8567ee1fb01d906896db85a27a236..ac0f615d225b3ec29cc498568f1063c19ff88ff7 100644
+--- a/src/inventory/normalize.py
++++ b/src/inventory/normalize.py
+@@ -1,2 +1,3 @@
+ def normalize(events: list):
+-    return []
++    return [{"sku": event["sku"].strip().casefold(), "delta": event["delta"]}
++            for event in events]
+diff --git a/src/inventory/parse.py b/src/inventory/parse.py
+index 9ebd2e7b981190a729aa29ffaa16eec93c58b010..5dce3985f3d3783dcb9504a837e1094bc7c51b92 100644
+--- a/src/inventory/parse.py
++++ b/src/inventory/parse.py
+@@ -1,2 +1,8 @@
+ def parse(text: str):
+-    return []
++    import json
++
++    try:
++        value = json.loads(text)
++    except (TypeError, ValueError):
++        return []
++    return value if isinstance(value, list) else []
+diff --git a/src/inventory/render.py b/src/inventory/render.py
+index 98147986c9d9c5e06cd70d2a2680dfce63e6f96d..569b8a76e809197bdb5a1cc6bbfc6a1d1d5b2e48 100644
+--- a/src/inventory/render.py
++++ b/src/inventory/render.py
+@@ -1,2 +1,2 @@
+ def render(balances: dict):
+-    return ""
++    return "\n".join(f"{sku}={balances[sku]}" for sku in sorted(balances))
+diff --git a/src/inventory/select.py b/src/inventory/select.py
+index 6f1a654f340fec0161cda409e42c4aad14f49c50..098c09f7b8c07473a3648f043885233f6aaefec8 100644
+--- a/src/inventory/select.py
++++ b/src/inventory/select.py
+@@ -1,2 +1,2 @@
+ def select(balances: dict):
+-    return {}
++    return {sku: balance for sku, balance in balances.items() if balance != 0}
+diff --git a/src/inventory/validate.py b/src/inventory/validate.py
+index 3b5d2f96898dd84d1c525a42712d6dc6b4316ec3..2804312cd4ed960c73b4de2e56e81c48e2bf0a57 100644
+--- a/src/inventory/validate.py
++++ b/src/inventory/validate.py
+@@ -1,2 +1,13 @@
+ def validate(events: list):
+-    return []
++    valid = []
++    for event in events:
++        if not isinstance(event, dict):
++            continue
++        sku = event.get("sku")
++        delta = event.get("delta")
++        if not isinstance(sku, str) or not sku.strip():
++            continue
++        if isinstance(delta, bool) or not isinstance(delta, int):
++            continue
++        valid.append({"sku": sku, "delta": delta})
++    return valid

@@ -1,0 +1,33 @@
+{
+  "budget": {
+    "command_timeout_seconds": 60,
+    "max_consecutive_failures": 5,
+    "max_replans": 4,
+    "max_run_seconds": 7200,
+    "max_steps": 48
+  },
+  "engines": [
+    "baseline"
+  ],
+  "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "model": {
+    "model_kwargs": {
+      "max_tokens": 4096,
+      "stream": true,
+      "temperature": 1,
+      "timeout": 120
+    },
+    "model_name": "openai/gpt-6.1-sol"
+  },
+  "output_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-02-real-boltons-slug-baseline",
+  "progress_detection_enabled": true,
+  "proxy_mode": "none",
+  "repeats": 1,
+  "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "task_ids": [
+    "real-boltons-slug"
+  ],
+  "tasks_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/tasks"
+}

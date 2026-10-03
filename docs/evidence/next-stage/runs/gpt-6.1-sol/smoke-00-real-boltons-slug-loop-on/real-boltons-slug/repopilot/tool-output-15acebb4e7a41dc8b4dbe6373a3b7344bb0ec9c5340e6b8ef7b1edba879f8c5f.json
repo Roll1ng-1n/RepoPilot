@@ -1,0 +1,1 @@
+{"duration_seconds": 0.08153901500008942, "exit_code": 0, "stderr": "", "stdout": "./boltons/strutils.py:88:def slugify(text, delim='_', lower=True, ascii=False):\n", "truncated": false}

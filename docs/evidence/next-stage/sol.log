@@ -1,0 +1,538 @@
+This is mini-swe-agent version 2.4.6.
+Check the v2 migration guide at https://klieret.short.gy/mini-v2-migration
+Loading global config from '/home/waaaaa/.config/mini-swe-agent/.env'
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-b40c60bc -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/smoke-00-real-boltons-slug-loop-on/real-boltons-slug/repopilot/work
+space,target=/workspace --user=1000:1000                                        
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-b40c60bc with ID 
+0b8ab4c596eb67abbfb20069777f3e5a8059c530c69039526c9130bac33dcb5f                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6.1-sol smoke-00-real-boltons-slug-loop-on SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-65966bce -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-boltons-slug-baseline/real-boltons-slug/baseline/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-65966bce with ID 
+d46e31be57e4a478770a476fdef5ce1e5e048c8a9dfc00ca264076c6f619e84a                
+Retrying <unknown> in 4 seconds as it raised InternalServerError: litellm.InternalServerError: InternalServerError: OpenAIException - Connection error..
+Retrying <unknown> in 4 seconds as it raised Timeout: litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out.
+Retrying <unknown> in 4 seconds as it raised InternalServerError: litellm.InternalServerError: InternalServerError: OpenAIException - Connection error..
+Retrying <unknown> in 4 seconds as it raised Timeout: litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out..
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6.1-sol formal-01-real-boltons-slug-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-93f2a480 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-boltons-slug-loop-on/real-boltons-slug/repopilot/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-93f2a480 with ID 
+0d9331f952a1a5db4509d25f3d42e6d2c8504f2e923a43d700948a5f59c13c83                
+gpt-6.1-sol formal-01-real-boltons-slug-loop-on SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-6a19a566 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-boltons-slug-loop-off/real-boltons-slug/repopilot/wo
+rkspace,target=/workspace --user=1000:1000                                      
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-6a19a566 with ID 
+9c40011fe94350add5ac0c21be19ccd9ede08c7b8f1e3d85232954baff7a44e3                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6.1-sol formal-01-real-boltons-slug-loop-off SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-35a77656 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-more-chunked-baseline/real-more-chunked/baseline/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-35a77656 with ID 
+85d4d59f1f58ab9b9e0c3f85fc17383f5c597b1b2de29f2b49e7911851a1a109                
+Retrying <unknown> in 4 seconds as it raised InternalServerError: litellm.InternalServerError: InternalServerError: OpenAIException - Connection error..
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6.1-sol formal-01-real-more-chunked-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-949847cc -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-more-chunked-loop-on/real-more-chunked/repopilot/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-949847cc with ID 
+478f442e7ec353e5c22cf9e70dae48db29688915c261bd0bb7b41a7b88d291d8                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6.1-sol formal-01-real-more-chunked-loop-on BUDGET_EXCEEDED False False
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-fb3a97b5 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-more-chunked-loop-on-replacement/real-more-chunked/r
+epopilot/workspace,target=/workspace --user=1000:1000                           
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-fb3a97b5 with ID 
+6b01dfffef3488c8d0d59384310578b3b56a8c4343673523b539cd65ff2e4730                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6.1-sol formal-01-real-more-chunked-loop-on-replacement BUDGET_EXCEEDED False False
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-6c73708e -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-more-chunked-loop-off/real-more-chunked/repopilot/wo
+rkspace,target=/workspace --user=1000:1000                                      
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-6c73708e with ID 
+baf56a5f427f1a690ebb06506e92c461a69af2d857193f92fe5517d709651f76                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6.1-sol formal-01-real-more-chunked-loop-off BUDGET_EXCEEDED False False
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-279f23af -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-more-chunked-loop-off-replacement/real-more-chunked/
+repopilot/workspace,target=/workspace --user=1000:1000                          
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-279f23af with ID 
+24e42af14f9f785385c55c9d35508834c652bda9f5c26793f088a76b6aea4ee0                
+gpt-6.1-sol formal-01-real-more-chunked-loop-off-replacement BUDGET_EXCEEDED False False
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-9d2836ba -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-cachetools-expire-baseline/real-cachetools-expire/ba
+seline/workspace,target=/workspace --user=1000:1000                             
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-9d2836ba with ID 
+8d6f167c9cc4f5d4b8ee107115b6af26126eb4c41daf864bac1e85a346d9a54d                
+Retrying <unknown> in 4 seconds as it raised InternalServerError: litellm.InternalServerError: InternalServerError: OpenAIException - Connection error..
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6.1-sol formal-01-real-cachetools-expire-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-d7282d70 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-cachetools-expire-loop-on/real-cachetools-expire/rep
+opilot/workspace,target=/workspace --user=1000:1000                             
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-d7282d70 with ID 
+21e8658af042c3a0a3cfacab5486e84dd0b109734631f5f55607638934b68ac3                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6.1-sol formal-01-real-cachetools-expire-loop-on SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-bb8e464b -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-cachetools-expire-loop-off/real-cachetools-expire/re
+popilot/workspace,target=/workspace --user=1000:1000                            
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-bb8e464b with ID 
+3a1cbc9d5233db370455da49c75e75809356639c4f504cc487041c5ba21dbe87                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6.1-sol formal-01-real-cachetools-expire-loop-off BUDGET_EXCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-982a3750 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-cachetools-expire-loop-off-replacement/real-cachetoo
+ls-expire/repopilot/workspace,target=/workspace --user=1000:1000                
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-982a3750 with ID 
+8c5a7861f75622fce83cba696cd3949305d988bc969f0045b2ff8fa86ac834c7                
+gpt-6.1-sol formal-01-real-cachetools-expire-loop-off-replacement BUDGET_EXCEEDED False False
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-8ed2346d -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-history-inventory-baseline/history-inventory/baseline/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-8ed2346d with ID 
+5c6613f82edba1cc73cb6f3f3064a2139d99a2f69f72cd25f24b6eee9418713d                
+gpt-6.1-sol formal-01-history-inventory-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-659f3237 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-history-inventory-loop-on/history-inventory/repopilot/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-659f3237 with ID 
+00b7be7492c9405b1b2084abd11964182e088b77f37b2a6919ab669ba822aee9                
+gpt-6.1-sol formal-01-history-inventory-loop-on SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-ead5b0a4 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-history-inventory-loop-off/history-inventory/repopilot/wo
+rkspace,target=/workspace --user=1000:1000                                      
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-ead5b0a4 with ID 
+fa5a9f29c3bf751025744e1329ec1b8b7f2597133d090773054851c546d25c24                
+gpt-6.1-sol formal-01-history-inventory-loop-off BUDGET_EXCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-6e830740 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-boltons-reread-baseline/real-boltons-reread/baseline
+/workspace,target=/workspace --user=1000:1000                                   
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-6e830740 with ID 
+ed1b1b89db095371b6fe529e7937975ac87743c11414a02ccc851cca92a1d38c                
+gpt-6.1-sol formal-01-real-boltons-reread-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-4fb1ec48 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-boltons-reread-loop-on/real-boltons-reread/repopilot
+/workspace,target=/workspace --user=1000:1000                                   
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-4fb1ec48 with ID 
+6a43f5dd3446c4cedaa3e822a00034074dab7daaa866b0f6fa506dae299ec46b                
+gpt-6.1-sol formal-01-real-boltons-reread-loop-on SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-e764cee1 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-01-real-boltons-reread-loop-off/real-boltons-reread/repopilo
+t/workspace,target=/workspace --user=1000:1000                                  
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-e764cee1 with ID 
+084705ada6c470b7819e967c527a47389df403c205e1db6233c9549a2a521f6d                
+gpt-6.1-sol formal-01-real-boltons-reread-loop-off SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-1ac612eb -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-real-boltons-slug-loop-on/real-boltons-slug/repopilot/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-1ac612eb with ID 
+99b1a23afd27d84b6a0355c2bb42a0baeae382317faa54a9cb9eaa0111fd7ce1                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6.1-sol formal-02-real-boltons-slug-loop-on SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-06b7330d -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-real-boltons-slug-loop-off/real-boltons-slug/repopilot/wo
+rkspace,target=/workspace --user=1000:1000                                      
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-06b7330d with ID 
+4de2e5d7cb99d9159532af466867195eee1c99fa36376ab40cc547e084c4a3ee                
+gpt-6.1-sol formal-02-real-boltons-slug-loop-off BUDGET_EXCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-4e093480 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-real-boltons-slug-baseline/real-boltons-slug/baseline/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-4e093480 with ID 
+4ed182ecf9724c27a03154b242dece683e22b8a4b0e0c1b389837535d56d3132                
+gpt-6.1-sol formal-02-real-boltons-slug-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-093c6783 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-real-more-chunked-loop-on/real-more-chunked/repopilot/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-093c6783 with ID 
+0ef33033689a23406ef4278a667385cf2a4017fac5bebd26e94a5fecd2ee7716                
+gpt-6.1-sol formal-02-real-more-chunked-loop-on BUDGET_EXCEEDED False False
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-9a47aee5 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-real-more-chunked-loop-off/real-more-chunked/repopilot/wo
+rkspace,target=/workspace --user=1000:1000                                      
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-9a47aee5 with ID 
+b663f7ba7a381d77634d3110cad8d06a578a74eb39e61103c03cbac1026055c8                
+gpt-6.1-sol formal-02-real-more-chunked-loop-off BUDGET_EXCEEDED False False
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-457cdea0 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-real-more-chunked-baseline/real-more-chunked/baseline/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-457cdea0 with ID 
+e64e813b0aff1de00adb299efc9a10e6d8686846c34d9371cb8544998b18cc71                
+gpt-6.1-sol formal-02-real-more-chunked-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-15b1ca72 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-real-cachetools-expire-loop-on/real-cachetools-expire/rep
+opilot/workspace,target=/workspace --user=1000:1000                             
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-15b1ca72 with ID 
+e467aebc3c978bedc4946b192b1063d449764195402c8db63c6b7ee91b6128bb                
+gpt-6.1-sol formal-02-real-cachetools-expire-loop-on BUDGET_EXCEEDED True None
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-84d447d4 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-real-cachetools-expire-loop-off/real-cachetools-expire/re
+popilot/workspace,target=/workspace --user=1000:1000                            
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-84d447d4 with ID 
+a1f30d52d3b56ab4205c593f2b2e10140b1ef3f0f3a1701358e00c055707d2c5                
+gpt-6.1-sol formal-02-real-cachetools-expire-loop-off SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-94c88c54 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-real-cachetools-expire-baseline/real-cachetools-expire/ba
+seline/workspace,target=/workspace --user=1000:1000                             
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-94c88c54 with ID 
+d2e1b2f25cd57d01da19cd7e9b1e103b34a45932655b01e015083226e76e5ae0                
+gpt-6.1-sol formal-02-real-cachetools-expire-baseline Submitted True None
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-a07a622f -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-history-inventory-loop-on/history-inventory/repopilot/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-a07a622f with ID 
+94e3e0138e75f8464d38d5d9586aac398cdeded9317697ee33cc2d72b0479625                
+gpt-6.1-sol formal-02-history-inventory-loop-on BUDGET_EXCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-a4799474 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-history-inventory-loop-off/history-inventory/repopilot/wo
+rkspace,target=/workspace --user=1000:1000                                      
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-a4799474 with ID 
+0471cf0a22f39bde6842f801197da1018b5d3a76d8c8853b10f9a5b219656724                
+gpt-6.1-sol formal-02-history-inventory-loop-off BUDGET_EXCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-dd95f970 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-history-inventory-baseline/history-inventory/baseline/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-dd95f970 with ID 
+9ebf5b674eb33866f5e9831b4f2a9fa0d6768c7bcfabae8ce659c50336d3985a                
+gpt-6.1-sol formal-02-history-inventory-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-67fb8941 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-real-boltons-reread-loop-on/real-boltons-reread/repopilot
+/workspace,target=/workspace --user=1000:1000                                   
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-67fb8941 with ID 
+fe71ca3fe8c8d0c709b6e974e69df80c436ce3e6fd7df2665a14d419ea114f8b                
+gpt-6.1-sol formal-02-real-boltons-reread-loop-on SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-b933efd6 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-real-boltons-reread-loop-off/real-boltons-reread/repopilo
+t/workspace,target=/workspace --user=1000:1000                                  
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-b933efd6 with ID 
+3f9926d55497feb3d1bc7925601962112bf1dd5c351129b13112ca4ebff62d71                
+gpt-6.1-sol formal-02-real-boltons-reread-loop-off SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-a6bb511f -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-02-real-boltons-reread-baseline/real-boltons-reread/baseline
+/workspace,target=/workspace --user=1000:1000                                   
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-a6bb511f with ID 
+6905800bd2943981c573854afead0163591134f9fea2960a227e5abe2bb58608                
+gpt-6.1-sol formal-02-real-boltons-reread-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-ce855c2e -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-real-boltons-slug-loop-off/real-boltons-slug/repopilot/wo
+rkspace,target=/workspace --user=1000:1000                                      
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-ce855c2e with ID 
+fc38f12bc39defcf55e5303b670c6174d4e9ce5eb3120f62b835ea537bb949fe                
+gpt-6.1-sol formal-03-real-boltons-slug-loop-off SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-68244f4d -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-real-boltons-slug-baseline/real-boltons-slug/baseline/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-68244f4d with ID 
+fe540726524f470f598ff9d66484a3a44450f1bc54a1ff2177bec0eaa601d0a5                
+gpt-6.1-sol formal-03-real-boltons-slug-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-60076c27 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-real-boltons-slug-loop-on/real-boltons-slug/repopilot/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-60076c27 with ID 
+fc21e3b8592fe7466febd0956b571fb7f42010419f2bb28f450bfaec7c710185                
+gpt-6.1-sol formal-03-real-boltons-slug-loop-on SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-3f1c3cbd -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-real-more-chunked-loop-off/real-more-chunked/repopilot/wo
+rkspace,target=/workspace --user=1000:1000                                      
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-3f1c3cbd with ID 
+6524b99d722eb6f731d7bf612204a0e37bc8cff052e385b78ae1cbbde4842ffa                
+gpt-6.1-sol formal-03-real-more-chunked-loop-off BUDGET_EXCEEDED False False
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-3be4b98b -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-real-more-chunked-baseline/real-more-chunked/baseline/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-3be4b98b with ID 
+70d33ebf50d3482666986d887781979ed4edcd5fc7c7cc21701f4fa619573595                
+gpt-6.1-sol formal-03-real-more-chunked-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-8982cc57 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-real-more-chunked-loop-on/real-more-chunked/repopilot/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-8982cc57 with ID 
+7323bd1798150d55c5586cdb48b0aa035f99ccda010fc2cf6174dbfb3dbd0edd                
+gpt-6.1-sol formal-03-real-more-chunked-loop-on BUDGET_EXCEEDED False False
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-9b079005 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-real-cachetools-expire-loop-off/real-cachetools-expire/re
+popilot/workspace,target=/workspace --user=1000:1000                            
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-9b079005 with ID 
+bc47f837dd8c055a535886a8a41de897b644455bce52696780a944d41304976d                
+gpt-6.1-sol formal-03-real-cachetools-expire-loop-off BUDGET_EXCEEDED False False
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-b3e9c9ee -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-real-cachetools-expire-baseline/real-cachetools-expire/ba
+seline/workspace,target=/workspace --user=1000:1000                             
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-b3e9c9ee with ID 
+6fb9d63dff2c72ea52daf53ea1d049de469280086fc960ee441ef0dfb4ab9acd                
+gpt-6.1-sol formal-03-real-cachetools-expire-baseline Submitted True None
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-34ae41d3 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-real-cachetools-expire-loop-on/real-cachetools-expire/rep
+opilot/workspace,target=/workspace --user=1000:1000                             
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-34ae41d3 with ID 
+437376bdfbb23b406c3ba8c3291a346adefc4938c60a3c86f26699c0df8951a4                
+gpt-6.1-sol formal-03-real-cachetools-expire-loop-on BUDGET_EXCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-b9a100a5 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-history-inventory-loop-off/history-inventory/repopilot/wo
+rkspace,target=/workspace --user=1000:1000                                      
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-b9a100a5 with ID 
+872b7be53ea234ec9087dfd2285fcab33d623239fd9a92951a486ad3c9cdb236                
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+gpt-6.1-sol formal-03-history-inventory-loop-off SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-391aac8b -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-history-inventory-baseline/history-inventory/baseline/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-391aac8b with ID 
+dc76a9814b65778b15efc4b55d1c7171322d1da34294117c3f6e1ffeb00e693d                
+gpt-6.1-sol formal-03-history-inventory-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-20a1407b -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-history-inventory-loop-on/history-inventory/repopilot/wor
+kspace,target=/workspace --user=1000:1000                                       
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-20a1407b with ID 
+6d6ab517bacc72a077621c0eeeb2052fae4bc8e9a4636a94d09c7c534e57721a                
+gpt-6.1-sol formal-03-history-inventory-loop-on SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-58f9bbd5 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-real-boltons-reread-loop-off/real-boltons-reread/repopilo
+t/workspace,target=/workspace --user=1000:1000                                  
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-58f9bbd5 with ID 
+8eaa5d21c117b8e74d1dc3dae43c293271003f897d8fcd34a9f8a250758faf6f                
+gpt-6.1-sol formal-03-real-boltons-reread-loop-off SUCCEEDED True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-9b53abc5 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-real-boltons-reread-baseline/real-boltons-reread/baseline
+/workspace,target=/workspace --user=1000:1000                                   
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-9b53abc5 with ID 
+dc61a3cb4d92ae0ffaa620a8f8788fe150baa0fdbba70d8d0ef9d700c807bcf5                
+gpt-6.1-sol formal-03-real-boltons-reread-baseline Submitted True True
+minisweagent.environment: DEBUG: Starting container with command: docker run -d 
+--name minisweagent-964722f5 -w /workspace --rm --mount                         
+type=bind,source=/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs
+/gpt-6.1-sol/formal-03-real-boltons-reread-loop-on/real-boltons-reread/repopilot
+/workspace,target=/workspace --user=1000:1000                                   
+sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6 sleep 2h
+minisweagent.environment: INFO: Started container minisweagent-964722f5 with ID 
+bbceec58bbcd2ecd2f4ec1cbb6d8c3dab80fb7c58164ad990b64c90f9feb897c                
+gpt-6.1-sol formal-03-real-boltons-reread-loop-on SUCCEEDED True True

@@ -1,0 +1,203 @@
+{
+  "stage": "formal",
+  "repeat": 1,
+  "replacement": false,
+  "variant": "baseline",
+  "source_sha256": "a929d146476d00f798ed609ab75b2863134ddef2f8f2eb143d11a55d7552fd62",
+  "result": {
+    "run_id": "a6a7147a2cc6439da8d7fdd06b93bd25",
+    "repeat": 1,
+    "model": "openai/gpt-6.1-sol",
+    "category": "simple",
+    "capabilities": [],
+    "evaluation": {
+      "schema_version": 6,
+      "repository_pass": true,
+      "behavior_pass": true,
+      "task_pass": true,
+      "behavior_verifier": {},
+      "termination": "correct_success",
+      "recovery": {
+        "trigger_count": null,
+        "attempt_count": null,
+        "resolved_count": null,
+        "success_rate": null,
+        "post_recovery_repository_pass": null,
+        "failure_types": []
+      },
+      "replan": {
+        "evidence_count": null,
+        "triggered_count": 0,
+        "valid_count": null,
+        "trigger_rate": null,
+        "triggered_scenarios": null,
+        "missed_scenarios": null,
+        "unnecessary_replans": null,
+        "success_rate": null,
+        "post_replan_repository_pass": null
+      },
+      "tool_quality": {
+        "failure_count": 2,
+        "failure_rate": 0.14285714285714285,
+        "recovery_rate": null,
+        "recovery_scope": "manifest-declared public-command failures only",
+        "redundant_calls": null,
+        "window_repeated_exploration": null
+      },
+      "budget_usage": {
+        "limits": {
+          "max_steps": 48,
+          "max_replans": 4,
+          "max_consecutive_failures": 5,
+          "command_timeout_seconds": 60,
+          "max_run_seconds": 7200
+        },
+        "steps_used": 8,
+        "replans_used": null,
+        "complete_audit": false
+      },
+      "approval_events": [],
+      "progress": {
+        "first_effective_source_change_step": null,
+        "source_changes": []
+      },
+      "churn": {
+        "status": "unsupported",
+        "reason": "Missing immutable repository states at every step boundary.",
+        "first_solved_step": null,
+        "final_step": 8,
+        "post_solution_steps": null
+      },
+      "duration": {
+        "wall_clock_seconds": 66.76524099999915,
+        "llm_seconds": null,
+        "coverage": "unavailable",
+        "active_seconds": null,
+        "idle_seconds": null,
+        "tool_seconds": null,
+        "orchestration_seconds": null,
+        "measured_orchestration_seconds": null,
+        "operations": {}
+      }
+    },
+    "repository_pass": true,
+    "behavior_pass": true,
+    "task_pass": true,
+    "task_id": "real-boltons-reread",
+    "engine": "baseline",
+    "artifact_directory": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-boltons-reread-baseline/real-boltons-reread/baseline",
+    "status": "Submitted",
+    "success": true,
+    "metrics": {
+      "steps": 8,
+      "tokens": {
+        "prompt": 62259,
+        "completion": 1781,
+        "total": 64040,
+        "cached": null,
+        "cache_write": null,
+        "reasoning": null
+      },
+      "cost": 0.05574880000000001,
+      "openai_standard_estimated_cost_usd": null,
+      "tool_calls": 14,
+      "errors": [
+        {
+          "type": "command",
+          "returncode": 1
+        },
+        {
+          "type": "command",
+          "returncode": 127
+        }
+      ],
+      "retries": null,
+      "replans": null,
+      "duration_seconds": 66.76524099999915,
+      "patch": {
+        "path": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/runs/gpt-6.1-sol/formal-01-real-boltons-reread-baseline/real-boltons-reread/baseline/patch.diff",
+        "changed": true,
+        "sha256": "c40f0b7baf42b74c1f6f8f52377d010c408e1d5720e79ef667ef98e57b3208d0"
+      },
+      "commits": [],
+      "trajectory_status": "Submitted",
+      "run_budget": {
+        "max_steps": 48,
+        "max_replans": 4,
+        "max_consecutive_failures": 5,
+        "command_timeout_seconds": 60,
+        "max_run_seconds": 7200
+      },
+      "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+      "preflight": {
+        "status": "READY",
+        "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "resolved_image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_id": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "image_digest": "repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+        "checks": [
+          {
+            "name": "image_inspect",
+            "command": [
+              "docker",
+              "image",
+              "inspect",
+              "--format={\"Id\":{{json .Id}},\"RepoDigests\":{{json .RepoDigests}}}",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6"
+            ],
+            "exit_code": 0,
+            "stdout": "{\"Id\":\"sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\",\"RepoDigests\":[\"repopilot-benchmark@sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6\"]}\n",
+            "stderr": "",
+            "duration_seconds": 0.03786830600074609
+          },
+          {
+            "name": "python",
+            "command": [
+              "docker",
+              "run",
+              "--rm",
+              "--pull=never",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+              "python",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stdout": "Python 3.12.14\n",
+            "stderr": "",
+            "duration_seconds": 0.4185732869991625
+          },
+          {
+            "name": "git",
+            "command": [
+              "docker",
+              "run",
+              "--rm",
+              "--pull=never",
+              "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+              "git",
+              "--version"
+            ],
+            "exit_code": 0,
+            "stdout": "git version 2.47.3\n",
+            "stderr": "",
+            "duration_seconds": 0.4442691829990508
+          }
+        ],
+        "error": null
+      },
+      "llm_calls": 8,
+      "tool_failures": 2
+    },
+    "verifier": {
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "duration_seconds": 0.05776673099899199,
+      "success_condition": "The hidden verifier exits with code 0."
+    },
+    "error": null
+  },
+  "provider_failure": false
+}
