@@ -6,7 +6,7 @@ RepoPilot 版本为 `repopilot.__version__`；发行名称为 **repopilot-runtim
 
 ## 安装
 
-需要 Python 3.10+、Git；Docker 运行另需可用的 daemon 和镜像。从 checkout 安装：
+需要 Python 3.10+、Git 和 ripgrep（`rg`）；Docker 运行另需可用的 daemon 和镜像。Ubuntu/WSL 可通过 `sudo apt-get install git ripgrep` 安装命令行依赖。从 checkout 安装：
 
 ```bash
 python -m venv .venv
