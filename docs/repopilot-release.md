@@ -15,6 +15,11 @@ python -m venv /tmp/repopilot-wheel
 
 smoke 在临时工作目录运行已安装包，检查 help/version、无凭据 doctor、脚本模型驱动的 native CLI Run 与真实 subprocess inspect JSON；不调用模型服务，不依赖 editable checkout。构建日志见 [packaging](evidence/next-stage/packaging/report.md)。
 
-发行 workflow 支持手动和 `repopilot-v<version>` tag，校验 tag/RepoPilot version 后构建、twine check 和干净安装 smoke，仅上传 CI artifact。当前无 PyPI 上传步骤、无 release 创建步骤。本次未推送源码、未上传包、未创建 release。
+发行 workflow 支持手动和 `repopilot-v<version>` tag，校验 tag/RepoPilot version 后构建、twine check 和干净安装 smoke，仅上传 CI artifact。GitHub Release 由维护者在 CI 通过后创建，附带 wheel、sdist 和 SHA256SUMS；可在 [Releases](https://github.com/Roll1ng-1n/RepoPilot/releases) 下载后本地安装。当前 PyPI 尚未发布；发布前需配置 PyPI token 或受信任发布者，并重新确认名称可用。
+
+```bash
+python -m pip install ./repopilot_runtime-0.1.0-py3-none-any.whl
+repopilot --version
+```
 
 默认核心 CI 无模型密钥，Docker 契约与文档检查单独执行。外部模型检查是显式手动命令：未提供配置时 skip，服务/模型不可用时记录 unavailable，运行验收失败时保留 failure；不会用空集成样本宣称外部成功。

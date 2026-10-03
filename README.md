@@ -2,7 +2,7 @@
 
 RepoPilot 是面向代码仓库的 CLI Agent。它通过原生 Tool Calling 读取与修改代码，维护 Plan，执行验证，并保存可检查、可恢复的运行产物。正常完成需要验证证据；隐藏测试通过和 Agent 正常结束是分别报告的结果。
 
-RepoPilot 版本为 `repopilot.__version__`；发行名称为 **repopilot-runtime**，CLI 和 Python 导入为 `repopilot`。本轮只完成本地构建验证，尚未发布到 PyPI。项目基于固定的 mini-SWE-agent v2.4.6，保留 `minisweagent` 包及上游入口。来源、原始 commit 和 MIT 许可见 [UPSTREAM.md](UPSTREAM.md) 与 [LICENSE.md](LICENSE.md)。
+RepoPilot 版本为 `repopilot.__version__`；发行名称为 **repopilot-runtime**，CLI 和 Python 导入为 `repopilot`。发行包通过 [GitHub Releases](https://github.com/Roll1ng-1n/RepoPilot/releases) 提供；PyPI 发布状态见 [发行记录](docs/repopilot-release.md)。项目基于固定的 mini-SWE-agent v2.4.6，保留 `minisweagent` 包及上游入口。来源、原始 commit 和 MIT 许可见 [UPSTREAM.md](UPSTREAM.md) 与 [LICENSE.md](LICENSE.md)。
 
 ## 安装
 
