@@ -6,17 +6,17 @@ RepoPilot 版本为 `repopilot.__version__`；发行名称为 **repopilot-runtim
 
 ## 安装
 
-需要 Python 3.10+、Git 和 ripgrep（`rg`）；Docker 运行另需可用的 daemon 和镜像。Ubuntu/WSL 可通过 `sudo apt-get install git ripgrep` 安装命令行依赖。从 checkout 安装：
+需要 Python 3.10+、Git 和 ripgrep（`rg`）；Docker 运行另需可用的 daemon 和镜像。Ubuntu/WSL 可通过 `sudo apt-get install git ripgrep` 安装命令行依赖。从 [PyPI](https://pypi.org/project/repopilot-runtime/) 安装：
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install .
+python -m pip install repopilot-runtime==0.1.0
 repopilot --version
 repopilot --help
 ```
 
-开发环境可安装 `python -m pip install -e '.[test]'`。本地发行验证使用 `python -m build`，再将 `dist/repopilot_runtime-*.whl` 安装到干净 venv；[发行决策与验证](docs/repopilot-release.md) 记录具体命令。
+从 checkout 可安装 `python -m pip install .`，开发环境可安装 `python -m pip install -e '.[test]'`。本地发行验证使用 `python -m build`，再将 `dist/repopilot_runtime-*.whl` 安装到干净 venv；[发行决策与验证](docs/repopilot-release.md) 记录具体命令。
 
 ## 配置与首次运行
 

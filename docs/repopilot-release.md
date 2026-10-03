@@ -7,7 +7,7 @@ RepoPilot 独立版本来自 `src/repopilot/__init__.py`，当前 0.1.0；保留
 ```bash
 python -m pip install build twine
 python -m build
-python -m twine check dist/*
+python -m twine check dist/*.whl dist/*.tar.gz
 python -m venv /tmp/repopilot-wheel
 /tmp/repopilot-wheel/bin/python -m pip install dist/*.whl
 /tmp/repopilot-wheel/bin/python scripts/packaging/wheel_smoke.py
@@ -15,10 +15,12 @@ python -m venv /tmp/repopilot-wheel
 
 smoke 在临时工作目录运行已安装包，检查 help/version、无凭据 doctor、脚本模型驱动的 native CLI Run 与真实 subprocess inspect JSON；不调用模型服务，不依赖 editable checkout。构建日志见 [packaging](evidence/next-stage/packaging/report.md)。
 
-发行 workflow 支持手动和 `repopilot-v<version>` tag，校验 tag/RepoPilot version 后构建、twine check 和干净安装 smoke，仅上传 CI artifact。GitHub Release 由维护者在 CI 通过后创建，附带 wheel、sdist 和 SHA256SUMS；可在 [Releases](https://github.com/Roll1ng-1n/RepoPilot/releases) 下载后本地安装。当前 PyPI 尚未发布；发布前需配置 PyPI token 或受信任发布者，并重新确认名称可用。
+发行 workflow 支持手动和 `repopilot-v<version>` tag，校验 tag/RepoPilot version 后构建、twine check 和干净安装 smoke，仅上传 CI artifact。GitHub Release 由维护者在 CI 通过后创建。
+
+0.1.0 已发布到 [PyPI](https://pypi.org/project/repopilot-runtime/0.1.0/) 和 [GitHub Release](https://github.com/Roll1ng-1n/RepoPilot/releases/tag/repopilot-v0.1.0)。发行源码对应 `repopilot-v0.1.0`，GitHub 附件包含 wheel、sdist、SHA256SUMS 和验证记录；PyPI 文件与这些附件的 SHA-256 一致。
 
 ```bash
-python -m pip install ./repopilot_runtime-0.1.0-py3-none-any.whl
+python -m pip install repopilot-runtime==0.1.0
 repopilot --version
 ```
 
