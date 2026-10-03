@@ -20,6 +20,7 @@ from repopilot.model import ToolCall
 from repopilot.patches import PatchFormatError, normalize_patch
 from repopilot.plan import PlanHistory, PlanInvariantError, PlanStep, PlanStepStatus
 from repopilot.profile import applicable_instructions
+from repopilot.verification_gate import VerificationGate
 
 
 class _ToolArguments(BaseModel):
@@ -282,6 +283,7 @@ def create_tool_registry(
 
     root = target_repository.resolve()
     verifications = verifications if verifications is not None else []
+    gate = VerificationGate(verifications, plan_history, required_verifications)
 
     def safe_path(path: str) -> str:
         resolved = (root / path).resolve()
@@ -422,30 +424,7 @@ def create_tool_registry(
         return {"patch": result["stdout"], "result": result}
 
     def verify_task(arguments: _ToolArguments) -> dict[str, Any]:
-        plan_ids = {step.id for step in plan_history.current.steps}
-        step_ids = getattr(arguments, "step_ids", []) or sorted(plan_ids)
-        if not set(step_ids) <= plan_ids:
-            raise PlanInvariantError(
-                f"Verification references an unknown Plan Step. Omit step_ids for task-level verification, or use {sorted(plan_ids)}."
-            )
-        if not set(arguments.supersedes) <= {v["sequence"] for v in verifications}:
-            raise ValueError("supersedes references an unknown verification sequence.")
-        check_id = arguments.check_id
-        previous = None
-        if check_id is None:
-            previous = next((v for v in reversed(verifications) if v["command"] == arguments.command), None)
-            if previous is None:
-                previous = next(
-                    (
-                        v
-                        for v in reversed(verifications)
-                        if v["scope"] == arguments.scope and not v.get("explicit_check_id")
-                    ),
-                    None,
-                )
-            check_id = (
-                previous.get("check_id", previous["scope"]) if previous else f"verification-{len(verifications) + 1}"
-            )
+        check_id, previous, step_ids = gate.prepare(arguments)
         before = capture_repository_state(root, verification=True)["diff_fingerprint"]
         result = execute(Command(("bash", "-lc", arguments.command)))  # type: ignore[attr-defined]
         verification = {
@@ -467,47 +446,8 @@ def create_tool_registry(
     def finish_task(arguments: _ToolArguments) -> dict[str, Any]:
         diff = current_diff()
         fingerprint = capture_repository_state(root, verification=True)["diff_fingerprint"]
-        replaced = {sequence for item in verifications for sequence in item.get("supersedes", [])}
-        latest = {
-            item.get("check_id", item["scope"]): item for item in verifications if item.get("sequence") not in replaced
-        }
-        problems = []
-        for check_id, item in latest.items():
-            identity = {"scope": item["scope"], "check_id": check_id, "sequence": item.get("sequence")}
-            if item["result"]["exit_code"] != 0:
-                problems.append({**identity, "reason": "failed"})
-            elif item.get("before_fingerprint") != fingerprint or item.get("after_fingerprint") != fingerprint:
-                problems.append({**identity, "reason": "stale_or_mutating_verification"})
-        by_command = {item["command"]: item for item in verifications}
-        for command in required_verifications:
-            item = by_command.get(command)
-            if (
-                item is None
-                or item["result"]["exit_code"] != 0
-                or any(item.get(key) != fingerprint for key in ("before_fingerprint", "after_fingerprint"))
-            ):
-                problems.append({"command": command, "reason": "required_check_not_satisfied"})
-        covered = {
-            step_id
-            for item in latest.values()
-            if item["result"]["exit_code"] == 0
-            and item.get("before_fingerprint") == fingerprint
-            and item.get("after_fingerprint") == fingerprint
-            for step_id in item.get("plan_step_ids", [])
-        }
-        if verifications:
-            for step in plan_history.current.steps:
-                if step.status is not PlanStepStatus.SKIPPED and step.id not in covered:
-                    problems.append({"step_id": step.id, "reason": "plan_step_has_no_current_verification"})
-        registry.completion_decision = {
-            "fingerprint": fingerprint,
-            "required_verifications": list(required_verifications),
-            "evidence_scope": "required_commands" if required_verifications else "model_selected_checks",
-            "covered_plan_steps": sorted(covered),
-            "problems": problems,
-            "completion_allowed": not problems,
-            "verification_sequences": [v.get("sequence") for v in latest.values()],
-        }
+        registry.completion_decision = gate.evaluate(fingerprint)
+        problems = registry.completion_decision["problems"]
         if problems:
             return {
                 "status": "INCOMPLETE",
@@ -598,6 +538,8 @@ def create_tool_registry(
             ),
         ]
     )
+    registry.verifications = verifications
+    registry.verification_gate = gate
     registry.root = root
     registry.plan_history = plan_history
     registry.planning_enabled = planning_enabled

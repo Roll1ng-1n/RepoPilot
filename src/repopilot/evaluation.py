@@ -12,6 +12,9 @@ from collections import Counter, defaultdict
 from itertools import combinations
 from statistics import mean, median, stdev
 
+from repopilot.measurement import timing_metrics
+from repopilot.progress import repeated_exploration
+
 CATEGORIES = ("simple", "cross-file", "recovery", "replan", "long-horizon", "hitl")
 REQUIREMENTS = {"recovery", "replan", "approval", "budget", "termination"}
 SUCCESS_STATUSES = {"SUCCESS", "SUCCEEDED", "Submitted"}
@@ -47,7 +50,7 @@ def normalize_trace(trace: list[dict]) -> list[dict]:
         kind = event.get("type")
         if kind == "model_request":
             step = event.get("step", step)
-        normalized = dict(event, source_index=index, step=step)
+        normalized = dict(event, source_index=index, step=event.get("step", step))
         if kind == "tool_result":
             obs = event.get("observation", {})
             result = command_result(obs)
@@ -181,7 +184,7 @@ def evaluate(
         for e in evidence
     )
     return {
-        "schema_version": 5,
+        "schema_version": 6,
         "repository_pass": repository_pass,
         "behavior_pass": behavior,
         "task_pass": task_pass,
@@ -212,6 +215,7 @@ def evaluate(
             "recovery_rate": ratio(recovered, len(recovery)),
             "recovery_scope": "manifest-declared public-command failures only",
             "redundant_calls": redundant if calls else None,
+            "window_repeated_exploration": repeated_exploration(events),
         },
         "budget_usage": {
             "limits": metrics.get("run_budget"),
@@ -220,6 +224,12 @@ def evaluate(
             "complete_audit": False,
         },
         "approval_events": [e for e in events if str(e.get("type", "")).startswith("approval_")],
+        "progress": {
+            "first_effective_source_change_step": next(
+                (e.get("step") for e in by_type["source_changed"] if e.get("paths")), None
+            ),
+            "source_changes": by_type["source_changed"],
+        },
         "churn": {
             "status": "unsupported",
             "reason": "Missing immutable repository states at every step boundary.",
@@ -233,8 +243,7 @@ def evaluate(
             if by_type["model_response"]
             and all(isinstance(e.get("duration_seconds"), (int, float)) for e in by_type["model_response"])
             else None,
-            "tool_seconds": None,
-            "orchestration_seconds": None,
+            **timing_metrics(events),
         },
     }
 
@@ -267,10 +276,15 @@ def aggregate(records: list[dict]) -> dict:
             "retries": ("metrics", "retries"),
             "replans": ("metrics", "replans"),
             "redundant_calls": ("evaluation", ("tool_quality", "redundant_calls")),
+            "window_repeated_exploration": ("evaluation", ("tool_quality", "window_repeated_exploration")),
             "total_tokens": ("tokens", "total"),
             "input_tokens": ("tokens", "prompt"),
             "output_tokens": ("tokens", "completion"),
             "duration_seconds": ("metrics", "duration_seconds"),
+            "active_seconds": ("evaluation", ("duration", "active_seconds")),
+            "tool_seconds": ("evaluation", ("duration", "tool_seconds")),
+            "orchestration_seconds": ("evaluation", ("duration", "orchestration_seconds")),
+            "first_effective_source_change_step": ("evaluation", ("progress", "first_effective_source_change_step")),
         }
         for key, spec in numeric_specs.items():
 

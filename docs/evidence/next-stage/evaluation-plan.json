@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "issues": [
+    31,
+    32
+  ],
+  "models": [
+    "gpt-6.1-sol",
+    "gpt-6-luna"
+  ],
+  "fee_limit_usd": null,
+  "authorization": "User explicitly selected both models and no fee ceiling in this session.",
+  "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "model_kwargs": {
+    "temperature": 1,
+    "stream": true,
+    "timeout": 120,
+    "max_tokens": 4096
+  },
+  "budgets": {
+    "max_steps": 48,
+    "max_replans": 4,
+    "max_consecutive_failures": 5,
+    "command_timeout_seconds": 60,
+    "max_run_seconds": 7200
+  },
+  "repeats": 3,
+  "tasks": [
+    "real-boltons-slug",
+    "real-more-chunked",
+    "real-cachetools-expire",
+    "history-inventory",
+    "real-boltons-reread"
+  ],
+  "variants": [
+    "baseline",
+    "loop-on",
+    "loop-off"
+  ],
+  "order": "Within each model: smoke once on real-boltons-slug/loop-on; then repeats 1..3, task order as listed, variant order rotated by repeat index. Independent models may run concurrently.",
+  "replacement_policy": "All original trials retained. At most one separately recorded replacement per trial only after a failed/unknown run with provider timeout, connection/HTTP error, protocol truncation, or abnormal empty response. Algorithmic failures and budget exhaustion without those errors are not replaced. Report originals and replacements separately; no selection by success.",
+  "smoke_policy": "No formal runs if offline/preflight/smoke infrastructure checks fail; a provider failure is retained and can receive one smoke replacement.",
+  "offline_command": ".venv/bin/python docs/evidence/next-stage/offline.py",
+  "reporting": "By model/task/variant, include all samples, repository and task pass true/false/null counts, status, steps, tokens, cost (unknown stays null), timing coverage, repetition distribution, first actual source change. Small-sample descriptive comparison only; do not claim causality from baseline, use loop-on/off for mechanism attribution."
+}

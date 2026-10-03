@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "real-more-chunked",
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "8c1a6ef241b51ff055e89219f050ccf4f15f37f6",
+    "sha256": "3534cbb585cb880ef73aeca8b7865badc2bf767c13fde7c7dfc5e40318075d6a"
+  },
+  "task_statement": "Repair the public more_itertools.chunked API: it must be available from the package root, yield lists of n elements, keep a final partial list by default, and reject a partial list with strict=True. Trace the helper in recipes.py and the public export in more.py. Preserve tests and other iterable helpers. Verify with `python -m unittest discover -s checks`.",
+  "category": "cross-file",
+  "capabilities": [],
+  "behavior_requirements": [],
+  "timeout_seconds": 7200,
+  "run_budget": {
+    "max_steps": 48,
+    "max_replans": 4,
+    "max_consecutive_failures": 5,
+    "command_timeout_seconds": 60,
+    "max_run_seconds": 7200
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 30
+  },
+  "provenance": {
+    "url": "https://github.com/more-itertools/more-itertools",
+    "commit": "8c1a6ef241b51ff055e89219f050ccf4f15f37f6",
+    "license_path": "snapshot/LICENSE",
+    "kind": "explicitly seeded regression on a real repository",
+    "seeded_files": [
+      "more_itertools/recipes.py",
+      "more_itertools/more.py"
+    ]
+  }
+}

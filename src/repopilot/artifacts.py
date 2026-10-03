@@ -9,6 +9,8 @@ import uuid
 from pathlib import Path
 from typing import Any
 
+from repopilot.measurement import TimeRecorder
+
 
 class RunArtifacts:
     """Keeps auditable Agent Run artifacts outside the Target Repository."""
@@ -20,6 +22,7 @@ class RunArtifacts:
         self._metadata_path = self.path / "metadata.json"
         self._trace_path = self.path / "trace.jsonl"
         self._secrets = tuple(secret for secret in secrets if len(secret) >= 4)
+        self.timing = TimeRecorder(self)
 
     @classmethod
     def reopen(cls, state_directory: Path, run_id: str, *, secrets: list[str]) -> RunArtifacts:
@@ -37,6 +40,7 @@ class RunArtifacts:
         artifacts._metadata_path = path / "metadata.json"
         artifacts._trace_path = path / "trace.jsonl"
         artifacts._secrets = tuple(secret for secret in secrets if len(secret) >= 4)
+        artifacts.timing = TimeRecorder(artifacts)
         return artifacts
 
     def write_metadata(self, metadata: dict[str, Any]) -> None:
@@ -98,29 +102,31 @@ class RunArtifacts:
     def write_checkpoint(self, checkpoint: dict[str, Any]) -> None:
         """Atomically replace the resumable state for this Agent Run."""
 
-        payload = json.dumps(self._redact(checkpoint), indent=2, sort_keys=True) + "\n"
+        with self.timing.measure("checkpoint_serialization"):
+            payload = json.dumps(self._redact(checkpoint), indent=2, sort_keys=True) + "\n"
         destination = self.path / "checkpoint.json"
-        descriptor, temporary_name = tempfile.mkstemp(
-            dir=destination.parent,
-            prefix=".checkpoint-",
-            suffix=".tmp",
-            text=True,
-        )
-        try:
-            with os.fdopen(descriptor, "w", encoding="utf-8") as temporary:
-                temporary.write(payload)
-                temporary.flush()
-                os.fsync(temporary.fileno())
-            os.replace(temporary_name, destination)
-            directory_descriptor = os.open(destination.parent, os.O_RDONLY)
+        with self.timing.measure("checkpoint_write_sync"):
+            descriptor, temporary_name = tempfile.mkstemp(
+                dir=destination.parent,
+                prefix=".checkpoint-",
+                suffix=".tmp",
+                text=True,
+            )
             try:
-                os.fsync(directory_descriptor)
+                with os.fdopen(descriptor, "w", encoding="utf-8") as temporary:
+                    temporary.write(payload)
+                    temporary.flush()
+                    os.fsync(temporary.fileno())
+                os.replace(temporary_name, destination)
+                directory_descriptor = os.open(destination.parent, os.O_RDONLY)
+                try:
+                    os.fsync(directory_descriptor)
+                finally:
+                    os.close(directory_descriptor)
             finally:
-                os.close(directory_descriptor)
-        finally:
-            temporary_path = Path(temporary_name)
-            if temporary_path.exists():
-                temporary_path.unlink()
+                temporary_path = Path(temporary_name)
+                if temporary_path.exists():
+                    temporary_path.unlink()
 
     def read_checkpoint(self) -> dict[str, Any]:
         """Load the latest atomically persisted state for this Agent Run."""

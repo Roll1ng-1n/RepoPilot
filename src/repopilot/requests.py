@@ -89,43 +89,45 @@ class RequestExecutor:
                 self.artifacts.append_jsonl(stream_artifact, stream_chunk_record(sequence, chunk))
 
             self.model.stream_observer = observe
-        try:
-            with request_deadline(remaining):
+        self.artifacts.timing.request = self.budget.requests_used + 1
+        with self.artifacts.timing.measure("model_complete", category="model"):
+            try:
+                with request_deadline(remaining):
+                    if isinstance(self.model, LiteLLMToolCallingModel):
+                        turn = self.model.complete(
+                            messages, tools, timeout_seconds=remaining if math.isfinite(remaining) else None
+                        )
+                    else:
+                        turn = self.model.complete(messages, tools)
+                return turn
+            except BaseException as error:
+                error_name = str(error) or type(error).__name__
+                raise
+            finally:
                 if isinstance(self.model, LiteLLMToolCallingModel):
-                    turn = self.model.complete(
-                        messages, tools, timeout_seconds=remaining if math.isfinite(remaining) else None
-                    )
-                else:
-                    turn = self.model.complete(messages, tools)
-            return turn
-        except BaseException as error:
-            error_name = str(error) or type(error).__name__
-            raise
-        finally:
-            if isinstance(self.model, LiteLLMToolCallingModel):
-                self.model.stream_observer = previous_observer
-            usage = getattr(turn, "usage", None)
-            cost = getattr(turn, "cost", None)
-            self.budget.record_request(usage, cost)
-            self.artifacts.append_trace(
-                "model_response",
-                model=self.model_name,
-                purpose=self.purpose,
-                content=getattr(turn, "content", None),
-                error=error_name,
-                usage=usage,
-                cost_usd=cost,
-                finish_reason=getattr(turn, "finish_reason", None),
-                stream_artifact=stream_artifact,
-                duration_seconds=time.monotonic() - started,
-                tool_calls=[
-                    {
-                        "id": c.id,
-                        "name": c.name,
-                        "arguments": c.arguments,
-                        "protocol_error": c.protocol_error,
-                        "raw_arguments": c.raw_arguments,
-                    }
-                    for c in getattr(turn, "tool_calls", [])
-                ],
-            )
+                    self.model.stream_observer = previous_observer
+                usage = getattr(turn, "usage", None)
+                cost = getattr(turn, "cost", None)
+                self.budget.record_request(usage, cost)
+                self.artifacts.append_trace(
+                    "model_response",
+                    model=self.model_name,
+                    purpose=self.purpose,
+                    content=getattr(turn, "content", None),
+                    error=error_name,
+                    usage=usage,
+                    cost_usd=cost,
+                    finish_reason=getattr(turn, "finish_reason", None),
+                    stream_artifact=stream_artifact,
+                    duration_seconds=time.monotonic() - started,
+                    tool_calls=[
+                        {
+                            "id": c.id,
+                            "name": c.name,
+                            "arguments": c.arguments,
+                            "protocol_error": c.protocol_error,
+                            "raw_arguments": c.raw_arguments,
+                        }
+                        for c in getattr(turn, "tool_calls", [])
+                    ],
+                )

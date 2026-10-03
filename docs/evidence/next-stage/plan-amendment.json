@@ -1,0 +1,9 @@
+{
+  "utc": "2026-10-03T02:42:19.339774+00:00",
+  "user_instruction": "6-luna用不了的话先不用了，只跑6.1-sol",
+  "active_models": [
+    "gpt-6.1-sol"
+  ],
+  "unavailable_smoke": "runs/gpt-6-luna/smoke-00-real-boltons-slug-loop-on/trial.json",
+  "scope": "Keep original fixed plan and all failed smoke evidence; execute the same tasks/variants/repeats only for gpt-6.1-sol. No formal Luna samples, no model substitution."
+}

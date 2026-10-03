@@ -144,6 +144,7 @@ def create_app(
             min=0.001,
             help="Optional total active time limit; omitted by default for slow model services.",
         ),
+        progress_detection: bool = typer.Option(True, "--progress-detection/--no-progress-detection"),
         context_strategy: ContextStrategy = typer.Option(ContextStrategy.NONE, "--context-strategy"),
         context_max_characters: int = typer.Option(12_000, "--context-max-characters", min=1),
         context_window_tokens: int = typer.Option(32768, "--context-window-tokens", min=4096),
@@ -260,6 +261,7 @@ def create_app(
                     ),
                 },
                 verifications=verifications,
+                progress_detection_enabled=progress_detection,
                 context=context,
                 approval_context=ApprovalContext(
                     environment=request.environment,

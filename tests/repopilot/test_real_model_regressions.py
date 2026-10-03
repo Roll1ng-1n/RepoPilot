@@ -87,7 +87,7 @@ def test_invalid_raw_arguments_are_preserved_and_redacted(monkeypatch, tmp_path)
         [], []
     )
     assert turn.tool_calls[0].protocol_error
-    event = artifacts.read_trace()[-1]
+    event = next(e for e in reversed(artifacts.read_trace()) if e["type"] == "model_response")
     assert "secret-fixture" not in json.dumps(event)
     assert event["tool_calls"][0]["raw_arguments"].startswith("broken ")
 

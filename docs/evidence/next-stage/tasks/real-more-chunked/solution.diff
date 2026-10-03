@@ -1,0 +1,21 @@
+--- a/more_itertools/recipes.py
++++ b/more_itertools/recipes.py
+@@ -130,7 +130,7 @@
+         [0, 1, 2]
+ 
+     """
+-    return list(islice(iterable, n + 1))
++    return list(islice(iterable, n))
+ 
+ 
+ def tabulate(function, start=0):
+--- a/more_itertools/more.py
++++ b/more_itertools/more.py
+@@ -69,6 +69,7 @@
+     'argmin',
+     'bucket',
+     'callback_iter',
++    'chunked',
+     'chunked_even',
+     'circular_shifts',
+     'collapse',

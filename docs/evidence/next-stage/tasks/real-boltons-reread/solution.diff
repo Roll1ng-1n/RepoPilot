@@ -1,0 +1,11 @@
+--- a/boltons/strutils.py
++++ b/boltons/strutils.py
+@@ -103,7 +103,7 @@
+     True
+ 
+     """
+-    ret = '_'.join(split_punct_ws(text)) or delim if text else ''
++    ret = delim.join(split_punct_ws(text)) or delim if text else ''
+     if ascii:
+         ret = asciify(ret)
+     if lower:

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "real-cachetools-expire",
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "ca7508fd56103a1b6d6f17c8e93e36c60b44ca25",
+    "sha256": "8876973cdf5c7dfb0fae8cdee8ca0489f6b3c3f32741bc4ad8c06daf4641c221"
+  },
+  "task_statement": "Before editing run `python -m unittest discover -s checks`; after repair rerun that same command successfully. Repair TTLCache.expire so entries expire at the exact TTL boundary and it returns removed key/value pairs while retaining unexpired entries. Preserve tests, public signatures and other cache classes. Use verify_task for both runs if available. Verify with `python -m unittest discover -s checks`.",
+  "category": "recovery",
+  "capabilities": [
+    "recovery"
+  ],
+  "behavior_requirements": [
+    "recovery"
+  ],
+  "timeout_seconds": 7200,
+  "run_budget": {
+    "max_steps": 48,
+    "max_replans": 4,
+    "max_consecutive_failures": 5,
+    "command_timeout_seconds": 60,
+    "max_run_seconds": 7200
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 30
+  },
+  "provenance": {
+    "url": "https://github.com/tkem/cachetools",
+    "commit": "ca7508fd56103a1b6d6f17c8e93e36c60b44ca25",
+    "license_path": "snapshot/LICENSE",
+    "kind": "explicitly seeded regression on a real repository",
+    "seeded_files": [
+      "src/cachetools/__init__.py"
+    ]
+  },
+  "behavior_spec": {
+    "recovery_command": "python -m unittest discover -s checks",
+    "recovery_files": [
+      "checks/test_regression.py"
+    ]
+  }
+}

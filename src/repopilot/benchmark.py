@@ -317,6 +317,7 @@ class BenchmarkConfig:
     image_id: str | None = None
     image_digest: str | None = None
     repeats: int = 1
+    progress_detection_enabled: bool = True
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "engines", tuple(_coerce_engine(e) for e in self.engines))
@@ -344,6 +345,7 @@ class BenchmarkConfig:
             "engines": [engine.value for engine in self.engines],
             "task_ids": list(self.task_ids),
             "repeats": self.repeats,
+            "progress_detection_enabled": self.progress_detection_enabled,
         }
 
     @property
@@ -1204,6 +1206,7 @@ def _run_repopilot(request: EngineRequest) -> EngineRun:
         },
         checkpoint_environment={"backend": "docker", "image": config.resolved_image},
         context=ContextManager(),
+        progress_detection_enabled=config.progress_detection_enabled,
         approval_context=ApprovalContext(
             environment="docker", disposable_benchmark=True, automatic_approval=request.task.category != "hitl"
         ),

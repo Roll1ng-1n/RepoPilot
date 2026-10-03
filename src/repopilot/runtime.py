@@ -17,11 +17,14 @@ from repopilot.approval import ApprovalContext, ApprovalPolicy, ApprovalRequest,
 from repopilot.artifacts import RunArtifacts
 from repopilot.budget import BudgetExceeded, RunBudget, RunBudgetTracker
 from repopilot.checkpoint import capture_repository_state, verify_repository_state
+from repopilot.checkpoint_codec import CheckpointCodec
 from repopilot.context import ContextManager
 from repopilot.locking import run_lock
+from repopilot.measurement import source_state
 from repopilot.model import ToolCall, ToolCallingModel
 from repopilot.plan import Plan, PlanHistory
 from repopilot.profile import repository_profile
+from repopilot.progress import EXPLORATION_TOOLS, ProgressTracker
 from repopilot.recovery import (
     Failure,
     FailureCategory,
@@ -32,6 +35,7 @@ from repopilot.recovery import (
     is_transient_model_error,
 )
 from repopilot.requests import RequestExecutor
+from repopilot.run_state import RunState
 from repopilot.tools import ToolRegistry
 
 _TASK_REPORT_TEMPLATE = Template(
@@ -106,6 +110,7 @@ class AgentRuntime:
         verifications: list[dict[str, Any]] | None = None,
         context: ContextManager | None = None,
         approval_context: ApprovalContext | None = None,
+        progress_detection_enabled: bool = True,
     ):
         self._model = model
         self._registry = registry
@@ -116,18 +121,17 @@ class AgentRuntime:
         self._sleeper = sleeper or time.sleep
         self._checkpoint_model = checkpoint_model or {"model_name": model.model_name}
         self._checkpoint_environment = checkpoint_environment or {}
-        self._verifications = verifications if verifications is not None else []
+        self._verifications = verifications if verifications is not None else registry.verifications
         self._context = context or ContextManager()
         self._context.include_plan = registry.planning_enabled
         self._approval_context = approval_context or ApprovalContext(environment="unknown")
         self._approval_policy = ApprovalPolicy(self._approval_context)
-        self._in_flight_tool_call: str | None = None
-        self._approved_call_id: str | None = None
+        self._progress_detection_enabled = progress_detection_enabled
 
     def run(self, task: str, target_repository: Path, *, checkpoint=None, approval_granted=None) -> AgentRunResult:
         if self._artifacts.path.is_relative_to(target_repository.resolve()):
             raise ValueError("Agent Run artifacts must be outside the Target Repository.")
-        with run_lock(self._artifacts.path):
+        with self._artifacts.timing.measure("active_run"), run_lock(self._artifacts.path):
             if checkpoint is not None:
                 if checkpoint.get("schema_version", 1) not in {1, 2}:
                     raise ValueError("Unsupported Checkpoint schema version.")
@@ -155,39 +159,27 @@ class AgentRuntime:
     ) -> AgentRunResult:
         """Run a new Agent Run or continue its persisted in-progress state."""
 
-        self._approved_call_id = checkpoint.get("approved_call_id") if checkpoint else None
-        self._rejected_call_id = checkpoint.get("rejected_call_id") if checkpoint else None
-        self._repository_baseline = (
-            checkpoint.get("repository_baseline") if checkpoint else repository_snapshot.snapshot(target_repository)
+        state = self._state = RunState(
+            task=task,
+            target_repository=target_repository,
+            budget=self._budget.start(),
+            recovery=RecoveryController(self._budget.max_consecutive_failures),
+            plan_history=self._plan_history,
+            context=self._context,
+            registry=self._registry,
+            verifications=self._verifications,
+            approval_context=self._approval_context,
+            progress=ProgressTracker(enabled=self._progress_detection_enabled),
         )
-        self._target_repository = target_repository
-        self._context.repository_profile = repository_profile(target_repository)
+        self._context.repository_profile = repository_profile(state.target_repository)
         self._registry.instruction_observer = self._context.observe_repository_instruction
-        trace_status = checkpoint.get("status") if isinstance(checkpoint, dict) else None
-        if not isinstance(trace_status, str):
-            trace_status = None
-
-        def record_status(status_value: str) -> None:
-            nonlocal trace_status
-            if status_value == trace_status:
-                return
-            self._artifacts.append_trace(
-                "status_changed",
-                previous_status=trace_status,
-                status=status_value,
-            )
-            trace_status = status_value
+        if checkpoint is None:
+            state.repository_baseline = repository_snapshot.snapshot(state.target_repository)
+        else:
+            CheckpointCodec.restore(state, checkpoint, self._budget)
 
         if checkpoint is None:
-            budget = self._budget.start()
-            recovery = RecoveryController(self._budget.max_consecutive_failures)
-            failures: list[dict[str, str]] = []
-            recoveries: list[dict[str, str | float]] = []
-            previous_tool_observation: str | None = None
-            tool_results: list[dict[str, Any]] = []
-            approval_request: ApprovalRequest | None = None
-            pending_tool_calls: list[ToolCall] = []
-            messages: list[dict[str, Any]] = [
+            state.messages: list[dict[str, Any]] = [
                 {
                     "role": "system",
                     "content": (
@@ -197,55 +189,34 @@ class AgentRuntime:
                         f"{json.dumps(self._plan_history.current.to_dict(), sort_keys=True)}"
                     ),
                 },
-                {"role": "user", "content": task},
+                {"role": "user", "content": state.task},
             ]
             self._artifacts.append_trace(
                 "run_started",
-                task=task,
-                target_repository=str(target_repository.resolve()),
+                task=state.task,
+                target_repository=str(state.target_repository.resolve()),
                 model=self._model.model_name,
             )
-            self._artifacts.append_trace("budget_updated", reason="run_started", budget=budget.snapshot())
+            self._artifacts.append_trace("budget_updated", reason="run_started", budget=state.budget.snapshot())
             self._artifacts.append_trace("plan_created", plan=self._plan_history.current.to_dict())
         else:
-            budget = RunBudgetTracker.from_snapshot(self._budget, checkpoint["budget"])
             changes = {
                 key: {"previous": checkpoint["budget"].get(key), "current": value}
-                for key, value in budget.snapshot().items()
+                for key, value in state.budget.snapshot().items()
                 if key.startswith("max_") and value != checkpoint["budget"].get(key)
             }
             if changes:
                 self._artifacts.append_trace("budget_limits_changed", changes=changes, reason="explicit_resume_options")
-            recovery = RecoveryController(self._budget.max_consecutive_failures)
-            recovery_data = checkpoint.get("recovery", {})
-            if not isinstance(recovery_data, dict):
-                raise ValueError("Checkpoint has invalid Recovery state.")
-            messages = self._checkpoint_list(checkpoint, "messages")
-            failures = self._checkpoint_list(checkpoint, "failures")
-            recovery.restore(recovery_data, failures)
-            recoveries = self._checkpoint_list(checkpoint, "recoveries")
-            tool_results = self._checkpoint_list(checkpoint, "tool_results")
-            approval_request = self._checkpoint_approval_request(checkpoint)
-            pending_tool_calls = self._checkpoint_tool_calls(checkpoint)
-            previous = checkpoint.get("previous_tool_observation")
-            if previous is not None and not isinstance(previous, str):
-                raise ValueError("Checkpoint has an invalid Tool Call observation.")
-            previous_tool_observation = previous
-            context_data = checkpoint.get("context")
-            if context_data is not None:
-                if not isinstance(context_data, dict):
-                    raise ValueError("Checkpoint has invalid Context state.")
-                self._context.restore(context_data)
-            if checkpoint.get("status") == "WAITING_FOR_APPROVAL" and approval_request is None:
+            if checkpoint.get("status") == "WAITING_FOR_APPROVAL" and state.approval_request is None:
                 raise ValueError("Checkpoint is waiting for Human Approval without an Approval Request.")
-            if approval_request is not None and approval_granted is None:
+            if state.approval_request is not None and approval_granted is None:
                 raise ValueError("Human Approval is required before this Agent Run can resume.")
             self._artifacts.append_trace("run_resumed", previous_status=checkpoint.get("status"))
-            self._artifacts.append_trace("budget_updated", reason="run_resumed", budget=budget.snapshot())
+            self._artifacts.append_trace("budget_updated", reason="run_resumed", budget=state.budget.snapshot())
 
         if checkpoint and checkpoint.get("in_flight_tool_call"):
             uncertain_id = checkpoint["in_flight_tool_call"]
-            for call in list(pending_tool_calls):
+            for call in list(state.pending_tool_calls):
                 if call.id == uncertain_id:
                     self._record_tool_result(
                         call,
@@ -254,176 +225,92 @@ class AgentRuntime:
                             "error": "interrupted_result_unknown",
                             "details": "Execution may have changed repository state. Observe it before retrying; this call was not replayed.",
                         },
-                        tool_results,
-                        messages,
+                        state.tool_results,
+                        state.messages,
                     )
-                    pending_tool_calls.remove(call)
-                    self._approved_call_id = None
-                    self._rejected_call_id = None
+                    state.pending_tool_calls.remove(call)
+                    state.progress.reset()
+                    self._state.approved_call_id = None
+                    self._state.rejected_call_id = None
                     break
-        self._in_flight_tool_call = None
+        self._state.in_flight_tool_call = None
 
-        record_status("RUNNING")
+        state.transition("RUNNING", self._artifacts)
 
-        self._write_checkpoint(
-            "RUNNING",
-            task,
-            target_repository,
-            budget,
-            recovery,
-            messages,
-            failures,
-            recoveries,
-            previous_tool_observation,
-            tool_results,
-            approval_request,
-            pending_tool_calls,
-        )
-        if approval_request is not None:
-            call = approval_request.tool_call.to_tool_call()
+        self._write_checkpoint("RUNNING")
+        if state.approval_request is not None:
+            call = state.approval_request.tool_call.to_tool_call()
             self._artifacts.append_trace(
                 "approval_granted" if approval_granted else "approval_rejected",
-                approval_request=approval_request.to_dict(),
+                approval_request=state.approval_request.to_dict(),
             )
-            self._approved_call_id = call.id if approval_granted else None
-            self._rejected_call_id = call.id if not approval_granted else None
-            pending_tool_calls = [call, *pending_tool_calls]
-            approval_request = None
-        status = "FAILED"
-        completion: dict[str, Any] | None = None
-        self._registry.budget = budget
+            self._state.approved_call_id = call.id if approval_granted else None
+            self._state.rejected_call_id = call.id if not approval_granted else None
+            state.pending_tool_calls = [call, *state.pending_tool_calls]
+            state.approval_request = None
+        self._registry.budget = state.budget
         self._context.output_reserve_tokens = max(
             self._context.output_reserve_tokens,
             int(self._checkpoint_model.get("model_kwargs", {}).get("max_tokens", 4096)),
         )
-        executor = RequestExecutor(self._model, budget, self._artifacts)
+        executor = RequestExecutor(self._model, state.budget, self._artifacts)
         executor.context_window_tokens = self._context.context_window_tokens
         executor.output_reserve_tokens = self._context.output_reserve_tokens
         self._context.bind_request_executor(executor)
         try:
             while True:
-                budget.remaining_seconds()
-                if pending_tool_calls:
-                    tool_calls = list(pending_tool_calls)
+                state.budget.remaining_seconds()
+                if state.pending_tool_calls:
+                    tool_calls = list(state.pending_tool_calls)
                 else:
                     try:
-                        budget.consume_step()
+                        state.budget.consume_step()
                         self._artifacts.append_trace(
-                            "budget_updated", reason="agent_step_consumed", budget=budget.snapshot()
+                            "budget_updated", reason="agent_step_consumed", budget=state.budget.snapshot()
                         )
                     except BudgetExceeded as error:
-                        status = self._record_budget_exhausted(error, budget)
+                        state.transition(self._record_budget_exhausted(error, state.budget), self._artifacts)
                         break
                     try:
-                        context_selection = self._context.prepare(messages, self._plan_history.current.to_dict())
-                        for event in context_selection.events:
-                            self._artifacts.append_trace(
-                                event["type"], **{key: value for key, value in event.items() if key != "type"}
-                            )
-                        self._write_checkpoint(
-                            "RUNNING",
-                            task,
-                            target_repository,
-                            budget,
-                            recovery,
-                            messages,
-                            failures,
-                            recoveries,
-                            previous_tool_observation,
-                            tool_results,
-                            approval_request,
-                            pending_tool_calls,
-                        )
-                        turn = executor.complete(
-                            self._context.bound_request(context_selection.messages, self._registry.schemas),
-                            self._registry.schemas,
-                        )
-                        budget.remaining_seconds()
+                        turn = self._request_turn(executor)
+                        state.budget.remaining_seconds()
                     except BudgetExceeded:
                         raise
                     except Exception as error:
                         terminal_status = self._handle_failure(
                             Failure(FailureCategory.MODEL_ERROR, str(error) or type(error).__name__),
-                            recovery,
-                            budget,
-                            messages,
-                            failures,
-                            recoveries,
                             transient_model_error=is_transient_model_error(error),
                         )
                         if terminal_status is not None:
-                            status = terminal_status
+                            state.transition(terminal_status, self._artifacts)
                             break
-                        self._write_checkpoint(
-                            "RUNNING",
-                            task,
-                            target_repository,
-                            budget,
-                            recovery,
-                            messages,
-                            failures,
-                            recoveries,
-                            previous_tool_observation,
-                            tool_results,
-                            approval_request,
-                            pending_tool_calls,
-                        )
+                        self._write_checkpoint("RUNNING")
                         continue
-                    recovery.record_model_success()
+                    state.recovery.record_model_success()
                     if not turn.tool_calls:
-                        messages.append(self._assistant_message(turn))
+                        state.messages.append(self._assistant_message(turn))
                         terminal_status = self._handle_failure(
-                            Failure(FailureCategory.NO_PROGRESS, "The model response contained no Tool Call."),
-                            recovery,
-                            budget,
-                            messages,
-                            failures,
-                            recoveries,
+                            Failure(FailureCategory.NO_PROGRESS, "The model response contained no Tool Call.")
                         )
                         if terminal_status is not None:
-                            status = terminal_status
+                            state.transition(terminal_status, self._artifacts)
                             break
-                        self._write_checkpoint(
-                            "RUNNING",
-                            task,
-                            target_repository,
-                            budget,
-                            recovery,
-                            messages,
-                            failures,
-                            recoveries,
-                            previous_tool_observation,
-                            tool_results,
-                            approval_request,
-                            pending_tool_calls,
-                        )
+                        self._write_checkpoint("RUNNING")
                         continue
-                    messages.append(self._assistant_message(turn))
+                    state.messages.append(self._assistant_message(turn))
                     tool_calls = turn.tool_calls
-                    pending_tool_calls = list(tool_calls)
+                    state.pending_tool_calls = list(tool_calls)
                 should_finish = False
                 for index, tool_call in enumerate(tool_calls):
-                    budget.remaining_seconds()
-                    pending_tool_calls = list(tool_calls[index:])
-                    self._write_checkpoint(
-                        "RUNNING",
-                        task,
-                        target_repository,
-                        budget,
-                        recovery,
-                        messages,
-                        failures,
-                        recoveries,
-                        previous_tool_observation,
-                        tool_results,
-                        approval_request,
-                        pending_tool_calls,
-                    )
+                    state.budget.remaining_seconds()
+                    state.pending_tool_calls = list(tool_calls[index:])
+                    self._write_checkpoint("RUNNING")
                     self._artifacts.append_trace(
                         "tool_call", tool_call_id=tool_call.id, tool_name=tool_call.name, arguments=tool_call.arguments
                     )
-                    prepared = self._registry.prepare(tool_call)
-                    if tool_call.id == self._rejected_call_id:
+                    with self._artifacts.timing.measure("tool_prepare", tool_call_id=tool_call.id):
+                        prepared = self._registry.prepare(tool_call)
+                    if tool_call.id == self._state.rejected_call_id:
                         observation = {
                             "ok": False,
                             "error": "approval_rejected",
@@ -432,24 +319,25 @@ class AgentRuntime:
                     elif isinstance(prepared, dict):
                         observation = prepared
                     else:
-                        assessment = self._approval_policy.assess(prepared.snapshot)
+                        with self._artifacts.timing.measure("approval_assessment", tool_call_id=tool_call.id):
+                            assessment = self._approval_policy.assess(prepared.snapshot)
                         if assessment.decision is RiskDecision.DENY:
                             observation = {"ok": False, "error": "tool_call_denied", "details": assessment.reason}
                         elif (
                             assessment.decision is RiskDecision.REQUIRE_APPROVAL
-                            and tool_call.id != self._approved_call_id
+                            and tool_call.id != self._state.approved_call_id
                         ):
-                            approval_request = ApprovalRequest(prepared.snapshot, assessment.reason)
-                            pending_tool_calls = [
+                            state.approval_request = ApprovalRequest(prepared.snapshot, assessment.reason)
+                            state.pending_tool_calls = [
                                 ToolCallSnapshot.from_tool_call(remaining).to_tool_call()
                                 for remaining in tool_calls[index + 1 :]
                             ]
                             self._artifacts.append_trace(
                                 "approval_requested",
-                                approval_request=approval_request.to_dict(),
-                                pending_tool_call_ids=[call.id for call in pending_tool_calls],
+                                approval_request=state.approval_request.to_dict(),
+                                pending_tool_call_ids=[call.id for call in state.pending_tool_calls],
                             )
-                            status = "WAITING_FOR_APPROVAL"
+                            state.transition("WAITING_FOR_APPROVAL", self._artifacts)
                             should_finish = True
                             break
                         else:
@@ -464,55 +352,69 @@ class AgentRuntime:
                                 )
                             if tool_call.name == "replan":
                                 try:
-                                    budget.consume_replan()
+                                    state.budget.consume_replan()
                                     self._artifacts.append_trace(
-                                        "budget_updated", reason="replan_consumed", budget=budget.snapshot()
+                                        "budget_updated", reason="replan_consumed", budget=state.budget.snapshot()
                                     )
                                 except BudgetExceeded as error:
                                     observation = {"ok": False, "error": "budget_exceeded", "limit": error.limit}
-                                    self._record_tool_result(tool_call, observation, tool_results, messages)
-                                    status = self._record_budget_exhausted(error, budget)
+                                    self._record_tool_result(tool_call, observation, state.tool_results, state.messages)
+                                    state.transition(
+                                        self._record_budget_exhausted(error, state.budget), self._artifacts
+                                    )
                                     should_finish = True
                                     break
-                            self._in_flight_tool_call = tool_call.id
-                            self._write_checkpoint(
-                                "RUNNING",
-                                task,
-                                target_repository,
-                                budget,
-                                recovery,
-                                messages,
-                                failures,
-                                recoveries,
-                                previous_tool_observation,
-                                tool_results,
-                                approval_request,
-                                pending_tool_calls,
-                            )
-                            observation = self._registry.execute(prepared)
+                            observation = self._execute_tool(prepared, tool_call)
                     if observation.get("ok") and tool_call.name == "record_fact":
                         self._context.record_fact(observation["result"]["fact"])
                         self._artifacts.append_trace("important_fact_recorded", fact=observation["result"]["fact"])
-                    self._record_tool_result(tool_call, observation, tool_results, messages)
+                    self._record_tool_result(tool_call, observation, state.tool_results, state.messages)
                     self._record_git_commit(tool_call, observation)
-                    self._in_flight_tool_call = None
-                    if self._approved_call_id == tool_call.id:
-                        self._approved_call_id = None
-                    pending_tool_calls = list(tool_calls[index + 1 :])
-                    self._write_checkpoint(
-                        "RUNNING",
-                        task,
-                        target_repository,
-                        budget,
-                        recovery,
-                        messages,
-                        failures,
-                        recoveries,
-                        previous_tool_observation,
-                        tool_results,
-                        approval_request,
-                        pending_tool_calls,
+                    self._state.in_flight_tool_call = None
+                    if self._state.approved_call_id == tool_call.id:
+                        self._state.approved_call_id = None
+                    state.pending_tool_calls = list(tool_calls[index + 1 :])
+                    failure = classify_tool_failure(tool_call.name, observation)
+                    observation_signature = self._tool_observation_signature(
+                        tool_call.name, tool_call.arguments, observation
                     )
+                    if tool_call.name == "verify_task" and observation.get("ok"):
+                        self._state.progress.verification(observation)
+                    progress = (
+                        self._state.progress.observe(tool_call.id, tool_call.name, tool_call.arguments, observation)
+                        if failure is None
+                        else None
+                    )
+                    if progress is not None:
+                        self._artifacts.append_trace(
+                            "exploration_observed",
+                            tool_call_id=tool_call.id,
+                            step=state.budget.steps_used,
+                            repeated=progress["repeated"],
+                            signature=progress["signature"],
+                        )
+                        diagnostic = progress["diagnostic"]
+                        if diagnostic is not None:
+                            self._artifacts.append_trace("exploration_loop_detected", **diagnostic)
+                            failure = Failure(
+                                FailureCategory.NO_PROGRESS,
+                                "Repeated exploration cycle: "
+                                + json.dumps(diagnostic, sort_keys=True)
+                                + ". Use the facts already observed to propose a source change or identify the specific missing evidence; revise the remaining plan.",
+                                tool_call.name,
+                            )
+                    elif (
+                        tool_call.name not in EXPLORATION_TOOLS
+                        and failure is None
+                        and observation_signature == state.previous_tool_observation
+                    ):
+                        failure = Failure(
+                            FailureCategory.NO_PROGRESS,
+                            "The Tool Call and its Observation repeated without new progress.",
+                            tool_call.name,
+                        )
+                    state.previous_tool_observation = observation_signature
+                    self._write_checkpoint("RUNNING")
                     if observation.get("ok") and tool_call.name in {"update_plan", "replan"}:
                         event_type = "plan_replanned" if tool_call.name == "replan" else "plan_updated"
                         self._artifacts.append_trace(event_type, **observation["result"])
@@ -521,66 +423,34 @@ class AgentRuntime:
                         and observation.get("ok")
                         and observation["result"].get("completion_allowed", True)
                     ):
-                        status = observation["result"]["status"]
-                        completion = observation["result"]
+                        state.transition(observation["result"]["status"], self._artifacts)
+                        state.completion = observation["result"]
                         should_finish = True
                         break
-                    failure = classify_tool_failure(tool_call.name, observation)
-                    observation_signature = self._tool_observation_signature(
-                        tool_call.name, tool_call.arguments, observation
-                    )
-                    if failure is None and observation_signature == previous_tool_observation:
-                        failure = Failure(
-                            FailureCategory.NO_PROGRESS,
-                            "The Tool Call and its Observation repeated without new progress.",
-                            tool_call.name,
-                        )
-                    previous_tool_observation = observation_signature
                     if failure is None:
-                        recovery.record_success()
+                        state.recovery.record_success()
                         continue
-                    terminal_status = self._handle_failure(
-                        failure,
-                        recovery,
-                        budget,
-                        messages,
-                        failures,
-                        recoveries,
-                    )
+                    terminal_status = self._handle_failure(failure)
                     if terminal_status is not None:
-                        status = terminal_status
+                        state.transition(terminal_status, self._artifacts)
                         should_finish = True
                         break
                 if should_finish:
                     break
-                self._write_checkpoint(
-                    "RUNNING",
-                    task,
-                    target_repository,
-                    budget,
-                    recovery,
-                    messages,
-                    failures,
-                    recoveries,
-                    previous_tool_observation,
-                    tool_results,
-                    approval_request,
-                    pending_tool_calls,
-                )
+                self._write_checkpoint("RUNNING")
         except BudgetExceeded as error:
-            status = self._record_budget_exhausted(error, budget)
+            state.transition(self._record_budget_exhausted(error, state.budget), self._artifacts)
         except KeyboardInterrupt:
-            status = "STOPPED"
+            state.transition("STOPPED", self._artifacts)
             self._artifacts.append_trace("run_stopped", reason="KeyboardInterrupt")
         self._registry.budget = None
-        record_status(status)
         self._artifacts.append_trace(
             "termination_audit",
-            status=status,
-            pending_tool_call_ids=[c.id for c in pending_tool_calls],
+            status=state.status,
+            pending_tool_call_ids=[c.id for c in state.pending_tool_calls],
             uncertain_tool_call_ids=[
                 item["tool_call_id"]
-                for item in tool_results
+                for item in state.tool_results
                 if item["observation"].get("error") == "interrupted_result_unknown"
             ],
             completion_decision=self._registry.completion_decision,
@@ -589,51 +459,38 @@ class AgentRuntime:
             "budget_audit",
             complete=False,
             scope="runtime_request_and_tool_dispatch",
-            budget=budget.snapshot(),
+            budget=state.budget.snapshot(),
             reason="Runtime dispatch is bounded; arbitrary shell actions and provider billing are not a complete external-effects audit.",
         )
-        self._artifacts.append_trace("run_finished", status=status)
-        self._write_checkpoint(
-            status,
-            task,
-            target_repository,
-            budget,
-            recovery,
-            messages,
-            failures,
-            recoveries,
-            previous_tool_observation,
-            tool_results,
-            approval_request,
-            pending_tool_calls,
-        )
-        self._write_terminal_artifacts(status, tool_results, completion)
+        self._artifacts.append_trace("run_finished", status=state.status)
+        self._write_checkpoint(state.status)
+        self._write_terminal_artifacts(state.status, state.tool_results, state.completion)
         self._artifacts.write_metadata(
             {
                 "run_id": self._artifacts.run_id,
-                "status": status,
-                "task": task,
-                "target_repository": str(target_repository.resolve()),
+                "status": state.status,
+                "task": state.task,
+                "target_repository": str(state.target_repository.resolve()),
                 "model": self._model.model_name,
                 "plan": self._plan_history.current.to_dict(),
                 "plan_history": [plan.to_dict() for plan in self._plan_history.versions],
                 "context": self._context.to_checkpoint(),
-                "budget": budget.snapshot(),
-                "failures": failures,
-                "recoveries": recoveries,
-                "tool_results": tool_results,
+                "budget": state.budget.snapshot(),
+                "failures": state.failures,
+                "recoveries": state.recoveries,
+                "tool_results": state.tool_results,
                 "verifications": self._verifications,
                 "completion_decision": self._registry.completion_decision,
                 "approval_context": self._approval_context.to_dict(),
-                "approval_request": approval_request.to_dict() if approval_request is not None else None,
+                "approval_request": state.approval_request.to_dict() if state.approval_request is not None else None,
                 "pending_tool_calls": [
-                    ToolCallSnapshot.from_tool_call(tool_call).to_dict() for tool_call in pending_tool_calls
+                    ToolCallSnapshot.from_tool_call(tool_call).to_dict() for tool_call in state.pending_tool_calls
                 ],
-                "git_commits": self._git_commits(tool_results),
-                "repository": capture_repository_state(target_repository),
+                "git_commits": self._git_commits(state.tool_results),
+                "repository": capture_repository_state(state.target_repository),
             }
         )
-        return AgentRunResult(self._artifacts.run_id, status, self._artifacts.path, self._plan_history.current)
+        return AgentRunResult(self._artifacts.run_id, state.status, self._artifacts.path, self._plan_history.current)
 
     def resume(
         self, checkpoint: dict[str, Any], target_repository: Path, *, approval_granted: bool | None = None
@@ -727,106 +584,92 @@ class AgentRuntime:
                 commits.append({"commit_hash": commit_hash, "message": message, "reason": reason, "paths": paths})
         return commits
 
-    def _write_checkpoint(
-        self,
-        status: str,
-        task: str,
-        target_repository: Path,
-        budget: RunBudgetTracker,
-        recovery: RecoveryController,
-        messages: list[dict[str, Any]],
-        failures: list[dict[str, str]],
-        recoveries: list[dict[str, str | float]],
-        previous_tool_observation: str | None,
-        tool_results: list[dict[str, Any]],
-        approval_request: ApprovalRequest | None = None,
-        pending_tool_calls: list[ToolCall] | None = None,
-    ) -> None:
-        self._artifacts.write_checkpoint(
-            {
-                "schema_version": 2,
-                "repository_baseline": self._repository_baseline,
-                "approved_call_id": self._approved_call_id,
-                "rejected_call_id": self._rejected_call_id,
-                "in_flight_tool_call": self._in_flight_tool_call,
-                "execution_log": {
-                    **{
-                        item["tool_call_id"]: {
-                            "state": "interrupted"
-                            if item["observation"].get("error") == "interrupted_result_unknown"
-                            else "completed",
-                            "tool_name": item["tool_name"],
-                        }
-                        for item in tool_results
-                    },
-                    **{
-                        call.id: {
-                            "state": "in_flight" if call.id == self._in_flight_tool_call else "pending",
-                            "tool_name": call.name,
-                        }
-                        for call in (pending_tool_calls or [])
-                    },
-                },
-                "run_id": self._artifacts.run_id,
-                "status": status,
-                "task": task,
-                "model": self._checkpoint_model,
-                "environment": self._checkpoint_environment,
-                "plan": self._plan_history.current.to_dict(),
-                "plan_history": [plan.to_dict() for plan in self._plan_history.versions],
-                "context": self._context.to_checkpoint(),
-                "messages": messages,
-                "budget": budget.snapshot(),
-                "recovery": recovery.to_checkpoint(),
-                "failures": failures,
-                "recoveries": recoveries,
-                "previous_tool_observation": previous_tool_observation,
-                "tool_results": tool_results,
-                "verifications": self._verifications,
-                "completion_decision": self._registry.completion_decision,
-                "approval_context": self._approval_context.to_dict(),
-                "approval_request": approval_request.to_dict() if approval_request is not None else None,
-                "pending_tool_calls": [
-                    ToolCallSnapshot.from_tool_call(tool_call).to_dict() for tool_call in (pending_tool_calls or [])
-                ],
-                "repository": capture_repository_state(target_repository),
-            }
+    def _request_turn(self, executor):
+        state = self._state
+        self._artifacts.timing.step = state.budget.steps_used
+        with self._artifacts.timing.measure("context_prepare"):
+            context_selection = self._context.prepare(state.messages, self._plan_history.current.to_dict())
+        for event in context_selection.events:
+            self._artifacts.append_trace(event["type"], **{key: value for key, value in event.items() if key != "type"})
+        self._write_checkpoint("RUNNING")
+        return executor.complete(
+            self._context.bound_request(context_selection.messages, self._registry.schemas),
+            self._registry.schemas,
         )
 
-    @staticmethod
-    def _checkpoint_list(checkpoint: dict[str, Any], key: str) -> list[Any]:
-        value = checkpoint.get(key)
-        if not isinstance(value, list):
-            raise ValueError(f"Checkpoint has invalid {key}.")
-        return value
+    def _execute_tool(self, prepared, tool_call):
+        state = self._state
+        self._state.in_flight_tool_call = tool_call.id
+        self._write_checkpoint("RUNNING")
+        may_modify = tool_call.name not in {
+            "read_file",
+            "search_code",
+            "list_files",
+            "read_artifact",
+            "record_fact",
+            "update_plan",
+            "replan",
+            "view_diff",
+        }
+        if may_modify:
+            with self._artifacts.timing.measure("source_scan", tool_call_id=tool_call.id):
+                before_source = source_state(state.target_repository)
+        try:
+            with self._artifacts.timing.measure("tool_execute", category="tool", tool_call_id=tool_call.id):
+                observation = self._registry.execute(prepared)
+        finally:
+            if may_modify:
+                with self._artifacts.timing.measure("source_scan", tool_call_id=tool_call.id):
+                    after_source = source_state(state.target_repository)
+                with self._artifacts.timing.measure("repository_scan", tool_call_id=tool_call.id):
+                    after_repository = capture_repository_state(state.target_repository)
+                if after_repository["diff_fingerprint"] != self._observed_repository_state["diff_fingerprint"]:
+                    self._state.progress.reset()
+                    self._artifacts.append_trace(
+                        "repository_changed",
+                        tool_call_id=tool_call.id,
+                        step=state.budget.steps_used,
+                        before=self._observed_repository_state["diff_fingerprint"],
+                        after=after_repository["diff_fingerprint"],
+                    )
+                changed_sources = sorted(
+                    path
+                    for path in before_source.keys() | after_source.keys()
+                    if before_source.get(path) != after_source.get(path)
+                )
+                if changed_sources:
+                    self._artifacts.append_trace(
+                        "source_changed",
+                        tool_call_id=tool_call.id,
+                        tool_name=tool_call.name,
+                        step=state.budget.steps_used,
+                        paths=changed_sources,
+                        before=before_source,
+                        after=after_source,
+                    )
 
-    @staticmethod
-    def _checkpoint_approval_request(checkpoint: dict[str, Any]) -> ApprovalRequest | None:
-        value = checkpoint.get("approval_request")
-        if value is None:
-            return None
-        if not isinstance(value, dict):
-            raise ValueError("Checkpoint has an invalid Approval Request.")
-        return ApprovalRequest.from_dict(value)
+        return observation
 
-    @staticmethod
-    def _checkpoint_tool_calls(checkpoint: dict[str, Any]) -> list[ToolCall]:
-        value = checkpoint.get("pending_tool_calls", [])
-        if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
-            raise ValueError("Checkpoint has invalid pending Tool Calls.")
-        return [ToolCallSnapshot.from_dict(item).to_tool_call() for item in value]
+    def _write_checkpoint(self, status: str = "RUNNING") -> None:
+        state = self._state
+        state.transition(status, self._artifacts)
+        with self._artifacts.timing.measure("repository_scan"):
+            repository = capture_repository_state(state.target_repository)
+        self._observed_repository_state = repository
+        self._artifacts.write_checkpoint(
+            CheckpointCodec.encode(
+                state,
+                run_id=self._artifacts.run_id,
+                model=self._checkpoint_model,
+                environment=self._checkpoint_environment,
+                repository=repository,
+            )
+        )
 
-    def _handle_failure(
-        self,
-        failure: Failure,
-        recovery: RecoveryController,
-        budget: RunBudgetTracker,
-        messages: list[dict[str, Any]],
-        failures: list[dict[str, str]],
-        recoveries: list[dict[str, str | float]],
-        *,
-        transient_model_error: bool = False,
-    ) -> str | None:
+    def _handle_failure(self, failure: Failure, *, transient_model_error: bool = False) -> str | None:
+        state = self._state
+        recovery, budget = state.recovery, state.budget
+        messages, failures, recoveries = state.messages, state.failures, state.recoveries
         failure_data = failure.to_dict()
         failures.append(failure_data)
         self._artifacts.append_trace("failure", **failure_data)
@@ -935,17 +778,19 @@ class AgentRuntime:
                 "history": [plan.to_dict() for plan in self._plan_history.versions],
             },
         )
-        final_snapshot = repository_snapshot.snapshot(self._target_repository)
-        baseline = self._repository_baseline
+        final_snapshot = repository_snapshot.snapshot(self._state.target_repository)
+        baseline = self._state.repository_baseline
         patch_scope = "unsupported_legacy_or_non_git"
         if baseline and baseline.get("tree") and final_snapshot.get("tree"):
             self._artifacts.write_text("worktree.diff", final_patch)
             initial_state = baseline["state"]
             self._artifacts.write_text(
                 "initial-worktree.diff",
-                repository_snapshot.diff(self._target_repository, initial_state["head"], baseline["tree"]),
+                repository_snapshot.diff(self._state.target_repository, initial_state["head"], baseline["tree"]),
             )
-            final_patch = repository_snapshot.diff(self._target_repository, baseline["tree"], final_snapshot["tree"])
+            final_patch = repository_snapshot.diff(
+                self._state.target_repository, baseline["tree"], final_snapshot["tree"]
+            )
             patch_scope = "agent_run_content_delta"
         self._artifacts.write_text("patch.diff", final_patch)
         persisted = (self._artifacts.path / "patch.diff").read_bytes()

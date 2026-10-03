@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "real-boltons-reread",
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "c23dbdadb6fecdf505eb4231559561913b84c13f",
+    "sha256": "8c6b0ee376aeaef44d7c45c62e15f3f0617804689ddb53b0db2df5ce3d082487"
+  },
+  "task_statement": "Repair boltons.strutils.slugify so a caller-provided delimiter is honored while lower, ascii and empty-input behavior remain compatible. Preserve public signatures and tests. Verify with `python -m unittest discover -s checks`. For an explicit before/after inspection, read the same slugify source range twice before editing and twice after editing, then verify. The source change separates the two observation segments.",
+  "category": "simple",
+  "capabilities": [],
+  "behavior_requirements": [],
+  "timeout_seconds": 7200,
+  "run_budget": {
+    "max_steps": 48,
+    "max_replans": 4,
+    "max_consecutive_failures": 5,
+    "command_timeout_seconds": 60,
+    "max_run_seconds": 7200
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 30
+  },
+  "provenance": {
+    "url": "https://github.com/mahmoud/boltons",
+    "commit": "c23dbdadb6fecdf505eb4231559561913b84c13f",
+    "license_path": "snapshot/LICENSE",
+    "kind": "explicitly seeded regression on a real repository",
+    "seeded_files": [
+      "boltons/strutils.py"
+    ]
+  }
+}

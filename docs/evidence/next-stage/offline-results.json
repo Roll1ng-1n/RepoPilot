@@ -1,0 +1,51 @@
+[
+  {
+    "task_id": "history-inventory",
+    "snapshot_sha256": "7a5f491c898f69f3a974d7c6177d04757022ca2ec83108f35408d26e3046e7a2",
+    "hash_valid": true
+  },
+  {
+    "task_id": "real-boltons-reread",
+    "snapshot_sha256": "8c6b0ee376aeaef44d7c45c62e15f3f0617804689ddb53b0db2df5ce3d082487",
+    "hash_valid": true,
+    "before_exit_code": 1,
+    "after_exit_code": 0,
+    "verifier_exit_code": 0,
+    "before_output": "F\n======================================================================\nFAIL: test_regression (test_regression.Regression.test_regression)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/repopilot-offline-jfzlinl9/workspace/checks/test_regression.py\", line 8, in test_regression\n    assert slugify('Hello, World!', delim='-') == 'hello-world'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n\n----------------------------------------------------------------------\nRan 1 test in 0.010s\n\nFAILED (failures=1)\n",
+    "after_output": ".\n----------------------------------------------------------------------\nRan 1 test in 0.008s\n\nOK\n",
+    "verifier_output": ""
+  },
+  {
+    "task_id": "real-boltons-slug",
+    "snapshot_sha256": "8c6b0ee376aeaef44d7c45c62e15f3f0617804689ddb53b0db2df5ce3d082487",
+    "hash_valid": true,
+    "before_exit_code": 1,
+    "after_exit_code": 0,
+    "verifier_exit_code": 0,
+    "before_output": "F\n======================================================================\nFAIL: test_regression (test_regression.Regression.test_regression)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/repopilot-offline-3w4j0nga/workspace/checks/test_regression.py\", line 8, in test_regression\n    assert slugify('Hello, World!', delim='-') == 'hello-world'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n\n----------------------------------------------------------------------\nRan 1 test in 0.008s\n\nFAILED (failures=1)\n",
+    "after_output": ".\n----------------------------------------------------------------------\nRan 1 test in 0.009s\n\nOK\n",
+    "verifier_output": ""
+  },
+  {
+    "task_id": "real-cachetools-expire",
+    "snapshot_sha256": "8876973cdf5c7dfb0fae8cdee8ca0489f6b3c3f32741bc4ad8c06daf4641c221",
+    "hash_valid": true,
+    "before_exit_code": 1,
+    "after_exit_code": 0,
+    "verifier_exit_code": 0,
+    "before_output": "F\n======================================================================\nFAIL: test_regression (test_regression.Regression.test_regression)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/repopilot-offline-4c1uti0r/workspace/checks/test_regression.py\", line 15, in test_regression\n    assert list(cache.expire()) == [('first', 1)]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n\n----------------------------------------------------------------------\nRan 1 test in 0.005s\n\nFAILED (failures=1)\n",
+    "after_output": ".\n----------------------------------------------------------------------\nRan 1 test in 0.005s\n\nOK\n",
+    "verifier_output": ""
+  },
+  {
+    "task_id": "real-more-chunked",
+    "snapshot_sha256": "3534cbb585cb880ef73aeca8b7865badc2bf767c13fde7c7dfc5e40318075d6a",
+    "hash_valid": true,
+    "before_exit_code": 1,
+    "after_exit_code": 0,
+    "verifier_exit_code": 0,
+    "before_output": "E\n======================================================================\nERROR: test_regression (test_regression.Regression.test_regression)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/repopilot-offline-kol_79xm/workspace/checks/test_regression.py\", line 7, in test_regression\n    from more_itertools import chunked\nImportError: cannot import name 'chunked' from 'more_itertools' (/tmp/repopilot-offline-kol_79xm/workspace/more_itertools/__init__.py). Did you mean: 'ichunked'?\n\n----------------------------------------------------------------------\nRan 1 test in 0.021s\n\nFAILED (errors=1)\n",
+    "after_output": ".\n----------------------------------------------------------------------\nRan 1 test in 0.018s\n\nOK\n",
+    "verifier_output": ""
+  }
+]

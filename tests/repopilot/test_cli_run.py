@@ -431,6 +431,7 @@ def test_cli_requests_replan_after_a_repeated_tool_call_and_observation(tmp_path
         [
             AssistantTurn(tool_calls=[ToolCall("call-1", "list_files", {"path": "."})]),
             AssistantTurn(tool_calls=[ToolCall("call-2", "list_files", {"path": "."})]),
+            AssistantTurn(tool_calls=[ToolCall("call-repeat-3", "list_files", {"path": "."})]),
             AssistantTurn(
                 tool_calls=[
                     ToolCall(
@@ -458,7 +459,7 @@ def test_cli_requests_replan_after_a_repeated_tool_call_and_observation(tmp_path
     )
 
     assert result.exit_code == 3, result.output
-    assert len(model.requests) == 3
+    assert len(model.requests) == 4
     run_directory = next(state_directory.iterdir())
     metadata = json.loads((run_directory / "metadata.json").read_text())
 
@@ -584,7 +585,7 @@ diff --git a/README.md b/README.md
         "## Verification\n\n- `README.md patch`: Proves the requested repository change is present. (passed)" in report
     )
     assert "## Risks\n\n- No runtime behavior changed." in report
-    event_types = [event["type"] for event in events]
+    event_types = [event["type"] for event in events if not event["type"].startswith("operation_")]
     assert event_types[0] == "run_started"
     assert event_types[-1] == "run_finished"
     assert "plan_created" in event_types
@@ -1065,7 +1066,7 @@ def test_cli_runs_a_read_only_native_tool_calling_agent_and_writes_safe_artifact
     assert (run_directories[0] / "patch.diff").read_text() == ""
     assert json.loads((run_directories[0] / "verification.json").read_text()) == {"verifications": []}
     assert "No verification evidence was collected." in (run_directories[0] / "task_report.md").read_text()
-    event_types = [event["type"] for event in events]
+    event_types = [event["type"] for event in events if not event["type"].startswith("operation_")]
     assert event_types[0] == "run_started"
     assert event_types[-1] == "run_finished"
     assert "plan_created" in event_types
@@ -1241,7 +1242,7 @@ def test_cli_records_a_versioned_plan_and_replan_from_agent_control_tools(tmp_pa
         "plan_replanned",
         "plan_updated",
     ]
-    assert events[-1] == {"type": "run_finished", "status": "UNVERIFIED"}
+    assert next(e for e in reversed(events) if e["type"] == "run_finished") == {"type": "run_finished", "status": "UNVERIFIED"}
 
 
 def test_cli_writes_all_terminal_artifacts_for_a_failed_run(tmp_path: Path) -> None:

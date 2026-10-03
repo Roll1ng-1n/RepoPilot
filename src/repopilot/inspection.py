@@ -10,6 +10,7 @@ from typing import Any
 from jinja2 import StrictUndefined, Template
 
 from repopilot.artifacts import RunArtifacts
+from repopilot.evaluation import evaluate, normalize_trace
 
 _ARTIFACT_NAMES = (
     "metadata.json",
@@ -56,6 +57,9 @@ class RunInspection:
         """Return the stable, JSON-serializable inspection document."""
 
         return {
+            "evaluation": evaluate(
+                None, self.status, {"steps": self.budget.get("steps_used")}, normalize_trace(self.trace), []
+            ),
             "run_id": self.run_id,
             "status": self.status,
             "task": self.task,
