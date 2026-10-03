@@ -1,0 +1,75 @@
+diff --git a/src/inventory/aggregate.py b/src/inventory/aggregate.py
+index 76fa4d2fbef258122abd769e3568c1c86be7b9c0..3a51c61b5cdcc345ce2e3fe3c944dd9d119af9f0 100644
+--- a/src/inventory/aggregate.py
++++ b/src/inventory/aggregate.py
+@@ -1,2 +1,6 @@
+ def aggregate(events: list):
+-    return {}
++    balances = {}
++    for event in events:
++        sku = event["sku"]
++        balances[sku] = balances.get(sku, 0) + event["delta"]
++    return balances
+diff --git a/src/inventory/normalize.py b/src/inventory/normalize.py
+index b8167f5dfcb8567ee1fb01d906896db85a27a236..6749a5cc1ee8405307df9a28af007d3ead07e794 100644
+--- a/src/inventory/normalize.py
++++ b/src/inventory/normalize.py
+@@ -1,2 +1,5 @@
+ def normalize(events: list):
+-    return []
++    return [
++        {"sku": event["sku"].strip().casefold(), "delta": event["delta"]}
++        for event in events
++    ]
+diff --git a/src/inventory/parse.py b/src/inventory/parse.py
+index 9ebd2e7b981190a729aa29ffaa16eec93c58b010..f07c08b925415ccf1619844a6c1e82e670c0f8eb 100644
+--- a/src/inventory/parse.py
++++ b/src/inventory/parse.py
+@@ -1,2 +1,9 @@
++import json
++
++
+ def parse(text: str):
+-    return []
++    try:
++        value = json.loads(text)
++    except (TypeError, ValueError):
++        return []
++    return value if isinstance(value, list) else []
+diff --git a/src/inventory/render.py b/src/inventory/render.py
+index 98147986c9d9c5e06cd70d2a2680dfce63e6f96d..8475be1eac2e021255c207c423bbc07bfb409c1c 100644
+--- a/src/inventory/render.py
++++ b/src/inventory/render.py
+@@ -1,2 +1,4 @@
+ def render(balances: dict):
+-    return ""
++    return "\n".join(
++        f"{sku}={balances[sku]}" for sku in sorted(balances)
++    )
+diff --git a/src/inventory/select.py b/src/inventory/select.py
+index 6f1a654f340fec0161cda409e42c4aad14f49c50..098c09f7b8c07473a3648f043885233f6aaefec8 100644
+--- a/src/inventory/select.py
++++ b/src/inventory/select.py
+@@ -1,2 +1,2 @@
+ def select(balances: dict):
+-    return {}
++    return {sku: balance for sku, balance in balances.items() if balance != 0}
+diff --git a/src/inventory/validate.py b/src/inventory/validate.py
+index 3b5d2f96898dd84d1c525a42712d6dc6b4316ec3..2804312cd4ed960c73b4de2e56e81c48e2bf0a57 100644
+--- a/src/inventory/validate.py
++++ b/src/inventory/validate.py
+@@ -1,2 +1,13 @@
+ def validate(events: list):
+-    return []
++    valid = []
++    for event in events:
++        if not isinstance(event, dict):
++            continue
++        sku = event.get("sku")
++        delta = event.get("delta")
++        if not isinstance(sku, str) or not sku.strip():
++            continue
++        if isinstance(delta, bool) or not isinstance(delta, int):
++            continue
++        valid.append({"sku": sku, "delta": delta})
++    return valid

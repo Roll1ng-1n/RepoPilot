@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "a7e51a889c1a69bb21cdd4c38f1cbd45a84f603e453a48cf1814fc863d5eeea9",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue27-real-models/round4/runs/gpt-6.1-sol/history-inventory/repopilot/workspace",
+      "head": "35640d8ea2aaee0afbaaba1c0268a5e5579facbb",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue27-real-models/round4/runs/gpt-6.1-sol/history-inventory/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "4800819275fc12bfdb77af400bff6f2f15fc240f"
+  },
+  "bytes": 10354,
+  "final": {
+    "state": {
+      "diff_fingerprint": "d077498fa745c5bcc2a5d0e3ca0fe3177eb0510a315a95ed2f29cc3133d9b492",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue27-real-models/round4/runs/gpt-6.1-sol/history-inventory/repopilot/workspace",
+      "head": "35640d8ea2aaee0afbaaba1c0268a5e5579facbb",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue27-real-models/round4/runs/gpt-6.1-sol/history-inventory/repopilot/workspace",
+      "status": " M src/inventory/aggregate.py\n M src/inventory/normalize.py\n M src/inventory/parse.py\n M src/inventory/render.py\n M src/inventory/select.py\n M src/inventory/validate.py\n?? checks/__pycache__/test_pipeline.cpython-312.pyc\n?? src/__pycache__/__init__.cpython-312.pyc\n?? src/inventory/__pycache__/__init__.cpython-312.pyc\n?? src/inventory/__pycache__/aggregate.cpython-312.pyc\n?? src/inventory/__pycache__/normalize.cpython-312.pyc\n?? src/inventory/__pycache__/parse.cpython-312.pyc\n?? src/inventory/__pycache__/pipeline.cpython-312.pyc\n?? src/inventory/__pycache__/render.cpython-312.pyc\n?? src/inventory/__pycache__/select.cpython-312.pyc\n?? src/inventory/__pycache__/validate.cpython-312.pyc\n"
+    },
+    "tree": "dce5717f5d4f2ac7456f929628d4dfdfb1826ab9"
+  },
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "122e5a21bfa2092b06fc830e82a73f1effec01e355a6986793c516a2f0f43d81"
+}

@@ -1,0 +1,6 @@
+[project]
+name = "inventory-fixture"
+version = "0.0.1"
+[tool.inventory]
+test-command = "python -m unittest discover -s checks"
+contracts = "docs/01-parse.md through docs/06-render.md"

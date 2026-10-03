@@ -173,7 +173,10 @@ class ContextManager:
         import copy
 
         selected = copy.deepcopy(messages)
-        reserved = self.output_reserve_tokens + len(json.dumps(schemas).encode()) + 1024
+        # Match RequestExecutor's complete JSON envelope, including its keys and
+        # separators. Omitting those bytes can reject an otherwise bounded
+        # request after trimming, before the model gets a chance to finish.
+        reserved = self.output_reserve_tokens + byte_size({"messages": [], "tools": schemas}) - byte_size([]) + 1024
         available = self.context_window_tokens - reserved
         if byte_size(selected) <= available:
             return selected

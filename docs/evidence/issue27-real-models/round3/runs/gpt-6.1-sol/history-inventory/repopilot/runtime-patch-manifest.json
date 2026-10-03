@@ -1,0 +1,27 @@
+{
+  "baseline": {
+    "state": {
+      "diff_fingerprint": "a7e51a889c1a69bb21cdd4c38f1cbd45a84f603e453a48cf1814fc863d5eeea9",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue27-real-models/round3/runs/gpt-6.1-sol/history-inventory/repopilot/workspace",
+      "head": "35640d8ea2aaee0afbaaba1c0268a5e5579facbb",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue27-real-models/round3/runs/gpt-6.1-sol/history-inventory/repopilot/workspace",
+      "status": ""
+    },
+    "tree": "4800819275fc12bfdb77af400bff6f2f15fc240f"
+  },
+  "bytes": 2734,
+  "final": {
+    "state": {
+      "diff_fingerprint": "d90ed369ab69d95ee303f4cc933502a0690a70e3f81d120131919a30255bdb89",
+      "git_root": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue27-real-models/round3/runs/gpt-6.1-sol/history-inventory/repopilot/workspace",
+      "head": "35640d8ea2aaee0afbaaba1c0268a5e5579facbb",
+      "resolved_target_repository": "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/issue27-real-models/round3/runs/gpt-6.1-sol/history-inventory/repopilot/workspace",
+      "status": " M src/inventory/aggregate.py\n M src/inventory/normalize.py\n M src/inventory/parse.py\n M src/inventory/render.py\n M src/inventory/select.py\n M src/inventory/validate.py\n"
+    },
+    "tree": "7f8f0ce760d3f9f0f50c3eb991798119ec5ba4bd"
+  },
+  "patch": "runtime-patch.diff",
+  "replay": "Apply initial-worktree.diff to baseline HEAD, then runtime-patch.diff.",
+  "scope": "agent_run_content_delta",
+  "sha256": "a89984f8d03d2bde2a539c721478f3fd4b752cad1c7cef4d00f6e11de82ddcdb"
+}

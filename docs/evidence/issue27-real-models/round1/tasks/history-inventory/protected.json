@@ -1,0 +1,12 @@
+{
+  "pyproject.toml": "33add787c0e60da3328da7798bda300c571150472e092e7f5f7bdf774594f4a1",
+  "AGENTS.md": "39da9f87dde8255b9e191183afcb96cc4e1e3a57f0864ee4d4aaeb5e6fcc0f7b",
+  "docs/04-aggregate.md": "575ccffa48c2da97023f5b2ea39046422a2683ade7804b0385cd204dd126db45",
+  "docs/05-select.md": "191c485684e4b9bd95a911c8237e43578a5f28f78146855de609781a0e89788c",
+  "docs/06-render.md": "298c75997dd892b6fb39f02a0b1616ebc694c9eb4a76b54546ca2a10f21c5b7e",
+  "docs/01-parse.md": "615321cf223892f39f964ea9ce8190f8f3ac03df255ff26d7b8d44f25df13ad2",
+  "docs/02-validate.md": "92e95b4a8931f370f2590b4a89bb633c97b4c0fe24024b1ab425be49834434c3",
+  "docs/03-normalize.md": "7c4720b15b8f8bad1f26c0618212c9edeeb8ae92dfb893dd832f70bf34bd251b",
+  "checks/test_pipeline.py": "ed498ab5c14fbeb8c12788845ac07289e53d36f55d992fe398b1e4ddc81807c8",
+  "src/inventory/AGENTS.md": "b2251f11902209be330036f94b34fbbce159c3a6b2b999645f62b4986847b5db"
+}

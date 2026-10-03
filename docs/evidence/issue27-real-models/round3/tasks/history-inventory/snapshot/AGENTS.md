@@ -1,0 +1,1 @@
+Only change src/inventory/*.py. Do not change checks, docs, config or instructions. Read stage contracts before implementation. Tests must run before editing and after repair.

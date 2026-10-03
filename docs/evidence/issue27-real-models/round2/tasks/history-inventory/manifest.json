@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "history-inventory",
+  "category": "recovery",
+  "capabilities": [
+    "recovery"
+  ],
+  "behavior_requirements": [
+    "recovery"
+  ],
+  "snapshot": {
+    "path": "snapshot",
+    "revision": "issue24-v1",
+    "sha256": "7a5f491c898f69f3a974d7c6177d04757022ca2ec83108f35408d26e3046e7a2"
+  },
+  "task_statement": "Before editing run `python -m unittest discover -s checks`; after repair rerun the same command successfully. Implement the six-stage inventory reconciliation pipeline in src/inventory according to all six docs/01-parse.md through docs/06-render.md contracts. Review each stage contract and track progress through parsing, validation, normalization, aggregation, selection and rendering; verify stages and end-to-end behavior. Preserve public signatures, docs, config, instructions and tests. If verify_task is available, use it for both test-suite runs.",
+  "timeout_seconds": 7200,
+  "run_budget": {
+    "max_steps": 48,
+    "max_replans": 4,
+    "max_consecutive_failures": 5,
+    "command_timeout_seconds": 60,
+    "max_run_seconds": 7200
+  },
+  "success_condition": {
+    "verifier_exit_code": 0
+  },
+  "verifier": {
+    "path": "verify.py",
+    "execution": "host",
+    "timeout_seconds": 30
+  },
+  "behavior_spec": {
+    "recovery_command": "python -m unittest discover -s checks",
+    "recovery_files": [
+      "checks/test_pipeline.py"
+    ]
+  }
+}

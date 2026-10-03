@@ -1,0 +1,35 @@
+{
+  "issue": 27,
+  "commit": "a43d9245e02774167d61a29e439b5da18af601a2",
+  "models": [
+    "gpt-5.6-sol",
+    "gpt-5.6-luna"
+  ],
+  "task": "history-inventory",
+  "engines": [
+    "repopilot"
+  ],
+  "repeats": 1,
+  "image": "sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6",
+  "model_kwargs": {
+    "temperature": 1,
+    "stream": true,
+    "timeout": 120,
+    "max_tokens": 4096
+  },
+  "budgets": {
+    "max_steps": 48,
+    "max_replans": 4,
+    "max_consecutive_failures": 5,
+    "command_timeout_seconds": 60,
+    "max_run_seconds": 7200
+  },
+  "acceptance": [
+    "SUCCEEDED and hidden verifier passes",
+    "initial failed test followed by successful verification",
+    "nonempty patch constrained to src/inventory/*.py",
+    "compare read_file, verify_task and apply_patch counts against old full runs",
+    "preserve bounded tool receipts and directory instructions after trimming"
+  ],
+  "retry_policy": "At most one separately recorded replacement per failed run with transport errors or abnormal empty model responses; do not replace algorithmic failures or select by success."
+}

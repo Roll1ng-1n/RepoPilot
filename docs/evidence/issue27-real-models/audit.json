@@ -1,0 +1,802 @@
+{
+  "completed_runs": 6,
+  "rows": [
+    {
+      "model": "gpt-5.6-luna",
+      "round": "round1",
+      "source_commit": "a43d9245e02774167d61a29e439b5da18af601a2",
+      "source_integrity": true,
+      "experiment_integrity": true,
+      "result_path": "round1/runs/gpt-5.6-luna/history-inventory/repopilot/result.json",
+      "status": "FAILED",
+      "repository_pass": false,
+      "task_pass": false,
+      "behavior_verifier": {
+        "recovery": {
+          "pass": null,
+          "reason": "unsupported: command observation is incomplete; missing behavior cannot be inferred."
+        }
+      },
+      "tool_counts": {
+        "verify_task": 1,
+        "update_plan": 1,
+        "list_files": 4,
+        "read_file": 16,
+        "replan": 1
+      },
+      "verifications": [
+        {
+          "trace_index": 23,
+          "command": "python -m unittest discover -s checks",
+          "exit_code": 1
+        }
+      ],
+      "failed_test_before_patch": false,
+      "successful_test_after_patch": false,
+      "read_paths": {
+        "checks/test_pipeline.py": 1,
+        "docs/01-parse.md": 1,
+        "docs/02-validate.md": 1,
+        "docs/03-normalize.md": 1,
+        "docs/04-aggregate.md": 1,
+        "docs/05-select.md": 1,
+        "docs/06-render.md": 1,
+        "src/inventory/AGENTS.md": 1,
+        "src/inventory/parse.py": 1,
+        "src/inventory/validate.py": 1,
+        "src/inventory/normalize.py": 1,
+        "src/inventory/aggregate.py": 1,
+        "src/inventory/select.py": 1,
+        "src/inventory/render.py": 1,
+        "src/inventory/pipeline.py": 1,
+        "src/inventory/__init__.py": 1
+      },
+      "context_trim_requests": 7,
+      "requests_with_receipts": 7,
+      "instructions_always_present": true,
+      "patch_bytes": 0,
+      "changed_files": [],
+      "directory_constraint_pass": false,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "model_errors": 8,
+      "empty_responses": 0,
+      "failures": [
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.InternalServerError: InternalServerError: OpenAIException - Connection error."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out."
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.InternalServerError: InternalServerError: OpenAIException - Connection error."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.InternalServerError: InternalServerError: OpenAIException - Connection error."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.InternalServerError: InternalServerError: OpenAIException - Connection error."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.InternalServerError: InternalServerError: OpenAIException - Connection error."
+        }
+      ],
+      "metrics": {
+        "steps": 14,
+        "duration_seconds": 1076.1236392640003,
+        "tokens": {
+          "cache_write": null,
+          "cached": 0,
+          "completion": 1066,
+          "prompt": 23396,
+          "reasoning": 0,
+          "total": 24462
+        },
+        "cost": 0.005958399999999999,
+        "retries": 7,
+        "run_budget": {
+          "command_timeout_seconds": 60,
+          "max_consecutive_failures": 5,
+          "max_replans": 4,
+          "max_run_seconds": 7200,
+          "max_steps": 48
+        }
+      },
+      "old": {
+        "status": "BUDGET_EXCEEDED",
+        "repository_pass": false,
+        "tool_counts": {
+          "update_plan": 2,
+          "run_command": 2,
+          "list_files": 42,
+          "verify_task": 18,
+          "read_file": 217,
+          "replan": 1
+        },
+        "patch_bytes": 0
+      }
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "round": "round1",
+      "source_commit": "a43d9245e02774167d61a29e439b5da18af601a2",
+      "source_integrity": true,
+      "experiment_integrity": true,
+      "result_path": "round1/runs/gpt-5.6-sol/history-inventory/repopilot/result.json",
+      "status": "FAILED",
+      "repository_pass": false,
+      "task_pass": false,
+      "behavior_verifier": {
+        "recovery": {
+          "pass": null,
+          "reason": "unsupported: command observation is incomplete; missing behavior cannot be inferred."
+        }
+      },
+      "tool_counts": {
+        "update_plan": 1,
+        "list_files": 1,
+        "verify_task": 1
+      },
+      "verifications": [
+        {
+          "trace_index": 24,
+          "command": "python -m unittest discover -s checks",
+          "exit_code": 1
+        }
+      ],
+      "failed_test_before_patch": false,
+      "successful_test_after_patch": false,
+      "read_paths": {},
+      "context_trim_requests": 0,
+      "requests_with_receipts": 0,
+      "instructions_always_present": true,
+      "patch_bytes": 0,
+      "changed_files": [],
+      "directory_constraint_pass": false,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "model_errors": 6,
+      "empty_responses": 0,
+      "failures": [
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: The read operation timed out"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.InternalServerError: InternalServerError: OpenAIException - Connection error."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.InternalServerError: InternalServerError: OpenAIException - Connection error."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.InternalServerError: InternalServerError: OpenAIException - Connection error."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out."
+        },
+        {
+          "category": "MODEL_ERROR",
+          "reason": "litellm.Timeout: APITimeoutError - Request timed out. Error_str: Request timed out."
+        }
+      ],
+      "metrics": {
+        "steps": 9,
+        "duration_seconds": 1231.317786567,
+        "tokens": {
+          "cache_write": null,
+          "cached": 0,
+          "completion": 137,
+          "prompt": 5271,
+          "reasoning": 0,
+          "total": 5408
+        },
+        "cost": 0.023823999999999998,
+        "retries": 5,
+        "run_budget": {
+          "command_timeout_seconds": 60,
+          "max_consecutive_failures": 5,
+          "max_replans": 4,
+          "max_run_seconds": 7200,
+          "max_steps": 48
+        }
+      },
+      "old": {
+        "status": "BUDGET_EXCEEDED",
+        "repository_pass": false,
+        "tool_counts": {
+          "update_plan": 1,
+          "list_files": 39,
+          "verify_task": 18,
+          "read_file": 215
+        },
+        "patch_bytes": 0
+      }
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "round": "round2",
+      "source_commit": "a43d9245e02774167d61a29e439b5da18af601a2",
+      "source_integrity": true,
+      "experiment_integrity": true,
+      "result_path": "round2/runs/gpt-5.6-luna/history-inventory/repopilot/result.json",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": true,
+      "task_pass": null,
+      "behavior_verifier": {
+        "recovery": {
+          "pass": null,
+          "reason": "unsupported: command observation is incomplete; missing behavior cannot be inferred."
+        }
+      },
+      "tool_counts": {
+        "update_plan": 3,
+        "run_command": 11,
+        "list_files": 10,
+        "verify_task": 5,
+        "read_file": 114,
+        "replan": 1,
+        "apply_patch": 1,
+        "search_code": 1,
+        "read_artifact": 3,
+        "view_diff": 1
+      },
+      "verifications": [
+        {
+          "trace_index": 14,
+          "command": "python -m unittest discover -s checks",
+          "exit_code": 1
+        },
+        {
+          "trace_index": 25,
+          "command": "python -m unittest discover -s checks",
+          "exit_code": 1
+        },
+        {
+          "trace_index": 63,
+          "command": "for f in src/inventory/*.py; do echo ===$f; cat \"$f\"; done",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 79,
+          "command": "for f in docs/0{1-6}-*.md src/inventory/*.py; do echo ===$f; cat \"$f\"; done",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 112,
+          "command": "python - <<'PY'\nfrom inventory import parse, validate, normalize, aggregate, select, render, reconcile\nraw='[{\"sku\":\" A \",\"delta\":2,\"extra\":1},{\"sku\":\"a\",\"delta\":-2},{\"sku\":\"zero\",\"delta\":0},{\"sku\":\"bad\",\"delta\":true},{\"sku\":\"x\",\"delta\":1.5},{\"sku\":\" \",\"delta\":3},null]'\nparsed=parse(raw)\nassert len(parsed)==7\nvalid=validate(parsed)\nassert valid == [{'sku':' A ','delta':2},{'sku':'a','delta':-2},{'sku':'zero','delta':0}]\nnormalized=normalize(valid)\nassert normalized == [{'sku':'a','delta':2},{'sku':'a','delta':-2},{'sku':'zero','delta':0}]\nbalances=aggregate(normalized)\nassert balances == {'a':0,'zero':0}\nselected=select(balances)\nassert selected == {} and balances == {'a':0,'zero':0}\nassert render({'z':-1,'a':2}) == 'a=2\\\\nz=-1'\nassert reconcile(raw) == ''\nassert parse('{') == [] and parse('{}') == []\nprint('focused stage and end-to-end checks passed')\nPY",
+          "exit_code": 1
+        },
+        {
+          "trace_index": 120,
+          "command": "pwd; printf '\\n'; find . -maxdepth 2 -type f | sort",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 171,
+          "command": "python - <<'PY'\nfrom src.inventory import parse, validate, normalize, aggregate, select, render\nfrom src.inventory.pipeline import reconcile\nraw='[{\"sku\":\" A \",\"delta\":2,\"extra\":1},{\"sku\":\"a\",\"delta\":-2},{\"sku\":\"zero\",\"delta\":0},{\"sku\":\"bad\",\"delta\":true},{\"sku\":\"x\",\"delta\":1.5},{\"sku\":\" \",\"delta\":3},null]'\nparsed=parse(raw)\nassert len(parsed)==7\nvalid=validate(parsed)\nassert valid == [{'sku':' A ','delta':2},{'sku':'a','delta':-2},{'sku':'zero','delta':0}]\nnormalized=normalize(valid)\nassert normalized == [{'sku':'a','delta':2},{'sku':'a','delta':-2},{'sku':'zero','delta':0}]\nassert aggregate(normalized)=={'a':0,'zero':0}\nselected=select({'z':-2,'a':0,'b':3})\nassert selected=={'z':-2,'b':3}\nassert render({'z':-2,'b':3})=='b=3\\\\nz=-2'\nassert render({})==''\nassert reconcile(raw)==''\nprint('focused stage and end-to-end checks passed')\nPY",
+          "exit_code": 1
+        },
+        {
+          "trace_index": 208,
+          "command": "sed -n '1,120p' src/inventory/__init__.py; echo ---; sed -n '1,160p' src/inventory/pipeline.py; echo ---; for f in src/inventory/{validate,normalize,aggregate,select,render}.py; do echo ===$f; cat $f; done; echo ---CHECK; cat checks/test_pipeline.py",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 213,
+          "command": "python - <<'PY'\nimport src.inventory as p\nprint(p, p.__file__)\nprint(repr(p.parse), type(p.parse))\nfrom src.inventory import parse\nprint(repr(parse), type(parse))\nPY\npython -m unittest discover -s checks -v",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 218,
+          "command": "python - <<'PY'\nfrom src.inventory import parse,validate,normalize,aggregate,select,render\nfrom src.inventory.pipeline import reconcile\nprint(type(parse),type(validate),type(normalize),type(aggregate),type(select),type(render))\nPY\nfind src/inventory -maxdepth 1 -type f -print -exec sed -n '1,100p' {} \\;",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 238,
+          "command": "cat src/inventory/__init__.py; cat src/inventory/AGENTS.md; for f in docs/01-parse.md docs/02-validate.md docs/03-normalize.md docs/04-aggregate.md docs/05-select.md docs/06-render.md; do echo ===$f; head -20 $f; done",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 310,
+          "command": "python - <<'PY'\nfrom src.inventory import parse, validate, normalize, aggregate, select, render\nfrom src.inventory.pipeline import reconcile\nraw='[{\"sku\":\" A \",\"delta\":2,\"extra\":1},{\"sku\":\"a\",\"delta\":-2},{\"sku\":\"zero\",\"delta\":0},{\"sku\":\"bad\",\"delta\":true},{\"sku\":\"x\",\"delta\":1.5},{\"sku\":\" \",\"delta\":3},null]'\nparsed=parse(raw)\nassert len(parsed)==7\nvalid=validate(parsed)\nassert valid == [{'sku':' A ','delta':2},{'sku':'a','delta':-2},{'sku':'zero','delta':0}]\nnormalized=normalize(valid)\nassert normalized == [{'sku':'a','delta':2},{'sku':'a','delta':-2},{'sku':'zero','delta':0}]\nassert valid[0] is not parsed[0]\nassert normalized[0] is not valid[0]\nbalances=aggregate(normalized)\nassert balances == {'a':0,'zero':0}\nselected=select(balances)\nassert selected == {}\nassert selected is not balances\nassert render({'b':-1,'a':2}) == 'a=2\\nb=-1'\nassert render({}) == ''\nassert reconcile(raw) == ''\nprint('focused checks passed')\nPY",
+          "exit_code": 1
+        },
+        {
+          "trace_index": 347,
+          "command": "for f in src/inventory/__init__.py src/inventory/pipeline.py docs/01-parse.md docs/02-validate.md docs/03-normalize.md docs/04-aggregate.md docs/05-select.md docs/06-render.md; do echo ===$f; cat $f; done; find checks -type f -maxdepth 2 -print",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 357,
+          "command": "python - <<'PY'\nfrom pathlib import Path\nfor p in sorted(Path('docs').glob('0*.md')):\n print('\\n===',p); print(p.read_text())\nprint('\\n=== init repr',repr(Path('src/inventory/__init__.py').read_text()))\nprint('=== parse',Path('src/inventory/parse.py').read_text())\nPY",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 445,
+          "command": "python - <<'PY'\nfrom src.inventory import parse, validate, normalize, aggregate, select, render\nfrom src.inventory.pipeline import reconcile\nraw='[{\"sku\":\" A \",\"delta\":2,\"extra\":1},{\"sku\":\"a\",\"delta\":-2},{\"sku\":\"zero\",\"delta\":0},{\"sku\":\"bad\",\"delta\":true},{\"sku\":\"x\",\"delta\":1.5},{\"sku\":\" \",\"delta\":3},null]'\nparsed=parse(raw)\nassert len(parsed)==7\nvalid=validate(parsed)\nassert valid == [{'sku':' A ','delta':2},{'sku':'a','delta':-2},{'sku':'zero','delta':0}]\nnormalized=normalize(valid)\nassert normalized == [{'sku':'a','delta':2},{'sku':'a','delta':-2},{'sku':'zero','delta':0}]\nbalances=aggregate(normalized)\nassert balances == {'a':0,'zero':0}\nassert select(balances) == {}\nassert render({'z':-1,'a':2}) == 'a=2\\nz=-1'\nassert reconcile(raw) == ''\nassert valid is not parsed and normalized is not valid\nprint('focused stage and pipeline checks passed')\nPY",
+          "exit_code": 1
+        },
+        {
+          "trace_index": 469,
+          "command": "cat src/inventory/__init__.py; echo; find checks -maxdepth 2 -type f -print",
+          "exit_code": 0
+        }
+      ],
+      "failed_test_before_patch": true,
+      "successful_test_after_patch": true,
+      "read_paths": {
+        "docs/01-parse.md": 5,
+        "docs/02-validate.md": 5,
+        "docs/03-normalize.md": 5,
+        "docs/04-aggregate.md": 5,
+        "docs/05-select.md": 5,
+        "docs/06-render.md": 5,
+        "src/inventory/parse.py": 9,
+        "src/inventory/validate.py": 9,
+        "src/inventory/normalize.py": 8,
+        "src/inventory/aggregate.py": 8,
+        "src/inventory/select.py": 8,
+        "src/inventory/render.py": 8,
+        "src/inventory/pipeline.py": 11,
+        "src/inventory/__init__.py": 11,
+        "checks/test_pipeline.py": 6,
+        "src/inventory/AGENTS.md": 1,
+        "checks/__init__.py": 1,
+        "pyproject.toml": 1,
+        "checks/test_inventory.py": 1,
+        "checks": 2
+      },
+      "context_trim_requests": 45,
+      "requests_with_receipts": 45,
+      "instructions_always_present": true,
+      "patch_bytes": 2257,
+      "changed_files": [
+        "src/inventory/aggregate.py",
+        "src/inventory/normalize.py",
+        "src/inventory/parse.py",
+        "src/inventory/render.py",
+        "src/inventory/select.py",
+        "src/inventory/validate.py"
+      ],
+      "directory_constraint_pass": true,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "model_errors": 0,
+      "empty_responses": 0,
+      "failures": [
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "TOOL_ERROR",
+          "reason": "Unknown artifact reference.",
+          "tool_name": "read_artifact"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        },
+        {
+          "category": "VERIFICATION_FAILURE",
+          "reason": "Task Verification exited with 1.",
+          "tool_name": "verify_task"
+        }
+      ],
+      "metrics": {
+        "steps": 48,
+        "duration_seconds": 405.60235292200014,
+        "tokens": {
+          "cache_write": null,
+          "cached": 15872,
+          "completion": 8828,
+          "prompt": 257377,
+          "reasoning": 0,
+          "total": 266205
+        },
+        "cost": 0.05921204000000001,
+        "retries": 0,
+        "run_budget": {
+          "command_timeout_seconds": 60,
+          "max_consecutive_failures": 5,
+          "max_replans": 4,
+          "max_run_seconds": 7200,
+          "max_steps": 48
+        }
+      },
+      "old": {
+        "status": "BUDGET_EXCEEDED",
+        "repository_pass": false,
+        "tool_counts": {
+          "update_plan": 2,
+          "run_command": 2,
+          "list_files": 42,
+          "verify_task": 18,
+          "read_file": 217,
+          "replan": 1
+        },
+        "patch_bytes": 0
+      }
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "round": "round2",
+      "source_commit": "a43d9245e02774167d61a29e439b5da18af601a2",
+      "source_integrity": true,
+      "experiment_integrity": true,
+      "result_path": "round2/runs/gpt-5.6-sol/history-inventory/repopilot/result.json",
+      "status": "SUCCEEDED",
+      "repository_pass": true,
+      "task_pass": true,
+      "behavior_verifier": {
+        "recovery": {
+          "pass": true,
+          "reason": "Every triggered recoverable scenario must have an objective resolution."
+        }
+      },
+      "tool_counts": {
+        "update_plan": 3,
+        "run_command": 1,
+        "list_files": 3,
+        "read_file": 22,
+        "apply_patch": 1,
+        "verify_task": 1,
+        "finish_task": 1
+      },
+      "verifications": [
+        {
+          "trace_index": 14,
+          "command": "python -m unittest discover -s checks",
+          "exit_code": 1
+        },
+        {
+          "trace_index": 86,
+          "command": "python -m unittest discover -s checks",
+          "exit_code": 0
+        }
+      ],
+      "failed_test_before_patch": true,
+      "successful_test_after_patch": true,
+      "read_paths": {
+        "docs/01-parse.md": 1,
+        "docs/02-validate.md": 1,
+        "docs/03-normalize.md": 1,
+        "docs/04-aggregate.md": 1,
+        "docs/05-select.md": 1,
+        "docs/06-render.md": 1,
+        "src/inventory/parse.py": 2,
+        "src/inventory/validate.py": 2,
+        "src/inventory/normalize.py": 2,
+        "src/inventory/aggregate.py": 2,
+        "src/inventory/select.py": 2,
+        "src/inventory/render.py": 2,
+        "src/inventory/pipeline.py": 2,
+        "src/inventory/__init__.py": 1,
+        "checks/test_pipeline.py": 1
+      },
+      "context_trim_requests": 6,
+      "requests_with_receipts": 6,
+      "instructions_always_present": true,
+      "patch_bytes": 2293,
+      "changed_files": [
+        "src/inventory/aggregate.py",
+        "src/inventory/normalize.py",
+        "src/inventory/parse.py",
+        "src/inventory/render.py",
+        "src/inventory/select.py",
+        "src/inventory/validate.py"
+      ],
+      "directory_constraint_pass": true,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "model_errors": 0,
+      "empty_responses": 0,
+      "failures": [],
+      "metrics": {
+        "steps": 9,
+        "duration_seconds": 300.3503962329996,
+        "tokens": {
+          "cache_write": null,
+          "cached": 0,
+          "completion": 1958,
+          "prompt": 38072,
+          "reasoning": 0,
+          "total": 40030
+        },
+        "cost": 0.191448,
+        "retries": 0,
+        "run_budget": {
+          "command_timeout_seconds": 60,
+          "max_consecutive_failures": 5,
+          "max_replans": 4,
+          "max_run_seconds": 7200,
+          "max_steps": 48
+        }
+      },
+      "old": {
+        "status": "BUDGET_EXCEEDED",
+        "repository_pass": false,
+        "tool_counts": {
+          "update_plan": 1,
+          "list_files": 39,
+          "verify_task": 18,
+          "read_file": 215
+        },
+        "patch_bytes": 0
+      }
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "round": "round3",
+      "source_commit": "a43d9245e02774167d61a29e439b5da18af601a2",
+      "source_integrity": true,
+      "experiment_integrity": true,
+      "result_path": "round3/runs/gpt-6.1-sol/history-inventory/repopilot/result.json",
+      "status": "BUDGET_EXCEEDED",
+      "repository_pass": true,
+      "task_pass": true,
+      "behavior_verifier": {
+        "recovery": {
+          "pass": true,
+          "reason": "Every triggered recoverable scenario must have an objective resolution."
+        }
+      },
+      "tool_counts": {
+        "update_plan": 2,
+        "list_files": 5,
+        "read_file": 42,
+        "run_command": 5,
+        "apply_patch": 1,
+        "view_diff": 2,
+        "verify_task": 1,
+        "read_artifact": 2
+      },
+      "verifications": [
+        {
+          "trace_index": 20,
+          "command": "python -m unittest discover -s checks",
+          "exit_code": 1
+        },
+        {
+          "trace_index": 67,
+          "command": "git status --short",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 129,
+          "command": "python -m unittest discover -s checks",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 162,
+          "command": "git status --short",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 172,
+          "command": "git diff -- src/inventory/parse.py src/inventory/validate.py src/inventory/normalize.py src/inventory/aggregate.py src/inventory/select.py src/inventory/render.py",
+          "exit_code": 0
+        },
+        {
+          "trace_index": 178,
+          "command": "find checks src -type d -name __pycache__ -prune -exec rm -rf {} +",
+          "exit_code": 0
+        }
+      ],
+      "failed_test_before_patch": true,
+      "successful_test_after_patch": true,
+      "read_paths": {
+        "AGENTS.md": 1,
+        "docs/01-parse.md": 2,
+        "docs/02-validate.md": 2,
+        "docs/03-normalize.md": 2,
+        "docs/04-aggregate.md": 2,
+        "docs/05-select.md": 2,
+        "docs/06-render.md": 2,
+        "src/inventory/AGENTS.md": 1,
+        "src/inventory/parse.py": 3,
+        "src/inventory/validate.py": 3,
+        "src/inventory/normalize.py": 3,
+        "src/inventory/aggregate.py": 3,
+        "src/inventory/select.py": 3,
+        "src/inventory/render.py": 3,
+        "src/inventory/pipeline.py": 4,
+        "src/inventory/__init__.py": 2,
+        "checks/test_pipeline.py": 3,
+        "checks": 1
+      },
+      "context_trim_requests": 17,
+      "requests_with_receipts": 17,
+      "instructions_always_present": true,
+      "patch_bytes": 2338,
+      "changed_files": [
+        "src/inventory/aggregate.py",
+        "src/inventory/normalize.py",
+        "src/inventory/parse.py",
+        "src/inventory/render.py",
+        "src/inventory/select.py",
+        "src/inventory/validate.py"
+      ],
+      "directory_constraint_pass": true,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "model_errors": 0,
+      "empty_responses": 0,
+      "failures": [],
+      "metrics": {
+        "steps": 20,
+        "duration_seconds": 147.07354922900004,
+        "tokens": {
+          "cache_write": null,
+          "cached": null,
+          "completion": 3666,
+          "prompt": 178823,
+          "reasoning": null,
+          "total": 182489
+        },
+        "cost": 0.21433800000000003,
+        "retries": 0,
+        "run_budget": {
+          "command_timeout_seconds": 60,
+          "max_consecutive_failures": 5,
+          "max_replans": 4,
+          "max_run_seconds": 7200,
+          "max_steps": 48
+        }
+      },
+      "old": null
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "round": "round4",
+      "source_commit": "a43d9245e02774167d61a29e439b5da18af601a2",
+      "source_integrity": true,
+      "experiment_integrity": true,
+      "result_path": "round4/runs/gpt-6.1-sol/history-inventory/repopilot/result.json",
+      "status": "SUCCEEDED",
+      "repository_pass": true,
+      "task_pass": true,
+      "behavior_verifier": {
+        "recovery": {
+          "pass": true,
+          "reason": "Every triggered recoverable scenario must have an objective resolution."
+        }
+      },
+      "tool_counts": {
+        "update_plan": 2,
+        "list_files": 3,
+        "run_command": 1,
+        "read_file": 17,
+        "apply_patch": 1,
+        "view_diff": 1,
+        "verify_task": 1,
+        "finish_task": 1
+      },
+      "verifications": [
+        {
+          "trace_index": 16,
+          "command": "python -m unittest discover -s checks",
+          "exit_code": 1
+        },
+        {
+          "trace_index": 69,
+          "command": "python -m unittest discover -s checks",
+          "exit_code": 0
+        }
+      ],
+      "failed_test_before_patch": true,
+      "successful_test_after_patch": true,
+      "read_paths": {
+        "AGENTS.md": 1,
+        "src/inventory/AGENTS.md": 1,
+        "docs/01-parse.md": 1,
+        "docs/02-validate.md": 1,
+        "docs/03-normalize.md": 1,
+        "docs/04-aggregate.md": 1,
+        "docs/05-select.md": 1,
+        "docs/06-render.md": 1,
+        "checks/test_pipeline.py": 1,
+        "src/inventory/parse.py": 1,
+        "src/inventory/validate.py": 1,
+        "src/inventory/normalize.py": 1,
+        "src/inventory/aggregate.py": 1,
+        "src/inventory/select.py": 1,
+        "src/inventory/render.py": 1,
+        "src/inventory/pipeline.py": 1,
+        "src/inventory/__init__.py": 1
+      },
+      "context_trim_requests": 4,
+      "requests_with_receipts": 4,
+      "instructions_always_present": true,
+      "patch_bytes": 2310,
+      "changed_files": [
+        "src/inventory/aggregate.py",
+        "src/inventory/normalize.py",
+        "src/inventory/parse.py",
+        "src/inventory/render.py",
+        "src/inventory/select.py",
+        "src/inventory/validate.py"
+      ],
+      "directory_constraint_pass": true,
+      "patch_integrity": {
+        "patch-manifest.json": true,
+        "runtime-patch-manifest.json": true
+      },
+      "model_errors": 0,
+      "empty_responses": 0,
+      "failures": [],
+      "metrics": {
+        "steps": 7,
+        "duration_seconds": 72.49735431499994,
+        "tokens": {
+          "cache_write": null,
+          "cached": null,
+          "completion": 1933,
+          "prompt": 56175,
+          "reasoning": null,
+          "total": 58108
+        },
+        "cost": 0.07331199999999999,
+        "retries": 0,
+        "run_budget": {
+          "command_timeout_seconds": 60,
+          "max_consecutive_failures": 5,
+          "max_replans": 4,
+          "max_run_seconds": 7200,
+          "max_steps": 48
+        }
+      },
+      "old": null
+    }
+  ]
+}

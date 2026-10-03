@@ -1,0 +1,25 @@
+{
+  "verifications": [
+    {
+      "after_fingerprint": "f95786404e31bac94496f250fab145e37306ec23bfbbb861808ec97710c18650",
+      "before_fingerprint": "f95786404e31bac94496f250fab145e37306ec23bfbbb861808ec97710c18650",
+      "check_id": "inventory-unittest",
+      "command": "python -m unittest discover -s checks",
+      "explicit_check_id": true,
+      "plan_step_ids": [
+        "complete-task"
+      ],
+      "reason": "Run the required post-repair test suite for all six inventory stages and end-to-end reconciliation.",
+      "result": {
+        "duration_seconds": 0.24418598800002655,
+        "exit_code": 0,
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "truncated": false
+      },
+      "scope": "Repository test suite under checks",
+      "sequence": 1,
+      "supersedes": []
+    }
+  ]
+}

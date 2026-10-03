@@ -1,0 +1,11 @@
+{
+  "reason": "Both first attempts ended after consecutive MODEL_ERROR transport retries were exhausted.",
+  "selection_before_results": [
+    "gpt-5.6-sol",
+    "gpt-5.6-luna"
+  ],
+  "original": "round1",
+  "replacement": "round2",
+  "same_source_and_inputs": true,
+  "remaining_replacements_after_this": 0
+}

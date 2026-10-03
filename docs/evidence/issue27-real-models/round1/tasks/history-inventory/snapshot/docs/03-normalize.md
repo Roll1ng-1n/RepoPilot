@@ -1,0 +1,72 @@
+# normalize contract
+
+Return new records with sku.strip().casefold() and unchanged integer delta. Unicode casefold is required, not lower. Preserve order and never mutate inputs.
+
+Audit sample records used during stage review:
+- Record 000: sku="item-0", delta=-4; audit batch=3, retain order before aggregation.
+- Record 001: sku="item-1", delta=-3; audit batch=3, retain order before aggregation.
+- Record 002: sku="item-2", delta=-2; audit batch=3, retain order before aggregation.
+- Record 003: sku="item-3", delta=-1; audit batch=3, retain order before aggregation.
+- Record 004: sku="item-4", delta=0; audit batch=3, retain order before aggregation.
+- Record 005: sku="item-5", delta=1; audit batch=3, retain order before aggregation.
+- Record 006: sku="item-6", delta=2; audit batch=3, retain order before aggregation.
+- Record 007: sku="item-7", delta=3; audit batch=3, retain order before aggregation.
+- Record 008: sku="item-8", delta=4; audit batch=3, retain order before aggregation.
+- Record 009: sku="item-9", delta=-4; audit batch=3, retain order before aggregation.
+- Record 010: sku="item-10", delta=-3; audit batch=3, retain order before aggregation.
+- Record 011: sku="item-11", delta=-2; audit batch=3, retain order before aggregation.
+- Record 012: sku="item-12", delta=-1; audit batch=3, retain order before aggregation.
+- Record 013: sku="item-13", delta=0; audit batch=3, retain order before aggregation.
+- Record 014: sku="item-14", delta=1; audit batch=3, retain order before aggregation.
+- Record 015: sku="item-15", delta=2; audit batch=3, retain order before aggregation.
+- Record 016: sku="item-16", delta=3; audit batch=3, retain order before aggregation.
+- Record 017: sku="item-0", delta=4; audit batch=3, retain order before aggregation.
+- Record 018: sku="item-1", delta=-4; audit batch=3, retain order before aggregation.
+- Record 019: sku="item-2", delta=-3; audit batch=3, retain order before aggregation.
+- Record 020: sku="item-3", delta=-2; audit batch=3, retain order before aggregation.
+- Record 021: sku="item-4", delta=-1; audit batch=3, retain order before aggregation.
+- Record 022: sku="item-5", delta=0; audit batch=3, retain order before aggregation.
+- Record 023: sku="item-6", delta=1; audit batch=3, retain order before aggregation.
+- Record 024: sku="item-7", delta=2; audit batch=3, retain order before aggregation.
+- Record 025: sku="item-8", delta=3; audit batch=3, retain order before aggregation.
+- Record 026: sku="item-9", delta=4; audit batch=3, retain order before aggregation.
+- Record 027: sku="item-10", delta=-4; audit batch=3, retain order before aggregation.
+- Record 028: sku="item-11", delta=-3; audit batch=3, retain order before aggregation.
+- Record 029: sku="item-12", delta=-2; audit batch=3, retain order before aggregation.
+- Record 030: sku="item-13", delta=-1; audit batch=3, retain order before aggregation.
+- Record 031: sku="item-14", delta=0; audit batch=3, retain order before aggregation.
+- Record 032: sku="item-15", delta=1; audit batch=3, retain order before aggregation.
+- Record 033: sku="item-16", delta=2; audit batch=3, retain order before aggregation.
+- Record 034: sku="item-0", delta=3; audit batch=3, retain order before aggregation.
+- Record 035: sku="item-1", delta=4; audit batch=3, retain order before aggregation.
+- Record 036: sku="item-2", delta=-4; audit batch=3, retain order before aggregation.
+- Record 037: sku="item-3", delta=-3; audit batch=3, retain order before aggregation.
+- Record 038: sku="item-4", delta=-2; audit batch=3, retain order before aggregation.
+- Record 039: sku="item-5", delta=-1; audit batch=3, retain order before aggregation.
+- Record 040: sku="item-6", delta=0; audit batch=3, retain order before aggregation.
+- Record 041: sku="item-7", delta=1; audit batch=3, retain order before aggregation.
+- Record 042: sku="item-8", delta=2; audit batch=3, retain order before aggregation.
+- Record 043: sku="item-9", delta=3; audit batch=3, retain order before aggregation.
+- Record 044: sku="item-10", delta=4; audit batch=3, retain order before aggregation.
+- Record 045: sku="item-11", delta=-4; audit batch=3, retain order before aggregation.
+- Record 046: sku="item-12", delta=-3; audit batch=3, retain order before aggregation.
+- Record 047: sku="item-13", delta=-2; audit batch=3, retain order before aggregation.
+- Record 048: sku="item-14", delta=-1; audit batch=3, retain order before aggregation.
+- Record 049: sku="item-15", delta=0; audit batch=3, retain order before aggregation.
+- Record 050: sku="item-16", delta=1; audit batch=3, retain order before aggregation.
+- Record 051: sku="item-0", delta=2; audit batch=3, retain order before aggregation.
+- Record 052: sku="item-1", delta=3; audit batch=3, retain order before aggregation.
+- Record 053: sku="item-2", delta=4; audit batch=3, retain order before aggregation.
+- Record 054: sku="item-3", delta=-4; audit batch=3, retain order before aggregation.
+- Record 055: sku="item-4", delta=-3; audit batch=3, retain order before aggregation.
+- Record 056: sku="item-5", delta=-2; audit batch=3, retain order before aggregation.
+- Record 057: sku="item-6", delta=-1; audit batch=3, retain order before aggregation.
+- Record 058: sku="item-7", delta=0; audit batch=3, retain order before aggregation.
+- Record 059: sku="item-8", delta=1; audit batch=3, retain order before aggregation.
+- Record 060: sku="item-9", delta=2; audit batch=3, retain order before aggregation.
+- Record 061: sku="item-10", delta=3; audit batch=3, retain order before aggregation.
+- Record 062: sku="item-11", delta=4; audit batch=3, retain order before aggregation.
+- Record 063: sku="item-12", delta=-4; audit batch=3, retain order before aggregation.
+- Record 064: sku="item-13", delta=-3; audit batch=3, retain order before aggregation.
+
+Final acceptance condition: Return new records with sku.strip().casefold() and unchanged integer delta. Unicode casefold is required, not lower. Preserve order and never mutate inputs.
