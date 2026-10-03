@@ -279,6 +279,9 @@ def run_repopilot(
 
 def _copy_runtime_artifacts(source: Path, destination: Path) -> None:
     for path in source.iterdir():
+        if path.name == "objects" and path.is_dir():
+            shutil.copytree(path, destination / "objects", dirs_exist_ok=True)
+            continue
         if path.name == "result.json":
             continue
         name = {"patch.diff": "runtime-patch.diff", "patch-manifest.json": "runtime-patch-manifest.json"}.get(

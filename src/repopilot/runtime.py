@@ -133,7 +133,7 @@ class AgentRuntime:
             raise ValueError("Agent Run artifacts must be outside the Target Repository.")
         with self._artifacts.timing.measure("active_run"), run_lock(self._artifacts.path):
             if checkpoint is not None:
-                if checkpoint.get("schema_version", 1) not in {1, 2}:
+                if checkpoint.get("schema_version", 1) not in {1, 2, 3}:
                     raise ValueError("Unsupported Checkpoint schema version.")
                 if self._artifacts.read_checkpoint() != checkpoint:
                     raise ValueError("Checkpoint changed before acquiring the run lock; reload before resuming.")

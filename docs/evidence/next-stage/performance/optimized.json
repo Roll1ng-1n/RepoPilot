@@ -1,0 +1,543 @@
+{
+  "implementation_sha256": {
+    "/home/waaaaa/vibecoding/RepoPilot/docs/evidence/next-stage/performance/measure.py": "a839c53a1be82f9be7f766ebd0bd99b761b768bdc2ec738ee8404244b98d30e9",
+    "src/repopilot/artifacts.py": "ed9c9bfa82ef8868d238479651b7ce34c608174700215bac326bd39c37edee86",
+    "src/repopilot/checkpoint_storage.py": "691d0654df4b43011a3d1587ca537a94be54351b1d341e3c05de05a1a5804245"
+  },
+  "mode": "optimized",
+  "cold": false,
+  "machine": {
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "filesystem_device": "/dev/sdd       ext4 1055762868 35785988 966273408    4% /home/waaaaa/vibecoding/RepoPilot",
+    "max_rss_kib": 1772200
+  },
+  "fixture_sha256": "0f2a4f56316f36ebef7bc7ec446ca01dde1477d9054722baa8a7879f9d95a758",
+  "baseline_source_sha256": "57d1a3e033b5fba2395950851d923f4f71c994ac643869ec1805023dea3a401b",
+  "repetitions": 5,
+  "scope": "Five durability-boundary saves of the same immutable history per size, first cold then four warm. All unique text objects, rewritten checkpoints and appended traces counted as actual written bytes. No extrapolation to every tool boundary.",
+  "rows": [
+    {
+      "history_results": 100,
+      "output_bytes_target": 102400,
+      "samples": [
+        {
+          "repeat": 1,
+          "save_seconds": 0.9579158629999256,
+          "scan_seconds": 0.025356967999869084,
+          "checkpoint_bytes": 64283,
+          "written_bytes": 10303377,
+          "checkpoint_serialization": 0.0016239510000559676,
+          "checkpoint_write_sync": 0.007918342999801098,
+          "checkpoint_objects": 0.9226299669999207
+        },
+        {
+          "repeat": 2,
+          "save_seconds": 0.04470268799968835,
+          "scan_seconds": 0.02405965500020102,
+          "checkpoint_bytes": 64283,
+          "written_bytes": 66177,
+          "checkpoint_serialization": 0.0015026810001472768,
+          "checkpoint_write_sync": 0.00850787700028377,
+          "checkpoint_objects": 0.01029611100011607
+        },
+        {
+          "repeat": 3,
+          "save_seconds": 0.046804674999748386,
+          "scan_seconds": 0.02605125699983546,
+          "checkpoint_bytes": 64283,
+          "written_bytes": 66181,
+          "checkpoint_serialization": 0.0016675419997227436,
+          "checkpoint_write_sync": 0.007921490999706293,
+          "checkpoint_objects": 0.010754108000128326
+        },
+        {
+          "repeat": 4,
+          "save_seconds": 0.046185192999928404,
+          "scan_seconds": 0.026638052000180323,
+          "checkpoint_bytes": 64283,
+          "written_bytes": 66181,
+          "checkpoint_serialization": 0.0014604770003643353,
+          "checkpoint_write_sync": 0.008373613000003388,
+          "checkpoint_objects": 0.009308152999892627
+        },
+        {
+          "repeat": 5,
+          "save_seconds": 0.04658186400001796,
+          "scan_seconds": 0.023669269000038184,
+          "checkpoint_bytes": 64283,
+          "written_bytes": 66181,
+          "checkpoint_serialization": 0.0017027379999490222,
+          "checkpoint_write_sync": 0.010545554000145785,
+          "checkpoint_objects": 0.010269265999795607
+        }
+      ],
+      "summary": {
+        "save_seconds": {
+          "median": 0.04658186400001796,
+          "p95": 0.77569362539989
+        },
+        "scan_seconds": {
+          "median": 0.025356967999869084,
+          "p95": 0.02652069300011135
+        },
+        "checkpoint_bytes": {
+          "median": 64283,
+          "p95": 64283.0
+        },
+        "written_bytes": {
+          "median": 66181,
+          "p95": 8255937.799999998
+        },
+        "checkpoint_serialization": {
+          "median": 0.0016239510000559676,
+          "p95": 0.0016956987999037665
+        },
+        "checkpoint_write_sync": {
+          "median": 0.008373613000003388,
+          "p95": 0.010138018600173382
+        },
+        "checkpoint_objects": {
+          "median": 0.01029611100011607,
+          "p95": 0.7402547951999621
+        }
+      },
+      "total_written_bytes": 10568097
+    },
+    {
+      "history_results": 500,
+      "output_bytes_target": 102400,
+      "samples": [
+        {
+          "repeat": 1,
+          "save_seconds": 4.645203028000196,
+          "scan_seconds": 0.02454520200035404,
+          "checkpoint_bytes": 320683,
+          "written_bytes": 51508573,
+          "checkpoint_serialization": 0.009084505999908288,
+          "checkpoint_write_sync": 0.008511390999956348,
+          "checkpoint_objects": 4.602456004000032
+        },
+        {
+          "repeat": 2,
+          "save_seconds": 0.09499231500012684,
+          "scan_seconds": 0.02552608100040743,
+          "checkpoint_bytes": 320683,
+          "written_bytes": 322579,
+          "checkpoint_serialization": 0.007306807000077242,
+          "checkpoint_write_sync": 0.016542957000183378,
+          "checkpoint_objects": 0.045054700000036974
+        },
+        {
+          "repeat": 3,
+          "save_seconds": 0.0982077720000234,
+          "scan_seconds": 0.025169701999857352,
+          "checkpoint_bytes": 320683,
+          "written_bytes": 322577,
+          "checkpoint_serialization": 0.007641553000212298,
+          "checkpoint_write_sync": 0.016601324000021123,
+          "checkpoint_objects": 0.04807386999982555
+        },
+        {
+          "repeat": 4,
+          "save_seconds": 0.14002345600010813,
+          "scan_seconds": 0.0312319929998921,
+          "checkpoint_bytes": 320683,
+          "written_bytes": 322575,
+          "checkpoint_serialization": 0.01007909700001619,
+          "checkpoint_write_sync": 0.016891810999823065,
+          "checkpoint_objects": 0.08110535500009064
+        },
+        {
+          "repeat": 5,
+          "save_seconds": 0.10019134599997415,
+          "scan_seconds": 0.02618696599984105,
+          "checkpoint_bytes": 320683,
+          "written_bytes": 322577,
+          "checkpoint_serialization": 0.008313030999943294,
+          "checkpoint_write_sync": 0.016369940000004135,
+          "checkpoint_objects": 0.04853871299974344
+        }
+      ],
+      "summary": {
+        "save_seconds": {
+          "median": 0.10019134599997415,
+          "p95": 3.7441671136001777
+        },
+        "scan_seconds": {
+          "median": 0.02552608100040743,
+          "p95": 0.030222987599881887
+        },
+        "checkpoint_bytes": {
+          "median": 320683,
+          "p95": 320683.0
+        },
+        "written_bytes": {
+          "median": 322577,
+          "p95": 41271374.19999999
+        },
+        "checkpoint_serialization": {
+          "median": 0.008313030999943294,
+          "p95": 0.00988017879999461
+        },
+        "checkpoint_write_sync": {
+          "median": 0.016542957000183378,
+          "p95": 0.016833713599862677
+        },
+        "checkpoint_objects": {
+          "median": 0.04853871299974344,
+          "p95": 3.698185874200043
+        }
+      },
+      "total_written_bytes": 52798881
+    },
+    {
+      "history_results": 1000,
+      "output_bytes_target": 102400,
+      "samples": [
+        {
+          "repeat": 1,
+          "save_seconds": 9.234279594000327,
+          "scan_seconds": 0.024371833000259358,
+          "checkpoint_bytes": 641184,
+          "written_bytes": 103015074,
+          "checkpoint_serialization": 0.019469822999781172,
+          "checkpoint_write_sync": 0.009806150999793317,
+          "checkpoint_objects": 9.179908134000016
+        },
+        {
+          "repeat": 2,
+          "save_seconds": 0.1540053590001662,
+          "scan_seconds": 0.023807707999822014,
+          "checkpoint_bytes": 641184,
+          "written_bytes": 643078,
+          "checkpoint_serialization": 0.016004581000288454,
+          "checkpoint_write_sync": 0.016854214999966644,
+          "checkpoint_objects": 0.09645633099989936
+        },
+        {
+          "repeat": 3,
+          "save_seconds": 0.15046873099981894,
+          "scan_seconds": 0.024599501000011514,
+          "checkpoint_bytes": 641184,
+          "written_bytes": 643076,
+          "checkpoint_serialization": 0.01476973699982409,
+          "checkpoint_write_sync": 0.016935432000082074,
+          "checkpoint_objects": 0.09331801799999084
+        },
+        {
+          "repeat": 4,
+          "save_seconds": 0.156020773000364,
+          "scan_seconds": 0.02489561899983528,
+          "checkpoint_bytes": 641184,
+          "written_bytes": 643078,
+          "checkpoint_serialization": 0.017967737000162742,
+          "checkpoint_write_sync": 0.016448941999897215,
+          "checkpoint_objects": 0.09578223300013633
+        },
+        {
+          "repeat": 5,
+          "save_seconds": 0.18015898300018307,
+          "scan_seconds": 0.030514462000155618,
+          "checkpoint_bytes": 641184,
+          "written_bytes": 643072,
+          "checkpoint_serialization": 0.019745274999877438,
+          "checkpoint_write_sync": 0.0171112479997646,
+          "checkpoint_objects": 0.1113012499999968
+        }
+      ],
+      "summary": {
+        "save_seconds": {
+          "median": 0.156020773000364,
+          "p95": 7.423455471800296
+        },
+        "scan_seconds": {
+          "median": 0.024599501000011514,
+          "p95": 0.02939069340009155
+        },
+        "checkpoint_bytes": {
+          "median": 641184,
+          "p95": 641184.0
+        },
+        "written_bytes": {
+          "median": 643078,
+          "p95": 82540674.79999998
+        },
+        "checkpoint_serialization": {
+          "median": 0.017967737000162742,
+          "p95": 0.019690184599858183
+        },
+        "checkpoint_write_sync": {
+          "median": 0.016854214999966644,
+          "p95": 0.017076084799828094
+        },
+        "checkpoint_objects": {
+          "median": 0.09645633099989936,
+          "p95": 7.36618675720001
+        }
+      },
+      "total_written_bytes": 105587378
+    },
+    {
+      "history_results": 100,
+      "output_bytes_target": 1048576,
+      "samples": [
+        {
+          "repeat": 1,
+          "save_seconds": 1.2509826979999161,
+          "scan_seconds": 0.037808747999861225,
+          "checkpoint_bytes": 64383,
+          "written_bytes": 104921075,
+          "checkpoint_serialization": 0.0016368910000892356,
+          "checkpoint_write_sync": 0.009255941999981587,
+          "checkpoint_objects": 1.201830727000015
+        },
+        {
+          "repeat": 2,
+          "save_seconds": 0.11203541899976699,
+          "scan_seconds": 0.02451347399983206,
+          "checkpoint_bytes": 64383,
+          "written_bytes": 66279,
+          "checkpoint_serialization": 0.0017519999996693514,
+          "checkpoint_write_sync": 0.015175204999650305,
+          "checkpoint_objects": 0.07015597500003423
+        },
+        {
+          "repeat": 3,
+          "save_seconds": 0.1068585319999329,
+          "scan_seconds": 0.024186081000152626,
+          "checkpoint_bytes": 64383,
+          "written_bytes": 66279,
+          "checkpoint_serialization": 0.0021298669998941477,
+          "checkpoint_write_sync": 0.008665947000281449,
+          "checkpoint_objects": 0.07141316600018399
+        },
+        {
+          "repeat": 4,
+          "save_seconds": 0.11628200399991329,
+          "scan_seconds": 0.025779449999845383,
+          "checkpoint_bytes": 64383,
+          "written_bytes": 66279,
+          "checkpoint_serialization": 0.0016898379999474855,
+          "checkpoint_write_sync": 0.016292882000016107,
+          "checkpoint_objects": 0.07206283899995469
+        },
+        {
+          "repeat": 5,
+          "save_seconds": 0.1149206069999309,
+          "scan_seconds": 0.024701023000034183,
+          "checkpoint_bytes": 64383,
+          "written_bytes": 66277,
+          "checkpoint_serialization": 0.0015799820002939668,
+          "checkpoint_write_sync": 0.01666204100001778,
+          "checkpoint_objects": 0.07156059399994774
+        }
+      ],
+      "summary": {
+        "save_seconds": {
+          "median": 0.1149206069999309,
+          "p95": 1.0240425591999154
+        },
+        "scan_seconds": {
+          "median": 0.024701023000034183,
+          "p95": 0.03540288839985806
+        },
+        "checkpoint_bytes": {
+          "median": 64383,
+          "p95": 64383.0
+        },
+        "written_bytes": {
+          "median": 66279,
+          "p95": 83950115.79999998
+        },
+        "checkpoint_serialization": {
+          "median": 0.0016898379999474855,
+          "p95": 0.0020542935998491886
+        },
+        "checkpoint_write_sync": {
+          "median": 0.015175204999650305,
+          "p95": 0.016588209200017447
+        },
+        "checkpoint_objects": {
+          "median": 0.07156059399994774,
+          "p95": 0.9758771494000028
+        }
+      },
+      "total_written_bytes": 105186189
+    },
+    {
+      "history_results": 500,
+      "output_bytes_target": 1048576,
+      "samples": [
+        {
+          "repeat": 1,
+          "save_seconds": 6.668529880000278,
+          "scan_seconds": 0.05800593200001458,
+          "checkpoint_bytes": 321183,
+          "written_bytes": 524597073,
+          "checkpoint_serialization": 0.007551200999841967,
+          "checkpoint_write_sync": 0.00943679300007716,
+          "checkpoint_objects": 6.5928464319999875
+        },
+        {
+          "repeat": 2,
+          "save_seconds": 0.395588201999999,
+          "scan_seconds": 0.0263469870001245,
+          "checkpoint_bytes": 321183,
+          "written_bytes": 323077,
+          "checkpoint_serialization": 0.008147083000039856,
+          "checkpoint_write_sync": 0.016886558999885892,
+          "checkpoint_objects": 0.34350323699982255
+        },
+        {
+          "repeat": 3,
+          "save_seconds": 0.4004710059998615,
+          "scan_seconds": 0.02585233799982234,
+          "checkpoint_bytes": 321183,
+          "written_bytes": 323075,
+          "checkpoint_serialization": 0.007213699000203633,
+          "checkpoint_write_sync": 0.016614747999938118,
+          "checkpoint_objects": 0.3501076389998161
+        },
+        {
+          "repeat": 4,
+          "save_seconds": 0.39908543899991855,
+          "scan_seconds": 0.024473198999658052,
+          "checkpoint_bytes": 321183,
+          "written_bytes": 323077,
+          "checkpoint_serialization": 0.007832252000298467,
+          "checkpoint_write_sync": 0.016668450999986817,
+          "checkpoint_objects": 0.34937676200024725
+        },
+        {
+          "repeat": 5,
+          "save_seconds": 0.46226303200000984,
+          "scan_seconds": 0.033589974000278744,
+          "checkpoint_bytes": 321183,
+          "written_bytes": 323075,
+          "checkpoint_serialization": 0.007526462999976502,
+          "checkpoint_write_sync": 0.01682986500009065,
+          "checkpoint_objects": 0.40354291899984673
+        }
+      ],
+      "summary": {
+        "save_seconds": {
+          "median": 0.4004710059998615,
+          "p95": 5.427276510400223
+        },
+        "scan_seconds": {
+          "median": 0.0263469870001245,
+          "p95": 0.05312274040006741
+        },
+        "checkpoint_bytes": {
+          "median": 321183,
+          "p95": 321183.0
+        },
+        "written_bytes": {
+          "median": 323077,
+          "p95": 419742273.7999999
+        },
+        "checkpoint_serialization": {
+          "median": 0.007551200999841967,
+          "p95": 0.008084116800091579
+        },
+        "checkpoint_write_sync": {
+          "median": 0.016668450999986817,
+          "p95": 0.016875220199926842
+        },
+        "checkpoint_objects": {
+          "median": 0.3501076389998161,
+          "p95": 5.354985729399958
+        }
+      },
+      "total_written_bytes": 525889377
+    },
+    {
+      "history_results": 1000,
+      "output_bytes_target": 1048576,
+      "samples": [
+        {
+          "repeat": 1,
+          "save_seconds": 13.139342730999942,
+          "scan_seconds": 0.024686235999979544,
+          "checkpoint_bytes": 642184,
+          "written_bytes": 1049192074,
+          "checkpoint_serialization": 0.022494147999623237,
+          "checkpoint_write_sync": 0.01243267800009562,
+          "checkpoint_objects": 13.078865703999782
+        },
+        {
+          "repeat": 2,
+          "save_seconds": 0.8463387780002449,
+          "scan_seconds": 0.02498586800038538,
+          "checkpoint_bytes": 642184,
+          "written_bytes": 644076,
+          "checkpoint_serialization": 0.015606964999733464,
+          "checkpoint_write_sync": 0.018808084999818675,
+          "checkpoint_objects": 0.7861066959999334
+        },
+        {
+          "repeat": 3,
+          "save_seconds": 0.7634351309998237,
+          "scan_seconds": 0.02405614000008427,
+          "checkpoint_bytes": 642184,
+          "written_bytes": 644076,
+          "checkpoint_serialization": 0.015100724999683734,
+          "checkpoint_write_sync": 0.016694722000011097,
+          "checkpoint_objects": 0.7067183469998781
+        },
+        {
+          "repeat": 4,
+          "save_seconds": 0.707674455000415,
+          "scan_seconds": 0.02563503600003969,
+          "checkpoint_bytes": 642184,
+          "written_bytes": 644076,
+          "checkpoint_serialization": 0.015994595999927697,
+          "checkpoint_write_sync": 0.016585215000304743,
+          "checkpoint_objects": 0.6485141660000409
+        },
+        {
+          "repeat": 5,
+          "save_seconds": 0.7343308449999313,
+          "scan_seconds": 0.024139999999988504,
+          "checkpoint_bytes": 642184,
+          "written_bytes": 644072,
+          "checkpoint_serialization": 0.0146953480002594,
+          "checkpoint_write_sync": 0.016806515000098443,
+          "checkpoint_objects": 0.6778731879999214
+        }
+      ],
+      "summary": {
+        "save_seconds": {
+          "median": 0.7634351309998237,
+          "p95": 10.6807419404
+        },
+        "scan_seconds": {
+          "median": 0.024686235999979544,
+          "p95": 0.02550520240010883
+        },
+        "checkpoint_bytes": {
+          "median": 642184,
+          "p95": 642184.0
+        },
+        "written_bytes": {
+          "median": 644076,
+          "p95": 839482474.3999999
+        },
+        "checkpoint_serialization": {
+          "median": 0.015606964999733464,
+          "p95": 0.021194237599684126
+        },
+        "checkpoint_write_sync": {
+          "median": 0.016694722000011097,
+          "p95": 0.018407770999874628
+        },
+        "checkpoint_objects": {
+          "median": 0.7067183469998781,
+          "p95": 10.62031390239981
+        }
+      },
+      "total_written_bytes": 1051768374
+    }
+  ]
+}

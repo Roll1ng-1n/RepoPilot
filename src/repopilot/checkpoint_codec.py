@@ -63,7 +63,7 @@ class CheckpointCodec:
 
     @staticmethod
     def restore(state, checkpoint, budget_options):
-        if checkpoint.get("schema_version", 1) not in {1, 2}:
+        if checkpoint.get("schema_version", 1) not in {1, 2, 3}:
             raise ValueError("Unsupported Checkpoint schema version.")
         status = checkpoint.get("status")
         if status not in {"RUNNING"} | TERMINAL_STATUSES | RESUMABLE_STATUSES:
