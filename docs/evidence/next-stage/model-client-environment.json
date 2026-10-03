@@ -1,0 +1,13 @@
+{
+  "python": "3.12.3",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "libraries": {
+    "litellm": "1.100.0",
+    "openai": "2.54.0",
+    "httpx": "0.28.1",
+    "pydantic": "2.13.5",
+    "tenacity": "9.1.4",
+    "requests": "2.34.2"
+  },
+  "scope": "Model client versions recorded during the ongoing fixed campaign, after installing separate build tools. The clean wheel venv uses independently resolved dependencies documented in packaging/installed.txt. Frozen source and Docker image are separate fixed inputs."
+}
