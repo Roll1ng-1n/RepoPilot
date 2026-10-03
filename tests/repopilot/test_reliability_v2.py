@@ -234,6 +234,7 @@ def test_context_bound_keeps_tool_pairs_and_rejects_oversized_constraints():
         context.bound_request([{"role": "system", "content": "x" * 20000}], [])
 
 
+@pytest.mark.docker
 def test_docker_timeout_kills_container_descendants(target):
     # WSL may expose a docker shim even when Desktop integration is unavailable.
     try:

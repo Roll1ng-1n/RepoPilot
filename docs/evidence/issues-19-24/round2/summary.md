@@ -17,7 +17,7 @@
 | #23 | 保留 finish_reason；拒绝执行截断/过滤响应中的调用；支持映射及 SDK 对象响应；可纠正协议错误走有界恢复；认证错误即使出现在多次重试后也立即停止；benchmark/campaign 共用连接配置解析 | run/resume 经实际 LiteLLM adapter、模拟 streaming-only completion 完成原生 verify/finish；中间中断后保留 stream 与 timeout，并累计三次请求。不是外部真实模型测试。 |
 | #24 | 有界 Repository Profile；根目录及访问路径适用的 AGENTS.md；新发现局部约束时先返回观察再允许 patch；上下文保留配置来源/约束；完整产物续读；上下文请求上限；依赖拆分；终止审计与评测计划 | 根/子目录约束生效，兄弟目录约束不混入；模型可通过 read_artifact 按字符续读完整结果；长历史删去完整调用/result 组，必要约束放不下时明确 `BUDGET_EXCEEDED(context_window)`。 |
 
-核心新增模块为 `locking.py`、`requests.py`、`repository_snapshot.py`、`profile.py`。定向故障测试见 [`test_reliability_v2.py`](../../../../tests/repopilot/test_reliability_v2.py)，第一轮回归仍见 [`test_issue_regressions.py`](../../../../tests/repopilot/test_issue_regressions.py)。
+核心新增模块为 `locking.py`、`requests.py`、`repository_snapshot.py`、`profile.py`。定向故障测试见 [`test_reliability_v2.py`](https://github.com/Roll1ng-1n/RepoPilot/blob/main/tests/repopilot/test_reliability_v2.py)，第一轮回归仍见 [`test_issue_regressions.py`](https://github.com/Roll1ng-1n/RepoPilot/blob/main/tests/repopilot/test_issue_regressions.py)。
 
 ## 原始场景产物
 
@@ -51,7 +51,7 @@ repopilot run /path/to/target --task '修复任务' \
 
 [环境记录](environment.json)和[依赖约束快照](dependency-constraints.txt)保存本次 Python 3.12 环境的安装版本；约束文件用于复现这个环境，不是跨平台锁文件。原有 `dev` extra 保留兼容性，新增加 `test/docs/evaluation` 入口；`datasets` 不再属于基础运行依赖。
 
-Docker 集成测试使用 `python:3.12-bookworm`。另外已修正固定输入的 [`docker/benchmark/Dockerfile`](../../../../docker/benchmark/Dockerfile)，为真实评测补装 `ripgrep`；构建单独使用标签 `repopilot-benchmark:issues-19-24`，不覆盖历史镜像标签。构建通过，实际版本为 Python 3.12.14、Git 2.47.3、ripgrep 14.1.1；manifest list 为 `sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6`。见[构建原始输出](image-build.txt)。新镜像上另跑 Docker 相关用例为 **14 passed、38 deselected**，见[镜像测试输出](image-tests.txt)；这 14 项与完整回归有重叠，不累加成 263 项。
+Docker 集成测试使用 `python:3.12-bookworm`。另外已修正固定输入的 [`docker/benchmark/Dockerfile`](https://github.com/Roll1ng-1n/RepoPilot/blob/main/docker/benchmark/Dockerfile)，为真实评测补装 `ripgrep`；构建单独使用标签 `repopilot-benchmark:issues-19-24`，不覆盖历史镜像标签。构建通过，实际版本为 Python 3.12.14、Git 2.47.3、ripgrep 14.1.1；manifest list 为 `sha256:67ecd4d89a62e76c2a6eabaabea62a9499ccf356cd310efa5495b43a6e2eedb6`。见[构建原始输出](image-build.txt)。新镜像上另跑 Docker 相关用例为 **14 passed、38 deselected**，见[镜像测试输出](image-tests.txt)；这 14 项与完整回归有重叠，不累加成 263 项。
 
 ## 行为边界
 

@@ -40,7 +40,10 @@ def _docker_available() -> bool:
 @pytest.fixture(
     params=[
         "local",
-        pytest.param("docker", marks=pytest.mark.skipif(not _docker_available(), reason="Docker is unavailable")),
+        pytest.param(
+            "docker",
+            marks=[pytest.mark.docker, pytest.mark.skipif(not _docker_available(), reason="Docker is unavailable")],
+        ),
     ]
 )
 def execution_environment(request: pytest.FixtureRequest, tmp_path: Path):

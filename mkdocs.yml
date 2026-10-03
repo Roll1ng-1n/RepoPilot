@@ -1,5 +1,5 @@
-site_name: mini-SWE-agent documentation
-site_url: https://mini-swe-agent.com
+site_name: RepoPilot documentation
+site_url: https://roll1ng-1n.github.io/RepoPilot/
 theme:
   name: material
   icon:
@@ -59,6 +59,12 @@ markdown_extensions:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 nav:
+  - RepoPilot:
+    - Overview: index.md
+    - Capabilities: repopilot-capabilities.md
+    - Inspection: repopilot-inspect.md
+    - Benchmark: repopilot-benchmark.md
+    - Release: repopilot-release.md
   - Getting Started:
     - "Overview": index.md
     - "Quick start": quickstart.md
@@ -152,8 +158,8 @@ plugins:
               - "!^_"
               - "!^model_config"
               - "!^model_post_init"
-repo_url: https://github.com/SWE-agent/mini-SWE-agent
-repo_name: SWE-agent/mini-SWE-agent
+repo_url: https://github.com/Roll1ng-1n/RepoPilot
+repo_name: Roll1ng-1n/RepoPilot
 edit_uri: edit/main/docs/
 extra_javascript:
   - assets/js/sh-annotation.js
@@ -172,3 +178,9 @@ extra:
   analytics:
     provider: google
     property: G-SG2NC1GDRD
+
+# Raw evaluation workspaces and input snapshots are repository artifacts, not site pages.
+exclude_docs: |
+  **/workspace/**
+  **/snapshot/**
+  **/run-state/**

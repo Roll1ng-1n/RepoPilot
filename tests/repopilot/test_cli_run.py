@@ -488,7 +488,7 @@ def _docker_available() -> bool:
         pytest.param(
             "docker",
             ["--image", os.environ.get("REPOPILOT_DOCKER_TEST_IMAGE", "python:3.12-bookworm")],
-            marks=pytest.mark.skipif(not _docker_available(), reason="Docker is unavailable"),
+            marks=[pytest.mark.docker, pytest.mark.skipif(not _docker_available(), reason="Docker is unavailable")],
         ),
     ],
 )
@@ -1242,7 +1242,10 @@ def test_cli_records_a_versioned_plan_and_replan_from_agent_control_tools(tmp_pa
         "plan_replanned",
         "plan_updated",
     ]
-    assert next(e for e in reversed(events) if e["type"] == "run_finished") == {"type": "run_finished", "status": "UNVERIFIED"}
+    assert next(e for e in reversed(events) if e["type"] == "run_finished") == {
+        "type": "run_finished",
+        "status": "UNVERIFIED",
+    }
 
 
 def test_cli_writes_all_terminal_artifacts_for_a_failed_run(tmp_path: Path) -> None:

@@ -47,8 +47,12 @@ These inherited pieces are intentionally not presented as RepoPilot inventions. 
 ## Reading the evidence
 
 CLI output, metadata, Checkpoints, and JSONL Trace are the public seams for a Run. Tests named above are Runtime
-Tests, while the six benchmark task verifiers are separate host-side Task Verification. A passing Runtime Test proves
+Tests, while the 30 benchmark task verifiers are separate host-side Task Verification. A passing Runtime Test proves
 the RepoPilot control flow under that test's controlled inputs; it does not prove a model call, Docker image, or
 external SWE-bench run is available. The current SWE-bench smoke passed its `READY` preflight but ended
 `BUDGET_EXCEEDED` before producing a patch or running the final verifier (`success: null`); it is real negative smoke
 evidence, not a SWE-bench score or a performance number.
+
+## Next-stage implementation
+
+Operation spans, actual source-change events, bounded multi-step exploration detection and schema 3 immutable checkpoint objects are implemented. See [metrics](evidence/next-stage/metrics.md), [state ownership](evidence/next-stage/architecture.md), [storage measurement](evidence/next-stage/performance/report.md) and [evaluation status](evidence/next-stage/report.md). Real-model benefits require the fixed comparison results; implementation tests alone do not establish them.

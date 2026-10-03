@@ -39,3 +39,9 @@ RUNNING may temporarily have only its Checkpoint and Trace; inspect uses the Che
   names contain `KEY`, `TOKEN`, `SECRET`, or `PASSWORD`; it is not a general secret scanner.
 - Inspect is read-only and does not recover a Run, replay commands, validate the current Target Repository, or render
   the full Checkpoint message history.
+
+## Measurement and storage compatibility
+
+JSON inspection includes evaluation with tri-state repository/task pass, timing coverage, window repetition and first effective source-change evidence. Older traces retain unavailable/null metrics; inspection does not rewrite history. [Metric definitions](evidence/next-stage/metrics.md) explain coverage and nested spans.
+
+Checkpoint disk schema 3 may reference objects/<sha256>.utf8. The complete directory is required for resume and fallback inspection; missing or damaged objects are explicit errors, never inferred tool results. Schemas 1/2 remain readable.

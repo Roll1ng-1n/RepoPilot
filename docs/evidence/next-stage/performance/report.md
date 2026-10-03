@@ -24,3 +24,5 @@ In-flight before-execution and after-result durability, approval/pause/terminal 
 Missing, truncated, altered, symlinked or invalid-path objects raise explicit errors. A failed pre-publication object check leaves the previous checkpoint intact. A crash may leave unreferenced objects; they do not cause calls to be replayed. Preserve the full run directory, restore a damaged object only from a matching verified backup, then inspect before resuming. Never fabricate unknown tool results or rerun an uncertain write. See test_checkpoint_storage.py and test_reliability_v2.py for interrupted publication and execution boundaries.
 
 Validation: 300 RepoPilot tests passed including Docker; stage4-tests.txt. Reproduce measurements with measure.py --mode baseline / --mode optimized. The saved checkpoint-baseline.py.txt is the baseline implementation input.
+
+后续 5802016 在读取/缓存写入路径补充对象目录 symlink 检查，定向损坏引用回归 9 passed。性能 JSON 的 implementation_sha256 明确对应测量时源码；未将后续 guard 改写为测量时实现。

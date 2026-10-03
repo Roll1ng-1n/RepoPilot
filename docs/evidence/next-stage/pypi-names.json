@@ -1,0 +1,54 @@
+[
+  {
+    "name": "repopilot",
+    "http_status": 200,
+    "query_url": "https://pypi.org/pypi/repopilot/json",
+    "utc": "2026-10-03T02:57:56.747511+00:00",
+    "summary": "",
+    "version": "0.0.1",
+    "project_urls": {
+      "Homepage": "https://github.com/FSoft-AI4Code/RepoPilot",
+      "Issues": "https://github.com/FSoft-AI4Code/RepoPilot/issues"
+    }
+  },
+  {
+    "name": "repopilot-agent",
+    "http_status": 200,
+    "query_url": "https://pypi.org/pypi/repopilot-agent/json",
+    "utc": "2026-10-03T02:57:57.406924+00:00",
+    "summary": "Local-first AI code agent in your terminal. Inspired by Claude Code and Codex CLI.",
+    "version": "0.2.2",
+    "project_urls": {
+      "Homepage": "https://github.com/ZhangYang2297/repopilot",
+      "Issues": "https://github.com/ZhangYang2297/repopilot/issues",
+      "Repository": "https://github.com/ZhangYang2297/repopilot"
+    }
+  },
+  {
+    "name": "repopilot-cli",
+    "http_status": 200,
+    "query_url": "https://pypi.org/pypi/repopilot-cli/json",
+    "utc": "2026-10-03T02:57:58.074442+00:00",
+    "summary": "Install a minimal repository operating standard",
+    "version": "1.0.1",
+    "project_urls": null
+  },
+  {
+    "name": "repopilot-runtime",
+    "http_status": 404,
+    "query_url": "https://pypi.org/pypi/repopilot-runtime/json",
+    "utc": "2026-10-03T02:59:37.858227+00:00"
+  },
+  {
+    "name": "roll1ng-repopilot",
+    "http_status": 404,
+    "query_url": "https://pypi.org/pypi/roll1ng-repopilot/json",
+    "utc": "2026-10-03T02:59:38.588933+00:00"
+  },
+  {
+    "name": "repopilot-engineering",
+    "http_status": 404,
+    "query_url": "https://pypi.org/pypi/repopilot-engineering/json",
+    "utc": "2026-10-03T02:59:39.227659+00:00"
+  }
+]

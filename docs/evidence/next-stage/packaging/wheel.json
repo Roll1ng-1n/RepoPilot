@@ -1,0 +1,10 @@
+{
+  "wheel": "repopilot_runtime-0.1.0-py3-none-any.whl",
+  "sha256": "e5703b60e74614da889c33ecddc8f01fb0fe40e5f1449dc0028cb9ea8b8d438e",
+  "bytes": 341274,
+  "name": "repopilot-runtime",
+  "version": "0.1.0",
+  "files": 313,
+  "task_manifests": 30,
+  "cache_entries": 0
+}

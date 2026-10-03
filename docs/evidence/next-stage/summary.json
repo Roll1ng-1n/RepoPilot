@@ -1,0 +1,1411 @@
+{
+  "formal_originals": 5,
+  "expected": 45,
+  "complete": false,
+  "archive_integrity": true,
+  "groups": [
+    {
+      "model": "gpt-6-luna",
+      "task": "real-boltons-slug",
+      "variant": "loop-on",
+      "stage": "smoke",
+      "replacement": false,
+      "n": 1,
+      "repository_pass": {
+        "true": 0,
+        "false": 1,
+        "none": 0
+      },
+      "task_pass": {
+        "true": 0,
+        "false": 1,
+        "none": 0
+      },
+      "successful_termination": {
+        "true": 0,
+        "false": 1,
+        "none": 0
+      },
+      "status_counts": {
+        "FAILED": 1
+      },
+      "metrics": {
+        "steps": {
+          "values": [
+            1
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "known_total": 1
+        },
+        "tokens": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "cost": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "read_file": {
+          "values": [
+            0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "known_total": 0
+        },
+        "loop_events": {
+          "values": [
+            0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "known_total": 0
+        },
+        "window_repeated_exploration": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "first_effective_source_change_step": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "wall_clock_seconds": {
+          "values": [
+            4.157027758999902
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 4.157027758999902,
+          "min": 4.157027758999902,
+          "max": 4.157027758999902,
+          "known_total": 4.157027758999902
+        },
+        "llm_seconds": {
+          "values": [
+            3.6516726810000364
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 3.6516726810000364,
+          "min": 3.6516726810000364,
+          "max": 3.6516726810000364,
+          "known_total": 3.6516726810000364
+        },
+        "tool_seconds": {
+          "values": [
+            0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "known_total": 0
+        },
+        "orchestration_seconds": {
+          "values": [
+            0.2425198839996483
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.2425198839996483,
+          "min": 0.2425198839996483,
+          "max": 0.2425198839996483,
+          "known_total": 0.2425198839996483
+        },
+        "active_seconds": {
+          "values": [
+            3.8940848689999257
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 3.8940848689999257,
+          "min": 3.8940848689999257,
+          "max": 3.8940848689999257,
+          "known_total": 3.8940848689999257
+        },
+        "idle_seconds": {
+          "values": [
+            0.0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "known_total": 0.0
+        }
+      }
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "task": "real-boltons-slug",
+      "variant": "baseline",
+      "stage": "formal",
+      "replacement": false,
+      "n": 1,
+      "repository_pass": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "task_pass": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "successful_termination": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "status_counts": {
+        "Submitted": 1
+      },
+      "metrics": {
+        "steps": {
+          "values": [
+            7
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 7,
+          "min": 7,
+          "max": 7,
+          "known_total": 7
+        },
+        "tokens": {
+          "values": [
+            63181
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 63181,
+          "min": 63181,
+          "max": 63181,
+          "known_total": 63181
+        },
+        "cost": {
+          "values": [
+            0.0623172
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.0623172,
+          "min": 0.0623172,
+          "max": 0.0623172,
+          "known_total": 0.0623172
+        },
+        "read_file": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "loop_events": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "window_repeated_exploration": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "first_effective_source_change_step": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "wall_clock_seconds": {
+          "values": [
+            603.8070316610001
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 603.8070316610001,
+          "min": 603.8070316610001,
+          "max": 603.8070316610001,
+          "known_total": 603.8070316610001
+        },
+        "llm_seconds": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "tool_seconds": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "orchestration_seconds": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "active_seconds": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "idle_seconds": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        }
+      }
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "task": "real-boltons-slug",
+      "variant": "loop-off",
+      "stage": "formal",
+      "replacement": false,
+      "n": 1,
+      "repository_pass": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "task_pass": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "successful_termination": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "status_counts": {
+        "SUCCEEDED": 1
+      },
+      "metrics": {
+        "steps": {
+          "values": [
+            9
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 9,
+          "min": 9,
+          "max": 9,
+          "known_total": 9
+        },
+        "tokens": {
+          "values": [
+            69994
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 69994,
+          "min": 69994,
+          "max": 69994,
+          "known_total": 69994
+        },
+        "cost": {
+          "values": [
+            0.04497999999999999
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.04497999999999999,
+          "min": 0.04497999999999999,
+          "max": 0.04497999999999999,
+          "known_total": 0.04497999999999999
+        },
+        "read_file": {
+          "values": [
+            2
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 2,
+          "min": 2,
+          "max": 2,
+          "known_total": 2
+        },
+        "loop_events": {
+          "values": [
+            0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "known_total": 0
+        },
+        "window_repeated_exploration": {
+          "values": [
+            0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "known_total": 0
+        },
+        "first_effective_source_change_step": {
+          "values": [
+            4
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 4,
+          "min": 4,
+          "max": 4,
+          "known_total": 4
+        },
+        "wall_clock_seconds": {
+          "values": [
+            967.033905629
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 967.033905629,
+          "min": 967.033905629,
+          "max": 967.033905629,
+          "known_total": 967.033905629
+        },
+        "llm_seconds": {
+          "values": [
+            963.3582573430003
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 963.3582573430003,
+          "min": 963.3582573430003,
+          "max": 963.3582573430003,
+          "known_total": 963.3582573430003
+        },
+        "tool_seconds": {
+          "values": [
+            1.4702024300008816
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 1.4702024300008816,
+          "min": 1.4702024300008816,
+          "max": 1.4702024300008816,
+          "known_total": 1.4702024300008816
+        },
+        "orchestration_seconds": {
+          "values": [
+            1.8416981879986452
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 1.8416981879986452,
+          "min": 1.8416981879986452,
+          "max": 1.8416981879986452,
+          "known_total": 1.8416981879986452
+        },
+        "active_seconds": {
+          "values": [
+            966.6794930649999
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 966.6794930649999,
+          "min": 966.6794930649999,
+          "max": 966.6794930649999,
+          "known_total": 966.6794930649999
+        },
+        "idle_seconds": {
+          "values": [
+            0.0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "known_total": 0.0
+        }
+      }
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "task": "real-boltons-slug",
+      "variant": "loop-on",
+      "stage": "formal",
+      "replacement": false,
+      "n": 1,
+      "repository_pass": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "task_pass": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "successful_termination": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "status_counts": {
+        "SUCCEEDED": 1
+      },
+      "metrics": {
+        "steps": {
+          "values": [
+            7
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 7,
+          "min": 7,
+          "max": 7,
+          "known_total": 7
+        },
+        "tokens": {
+          "values": [
+            60278
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 60278,
+          "min": 60278,
+          "max": 60278,
+          "known_total": 60278
+        },
+        "cost": {
+          "values": [
+            0.0403848
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.0403848,
+          "min": 0.0403848,
+          "max": 0.0403848,
+          "known_total": 0.0403848
+        },
+        "read_file": {
+          "values": [
+            2
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 2,
+          "min": 2,
+          "max": 2,
+          "known_total": 2
+        },
+        "loop_events": {
+          "values": [
+            0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "known_total": 0
+        },
+        "window_repeated_exploration": {
+          "values": [
+            0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "known_total": 0
+        },
+        "first_effective_source_change_step": {
+          "values": [
+            4
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 4,
+          "min": 4,
+          "max": 4,
+          "known_total": 4
+        },
+        "wall_clock_seconds": {
+          "values": [
+            64.6360535269996
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 64.6360535269996,
+          "min": 64.6360535269996,
+          "max": 64.6360535269996,
+          "known_total": 64.6360535269996
+        },
+        "llm_seconds": {
+          "values": [
+            62.12328994800009
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 62.12328994800009,
+          "min": 62.12328994800009,
+          "max": 62.12328994800009,
+          "known_total": 62.12328994800009
+        },
+        "tool_seconds": {
+          "values": [
+            1.046133178999753
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 1.046133178999753,
+          "min": 1.046133178999753,
+          "max": 1.046133178999753,
+          "known_total": 1.046133178999753
+        },
+        "orchestration_seconds": {
+          "values": [
+            1.2410373550001168
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 1.2410373550001168,
+          "min": 1.2410373550001168,
+          "max": 1.2410373550001168,
+          "known_total": 1.2410373550001168
+        },
+        "active_seconds": {
+          "values": [
+            64.41218782199985
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 64.41218782199985,
+          "min": 64.41218782199985,
+          "max": 64.41218782199985,
+          "known_total": 64.41218782199985
+        },
+        "idle_seconds": {
+          "values": [
+            0.0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "known_total": 0.0
+        }
+      }
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "task": "real-boltons-slug",
+      "variant": "loop-on",
+      "stage": "smoke",
+      "replacement": false,
+      "n": 1,
+      "repository_pass": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "task_pass": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "successful_termination": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "status_counts": {
+        "SUCCEEDED": 1
+      },
+      "metrics": {
+        "steps": {
+          "values": [
+            9
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 9,
+          "min": 9,
+          "max": 9,
+          "known_total": 9
+        },
+        "tokens": {
+          "values": [
+            60142
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 60142,
+          "min": 60142,
+          "max": 60142,
+          "known_total": 60142
+        },
+        "cost": {
+          "values": [
+            0.077556
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.077556,
+          "min": 0.077556,
+          "max": 0.077556,
+          "known_total": 0.077556
+        },
+        "read_file": {
+          "values": [
+            2
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 2,
+          "min": 2,
+          "max": 2,
+          "known_total": 2
+        },
+        "loop_events": {
+          "values": [
+            0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "known_total": 0
+        },
+        "window_repeated_exploration": {
+          "values": [
+            0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "known_total": 0
+        },
+        "first_effective_source_change_step": {
+          "values": [
+            6
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 6,
+          "min": 6,
+          "max": 6,
+          "known_total": 6
+        },
+        "wall_clock_seconds": {
+          "values": [
+            397.4196737090001
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 397.4196737090001,
+          "min": 397.4196737090001,
+          "max": 397.4196737090001,
+          "known_total": 397.4196737090001
+        },
+        "llm_seconds": {
+          "values": [
+            394.08179106799935
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 394.08179106799935,
+          "min": 394.08179106799935,
+          "max": 394.08179106799935,
+          "known_total": 394.08179106799935
+        },
+        "tool_seconds": {
+          "values": [
+            1.2058655929995439
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 1.2058655929995439,
+          "min": 1.2058655929995439,
+          "max": 1.2058655929995439,
+          "known_total": 1.2058655929995439
+        },
+        "orchestration_seconds": {
+          "values": [
+            1.8858468910007105
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 1.8858468910007105,
+          "min": 1.8858468910007105,
+          "max": 1.8858468910007105,
+          "known_total": 1.8858468910007105
+        },
+        "active_seconds": {
+          "values": [
+            397.1748683709998
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 397.1748683709998,
+          "min": 397.1748683709998,
+          "max": 397.1748683709998,
+          "known_total": 397.1748683709998
+        },
+        "idle_seconds": {
+          "values": [
+            0.0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "known_total": 0.0
+        }
+      }
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "task": "real-more-chunked",
+      "variant": "baseline",
+      "stage": "formal",
+      "replacement": false,
+      "n": 1,
+      "repository_pass": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "task_pass": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "successful_termination": {
+        "true": 1,
+        "false": 0,
+        "none": 0
+      },
+      "status_counts": {
+        "Submitted": 1
+      },
+      "metrics": {
+        "steps": {
+          "values": [
+            11
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 11,
+          "min": 11,
+          "max": 11,
+          "known_total": 11
+        },
+        "tokens": {
+          "values": [
+            139061
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 139061,
+          "min": 139061,
+          "max": 139061,
+          "known_total": 139061
+        },
+        "cost": {
+          "values": [
+            0.093322
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.093322,
+          "min": 0.093322,
+          "max": 0.093322,
+          "known_total": 0.093322
+        },
+        "read_file": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "loop_events": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "window_repeated_exploration": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "first_effective_source_change_step": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "wall_clock_seconds": {
+          "values": [
+            539.2265829079997
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 539.2265829079997,
+          "min": 539.2265829079997,
+          "max": 539.2265829079997,
+          "known_total": 539.2265829079997
+        },
+        "llm_seconds": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "tool_seconds": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "orchestration_seconds": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "active_seconds": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        },
+        "idle_seconds": {
+          "values": [
+            null
+          ],
+          "known": 0,
+          "unknown": 1,
+          "median": null,
+          "min": null,
+          "max": null,
+          "known_total": null
+        }
+      }
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "task": "real-more-chunked",
+      "variant": "loop-on",
+      "stage": "formal",
+      "replacement": false,
+      "n": 1,
+      "repository_pass": {
+        "true": 0,
+        "false": 1,
+        "none": 0
+      },
+      "task_pass": {
+        "true": 0,
+        "false": 1,
+        "none": 0
+      },
+      "successful_termination": {
+        "true": 0,
+        "false": 1,
+        "none": 0
+      },
+      "status_counts": {
+        "BUDGET_EXCEEDED": 1
+      },
+      "metrics": {
+        "steps": {
+          "values": [
+            26
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 26,
+          "min": 26,
+          "max": 26,
+          "known_total": 26
+        },
+        "tokens": {
+          "values": [
+            252373
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 252373,
+          "min": 252373,
+          "max": 252373,
+          "known_total": 252373
+        },
+        "cost": {
+          "values": [
+            0.35061479999999995
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.35061479999999995,
+          "min": 0.35061479999999995,
+          "max": 0.35061479999999995,
+          "known_total": 0.35061479999999995
+        },
+        "read_file": {
+          "values": [
+            31
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 31,
+          "min": 31,
+          "max": 31,
+          "known_total": 31
+        },
+        "loop_events": {
+          "values": [
+            0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "known_total": 0
+        },
+        "window_repeated_exploration": {
+          "values": [
+            1
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "known_total": 1
+        },
+        "first_effective_source_change_step": {
+          "values": [
+            11
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 11,
+          "min": 11,
+          "max": 11,
+          "known_total": 11
+        },
+        "wall_clock_seconds": {
+          "values": [
+            402.9671411680001
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 402.9671411680001,
+          "min": 402.9671411680001,
+          "max": 402.9671411680001,
+          "known_total": 402.9671411680001
+        },
+        "llm_seconds": {
+          "values": [
+            391.2109596040018
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 391.2109596040018,
+          "min": 391.2109596040018,
+          "max": 391.2109596040018,
+          "known_total": 391.2109596040018
+        },
+        "tool_seconds": {
+          "values": [
+            5.346254553999643
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 5.346254553999643,
+          "min": 5.346254553999643,
+          "max": 5.346254553999643,
+          "known_total": 5.346254553999643
+        },
+        "orchestration_seconds": {
+          "values": [
+            6.157257726001262
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 6.157257726001262,
+          "min": 6.157257726001262,
+          "max": 6.157257726001262,
+          "known_total": 6.157257726001262
+        },
+        "active_seconds": {
+          "values": [
+            402.7285974340002
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 402.7285974340002,
+          "min": 402.7285974340002,
+          "max": 402.7285974340002,
+          "known_total": 402.7285974340002
+        },
+        "idle_seconds": {
+          "values": [
+            0.0
+          ],
+          "known": 1,
+          "unknown": 0,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "known_total": 0.0
+        }
+      }
+    }
+  ],
+  "samples": [
+    {
+      "path": "runs/gpt-6-luna/smoke-00-real-boltons-slug-loop-on/trial.json",
+      "model": "gpt-6-luna",
+      "stage": "smoke",
+      "repeat": 0,
+      "replacement": false,
+      "variant": "loop-on",
+      "task": "real-boltons-slug",
+      "status": "FAILED",
+      "source_matches": true,
+      "repository_pass": false,
+      "task_pass": false,
+      "successful_termination": false,
+      "provider_failure": false,
+      "steps": 1,
+      "tokens": null,
+      "cost": null,
+      "read_file": 0,
+      "loop_events": 0,
+      "window_repeated_exploration": null,
+      "first_effective_source_change_step": null,
+      "timing_coverage": "complete",
+      "wall_clock_seconds": 4.157027758999902,
+      "llm_seconds": 3.6516726810000364,
+      "tool_seconds": 0,
+      "orchestration_seconds": 0.2425198839996483,
+      "active_seconds": 3.8940848689999257,
+      "idle_seconds": 0.0
+    },
+    {
+      "path": "runs/gpt-6.1-sol/formal-01-real-boltons-slug-baseline/trial.json",
+      "model": "gpt-6.1-sol",
+      "stage": "formal",
+      "repeat": 1,
+      "replacement": false,
+      "variant": "baseline",
+      "task": "real-boltons-slug",
+      "status": "Submitted",
+      "source_matches": true,
+      "repository_pass": true,
+      "task_pass": true,
+      "successful_termination": true,
+      "provider_failure": false,
+      "steps": 7,
+      "tokens": 63181,
+      "cost": 0.0623172,
+      "read_file": null,
+      "loop_events": null,
+      "window_repeated_exploration": null,
+      "first_effective_source_change_step": null,
+      "timing_coverage": "unavailable",
+      "wall_clock_seconds": 603.8070316610001,
+      "llm_seconds": null,
+      "tool_seconds": null,
+      "orchestration_seconds": null,
+      "active_seconds": null,
+      "idle_seconds": null
+    },
+    {
+      "path": "runs/gpt-6.1-sol/formal-01-real-boltons-slug-loop-off/trial.json",
+      "model": "gpt-6.1-sol",
+      "stage": "formal",
+      "repeat": 1,
+      "replacement": false,
+      "variant": "loop-off",
+      "task": "real-boltons-slug",
+      "status": "SUCCEEDED",
+      "source_matches": true,
+      "repository_pass": true,
+      "task_pass": true,
+      "successful_termination": true,
+      "provider_failure": true,
+      "steps": 9,
+      "tokens": 69994,
+      "cost": 0.04497999999999999,
+      "read_file": 2,
+      "loop_events": 0,
+      "window_repeated_exploration": 0,
+      "first_effective_source_change_step": 4,
+      "timing_coverage": "complete",
+      "wall_clock_seconds": 967.033905629,
+      "llm_seconds": 963.3582573430003,
+      "tool_seconds": 1.4702024300008816,
+      "orchestration_seconds": 1.8416981879986452,
+      "active_seconds": 966.6794930649999,
+      "idle_seconds": 0.0
+    },
+    {
+      "path": "runs/gpt-6.1-sol/formal-01-real-boltons-slug-loop-on/trial.json",
+      "model": "gpt-6.1-sol",
+      "stage": "formal",
+      "repeat": 1,
+      "replacement": false,
+      "variant": "loop-on",
+      "task": "real-boltons-slug",
+      "status": "SUCCEEDED",
+      "source_matches": true,
+      "repository_pass": true,
+      "task_pass": true,
+      "successful_termination": true,
+      "provider_failure": false,
+      "steps": 7,
+      "tokens": 60278,
+      "cost": 0.0403848,
+      "read_file": 2,
+      "loop_events": 0,
+      "window_repeated_exploration": 0,
+      "first_effective_source_change_step": 4,
+      "timing_coverage": "complete",
+      "wall_clock_seconds": 64.6360535269996,
+      "llm_seconds": 62.12328994800009,
+      "tool_seconds": 1.046133178999753,
+      "orchestration_seconds": 1.2410373550001168,
+      "active_seconds": 64.41218782199985,
+      "idle_seconds": 0.0
+    },
+    {
+      "path": "runs/gpt-6.1-sol/formal-01-real-more-chunked-baseline/trial.json",
+      "model": "gpt-6.1-sol",
+      "stage": "formal",
+      "repeat": 1,
+      "replacement": false,
+      "variant": "baseline",
+      "task": "real-more-chunked",
+      "status": "Submitted",
+      "source_matches": true,
+      "repository_pass": true,
+      "task_pass": true,
+      "successful_termination": true,
+      "provider_failure": false,
+      "steps": 11,
+      "tokens": 139061,
+      "cost": 0.093322,
+      "read_file": null,
+      "loop_events": null,
+      "window_repeated_exploration": null,
+      "first_effective_source_change_step": null,
+      "timing_coverage": "unavailable",
+      "wall_clock_seconds": 539.2265829079997,
+      "llm_seconds": null,
+      "tool_seconds": null,
+      "orchestration_seconds": null,
+      "active_seconds": null,
+      "idle_seconds": null
+    },
+    {
+      "path": "runs/gpt-6.1-sol/formal-01-real-more-chunked-loop-on/trial.json",
+      "model": "gpt-6.1-sol",
+      "stage": "formal",
+      "repeat": 1,
+      "replacement": false,
+      "variant": "loop-on",
+      "task": "real-more-chunked",
+      "status": "BUDGET_EXCEEDED",
+      "source_matches": true,
+      "repository_pass": false,
+      "task_pass": false,
+      "successful_termination": false,
+      "provider_failure": true,
+      "steps": 26,
+      "tokens": 252373,
+      "cost": 0.35061479999999995,
+      "read_file": 31,
+      "loop_events": 0,
+      "window_repeated_exploration": 1,
+      "first_effective_source_change_step": 11,
+      "timing_coverage": "complete",
+      "wall_clock_seconds": 402.9671411680001,
+      "llm_seconds": 391.2109596040018,
+      "tool_seconds": 5.346254553999643,
+      "orchestration_seconds": 6.157257726001262,
+      "active_seconds": 402.7285974340002,
+      "idle_seconds": 0.0
+    },
+    {
+      "path": "runs/gpt-6.1-sol/smoke-00-real-boltons-slug-loop-on/trial.json",
+      "model": "gpt-6.1-sol",
+      "stage": "smoke",
+      "repeat": 0,
+      "replacement": false,
+      "variant": "loop-on",
+      "task": "real-boltons-slug",
+      "status": "SUCCEEDED",
+      "source_matches": true,
+      "repository_pass": true,
+      "task_pass": true,
+      "successful_termination": true,
+      "provider_failure": true,
+      "steps": 9,
+      "tokens": 60142,
+      "cost": 0.077556,
+      "read_file": 2,
+      "loop_events": 0,
+      "window_repeated_exploration": 0,
+      "first_effective_source_change_step": 6,
+      "timing_coverage": "complete",
+      "wall_clock_seconds": 397.4196737090001,
+      "llm_seconds": 394.08179106799935,
+      "tool_seconds": 1.2058655929995439,
+      "orchestration_seconds": 1.8858468910007105,
+      "active_seconds": 397.1748683709998,
+      "idle_seconds": 0.0
+    }
+  ],
+  "scope": "Small-sample descriptive results. Originals, smoke and replacements separate. Baseline shell reads and source-change steps are unobservable. Unknown metrics remain null."
+}

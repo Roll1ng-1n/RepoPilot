@@ -17,7 +17,7 @@
 | [#23](https://github.com/Roll1ng-1n/RepoPilot/issues/23) | 空流和聚合失败抛明确协议错误，聚合数量/大小有上限并关闭迭代器；畸形参数保留 Tool Call ID 与错误，返回结构化纠正观察，不执行；普通 run/resume/approve/reject 暴露连接配置并恢复非秘密选项 | 空流/聚合失败；畸形参数 Checkpoint 快照往返后仍不可执行；CLI > 环境变量 > env-file > Checkpoint 优先级；stream/timeout/max_tokens 恢复；Checkpoint 不含测试密钥 |
 | [#24](https://github.com/Roll1ng-1n/RepoPilot/issues/24) | 文件列表遵守 Git ignore、去重和分页；搜索全局行数上限并用 `--` 隔离查询参数；新增免费 doctor；上游启动 banner 改发 stderr；中英文 README 指向 30 任务证据并区分指标 | `.venv` 排除、分页与多文件搜索上限；doctor 不构造模型、不输出测试密钥；真实子进程 `inspect --json` stdout 可直接 `json.loads` |
 
-定向用例位于 [`tests/repopilot/test_issue_regressions.py`](../../../tests/repopilot/test_issue_regressions.py)。
+定向用例位于 [`tests/repopilot/test_issue_regressions.py`](https://github.com/Roll1ng-1n/RepoPilot/blob/main/tests/repopilot/test_issue_regressions.py)。
 本批沿用原生 Tool Calling；没有读取隐藏 benchmark verifier 来决定产品运行成功。
 
 ## 运行结果与复现

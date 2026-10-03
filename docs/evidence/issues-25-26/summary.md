@@ -20,7 +20,7 @@ BUDGET_EXCEEDED 支持显式修改预算后 resume：--max-steps、--max-replans
 - [完整回归](runtime-tests.txt)：`.venv/bin/pytest tests/repopilot -q -rs`。
 - [静态检查](lint.txt)：`.venv/bin/ruff check src/repopilot tests/repopilot`。
 - [本轮源码摘要](source-manifest.json)：关联 round3 基线归档并记录当前源码/测试摘要。
-- [新增回归](../../../tests/repopilot/test_priority_fixes.py)：缓存与源码变动、scope 改名、独立检查、required command、默认无时间截止、一次超时重试、步骤耗尽续跑、补丁保真、旧版时间预算增加/取消及旧验证记录重验。
+- [新增回归](https://github.com/Roll1ng-1n/RepoPilot/blob/main/tests/repopilot/test_priority_fixes.py)：缓存与源码变动、scope 改名、独立检查、required command、默认无时间截止、一次超时重试、步骤耗尽续跑、补丁保真、旧版时间预算增加/取消及旧验证记录重验。
 - [先前审查](../current-priority-review/report.md)保留问题触发证据并标注用户修正。
 
 修复在现有工作区完成，未提交或推送代码。GitHub #25、#26 回填本轮实现和验证结果；#19–#24 的历史范围未一并关闭。本轮确定性回归证明接口和控制流修复，不代表已经获得新的真实模型成功率。

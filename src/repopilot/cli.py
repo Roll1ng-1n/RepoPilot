@@ -14,6 +14,7 @@ from typing import Any
 import typer
 from platformdirs import user_state_dir
 
+from repopilot import __version__
 from repopilot.approval import ApprovalContext
 from repopilot.artifacts import RunArtifacts
 from repopilot.benchmark import (
@@ -100,8 +101,13 @@ def create_app(
         if result.status != "SUCCEEDED":
             raise typer.Exit(code={"UNVERIFIED": 3, "WAITING_FOR_APPROVAL": 4, "STOPPED": 5}.get(result.status, 1))
 
+    def show_version(value: bool) -> None:
+        if value:
+            typer.echo(f"RepoPilot {__version__}")
+            raise typer.Exit()
+
     @app.callback()
-    def main() -> None:
+    def main(version: bool = typer.Option(False, "--version", is_eager=True, callback=show_version)) -> None:
         """RepoPilot commands."""
 
     @app.command()
