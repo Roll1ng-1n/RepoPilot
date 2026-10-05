@@ -22,7 +22,7 @@ jobs:
           REPOPILOT_MODEL: ${{ inputs.model }}
           REPOPILOT_API_KEY: ${{ secrets.REPOPILOT_API_KEY }}
           REPOPILOT_BASE_URL: ${{ vars.REPOPILOT_BASE_URL }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: external-probe

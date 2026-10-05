@@ -23,7 +23,7 @@ jobs:
       - run: python -m venv /tmp/repopilot-wheel
       - run: /tmp/repopilot-wheel/bin/python -m pip install dist/*.whl
       - run: /tmp/repopilot-wheel/bin/python scripts/packaging/wheel_smoke.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: repopilot-runtime-dist
           path: dist/*
